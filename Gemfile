@@ -45,6 +45,16 @@ end
 group :development, :test do
   gem 'rspec-rails'
   gem 'simplecov'
+  gem 'factory_girl_rails'
+  gem 'debugger'
+  gem 'shoulda-matchers'
+  gem 'faker'
+  gem 'acts_as_list'
+end
+
+group :test do  
+  gem 'guard-rspec'
+  gem 'database_cleaner'
 end
 
 # Use ActiveModel has_secure_password

@@ -33,4 +33,8 @@ BhlRails4::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+  
+  SOLR_BOOKS_METADATA = "http://localhost:8989/solr/books_metadata"
+  SOLR_SCI_NAMES = "http://localhost:8989/solr/sci_names"
+  SOLR_NAMES_FOUND = "http://localhost:8989/solr/names_found"
 end

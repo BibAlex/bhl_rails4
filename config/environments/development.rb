@@ -26,4 +26,8 @@ BhlRails4::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+  
+  SOLR_BOOKS_METADATA = "http://localhost:8983/solr/books_metadata"
+  SOLR_SCI_NAMES = "http://localhost:8983/solr/sci_names"
+  SOLR_NAMES_FOUND = "http://localhost:8983/solr/names_found"
 end
