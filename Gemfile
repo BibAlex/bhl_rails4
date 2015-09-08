@@ -42,6 +42,11 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+group :development do
+  gem 'actionpack-page_caching'
+  gem 'actionpack-action_caching'
+end
+
 group :development, :test do
   gem 'rspec-rails'
   gem 'simplecov'
@@ -50,6 +55,9 @@ group :development, :test do
   gem 'shoulda-matchers'
   gem 'faker'
   gem 'acts_as_list'
+  gem 'thin'
+  gem 'capybara'
+  gem 'minitest'
 end
 
 group :test do  
