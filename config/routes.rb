@@ -53,4 +53,7 @@ BhlRails4::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+  
+  get 'browse/:type', to: 'browse#index'
+  resources :books
 end

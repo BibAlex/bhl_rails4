@@ -1,0 +1,22 @@
+- page_title = I18n.t("browse_#{params[:type]}_page_header")
+.row.clearfix
+  .col-md-12.column
+    %h2
+      = page_title
+    %hr
+    .well.text-center
+      = render partial: "browse/chars"        
+    .panel.panel-default
+      - if @prefixes_with_values.empty?
+        = I18n.t(:no_entity_found, entity: page_title)
+      - else                        
+        - @prefixes_with_values.each do |key, value|    
+          .panel-heading
+            %h3.panel-title
+              =key.upcase
+          .panel-body       
+            %ul.direction    
+              - value.each do |item|    
+                %li
+                  =link_to books_path(params: addFacetSearch({}, params[:type].singularize, item[:name].html_safe.gsub("]", "").gsub("[", ""))) do
+                    = "#{item[:name].capitalize} (#{item[:count]})"
