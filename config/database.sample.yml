@@ -1,0 +1,36 @@
+common: &common
+  adapter: mysql2
+  encoding: utf8
+  reconnect: true
+  
+eol: &eol
+  <<: *common
+  host:        localhost
+  database:    eol
+  username:    root
+  password:    root
+  #eol_port:        3306 
+
+development:
+  <<: *common
+  #<<: *eol
+  host:            localhost
+  username:        root
+  password:        root
+  database:        bhl  
+  
+test:
+  <<: *common
+  #<<: *eol
+  host:            localhost
+  username:        root
+  password:        root
+  database:        bhl_test
+
+production:
+  <<: *common
+  #<<: *eoloo
+  host:            localhost
+  username:        root
+  password:        root
+  database:        bhl_production
