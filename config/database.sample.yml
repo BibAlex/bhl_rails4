@@ -17,7 +17,7 @@ development:
   host:            localhost
   username:        root
   password:        root
-  database:        bhl  
+  database:        bhl_development_2
   
 test:
   <<: *common
@@ -25,7 +25,7 @@ test:
   host:            localhost
   username:        root
   password:        root
-  database:        bhl_test
+  database:        bhl_test-2
 
 production:
   <<: *common
@@ -33,4 +33,4 @@ production:
   host:            localhost
   username:        root
   password:        root
-  database:        bhl_production
+  database:        bhl_production_2
