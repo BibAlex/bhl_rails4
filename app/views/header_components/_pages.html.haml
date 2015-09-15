@@ -1,0 +1,52 @@
+.col-md-12.column
+  %nav.navbar.navbar-default.navbar-inverse{ role: "navigation" }
+    .navbar-header
+      %button.navbar-toggle{ "data-target" => "#bs-example-navbar-collapse-1", "data-toggle" => "collapse", "type" => "button" }
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.navbar-brand{ href: "/" }
+        %i.fa.fa-home
+        = I18n.t('header.pages.bhl_homepage')   
+    #bs-example-navbar-collapse-1.collapse.navbar-collapse
+      %ul.nav.navbar-nav               
+        %li{ class: is_active?({ controller: 'pages', action: 'about' })}
+          %a{ href: "#{about_pages_path}" }
+            %i.fa.fa-info-circle
+            = I18n.t('header.pages.about_us_link')
+        %li{ class: is_active?({ controller: 'books', action: 'index' })}
+          %a{ href: "#{books_path}" }
+            %i.fa.fa-globe
+            = I18n.t('header.pages.browse_all_link')
+        %li{ class: is_active?({ controller: 'browse', action: 'index', type: 'subjects' })}
+          = link_to(" #{I18n.t('header.pages.subjects_link')}",{ controller: "browse", action: "index", type: "subjects", char: 'all' }, class: "fa fa-sitemap")
+        %li{ class: is_active?({ controller: 'names', action: 'index' })}
+          %a{ href: "#{names_path}" }
+            %i.fa.fa-tags
+            = I18n.t('header.pages.names_link')              
+        %li{ class: is_active?({ controller: 'browse', action: 'index', type: 'authors' })}
+          = link_to(" #{I18n.t('header.pages.authors_link')}", { controller: "browse", action: "index", type: "authors", char: 'all' }, class: "fa fa-user")              
+        %li{ class: is_active?({ controller: 'geographics', action: 'index' })}
+          %a{ href: "#{geographics_path}" }
+            %i.fa.fa-map-marker
+            = I18n.t('header.pages.geographics_link')
+        %li{ class: is_active?({ controller: 'collections', action: 'index' })}
+          %a{ href: "#{collections_path}" }
+            %i.fa.fa-stack-overflow
+            = I18n.t('header.pages.collections_link')
+      .visible-xs.visible-sm
+        .form-group
+          %input.form-control{ id: "appendedDropdownButton focusedInput", placeholder: "Search", type: "text" }
+        .btn-group
+          %button.btn.dropdown-toggle.allcat{ "data-toggle" => "dropdown" }
+            = "#{I18n.t(:option_all)}"
+            %span.caret
+          %ul.dropdown-menu.topdropdown-search
+            %li
+              %a{ href: "#" } Animalia
+            %li
+              %a{ href: "#" } Aykalam 
+        %button.btn.btn-default{ type: "submit" } 
+          = "#{I18n.t(:submit_buton)}"
+        .clearfix

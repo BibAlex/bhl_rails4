@@ -4,7 +4,7 @@
     %li
       - if @char == ''
         %b
-          = I18n.t(:browse_all)
+          = I18n.t('browse.all')
       - else
         = link_to(I18n.t(:browse_all), { controller: "browse", action: "index", type: params[:type] })
     - @alphas.each do |alpha|

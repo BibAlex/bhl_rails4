@@ -20,8 +20,53 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
-  browse_subjects_page_header: "Subjects"
-  browse_authors_page_header: "Authors"
-  browse_all: All
-  no_entity_found: "No %{entity} Found"
+  
+  browse:
+    all: All
+    authors_page_header: "Authors"    
+    subjects_page_header: "Subjects"
+  
+  common:
+    no_entity_found: "No %{entity} Found"
+    signup: Sign Up    
+    login: Login
+    profile: Profile
+    
+  warn:
+    empty_search_query_warn: "Search statement shouldn't be empty"
+    invalid_input: Invalid Input
+    
+  msgs:
+    no_suggestion: "No Suggestion"
+    
+  
+  header:
+    page_title:
+      bhl_page_title: "Biodivestiry Heritage Library - Egypt"
+      bhl_short_title: "BHL Egypt"      
+    search:
+      option_all: All Categories
+      option_title: Title
+      option_language: Language
+      option_publish_time: Published On
+      option_publisher: Publisher
+      option_regional_affiliation: Regional Affiliation
+      option_author: Author
+      option_tagged_species: Tagged Species
+      option_genre: Genre
+      option_content: Content
+    pages:
+      about_us_link: About Us
+      contact_us_link: Contact Us
+      browse_all_link: Browse All
+      authors_link: Authors
+      subjects_link: Subjects
+      names_link: Species
+      collections_link: Collections
+      geographics_link: Geographics
+      bhl_homepage: BHL Egypt
+    user:
+      signout: Sign Out
+    logo:
+      logo: "logo.png"
+      bhl_site_name: "Biodivestiry Heritage Library - Egypt"   

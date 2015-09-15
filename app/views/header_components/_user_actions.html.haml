@@ -1,0 +1,24 @@
+.col-md-2  
+  .signin
+    .col-sm-6.no-padding.text-center
+      - if !is_logged_in?
+        %a{ href: "#{new_user_path}" }
+          %i.fa.fa-sign-in
+          %div
+            = I18n.t('common.signup')
+      - else
+        %a{ href: "#{logout_users_path}" }
+          %i.fa.fa-sign-out
+          %div
+            = I18n.t('header.user.signout')
+    .col-sm-6.no-padding.text-center
+      - if !is_logged_in?
+        %a{ href: "#{login_users_path}" }
+          %i.fa.fa-user
+          %div
+            = I18n.t('common.login')
+      - else
+        = link_to controller: "users", action: "show", id: session["user_id"], tab: nil do
+          %i.fa.fa-edit
+          %div
+            = I18n.t('common.profile')

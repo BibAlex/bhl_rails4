@@ -1,0 +1,15 @@
+%html{ "xml:lang" => I18n.locale, "lang" => I18n.locale }
+  %head
+    = render partial: "header_components/html_head"
+    
+  :css
+    .ui-autocomplete-loading
+      background: white url("/images_#{I18n.locale}/ui-anim_basic_16x16.gif") right center no-repeat
+  
+  %body
+    #wrap
+      .container
+        .row.clearfix.visible-md.visible-lg
+          = render_header     
+          = render partial: "layouts/flash", object: flash  #NEW_LAYOUT
+        = yield

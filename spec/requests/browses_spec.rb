@@ -12,7 +12,7 @@ RSpec.describe "Browses", type: :request do
       before(:all) do
         solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
         solr_books_core.delete_by_query('*:*')
-        solr_books_core.commit    
+        solr_books_core.commit
         solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', author_en: ['abc', 'bca', 'cab'] })
         solr_books_core.add({ job_id: 2, language_facet: 'eng', bib_id: 'bib_id_2', author_en: 'bca' })
         solr_books_core.commit
@@ -37,7 +37,7 @@ RSpec.describe "Browses", type: :request do
         end
         [ { name: 'bca', count: 2 }].each do |item|
           value = item[:name].slice(0,1).capitalize + item[:name].slice(1..-1)
-          expect(page).to have_selector("a[href='/books?_author=#{item[:name]}']", text: "#{value} (#{item[:count]})")
+          expect(page).to have_selector("a[href='/en/books?_author=#{item[:name]}']", text: "#{value} (#{item[:count]})")
         end
       end
     end

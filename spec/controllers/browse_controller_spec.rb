@@ -3,27 +3,27 @@ require 'rails_helper'
 RSpec.describe BrowseController, type: :controller do
   describe 'GET #index' do
     
-    context 'authors' do
-      
-      before do
-        get :index, type: "authors"
-      end
+    context 'authors' do      
       
       describe 'response header' do
+        before do
+          get :index, type: "authors"
+        end
         it { is_expected.to respond_with :ok }
-        it { is_expected.to render_with_layout :browse }
+        it { is_expected.to render_with_layout :application }
         it { is_expected.to render_template :index }
       end
       
       describe 'response content' do
         
-        before(:all) do
+        before do
           solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
           solr_books_core.delete_by_query('*:*')
           solr_books_core.commit    
           solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', author_en: ['abc', 'bca', 'cab'] })
           solr_books_core.add({ job_id: 2, language_facet: 'eng', bib_id: 'bib_id_2', author_en: 'bca' })
           solr_books_core.commit
+          get :index, type: "authors"
         end
         
         describe 'instance variables' do

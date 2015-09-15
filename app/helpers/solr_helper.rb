@@ -31,10 +31,14 @@ module SolrHelper
     end   
     field
   end
-  def solr_autocomplete(field,term, limit)
-    rsolr = RSolr.connect :url => SOLR_BOOKS_METADATA
-    facet_type = get_autocomplete_field(field)
-    response = rsolr.find :q => "*:*", :fl => "vol_jobid", :facet => true, 'facet.field' => facet_type, 'facet.limit' => limit, 'facet.prefix' => term.downcase, 'rows' => 0
+  def solr_autocomplete(field, term, limit)
+    if field == 'name'
+      rsolr = RSolr.connect url: SOLR_SCI_NAMES
+      response = rsolr.find 'q' => "*:*", 'facet' => true, 'facet.field' => "sci_name_suggest", 'facet.limit' => limit, 'facet.prefix' => term.downcase, 'rows' => 0
+    else
+      rsolr = RSolr.connect url: SOLR_BOOKS_METADATA
+      response = rsolr.find 'q' => "*:*", 'facet' => true, 'facet.field' => "#{field}_auto", 'facet.limit' => limit, 'facet.prefix' => term.downcase, 'rows' => 0
+    end    
     response.facets.first.items
   end
   

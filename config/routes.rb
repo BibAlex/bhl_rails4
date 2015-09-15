@@ -1,4 +1,5 @@
 BhlRails4::Application.routes.draw do
+  scope "(:locale)", :locale => /en|ar/ do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -54,6 +55,37 @@ BhlRails4::Application.routes.draw do
   #     resources :products
   #   end
   
-  get 'browse/:type', to: 'browse#index'
-  resources :books
+  
+    get 'browse/:type', to: 'browse#index'
+    
+    root :to => 'pages#home'
+    
+    resources :books do
+      collection do
+        get 'autocomplete'
+      end
+    end
+    
+    resources :users do
+      collection do
+        get 'login'
+      end
+      member do
+        get 'logout'
+      end
+    end
+     
+    resources :pages do
+      collection do
+        get 'about'
+        get 'home'
+      end
+    end
+    
+    resources :names
+    
+    resources :geographics
+    
+    resources :collections
+  end
 end

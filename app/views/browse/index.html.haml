@@ -1,11 +1,11 @@
-- page_title = I18n.t("browse_#{params[:type]}_page_header")
+- page_title = I18n.t("browse.#{params[:type]}_page_header")
 .row.clearfix
   .col-md-12.column
     %h2
       = page_title
     %hr
     .well.text-center
-      = render partial: "browse/chars"        
+      = render partial: "browse/chars"
     .panel.panel-default
       - if @prefixes_with_values.empty?
         = I18n.t(:no_entity_found, entity: page_title)
