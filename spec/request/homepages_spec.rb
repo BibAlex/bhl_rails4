@@ -1,13 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Homepages", type: :request do  
- 
-  describe "GET /homepages" do
-    it "works! (now write some real specs)" do
-      get '/'
-      expect(response).to have_http_status(200)
-    end
-  end    
+RSpec.describe "Homepages", type: :feature do  
   
   describe "header" do
     

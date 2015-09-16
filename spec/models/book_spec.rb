@@ -29,7 +29,7 @@ RSpec.describe Book, type: :model do
   
   describe "meta functions" do    
     
-    before(:all) do
+    before do
       @book = FactoryGirl.build(:book)
     
       volume = FactoryGirl.build(:volume)

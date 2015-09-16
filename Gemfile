@@ -58,6 +58,7 @@ group :development, :test do
   gem 'thin'
   gem 'capybara'
   gem 'minitest'
+  gem 'selenium-webdriver'
 end
 
 group :test do  

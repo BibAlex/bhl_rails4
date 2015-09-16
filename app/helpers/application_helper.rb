@@ -1,13 +1,14 @@
 module ApplicationHelper
   
   def render_header
-    # Rails.cache.fetch("header_#{session[:user_id]}", expires_in: 1.minutes) do
+    if output = read_fragment("header_#{session[:user_id]}")
+      output
+    else
       render partial: "layouts/header"
-    # end
+    end    
   end
   
-  def is_active?(options)
-    ((options[:controller] == params[:controller]) && (options[:action] == params[:action]) && (params[:type] && params[:type] == options[:type])) ? true : false
-  end
-  
+  def link_class(options)
+    ((options[:controller] == params[:controller]) && (options[:action] == params[:action]) && (true || (params[:type] && params[:type] == options[:type]))) ? "active" : ""
+  end  
 end

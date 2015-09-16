@@ -10,28 +10,28 @@
         %i.fa.fa-home
         = I18n.t('header.pages.bhl_homepage')   
     #bs-example-navbar-collapse-1.collapse.navbar-collapse
-      %ul.nav.navbar-nav               
-        %li{ class: is_active?({ controller: 'pages', action: 'about' })}
+      %ul.nav.navbar-nav
+        %li{ class: link_class({ controller: 'pages', action: 'about' })}
           %a{ href: "#{about_pages_path}" }
             %i.fa.fa-info-circle
             = I18n.t('header.pages.about_us_link')
-        %li{ class: is_active?({ controller: 'books', action: 'index' })}
+        %li{ class: link_class({ controller: 'books', action: 'index' })}
           %a{ href: "#{books_path}" }
             %i.fa.fa-globe
             = I18n.t('header.pages.browse_all_link')
-        %li{ class: is_active?({ controller: 'browse', action: 'index', type: 'subjects' })}
+        %li{ class: link_class({ controller: 'browse', action: 'index', type: 'subjects' })}
           = link_to(" #{I18n.t('header.pages.subjects_link')}",{ controller: "browse", action: "index", type: "subjects", char: 'all' }, class: "fa fa-sitemap")
-        %li{ class: is_active?({ controller: 'names', action: 'index' })}
+        %li{ class: link_class({ controller: 'names', action: 'index' })}
           %a{ href: "#{names_path}" }
             %i.fa.fa-tags
             = I18n.t('header.pages.names_link')              
-        %li{ class: is_active?({ controller: 'browse', action: 'index', type: 'authors' })}
+        %li{ class: link_class({ controller: 'browse', action: 'index', type: 'authors' })}
           = link_to(" #{I18n.t('header.pages.authors_link')}", { controller: "browse", action: "index", type: "authors", char: 'all' }, class: "fa fa-user")              
-        %li{ class: is_active?({ controller: 'geographics', action: 'index' })}
+        %li{ class: link_class({ controller: 'geographics', action: 'index' })}
           %a{ href: "#{geographics_path}" }
             %i.fa.fa-map-marker
             = I18n.t('header.pages.geographics_link')
-        %li{ class: is_active?({ controller: 'collections', action: 'index' })}
+        %li{ class: link_class({ controller: 'collections', action: 'index' })}
           %a{ href: "#{collections_path}" }
             %i.fa.fa-stack-overflow
             = I18n.t('header.pages.collections_link')

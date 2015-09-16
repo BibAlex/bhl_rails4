@@ -10,6 +10,7 @@
     #wrap
       .container
         .row.clearfix.visible-md.visible-lg
-          = render_header     
+          - cache "header_#{session[:user_id]}" do
+            = render partial: "layouts/header"
           = render partial: "layouts/flash", object: flash  #NEW_LAYOUT
         = yield

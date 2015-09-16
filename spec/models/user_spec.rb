@@ -90,7 +90,7 @@ RSpec.describe User, type: :model do
   
   describe '#activate' do    
     
-    before(:all) do
+    before do
       @user = FactoryGirl.create(:user)
       @user.activate
     end
