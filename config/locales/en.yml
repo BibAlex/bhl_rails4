@@ -69,4 +69,11 @@ en:
       signout: Sign Out
     logo:
       logo: "logo.png"
-      bhl_site_name: "Biodivestiry Heritage Library - Egypt"   
+      bhl_site_name: "Biodivestiry Heritage Library - Egypt"
+      
+  footer:
+    ba_logo: "balogo-white.svg"
+    home: Home
+    about: About
+    contact: Contact Us
+    copyright_statement: Copyright © Bibliotheca Alexandrina

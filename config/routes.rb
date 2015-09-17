@@ -79,6 +79,7 @@ BhlRails4::Application.routes.draw do
       collection do
         get 'about'
         get 'home'
+        get 'contact'
       end
     end
     

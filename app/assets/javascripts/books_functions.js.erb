@@ -45,7 +45,7 @@ function autocomplete()
         }
         search_by = $("#headersearchby").val();
         searchfield = $("#headersearchfield").val();
-        return $.getJSON("/#{I18n.locale}/books/autocomplete?type=" + search_by, request, function(data, status, xhr) {
+        return $.getJSON("/<%= I18n.locale %>/books/autocomplete?type=" + search_by, request, function(data, status, xhr) {
           cache[term] = data;
           return response(data);
         });
