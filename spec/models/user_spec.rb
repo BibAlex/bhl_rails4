@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
       expect(FactoryGirl.build(:user, username: nil)).to_not be_valid
     end
     
-     it "is invalid with duplicated username" do
+     it "is invalid with duplicate username" do
       FactoryGirl.create(:user, username: 'user')
       expect(FactoryGirl.build(:user, username: 'user')).to_not be_valid
     end
@@ -73,7 +73,7 @@ RSpec.describe User, type: :model do
       
       context 'successful authentication' do
         
-        it "returns user matches username and password" do
+        it "returns user matcheing username and password" do
           FactoryGirl.create(:user, username: 'user_name', password: User.hash_password('password'), active: true)
           expect(User.authenticate('user_name', 'password')).to_not be_nil
         end  

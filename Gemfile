@@ -49,7 +49,6 @@ end
 
 group :development, :test do
   gem 'rspec-rails'
-  gem 'simplecov'
   gem 'factory_girl_rails'
   gem 'debugger'
   gem 'shoulda-matchers'

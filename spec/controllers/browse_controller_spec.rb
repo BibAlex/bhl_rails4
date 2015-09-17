@@ -41,7 +41,6 @@ RSpec.describe BrowseController, type: :controller do
           expect(assigns(:prefixes_with_values)).to eq({ "A" => [{ name: 'abc' , count: 1 }], "B" => [{ name: 'bca', count: 2 }], "C" => [{ name: 'cab' , count: 1 }] })        
         end
         
-        # the following specs can't be in views spec because we must use redirect page with type parameter not render
         describe 'views components' do
           it 'displays link for each alphabet from A to Z' do
             get :index, type: "authors"

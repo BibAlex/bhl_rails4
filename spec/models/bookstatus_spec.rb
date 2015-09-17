@@ -18,16 +18,16 @@ RSpec.describe Bookstatus, type: :model do
       expect(FactoryGirl.build(:bookstatus, code: nil)).to_not be_valid
     end
     
-    it "is invalid with duplicated code" do
+    it "is invalid with duplicate code" do
       FactoryGirl.create(:bookstatus, code: '10')
       expect(FactoryGirl.build(:bookstatus, code: '10')).to_not be_valid
     end
     
-    it "is invalid with short code" do
+    it "is invalid with too short code" do
       expect(FactoryGirl.build(:bookstatus, code: 'code_1')).to_not be_valid
     end
     
-    it "is invalid with long code" do
+    it "is invalid with too long code" do
       expect(FactoryGirl.build(:bookstatus, code: 'c')).to_not be_valid
     end    
   end

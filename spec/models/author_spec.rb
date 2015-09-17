@@ -10,7 +10,9 @@ RSpec.describe Author, type: :model do
   end
   
   describe Author, 'validation' do
-    it { should validate_presence_of(:name) }
+    it "is invalid without name" do
+      expect(FactoryGirl.build(:author, name: nil)).to_not be_valid
+    end
   end
   
 end

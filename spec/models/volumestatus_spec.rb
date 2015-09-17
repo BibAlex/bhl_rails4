@@ -13,7 +13,7 @@ RSpec.describe Volumestatus, type: :model do
       expect(FactoryGirl.build(:volumestatus, code: nil)).to_not be_valid
     end
     
-    it "is invalid with duplicated code" do
+    it "is invalid with duplicate code" do
       FactoryGirl.create(:volumestatus, code: '10')
       expect(FactoryGirl.build(:volumestatus, code: '10')).to_not be_valid
     end

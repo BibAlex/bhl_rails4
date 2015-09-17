@@ -22,7 +22,7 @@ RSpec.describe BooksController, type: :controller do
     
     describe "title autocomplete" do
       context "when result found" do
-        it "returns a list of books titles matches the entered title" do
+        it "returns a list of titles matching the entered title" do
           get :autocomplete, type: "title", term: 'tit'
           expect(assigns(:results)).to eq(['title_1', 'title_2'])
         end
@@ -38,7 +38,7 @@ RSpec.describe BooksController, type: :controller do
     
     describe "author autocomplete" do
       context "when result found" do
-        it "returns a list of books authors matches the entered author" do
+        it "returns a list of authors matching the entered author" do
           get :autocomplete, type: "author", term: 'auth'
           expect(assigns(:results)).to eq(['author_1', 'author_2'])
         end
@@ -54,7 +54,7 @@ RSpec.describe BooksController, type: :controller do
     
     describe "subject autocomplete" do
       context "when result found" do
-        it "returns a list of books subjects matches the entered subject" do
+        it "returns a list of subjects matching the entered subject" do
           get :autocomplete, type: "subject", term: 'subj'
           expect(assigns(:results)).to eq(['subject_1', 'subject_2'])
         end
@@ -70,7 +70,7 @@ RSpec.describe BooksController, type: :controller do
     
     describe "names autocomplete" do
       context "when result found" do
-        it "returns a list of books names matches the entered name" do
+        it "returns a list of names matching the entered name" do
           get :autocomplete, type: "name", term: 'nam'
           expect(assigns(:results)).to eq(['name_1', 'name_2'])
         end
@@ -82,9 +82,6 @@ RSpec.describe BooksController, type: :controller do
           expect(assigns(:results)).to eq([I18n.t('msgs.no_suggestion')])
         end
       end
-    end
-    
-    
-  end
-  
+    end    
+  end 
 end
