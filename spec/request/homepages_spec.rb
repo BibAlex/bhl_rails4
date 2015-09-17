@@ -54,13 +54,9 @@ RSpec.describe "Homepages", type: :feature do
         
       end
       
-      it "includes a link for user profile page" do        
-        # expect(page).to have_selector("a[href='/users/#{@user.id}']")
-      end
+      it "includes a link for user profile page"
       
-      it "includes a link for user signout" do
-        # expect(page).to have_selector("a[href='/users/signout']")
-      end
+      it "includes a link for user signout"
     end
     
     context "when user is not  logged in" do      
