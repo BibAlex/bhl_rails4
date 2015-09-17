@@ -59,6 +59,7 @@ group :development, :test do
   gem 'capybara'
   gem 'minitest'
   gem 'selenium-webdriver'
+  gem 'social-share-button'
 end
 
 group :test do  

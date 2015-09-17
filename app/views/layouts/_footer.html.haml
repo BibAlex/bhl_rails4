@@ -1,31 +1,15 @@
-:javascript
-  function shareFb(){
-    bhl = "#{BHL_LINK}";
-    var sharer = "https://www.facebook.com/sharer/sharer.php?u="; 
-    window.open(sharer + bhl, 'sharer', 'width=626,height=436'); 
-  }  
-  function twitter(d,s,id){
-    var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-    if(!d.getElementById(id)){
-      js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
-      fjs.parentNode.insertBefore(js,fjs);
-    }    
-  }(document, 'script', 'twitter-wjs')
 .footer
   .container
     .col-md-3.social
-      %a{ href: "", onclick: "shareFb()" }
-        %i.fa.fa-facebook.fa-2x
-      %a{ href: "https://twitter.com/share?original_referer=#{BHL_LINK}&url=#{BHL_LINK}", target: "_blank" }
-        %i.fa.fa-twitter.fa-2x
+      = social_share_button_tag(I18n.t('footer.share_msg'), url: "#{BHL_LINK}")
     .col-md-6
       %p.text-center
         %a{ href: "/" } 
           = I18n.t('footer.home')
         |
-        = link_to I18n.t('footer.about'), { controller: 'pages', action: 'about' }
+        = link_to I18n.t('footer.about'), { controller: 'pages', action: 'about', locale: I18n.locale }
         |
-        = link_to I18n.t('footer.contact'), { controller: 'pages', action: 'contact' }
+        = link_to I18n.t('footer.contact'), { controller: 'pages', action: 'contact', locale: I18n.locale }
       %p.text-center 
         = I18n.t('footer.copyright_statement')
     .col-md-3.ba-logo

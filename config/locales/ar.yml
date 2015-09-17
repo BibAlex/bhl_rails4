@@ -40,3 +40,11 @@ ar:
     logo:
       logo: "logo.png"
       bhl_site_name: "مكتبة تراث التنوع الحيوي- مصر"
+      
+  footer:
+    ba_logo: "balogo-white.svg"
+    home: الصفحة الرئيسية
+    about: نبذة
+    contact: اتصل بنا
+    copyright_statement: جميع الحقوق محفوظة @ مكتبة الاسكندرية
+    share_msg: BHLمصر

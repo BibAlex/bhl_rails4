@@ -14,4 +14,5 @@
             = render partial: "layouts/header"
           = render partial: "layouts/flash", object: flash  #NEW_LAYOUT
         = yield
-    = render partial: "layouts/footer"
+    - cache "footer" do
+      = render partial: "layouts/footer"

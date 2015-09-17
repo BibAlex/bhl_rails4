@@ -216,6 +216,9 @@ GEM
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
     slop (3.6.0)
+    social-share-button (0.1.8)
+      coffee-rails
+      sass-rails
     sprockets (2.12.4)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -284,6 +287,7 @@ DEPENDENCIES
   selenium-webdriver
   shoulda-matchers
   simplecov
+  social-share-button
   sqlite3
   thin
   turbolinks
