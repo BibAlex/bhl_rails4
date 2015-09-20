@@ -1,28 +1,70 @@
-== README
+= BA BHL site
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+== GETTING STARTED
+Things you need:
 
-Things you may want to cover:
+  Ruby:    ruby 2.2.1p85 (2015-02-26 revision 49769)
+  Rubygem: 2.4.8
+  Rails:   4.2.4
 
-* Ruby version
+=== Prepare the environment
 
-* System dependencies
+  1.  install mysql server 5.5
+      sudo apt-get install mysql-server-5.5
 
-* Configuration
+  2.  install rvm
+      sudo apt-get update
+      sudo apt-get install curl
+      \curl -L https://get.rvm.io | bash -s stable
+      source ~/.rvm/scripts/rvm
+      rvm requirements
 
-* Database creation
+  3.  install ruby 2.2
+      rvm install ruby 2.2
 
-* Database initialization
+  4.  install rubygems
+      rvm install rubygems 2.4.8
 
-* How to run the test suite
+  5.  install rails
+      rvm install rails 4.2.4
+  
 
-* Services (job queues, cache servers, search engines, etc.)
+  6.  Install jre
+      sudo apt-get install default-jre
 
-* Deployment instructions
+  7.  install git
+      sudo apt-get install git
 
-* ...
+  8.  download and run solr
+      git clone https://github.com/BibAlex/bhl_rails_4_solr.git solr
+      cd solr/example
+      java -jar start.jar
+      make sure localhost:8983/solr is up and running
+
+  9.  download and run solr_test
+      mkdir solr_test
+      git clone https://github.com/BibAlex/bhl_rails_4_solr_test.git solr_test
+      cd solr_test/example
+      java -jar start;jar
+      make sure localhost:8989/solr is up and running  
+
+  10.  Prepare the environment
+      sudo apt-get install libxslt-dev libxml2-dev
+      apt-get install libmysqlclient-dev nodejs
+
+  11. Download the code
+      git clone https://github.com/BibAlex/bhl_rails4.git bhl_rails
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+=== INSTALLATION
+
+  1.  bundle install
+  2.  copy config/database.sample.yml to config/database.yml and fix the database settings
+  3.  copy config/environment.sample.rb to config/environment.rb and fix some constants
+  4.  rake db:create:all # to create all databases if not exist 
+  5.  rake db:migrate; rake db:migrate RAILS_ENV=test
+  6.  rake spec # to make sure all tests are green  
+  
+== Common issues
+ - Make sure folder tmp/cache exists 
+
