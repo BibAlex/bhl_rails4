@@ -21,16 +21,52 @@
 
 en:
   
-  browse:
+  common:
     all: All
     authors_page_header: "Authors"    
     subjects_page_header: "Subjects"
-  
-  common:
     no_entity_found: "No %{entity} Found"
     signup: Sign Up    
     login: Login
     profile: Profile
+    by: By
+    separator: "/"
+    terminator: "."
+    and_count_more: "and %{count} more"
+    genre: Genre
+    tabs_more: "more..."
+    names: "Names:"
+    at: At
+    as: as
+    with: with
+    no_activities: No activities found..
+    default_collection: "default_collection.png"
+    default_user_small: "default_user_small.png"
+    activity_log: Activity Log
+    save: Save
+    cancel: Cancel
+    title: Title
+    description: Description
+    public: Public
+    create_new_collection: Create New Collection
+    stars_white: "stars_white.png"
+    stars_grey: "stars_grey.png"
+    actions:
+      create: Created
+      rate: Rated
+      comment: Commented on
+    types:
+      collection: a collection
+      book: a book
+      comment: a comment
+    sidelinks:
+      read: Read
+      detail: Details
+      add_collection: Add to Collection
+      views:
+        one: "1 view"
+        other: "%{count} views"
+     
     
   warn:
     empty_search_query_warn: "Search statement shouldn't be empty"
@@ -78,3 +114,19 @@ en:
     contact: Contact Us
     copyright_statement: Copyright © Bibliotheca Alexandrina
     share_msg: BHL Egypt
+    
+  home:
+    statistics:
+      book_count:
+        one: "one Book"
+        other: "%{count} books"       
+      author_count:
+        one: "one Author"
+        other: "%{count} Authors"
+      species:
+        one: "one Tagged Specie"
+        other: "%{count} Tagged Species"
+    
+    most_viewed: Most Viewed
+    top_rated: Top Rated
+    top_collections: Top Collections

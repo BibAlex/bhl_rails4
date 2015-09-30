@@ -1,14 +1,60 @@
 ar:
-  browse:
+  
+  common:
     all: الكل
     authors_page_header: "المؤلفون"    
     subjects_page_header: "الموضوعات"
-  
-  common:
     no_entity_found: "No %{entity} Found"
     signup: تسجيل    
     login: دخول
     profile: الصفحة الشخصية
+    by: بواسطة
+    separator: "/"
+    terminator: "."
+    and_count_more: "و %{count} اكثر"
+    genre: "النوع"
+    tabs_more: "المزيد .."
+    names: "الأسماء:"
+    at: "عند"
+    as: "بأنها"
+    with: "بمقدار"
+    no_activities: "لا توجد أنشطة .."
+    default_collection: "default_collection.png"
+    default_user_small: "default_user_small.png"
+    activity_log: "سجل الأنشطة"
+    save: "حفظ"
+    cancel: "إلغاء"
+    title: "عنوان"
+    description: "وصف"
+    public: "عام"
+    create_new_collection: "إنشاء مجموعة جديدة"
+    stars_white: "stars_white.png"
+    stars_grey: "stars_grey.png"
+    actions:
+      create: "أنشأ"
+      rate: "قيم"
+      comment: "علق على"
+    types:
+      collection: "المجموعة"
+      book: "الكتاب"
+      comment: "التعليق"
+    sidelinks:
+      read: "اقرأ"
+      detail: "تفاصيل"
+      add_collection: "أضف إلى المجموعة"
+      views:
+        one: "مشاهدة واحدة"
+        two: "مشاهدتين"
+        other: " %{count} مشاهدات "
+  
+  
+  warn:
+    empty_search_query_warn: "يجب عليك إدخال جملة البحث"
+    invalid_input: "جملة غير صالحة للبحث"
+    
+  msgs:
+    no_suggestion: "لا توجد إقتراحات"
+  
   
   header:
     page_title:
@@ -48,3 +94,19 @@ ar:
     contact: اتصل بنا
     copyright_statement: جميع الحقوق محفوظة @ مكتبة الاسكندرية
     share_msg: BHLمصر
+  
+  home:
+    statistics:
+      book_count:
+        one: "كتاب واحد"
+        other: "%{count} كتب"       
+      author_count:
+        one: "مؤلف واحد"
+        other: " %{count} مؤلفين"
+      species:
+        one: "اسم واحد"
+        other: " %{count} الأنواع المسماة"
+    
+    most_viewed: "الأكثر مشاهدة"
+    top_rated: "الأعلى تقديرًا"
+    top_collections: "المجموعات الأهم"

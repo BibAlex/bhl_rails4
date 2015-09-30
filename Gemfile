@@ -58,6 +58,7 @@ group :development, :test do
   gem 'minitest'
   gem 'selenium-webdriver'
   gem 'social-share-button'
+  gem 'byebug'
 end
 
 group :test do  

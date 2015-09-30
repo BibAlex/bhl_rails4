@@ -36,4 +36,24 @@ RSpec.describe Collection, type: :model do
     end
   end
   
+  describe "top_collections" do
+    
+    before(:all) do
+      user = FactoryGirl.create(:user, active: true, username: "user_collection", email: "user_collection@example.com", guid: "collection")
+      @first_collection = FactoryGirl.create(:collection, title: "first collection", user_id: user.id, is_public: true, rate: 2)
+      @second_collection = FactoryGirl.create(:collection, title: "second collection", user_id: user.id, is_public: true, rate: 4)
+      @non_public_collection = FactoryGirl.create(:collection, title: "non public collection", user_id: user.id, is_public: false, rate: 5)
+      @top_collections = Collection.top
+    end
+    
+    it "returns top collections ordered by rate" do
+      expect(@top_collections.first.id).to eq(@second_collection.id)
+      expect(@top_collections.last.id).to eq(@first_collection.id)
+    end
+    
+    it "doesn't return non public collections in top collections" do
+      expect(@top_collections).not_to include(@non_public_collection.id)
+    end
+  end
+  
 end

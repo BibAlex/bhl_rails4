@@ -1,0 +1,25 @@
+= javascript_include_tag 'book_collection.js'
+#approvalModal.modal.fade{ "aria-hidden" => "true", "aria-labelledby" => "approvalModalLabel", "role" => "dialog", "tabindex" => "-1" }
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{ "data-dismiss" => "modal", "type" => "button" }
+          %span{ "aria-hidden" => "true" } &times;
+          %span.sr-only Close
+        %h4.modal-title 
+          = I18n.t('common.sidelinks.add_collection')
+      .modal-body
+        = check_box_tag(:create_new_collection)
+        = label_tag(:create_new_collection, I18n.t('common.create_new_collection'))
+        %div{ id: "new_collection", style: "display: none;" }
+          = form_tag collections_path, method: :get, class: "form-horizontal" do
+            = label_tag 'title', I18n.t('common.title'), class: 'control-label'
+            = text_field_tag :title, params[:reason], class: "form-control"
+            = label_tag 'description', I18n.t('common.description'), class: 'control-label'
+            = text_field_tag :title, params[:reason], class: "form-control"
+            = check_box_tag(:is_public)
+            = label_tag(:is_public, I18n.t('common.public'))
+            .modal-footer
+              %button.btn.btn-danger{ "data-dismiss" => "modal", "type" => "button" }
+                = I18n.t('common.cancel')
+              = submit_tag I18n.t('common.save'), name: nil, class: "btn btn-success"

@@ -1,0 +1,24 @@
+= javascript_include_tag 'grey_stars.js'
+- if (top_books.count > 0)  
+  - top_books.each_with_index  do |doc, index|    
+    - doc = doc      
+    .browse
+      .col-md-2
+        - coverauthor = doc[:author] ? doc[:author][0] : ""
+        = render partial: "books/covers", locals: { coverno: index + 1, covertitle: doc[:title][0].html_safe, coverauthor: coverauthor }
+      .col-md-6
+        %h4
+          = link_to doc[:title][0], { controller: 'books', id: doc[:job_id] }
+        %p.small
+          - if doc[:author]
+            = render partial: "books/book_multi_valued_field", locals: { book_multi_valued_field: doc[:author], title: I18n.t('common.by') }
+          - if doc[:subject]
+            = render partial: "books/book_multi_valued_field", locals: { book_multi_valued_field: doc[:subject], title: I18n.t('common.genre') }
+          - if doc[:sci_names].count > 0
+            - names = fill_response_array(doc[:sci_names])
+            = render partial: "books/book_names", locals: { sci_names: doc[:sci_names], id: doc[:job_id], sci_names_info: get_names_info(names) }
+      .col-md-3.controls
+        = render partial: "pages/sidelinks", locals: { id: doc[:job_id], rate: doc[:rate], views: doc[:views] }
+    .clearfix    
+  .pull-right  
+    = link_to I18n.t('common.tabs_more'), { controller: 'books', action: 'index', sort_type: "#{top_criteria} desc" }

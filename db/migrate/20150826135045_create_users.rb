@@ -11,6 +11,7 @@ class CreateUsers < ActiveRecord::Migration
       t.datetime :verified_date
       t.datetime :last_login
       t.string :last_login_language
+      t.string :photo_name
       t.timestamps
     end
     add_index :users, :username

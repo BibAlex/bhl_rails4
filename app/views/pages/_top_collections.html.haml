@@ -1,0 +1,24 @@
+= javascript_include_tag 'white_stars.js'
+%h4 
+  = link_to I18n.t('home.top_collections'), { controller: 'collections', action: 'index', sort_type: "rate desc" }
+
+- @top_collections.each do |collection|  
+  - if(collection.photo_name.blank?)
+    - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_collection')}"
+  - else
+    - thumb = collection.photo_name_url(:thumb)
+  .col-md-2.collection
+    .media
+      %center
+        = link_to image_tag(thumb, title: "#{collection.title}", class: "media-object img-thumbnail"),{ controller: 'collections', action: 'show', id: collection.id }
+      %h5
+        - title = "#{collection.title}"
+        - if collection.title.length > 14
+          - title = collection.title[0,13] +"..."
+        = link_to title,{ controller: 'collections', action: 'show', id: collection.id }, alt: "#{collection.title}"
+      %i.fa.fa-user
+      %small
+        = link_to "#{I18n.t('common.by')} #{User.find_by_id(collection.user_id).real_name}",{ controller: 'users', action: 'show', id: collection.user_id }
+      .rate
+        - if collection.rate != 0.0 
+          .starsidelink_white{ id: "starsidelink_#{collection.id}", data: "#{collection.rate}" }

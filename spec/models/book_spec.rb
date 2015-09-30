@@ -37,7 +37,7 @@ RSpec.describe Book, type: :model do
       
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
-      solr_books_core.commit    
+      solr_books_core.commit
       solr_books_core.add({ job_id: volume.job_id, language_facet: 'eng', bib_id: 'bib_id' })
       solr_books_core.commit
        

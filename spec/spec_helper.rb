@@ -61,6 +61,15 @@ RSpec.configure do |config|
     # other teardown ...
     DatabaseCleaner.clean # cleans tracked records
   end
+  
+  config.before(:all) do
+    DatabaseCleaner.start # starts tracking
+    # other setup ...
+  end
+  config.after(:all) do
+    # other teardown ...
+    DatabaseCleaner.clean # cleans tracked records
+  end
 
 
 # The settings below are suggested to provide a good initial experience

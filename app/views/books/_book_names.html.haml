@@ -1,0 +1,31 @@
+%i
+  %b
+    = I18n.t('common.names')
+- sci_names.each do |sci_name|
+  - if sci_name.kind_of?(Array)
+    - sci_names.delete(name)
+    - sci_names << name[0]
+- sci_names_info.each_with_index do |item, index|
+  %a.tooltipname{ title: name_tip(id, item[:sci_name], item[:thumb], item[:eol_url]), href: "#" }
+    = item[:sci_name].html_safe
+  -if index != sci_names.length - 1
+    %b
+      = I18n.t('common.separator')
+%span
+  = book_names_more_open_div(id,sci_names.count)
+  
+.modal.fade{ "id" => "morenamesdiv_#{id}", "tabindex" => "-1", "role" => "dialog", "area-labelledby" => "morenamesmodallabel", "area-hidden" => "true" }
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{ "type" => "button", "data-dismiss" => "modal", "area-hidden" => "true" }
+          &times;
+        %h4.modal-title{ id: "morenamesmodallabel" }
+          = I18n.t('common.names')
+          %span.badge
+            = sci_names.count           
+      .modal-body
+        - sci_names.each do |sci_name|
+          .text-dimmed
+            = sci_name
+            %br

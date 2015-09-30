@@ -1,0 +1,14 @@
+- book_multi_valued_field_max = fill_response_array(book_multi_valued_field)
+- more = book_multi_valued_field.length - book_multi_valued_field_max.length
+%i
+  %b
+    = title
+- book_multi_valued_field_max.each_with_index do |field, index|  
+  = field.kind_of?(Array) ? field[0].html_safe : field.html_safe
+  -if index != book_multi_valued_field_max.length - 1
+    %b
+      = I18n.t('common.separator')
+- if (more > 0)
+  = I18n.t('common.and_count_more', count: more)
+%b
+  =I18n.t('common.terminator')

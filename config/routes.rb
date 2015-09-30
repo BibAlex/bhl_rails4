@@ -80,6 +80,13 @@ BhlRails4::Application.routes.draw do
         get 'about'
         get 'home'
         get 'contact'
+        get 'top_rated_books'
+      end
+    end
+    
+    resources :activities do
+      collection do
+        get 'get_activity_log'
       end
     end
     

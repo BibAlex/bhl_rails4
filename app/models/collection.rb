@@ -15,6 +15,8 @@ class Collection < ActiveRecord::Base
   
   before_save :sanitize_html
   
+  scope :top, -> { where("is_public = true").order("rate desc").limit(TOP_COLLECTIONS_COUNT).offset(0) }
+  
   def sanitize_html
      self.title = sanitize(title, :tags=>[])
      self.description = sanitize(description, :tags=>[])

@@ -6,6 +6,7 @@ class CreateActivities < ActiveRecord::Migration
       t.string :action, null: false
       t.references :user, null: false
       t.string :activitable_type, null: false
+      t.string :activitable_title
       t.timestamps
     end
     add_index :activities, :user_id

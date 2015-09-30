@@ -10,9 +10,9 @@
     #wrap
       .container
         .row.clearfix.visible-md.visible-lg
-          - cache "header_#{session[:user_id]}" do
+          - cache(["header_#{session[:user_id]}", locale: I18n.locale]) do
             = render partial: "layouts/header"
           = render partial: "layouts/flash", object: flash  #NEW_LAYOUT
         = yield
-    - cache "footer" do
+    - cache(["footer", locale: I18n.locale]) do
       = render partial: "layouts/footer"

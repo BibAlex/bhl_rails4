@@ -11,13 +11,40 @@ module SolrHelper
     response.facets.first.items
   end
   
-    def browse_facet(type, prefix)
-      rsolr = RSolr.connect url: SOLR_BOOKS_METADATA
-      response = rsolr.find 'q' => "*:*", 'facet' => true, 'facet.field' => "#{type}_auto", 'facet.prefix' => prefix, 'facet.limit' => 1000000, 'rows' => 0    
-      res = []
+  def browse_facet(type, prefix)
+    rsolr = RSolr.connect url: SOLR_BOOKS_METADATA
+    response = rsolr.find 'q' => "*:*", 'facet' => true, 'facet.field' => "#{type}_auto", 'facet.prefix' => prefix, 'facet.limit' => 1000000, 'rows' => 0    
+    res = []
+    response.facets.first.items.each do |item|
+      res << item if item.value.downcase.start_with?(prefix.downcase)
+    end
+    res
+  end
+    
+  def search_facet_highlight(query, page, limit, sort_type)
+    facet_array = ['author_facet', 'language_facet', 'subject_facet', 'location_facet']
+    start = (page > 1) ? (page - 1) * limit : 0
+    solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
+    response = solr.find  'q' => query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
+                          'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4"
+    response
+  end
+  
+  def get_sci_names_of_volume(job_id)
+    rsolr = RSolr.connect url: SOLR_NAMES_FOUND
+    response = rsolr.find 'q' => "job_id:#{job_id}", 'facet' => true, 'facet.field' => "sci_name", 'rows' => 0
+    sci_names = []
+    if response["response"]["numFound"] > 0
       response.facets.first.items.each do |item|
-        res << item if item.value.downcase.start_with?(prefix.downcase)
+        sci_names << item.value unless item.hits == 0
       end
-      res
-  end  
+    end
+    sci_names
+  end
+  
+  def get_name_info(sci_name)
+    rsolr = RSolr.connect url: SOLR_SCI_NAMES
+    response = rsolr.find 'q' => "sci_name:#{sci_name}", 'fl' => "sci_name,eol_url,thumb"
+    response["response"]["docs"][0]
+  end
 end

@@ -1,0 +1,33 @@
+= javascript_include_tag 'jquery/jquery.tooltipster.min'
+= stylesheet_link_tag 'jquery/rating/jRating.jquery.css'
+= javascript_include_tag 'jquery/rating/jRating.jquery.js'
+= javascript_include_tag 'home_page.js'
+  
+.row.home
+  .col-md-3
+    = render partial: "pages/statistics"
+  .col-md-9
+    %div{ id: "top_collections" }
+      = render partial: "pages/top_collections"
+
+.row
+  .col-md-12
+    %hr
+  
+.row.clearfix
+  .col-md-4.column.pull-right
+    = render partial: "pages/activity_log"
+  %div.col-md-8.tabs
+    %ul.nav.nav-tabs
+      %li.active
+        %a{ "href" => "#mostviewd", "data-toggle" => "tab", "style" => "padding: 0px 15px 10px 15px;" }
+          %h4
+            = I18n.t('home.most_viewed')
+      %li
+        %a{ "href" => "#toprated", "data-toggle" => "tab", "style" => "padding: 0px 15px 10px 15px;", "id" => "top_rated" }
+          %h4
+            = I18n.t('home.top_rated')
+    .tab-content
+      .tab-pane.active#mostviewd
+        = render partial: "pages/top_books", locals: { top_books: @most_viewed_response, top_criteria: "views" }
+      .tab-pane#toprated

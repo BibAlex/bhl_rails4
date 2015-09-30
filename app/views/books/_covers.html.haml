@@ -1,0 +1,24 @@
+= stylesheet_link_tag '3dcovers/component'
+= javascript_include_tag '3dcovers/modernizr.custom.js'
+= javascript_include_tag '3dcovers/book.js'
+
+- if covertitle.length > 40
+  - covertitle = "#{covertitle.html_safe[0..40]}..."
+- else
+  - covertitle = covertitle.html_safe
+.col-md-2.bookshelf.no-padding
+  %ul.bk-list.clearfix#bk-list
+    %li
+      .bk-book.bk-bookdefault{ class: "book-#{coverno}" }
+        .bk-front
+          .bk-cover
+            %h2
+              %span
+              %span                
+                = covertitle    
+          .bk-cover-back
+        .bk-right
+        .bk-left
+          %h4
+            %span
+              = coverauthor
