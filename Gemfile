@@ -59,6 +59,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'social-share-button'
   gem 'byebug'
+  gem 'will_paginate'
 end
 
 group :test do  

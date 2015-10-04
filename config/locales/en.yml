@@ -30,6 +30,7 @@ en:
     login: Login
     profile: Profile
     by: By
+    filter_by: "Filter By:"
     separator: "/"
     terminator: "."
     and_count_more: "and %{count} more"
@@ -42,6 +43,7 @@ en:
     no_activities: No activities found..
     default_collection: "default_collection.png"
     default_user_small: "default_user_small.png"
+    default_user: "default_user.png"
     activity_log: Activity Log
     save: Save
     cancel: Cancel
@@ -49,6 +51,9 @@ en:
     description: Description
     public: Public
     create_new_collection: Create New Collection
+    rate: Rate
+    comments: Comments
+    collections: Collections
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     actions:

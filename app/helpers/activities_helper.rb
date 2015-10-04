@@ -14,5 +14,5 @@ module ActivitiesHelper
     else
       ""
     end
-  end
+  end  
 end

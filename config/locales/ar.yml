@@ -9,6 +9,7 @@ ar:
     login: دخول
     profile: الصفحة الشخصية
     by: بواسطة
+    filter_by: "الترشيح حسب:"
     separator: "/"
     terminator: "."
     and_count_more: "و %{count} اكثر"
@@ -21,6 +22,7 @@ ar:
     no_activities: "لا توجد أنشطة .."
     default_collection: "default_collection.png"
     default_user_small: "default_user_small.png"
+    default_user: "default_user.png"
     activity_log: "سجل الأنشطة"
     save: "حفظ"
     cancel: "إلغاء"
@@ -28,6 +30,9 @@ ar:
     description: "وصف"
     public: "عام"
     create_new_collection: "إنشاء مجموعة جديدة"
+    rate: "معدل"
+    comments: "تعليقات"
+    collections: "مجموعات"
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     actions:

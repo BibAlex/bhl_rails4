@@ -1,0 +1,37 @@
+.row.clearfix
+  .col-md-12.column
+    %h2
+      = I18n.t('common.activity_log')
+    %hr
+    .well.text-center
+      = render partial: "activities/filter"
+    .panel.panel-default.activity-listing
+      - @activities.each_with_index do |activity, index|
+        - if activity
+          .panel-body
+            - user = User.find(activity.user_id)
+            - if(user.photo_name.blank?)
+              - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
+            - else
+              - thumb = user.photo_name_url(:thumb)
+            .media
+              = link_to image_tag("#{thumb}", class: "media-object img-circle"), { controller: 'users', action: 'show', id: user.id }, class: "pull-left"
+              .media-body.activity-log
+                %p{ style: "line-height:120%;font-size:12px;" }
+                  %strong
+                    = link_to user.real_name, user_path(id: user.id, tab: "profile"), class: "book_author"
+                  %strong
+                    = activity_action_and_object(activity)
+                  %a.book_title{ href: "/#{activity.activitable_type.pluralize(2)}/#{activity.activitable_id}" } 
+                    = activity.activitable_title
+                  %strong
+                    = "#{activity_action_postfix(activity)} #{activity.value}"
+                  %br
+                  %br
+                  %small.text-muted
+                    = "#{I18n.t('common.at')} #{activity.created_at}"
+          - if index < @activities.count
+            %hr
+      %div
+        .pagination-centered
+          = will_paginate @activities
