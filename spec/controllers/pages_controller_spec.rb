@@ -33,5 +33,35 @@ RSpec.describe PagesController, type: :controller do
       end    
     end    
   end
+  
+  describe "about_us" do    
+    
+    before do
+      get :about
+    end
+    
+    it "returns a 200 ok status" do
+      expect(response).to have_http_status(:ok)
+    end
+    
+    it "renders the about us template" do
+      expect(response).to render_template(:about)
+    end
+  end
+  
+  describe "contact_us" do    
+    
+    before do
+      get :contact
+    end
+    
+    it "returns a 200 ok status" do
+      expect(response).to have_http_status(:ok)
+    end
+    
+    it "renders the about us template" do
+      expect(response).to render_template(:contact)
+    end
+  end
     
 end

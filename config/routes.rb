@@ -56,8 +56,7 @@ BhlRails4::Application.routes.draw do
   #   end
   
   
-    get 'browse/:type', to: 'browse#index'
-    
+   
     root :to => 'pages#home'
     
     resources :books do
@@ -81,6 +80,7 @@ BhlRails4::Application.routes.draw do
         get 'home'
         get 'contact'
         get 'top_rated_books'
+        post 'send_contact_us_message'
       end
     end
     

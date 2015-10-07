@@ -6,4 +6,8 @@ class EmailMessage < ActiveRecord::Base
   validates :email, presence: true, format: @email_format_re
   validates :message, presence: true
   validates :subject, presence: true
+  
+  def self.email_message_params(params)
+    params.permit(:name, :email, :message, :subject)
+  end
 end

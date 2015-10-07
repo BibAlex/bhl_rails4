@@ -28,7 +28,17 @@ class PagesController < ApplicationController
   end
   
   def contact
-    
+    @email_message = EmailMessage.new
+    @verify_captcha = true
+  end
+  
+  def send_contact_us_message
+    @email_message = EmailMessage.new(EmailMessage.email_message_params(params[:email_message]))
+    if @email_message.valid?
+      handle_valid_email_message
+    else
+      handle_invalid_email_message
+    end
   end
   
   private
@@ -51,5 +61,22 @@ class PagesController < ApplicationController
   
   def prepare_activity_log
     @ctivities_count = Activity.count
+  end
+  
+  def handle_valid_email_message
+    @email_message.save
+    if Notifier.contact_message(params[:email_message][:name],params[:email_message][:email],
+                                params[:email_message][:subject],params[:email_message][:message]).deliver
+      redirect_to contact_pages_path, flash: { notice: I18n.t('contact_us.successful_feedback') }
+    else
+      redirect_to contact_pages_path, flash: { notice: I18n.t('contact_us.unsuccessful_feedback') }
+    end
+    
+  end
+  
+  def handle_invalid_email_message
+    @verify_captcha = true
+    @email_message.errors.add('recaptcha', I18n.t("form_validation_errors_for_attribute_assistive")) unless verify_recaptcha
+    render 'contact'
   end
 end

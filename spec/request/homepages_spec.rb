@@ -29,15 +29,7 @@ RSpec.describe "Homepages", type: :feature do
     
     it "includes a link for browse all books page" do
       expect(page).to have_selector("a[href='/#{I18n.locale}/books']")
-    end
-    
-    it "includes a link for subjects page" do
-      expect(page).to have_selector("a[href='/#{I18n.locale}/browse/subjects?char=all']")
-    end
-    
-    it "includes a link for authors page" do
-      expect(page).to have_selector("a[href='/#{I18n.locale}/browse/authors?char=all']")
-    end
+    end    
     
     it "includes a link for geographics page" do
       expect(page).to have_selector("a[href='/#{I18n.locale}/geographics']")
@@ -163,8 +155,8 @@ RSpec.describe "Homepages", type: :feature do
         expect(page).to have_selector("a[href='/#{I18n.locale}/books']", text: I18n.t('home.statistics.book_count', count: 2))
       end
       
-      it "displays a link for authors page with total number of authors in BHL" do          
-        expect(page).to have_selector("a[href='/#{I18n.locale}/browse/authors']", text: I18n.t('home.statistics.author_count', count: 2))
+      it "displays the total number of authors in BHL" do          
+        expect(page).to have_selector("h4[class='alert alert-warning']", text: I18n.t('home.statistics.author_count', count: 2))
       end
       
       it "displays a link for species page with total number of species in BHL" do          

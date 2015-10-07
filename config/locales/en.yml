@@ -53,7 +53,16 @@ en:
     create_new_collection: Create New Collection
     rate: Rate
     comments: Comments
+    ba_link: "http://www.bibalex.org/Home/Default_EN.aspx"
+    ba_name: "Bibliotheca Alexandrina (BA)"
     collections: Collections
+    sender: Sender
+    email: Email
+    message_subject: Subject
+    text: Text
+    send: Send
+    clear: Clear
+    recaptcha: "Recaptcha"
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     actions:
@@ -119,6 +128,15 @@ en:
     contact: Contact Us
     copyright_statement: Copyright © Bibliotheca Alexandrina
     share_msg: BHL Egypt
+    
+  about_us:
+    paragraph_1: "The New %{ba_link} is dedicated to recapture the spirit of openness and scholarship of the original Bibliotheca Alexandrina. Hence, it was keen to take part in the Global Biodiversity Heritage Library (BHL) project, as the project is regarded as a substantial enrichment to the BA's collection and simultaneously an optimum channel for sharing and propagating the Library's Arabic and non-Arabic biodiversity collection. This mutual collaboration comes in accordance with the BA's mission in availing knowledge to all, and furthers the inclusion and input of the Arabic-speaking countries."
+    paragraph_2: "Accordingly, the BA has been pursuing the mirroring and replication of BHL since early 2011. Its participation in BHL project emerged inevitably in its course of being one of the main players in the internationalization, localization and mirroring of the Encyclopedia of Life, creating the EOL in Arabic. In this context, the scope of the BA's contribution in BHL project generally includes: setting the infrastructure for the mirroring and replication of the original BHL book collection, development of Local-BHL system, and adding biodiversity material from the BA's collection to comprise material from the Arab world in Arabic as well as other languages."
+  
+  contact_us:
+    title: Contact Us
+    successful_feedback: Thank you for your message
+    unsuccessful_feedback: An error occured while sending your message, please check try again
     
   home:
     statistics:
