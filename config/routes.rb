@@ -58,6 +58,7 @@ BhlRails4::Application.routes.draw do
   
    
     root :to => 'pages#home'
+    get "users/activate/:guid/:activation_code" => "users#activate"
     
     resources :books do
       collection do
@@ -73,6 +74,7 @@ BhlRails4::Application.routes.draw do
         get 'logout'
       end
     end
+    
      
     resources :pages do
       collection do

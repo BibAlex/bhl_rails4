@@ -17,8 +17,9 @@ class User < ActiveRecord::Base
   validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 4, maximum: 16 }
   validates :entered_password, presence: true, confirmation: true, length: { minimum: 4, maximum: 16 }, if: :password_validation_required?
   validates :email, presence: true, confirmation: true, format: @email_format_re, uniqueness: { case_sensitive: false }
-  validates :guid, presence: true, uniqueness: true
   validates :real_name, presence: true
+  
+  mount_uploader :photo_name, ImageUploader
   
   before_create :generate_uuid
   before_create :encrypt_password
@@ -41,9 +42,10 @@ class User < ActiveRecord::Base
   def activate
     self.update_attributes(active: 1, verified_date: Time.now, verification_code: "")
   end
-
-
   
+  def self.user_params(params)
+    params.permit(:username, :entered_password, :entered_password_confirmation, :email, :email_confirmation, :real_name, :photo_name)
+  end  
   
   
   private

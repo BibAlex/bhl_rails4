@@ -1,6 +1,6 @@
 require 'rails_helper'
  
- RSpec.describe "Browses", type: :request do
+ RSpec.describe "Activities", type: :request do
    
    before(:all) do
       Rails.cache.clear

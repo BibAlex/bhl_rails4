@@ -63,6 +63,21 @@ en:
     send: Send
     clear: Clear
     recaptcha: "Recaptcha"
+    signup: Sign up
+    modify_profile: Modify profile
+    reset: Reset
+    mb: megabytes
+    dear_msg: "Dear %{name},"
+    email_signature_1: "Regards,"
+    email_signature_2: "BHL Team"
+    username: Username
+    real_name: Real name
+    password: Password
+    password_confirmation: Password confirmation
+    email: Email
+    email_confirmation: Email confirmation
+    recaptcha: Recaptcha
+    upload_photo: Upload photo
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     actions:
@@ -85,10 +100,17 @@ en:
   warn:
     empty_search_query_warn: "Search statement shouldn't be empty"
     invalid_input: Invalid Input
+    max_photo_size: Max size for photo
     
   msgs:
     no_suggestion: "No Suggestion"
-    
+    registration_welcome_message: "Welcome %{real_name}. Your account is not activated yet. An email was sent to you containing activation instructions."
+    form_validation_errors_for_attribute_assistive: "There is a validation error on this element"
+    upload_photo_max_size_error: You cannot upload a file greater than
+    activation_failed: "Activation failed."
+    account_already_active: "This is account is already active."
+    account_activated: "This account (%{real_name}) is activated. Thank you for joining BHL Egypt."
+    upload_photo_ext_error: Allowed extensions (jpg, jpeg, png, gif, bmp)
   
   header:
     page_title:
@@ -153,3 +175,66 @@ en:
     most_viewed: Most Viewed
     top_rated: Top Rated
     top_collections: Top Collections
+    
+  activerecord:
+      attributes:
+        user:
+          email: "Email"
+          username: "Username"
+          entered_password: "Password"
+          real_name: "Real Name"
+          recaptcha: "Recaptcha"
+        collection:
+          title: "Title"
+          description: "Description"
+      errors:
+        format: "%{attribute} %{message}"
+        template:
+          header:
+            one: "%{count} validation error found"
+            other: "%{count} validation errors found"
+          body: "The following fields failed validation:"
+        messages:
+          taken: "has already taken"
+          record_invalid: "Validation failed: %{errors}"
+          invalid: "is invalid"
+          confirmation: "doesn't match confirmation"
+          accepted: "must be accepted"
+          empty: "can't be empty"
+          blank: "can't be blank"
+          too_long:
+            one: "is too long (maximum is %{count} character)"
+            other: "is too long (maximum is %{count} characters)"
+          too_short:
+            one: "is too short (minimum is %{count} character)"
+            other: "is too short (minimum is %{count} characters)"
+          wrong_length: "is the wrong length (should be %{count} characters)"
+          not_a_number: "is not a number"
+          not_an_integer: "must be an integer"
+          greater_than:
+            one: "must be greater than %{count}"
+            other: "must be greater than %{count}"
+          greater_than_or_equal_to: "must be greater than or equal to %{count}"
+          equal_to: "must be equal to %{count}"
+          less_than:
+            one: "must be less than %{count}"
+            other: "must be less than %{count}"
+          less_than_or_equal_to: "must be less than or equal to %{count}"
+          odd: "must be odd"
+          even: "must be even"
+          inaccessible: "is inaccessible"
+          wrong_type: "is the wrong type"
+        full_messages:
+          format: "%{attribute} %{message}"
+          
+  notifier:
+      user_verification:
+        subject: "Please verify your request for BHL Egypt"
+        message_1: "Thanks for registering for BHL Egypt."
+        message_2: "The following link will verify that you wish to complete your registration and activate your account"   
+      user_activated:
+        subject: "Your BHL account has been activated"
+        message: "Welcome to the BHL Egypt and thank you for registering!"
+      user_recover_account:
+        subject: "Recover your BHL account"
+        message: "The BHL received a request to recover your account. If you did not make this request, please ignore this email.The following link provides a one time log in to allow you to change your password"

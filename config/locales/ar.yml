@@ -42,6 +42,20 @@ ar:
     recaptcha: "السؤال الأمنى"
     ba_home_page_link: "http://www.bibalex.org/Home/Default_EN.aspx"
     ba_name: "مكتبة الإسكندرية"
+    signup: "تسجيل"
+    modify_profile: "تغيير بيانات الملف الشخصى"
+    reset: "إعادة"
+    mb: "ميجابايت"
+    dear_msg: " عزيزى %{name} "
+    email_signature_1: "تحية"
+    email_signature_2: "فريق عمل BHL"
+    username: "اسم المستخدم"
+    real_name: "الاسم الفعلي"
+    password: "كلمة المرور"
+    password_confirmation: "تأكيد اسم المرور"
+    email: "عنوان البريد الإلكتروني"
+    email_confirmation: "تأكيد بريد إلكتروني"
+    upload_photo: "تحميل الصور"
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     actions:
@@ -65,10 +79,18 @@ ar:
   warn:
     empty_search_query_warn: "يجب عليك إدخال جملة البحث"
     invalid_input: "جملة غير صالحة للبحث"
+    max_photo_size: "أقصى حجم للصور"
     
   msgs:
     no_suggestion: "لا توجد إقتراحات"
-  
+    registration_welcome_message: "مرحبًا %{real_name}. لم يتم تفعيل الحساب الخاص بك بعد. سوف يتم إرسال بريد إلكتروني يتضمن التعليمات الخاصة بالتفعيل."
+    form_validation_errors_for_attribute_assistive: "يوجد خطأ في التحقق من الصحة في هذه العنصر"
+    upload_photo_max_size_error:  لا يمكن تحميل ملف أكبر من 
+    activation_failed: "لقد فشلت عملية التفعيل"
+    account_already_active: تم تفعيل هذا الحساب من قبل
+    account_activated: "تم تفعيل (%{real_name}). شكرًا لانضمامك لـ BHL مصر."
+    upload_photo_ext_error: (jpg, jpeg, png, gif, bmp)امتدادات الملفات المسموح بها 
+
   
   header:
     page_title:
@@ -133,3 +155,66 @@ ar:
     most_viewed: "الأكثر مشاهدة"
     top_rated: "الأعلى تقديرًا"
     top_collections: "المجموعات الأهم"
+    
+  activerecord:
+    attributes:
+      user:
+        email: "البريد الإلكترونى"
+        username: "اسم المستخدم"
+        entered_password: "كلمة المرور"
+        real_name: "الاسم الفعلي"
+        recaptcha: "السؤال الأمنى"
+      collection:
+        title: "اسم المجموعة"
+        description: "وصف المجموعة"
+    errors:      
+      format: "%{attribute} %{message}"
+      template:
+        header:
+          one: "وجد خطأ فى البيانات"
+          other: " وجدت %{count} أخطاء فى البيانات"
+        body: "أخفقت الحقول التالية في اختبار التحقق من الصحة:"
+      messages:
+        taken: "موجود مسبقا "
+        record_invalid: "فشل التحقق من الصحة:%{أخطاء}"
+        invalid: "غير صحيح"
+        confirmation: "لا يطابق التأكيد"
+        accepted: "واجب القبول"
+        empty: "لا يمكن أن يكون خاليًا"
+        blank: "لا يمكن أن يكون فارغًا"
+        too_long:
+          one: "(حرف %{count}بحد أقصى)طويل جدًّا "
+          other: "(حرف %{count} بحد أقصى)طويل جدًّا "
+        too_short:
+          one: "(حرف %{count}بحد أدنى)قصير جدًّا "
+          other: "(حرف %{count}بحد أدنى)قصير جدًّا "
+        wrong_length: "(حرف %{count}(يجب أن يكون يوجد خطأ في الطول)"
+        not_a_number: "ليس رقمًا"
+        not_an_integer: "يجب أن يكون عددًا صحيحًا"
+        greater_than:
+          one: "%{count}يجب أن يكون أكبر من "
+          other: "%{count}يجب أن يكون أكبر من "
+        greater_than_or_equal_to: "%{count}يجب أن يكون أكبر من أو يساوي "
+        equal_to: "%{count}يجب أن يساوي "
+        less_than:
+          one: "%{count}يجب أن يكون أقل من "
+          other: "%{count}يجب أن يكون أقل من "
+        less_than_or_equal_to: "%{count}يجب أن يكون أقل من أو يساوي "
+        odd: "يجب أن يكون عددًا فرديًّا"
+        even: "يجب أن يكون عددًا زوجيًّا"
+        inaccessible: "غير متاح"
+        wrong_type: "يوجد خطأ في النوع"
+      full_messages:
+        format: "%{خاصية} %{رسالة}"
+                  
+  notifier:
+    user_verification:
+      subject: " برجاء التحقق من طلبك ل BHLمصر "
+      message_1: "شكرا للتسجيل مع BHLمصر  "
+      message_2: "يؤكد الرابط التالي رغبتك في استكمال التسجيل وتفعيل حسابك"   
+    user_activated:
+      subject: " تم تفعيل حساب BHL الخاص بك "
+      message: " مصر وشكرًا للتسجيل! BHL مرحبًا بك في "
+    user_recover_account:
+      subject: "استعد حساب BHL الخاص بك"
+      message: "لقد استلمنا طلبا لاستعادة حسابك. إذا لم تكن قد قمت بهذا الطلب, يرجى تجاهل هذا البريد الإلكترونى. يسمح الرابط التالى بالدخول مرة واحدة لتغيير اسم المرور الخاص بك."

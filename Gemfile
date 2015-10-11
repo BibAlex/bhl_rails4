@@ -60,6 +60,9 @@ group :development, :test do
   gem 'social-share-button'
   gem 'byebug'
   gem 'will_paginate'
+  gem 'carrierwave'
+  gem "mini_magick"
+  gem 'uuidtools'
 end
 
 group :test do  

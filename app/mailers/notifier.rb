@@ -8,4 +8,16 @@ class Notifier < ApplicationMailer
     @email = mail
     mail(content_type: "text/html", subject: subject, to: CONTACT_US_EMAIL, from: NO_REPLY_EMAIL_ADDRESS)
   end
+  
+  def user_verification(user, url)
+    @user = user
+    @verification_url = url
+    mail(content_type: "text/html", subject: I18n.t('notifier.user_verification.subject'), to: user.email, from: NO_REPLY_EMAIL_ADDRESS )
+  end
+  
+  def user_activated(user)
+    @user = user
+    mail(content_type: "text/html", subject: I18n.t('notifier.user_activated.subject'), to: user.email, from: NO_REPLY_EMAIL_ADDRESS)
+  end
+
 end

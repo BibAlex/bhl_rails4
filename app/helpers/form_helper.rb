@@ -59,7 +59,7 @@ module FormHelper
 
   def validation_errors_for(resource, message = nil)
     if resource.errors.any?
-      message ||= I18n.t('activerecord.errors.template.header', :count => resource.errors.size, :model => '')
+      message ||= I18n.t('activerecord.errors.template.header', count: resource.errors.size, model: '')
       capture_haml do
         haml_tag 'fieldset#errors' do
           haml_tag :legend, message

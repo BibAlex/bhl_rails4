@@ -1,0 +1,83 @@
+= javascript_include_tag "user_form"
+
+- user_form_params = get_user_form_params(user)
+  
+.col-md-12.column
+  %div
+    %fieldset
+      %legend
+        = user_form_params[:page_title]
+      .form-horizontal
+        = validation_errors_for(user)
+        = form_for user, builder: FormHelper::BHLFormBuilder ,html: { onsubmit: "return check_image_size();" } do |f|
+          .form-group
+            = f.label I18n.t('common.username'), class: 'col-sm-2 control-label'
+            .col-sm-10
+              = f.text_field :username, { class: "required form-control", id: "username" }
+          - if user.new_record?
+            .form-group
+              = f.label I18n.t('common.password') , class: 'col-sm-2 control-label'
+              .col-sm-10
+                = f.password_field :entered_password, { type: "password", class: "required form-control", autocomplete: "off" }
+            .form-group
+              = f.label I18n.t('common.password_confirmation') , class: 'col-sm-2 control-label'
+              .col-sm-10
+                = f.password_field :entered_password_confirmation, { type: "password", class: "required form-control", autocomplete: "off" }
+          - unless user.new_record?
+            %a.btn{ style: "cursor:pointer;", id: "change_password" } 
+              = I18n.t('common.change_password')
+            %div{ style: "cursor:pointer;display:none;", id: "change_password_block"}
+              .form-group
+                = f.label I18n.t('common.old_password') , class: 'col-sm-2 control-label' 
+                .col-sm-10
+                  = f.text_field :old_password, { type: "password", class: "required form-control", autocomplete: "off" }
+              .form-group
+                = f.label I18n.t('common.new_password') , class: 'col-sm-2 control-label'
+                .col-sm-10
+                  = f.password_field :entered_password, { type: "password", class: "required form-control", autocomplete: "off" }
+              .form-group
+                = f.label I18n.t('common.new_password_confirmation') , class: 'col-sm-2 control-label'
+                .col-sm-10
+                  = f.password_field :entered_password_confirmation, { type: "password", class: "required form-control", autocomplete: "off" }
+          .form-group
+            = f.label I18n.t('common.email'), class: 'col-sm-2 control-label'
+            .col-sm-10
+              = f.text_field :email, { class: "required form-control" }
+          .form-group
+            = f.label I18n.t('common.email_confirmation'), class: 'col-sm-2 control-label'
+            .col-sm-10
+              = f.text_field :email_confirmation, { class: "required form-control" }
+          .form-group
+            = f.label I18n.t('common.real_name'), class: 'col-sm-2 control-label'
+            .col-sm-10
+              = f.text_field :real_name, { class: "required form-control" }
+          - if user_form_params[:verify_captcha]
+            .form-group
+              = f.label I18n.t('common.recaptcha'), class: 'required col-sm-2 control-label'
+              .col-sm-10
+                = recaptcha_tags(display: {theme: 'clean'})
+          - if(!(user.photo_name.blank?))
+            - thumb = user.photo_name_url(:thumb)
+            .form-group
+              = f.label I18n.t('profile_photo'), class: 'col-sm-2 control-label'
+              .col-sm-10
+                = image_tag("#{thumb}", width: 150, border: 0)
+          .form-group
+            = f.label I18n.t('common.upload_photo'), class: 'col-sm-2 control-label'
+            .col-sm-10
+              .invisible_error_msg#photo_size_error_message
+                = "#{I18n.t('msgs.upload_photo_max_size_error')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
+              .invisible_error_msg#photo_ext_error_message
+                = "#{I18n.t('msgs.upload_photo_ext_error')}"
+              = f.file_field :photo_name, { id: "photo_name", type: "file", class: "btn btn-default" }
+              %p.help-block
+                = "#{I18n.t('warn.max_photo_size')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
+          .form-group
+            .col-sm-2
+            .col-sm-10
+              - if user.new_record?
+                = f.submit I18n.t('common.signup'), class: "btn btn-primary", id: "submit"
+                = f.submit I18n.t('common.clear'), class: "btn btn-default", id: "clear", type: "reset"
+              - else
+                = f.submit I18n.t('common.save'), class: "btn btn-primary", id: "submit"
+                = f.submit I18n.t('common.reset'), class: "btn btn-default", id: "clear", type: "reset"
