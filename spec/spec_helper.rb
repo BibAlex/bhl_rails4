@@ -47,30 +47,17 @@ RSpec.configure do |config|
   end
   
   config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:deletion) # clean suite now up-front
+    DatabaseCleaner.clean_with(:truncation)
   end
 
-  # letting database cleaner take care of transactional tests:
-  # config.use_transactional_fixtures = false
-  config.before(:each) do
-    DatabaseCleaner.start # starts tracking
-    # other setup ...
+  config.before(:each) do |example|
+    DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
+    DatabaseCleaner.start
   end
+
   config.after(:each) do
-    # other teardown ...
-    DatabaseCleaner.clean # cleans tracked records
+    DatabaseCleaner.clean
   end
-  
-  config.before(:all) do
-    DatabaseCleaner.start # starts tracking
-    # other setup ...
-  end
-  config.after(:all) do
-    # other teardown ...
-    DatabaseCleaner.clean # cleans tracked records
-  end
-
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.

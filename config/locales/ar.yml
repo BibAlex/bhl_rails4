@@ -56,6 +56,8 @@ ar:
     email: "عنوان البريد الإلكتروني"
     email_confirmation: "تأكيد بريد إلكتروني"
     upload_photo: "تحميل الصور"
+    forgot_password: "هل نسيت كلمة المرور؟"
+    not_member: لست عضوًا؟
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     actions:
@@ -90,6 +92,12 @@ ar:
     account_already_active: تم تفعيل هذا الحساب من قبل
     account_activated: "تم تفعيل (%{real_name}). شكرًا لانضمامك لـ BHL مصر."
     upload_photo_ext_error: (jpg, jpeg, png, gif, bmp)امتدادات الملفات المسموح بها 
+    empty_user_name_error: لا يمكن ترك اسم المستخدم خاليًا
+    empty_password_error: لا يمكن ترك كلمة المرور خالية
+    empty_verfication_error: يرجى ملء هذا الحقل
+    recaptcha_error: "يوجد خطأ تحقق من الصحة في عنصر التأكد من تسجيل الدخول" 
+    sign_in_unsuccessful_error: "فشل تسجيل الدخول. اسم مستخدم غير سليم أو كلمة مرور غير سليمة" 
+    sign_in_successful_notice: "تسجيل دخول ناجح"
 
   
   header:

@@ -1,14 +1,36 @@
 class UsersController < ApplicationController
   
   include UsersHelper
+  include BHL::Login
   
   def login
-    
+    session[:login_attempts] ||= 0
+    @verify_captcha = true if (session[:login_attempts].to_i  >= LOGIN_ATTEMPTS)
   end
   
   def logout
+    log_out
+    redirect_to root_path
+  end
+  
+  def forgot_password
     
   end
+  
+    # POST /users/validate
+  def validate
+    if (session[:login_attempts].to_i >= LOGIN_ATTEMPTS) && !(verify_recaptcha)
+      redirect_to controller: 'users', action: 'login', flash: { error: I18n.t('msgs.recaptcha_error') }
+    else
+      @user = User.authenticate(params[:user][:username], params[:user][:password])
+      if @user.nil?
+        failed_validation
+      else
+       successful_validation
+      end
+    end
+  end
+
   
   def new
     if session[:failed_user]
@@ -18,11 +40,12 @@ class UsersController < ApplicationController
     else
        @user = User.new
     end
+    @verify_captcha = true
   end
   
   def create
     @user = User.new(User.user_params(params[:user]))
-    if @user.valid?
+    if @user.valid? && verify_recaptcha
       handle_successful_registration
     else
       handle_failed_registration
@@ -72,4 +95,19 @@ class UsersController < ApplicationController
     end
     redirect_to root_path, flash: { notice: I18n.t('msgs.account_activated', real_name: @user.real_name) }
   end
+  
+  def failed_validation
+    session[:login_attempts] = session[:login_attempts].to_i + 1
+    return redirect_to({ controller: 'users', action: 'login' }, flash: { error: I18n.t('msgs.sign_in_unsuccessful_error') })
+  end
+  
+  def successful_validation
+    log_in(@user)
+    if params[:return_to].blank?
+      return redirect_to({ controller: 'users', action: 'show', id: @user.id }, flash: { notice: I18n.t('msgs.sign_in_successful_notice') })
+    else
+      return redirect_to params[:return_to], flash: { notice: I18n.t('msgs.sign_in_successful_notice') }
+    end
+  end
+
 end

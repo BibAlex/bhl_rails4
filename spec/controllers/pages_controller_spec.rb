@@ -4,7 +4,7 @@ RSpec.describe PagesController, type: :controller do
   
   describe "home" do
     
-    before(:all) do
+    before do
       Rails.cache.clear
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')

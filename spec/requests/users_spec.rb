@@ -50,4 +50,32 @@ RSpec.describe "Users", type: :request do
       end
     end    
   end
+  
+  describe "login" do
+    
+    before do
+      visit login_users_path(locale: I18n.locale)
+    end
+    
+    describe "new user form" do
+      
+      it "displays username field" do
+        expect(page).to have_selector("label", text: I18n.t('common.username'))
+        expect(page).to have_field("username")
+      end
+      
+      it "displays password field" do
+        expect(page).to have_selector("label", text: I18n.t('common.password'))
+        expect(page).to have_field("password")
+      end
+      
+      it "displays a link for forgot password page" do
+        expect(page).to have_selector("a[href='/#{I18n.locale}/users/forgot_password']", text: I18n.t('common.forgot_password'))
+      end
+      
+      it "displays a link for sign up page" do
+        expect(page).to have_selector("a[href='/#{I18n.locale}/users/new']", text: I18n.t('common.signup'))
+      end      
+    end    
+  end
 end

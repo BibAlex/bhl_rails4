@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ActivitiesController, type: :controller do
   
-  before(:all) do
+  before do
       Rails.cache.clear
       user = FactoryGirl.create(:user, active: true, username: "user_activity", email: "user_activity@example.com", guid: "activity")
       collection = FactoryGirl.create(:collection, user: user, title: "new_collection", is_public: true)

@@ -69,6 +69,8 @@ BhlRails4::Application.routes.draw do
     resources :users do
       collection do
         get 'login'
+        get 'forgot_password'
+        post 'validate'
       end
       member do
         get 'logout'

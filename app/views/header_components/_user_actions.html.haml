@@ -6,7 +6,7 @@
           %div
             = I18n.t('common.signup')
       - else
-        = link_to logout_user_path(locale: I18n.locale), class: "fa fa-sign-out" do
+        = link_to logout_user_path(locale: I18n.locale, id: session["user_id"]), class: "fa fa-sign-out" do
           %div
             = I18n.t('header.user.signout')
     .col-sm-6.no-padding.text-center

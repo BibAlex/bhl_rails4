@@ -110,7 +110,7 @@ RSpec.describe "Homepages", type: :feature do
   
   describe "home content" do
     
-    before(:all) do
+    before do
       Rails.cache.clear
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')

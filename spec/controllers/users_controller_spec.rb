@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe UsersController, type: :controller do
-  
+RSpec.describe UsersController, type: :controller do  
+ 
   describe "#new" do
     
     before do
@@ -12,7 +12,7 @@ RSpec.describe UsersController, type: :controller do
       expect(response).to have_http_status(:ok)
     end
     
-    it "renders the get_activity_log partial" do
+    it "renders the new template" do
       expect(response).to render_template(:new)
     end
   end
@@ -67,8 +67,85 @@ RSpec.describe UsersController, type: :controller do
                                 email: "user@example.com", email_confirmation: "user@example.com", real_name: "user" } }
         expect(response).to redirect_to(new_user_path)
       end      
+    end    
+  end
+  
+  describe "#login" do
+    
+    before do
+      get :login
     end
     
+    it "returns a 200 ok status" do
+      expect(response).to have_http_status(:ok)
+    end
+    
+    it "renders the login template" do
+      expect(response).to render_template(:login)
+    end
+  end
+  
+  
+  
+  describe "#logout" do     
+      
+   let!(:user) { FactoryGirl.create(:user, active: true, username: "user_logout", password: User.hash_password("user_logout_password")) }
+    
+    before do
+      post :validate, { user: { username: "user_logout", password: "user_logout_password" } }
+      get :logout, { id: user.id }
+    end
+    
+   
+    it "redirects to root path" do
+      expect(response).to redirect_to(root_path)
+    end
+      
+    it "clears session of user_id" do       
+       expect(session[:user_id]).to be_nil
+    end    
+  end
+  
+  describe "#validate" do
+    
+    context "valid user" do      
+      
+      let!(:user) { FactoryGirl.create(:user, active: true, username: "valid_user_login", password: User.hash_password("valid_user_login_password")) }
+      
+      it "sets session of user_id" do
+         post :validate, { user: { username: "valid_user_login", password: "valid_user_login_password" } }
+         expect(session[:user_id]).to eq(user.id)
+      end
+      
+      it "redirects to the profile page of the user" do
+        post :validate, { user: { username: "valid_user_login", password: "valid_user_login_password" } }
+        expect(response).to redirect_to(user_path(id: user.id))
+      end
+      
+      it "displays a flash message for successful login" do
+        post :validate, { user: { username: "valid_user_login", password: "valid_user_login_password" } }
+        expect(flash[:notice]).to eq(I18n.t('msgs.sign_in_successful_notice'))
+      end     
+    end
+    
+    context "invalid user" do
+      
+      it "sets session of login_attempts" do
+        last_login_attempts = session[:login_attempts] ||= 0
+        post :validate, { user: { username: "invalid_username", password: "invalid_password" } }
+        expect(session[:login_attempts]).to eq(last_login_attempts + 1)
+      end
+      
+      it "renders renders login page" do
+        post :validate, { user: { username: "invalid_username", password: "invalid_password" } }
+        expect(response).to redirect_to(login_users_path)
+      end
+      
+      it "displays a flash message for unsuccessful login" do
+        post :validate, { user: { username: "invalid_username", password: "invalid_password" } }
+        expect(flash[:error]).to eq(I18n.t('msgs.sign_in_unsuccessful_error'))
+      end            
+    end    
   end
 
 end
