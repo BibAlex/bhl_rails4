@@ -68,6 +68,7 @@ end
 group :test do  
   gem 'guard-rspec'
   gem 'database_cleaner'
+  gem 'rack_session_access'
 end
 
 # Use ActiveModel has_secure_password

@@ -46,7 +46,7 @@ RSpec.describe UsersController, type: :controller do
         post :create, { user: { username: "user", entered_password: "password", entered_password_confirmation: "password", 
                                 email: "user@example.com", email_confirmation: "user@example.com", real_name: "user",
                                 photo_name: file } }
-        expect(File.exist?("#{Rails.root}/public/avatar_#{Rails.env}/users/#{User.last.id}/default_user.png")).to eq(true)
+        expect(File.exist?("#{Rails.root}/public/avatar_#{Rails.env}/users/#{User.last.id}")).to eq(true)
         
         file_path = "#{Rails.root}/public/avatar_#{Rails.env}/users/#{User.last.id}"
         FileUtils.rm_rf(file_path) if File.exist?(file_path)          
@@ -82,6 +82,32 @@ RSpec.describe UsersController, type: :controller do
     
     it "renders the login template" do
       expect(response).to render_template(:login)
+    end
+  end
+  
+  describe "#show" do 
+    
+    let!(:owner_user) { FactoryGirl.create(:user, active: true, username: "owner_user", password: User.hash_password("owner_user_password")) }
+    
+    before do
+      session[:user_id] = owner_user.id
+      get :show, { id: owner_user.id }
+    end
+    
+    it "returns a 200 ok status" do      
+      expect(response).to have_http_status(:ok)
+    end
+    
+    it "renders the show template" do
+      expect(response).to render_template(:show)
+    end
+    
+    it "loads user info" do
+      expect(assigns(:user)).to eq(owner_user)
+    end
+    
+    it "loads tab info" do
+      expect(assigns(:tab)).to eq("profile")
     end
   end
   
@@ -147,5 +173,4 @@ RSpec.describe UsersController, type: :controller do
       end            
     end    
   end
-
 end

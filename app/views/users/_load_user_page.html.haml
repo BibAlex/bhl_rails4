@@ -1,0 +1,26 @@
+%body
+  #wrap
+    .container
+      .row.clearfix
+        .col-md-12.column
+          %h2
+            = @user.real_name
+          %hr
+      .row.clearfix  
+        .col-md-3
+          %ul.nav.nav-pills.nav-stacked
+            %li
+              = link_to I18n.t('common.profile'), user_path(id: @user.id, tab: "profile"), { id: "tab_profile", class: get_tab_class("profile", @tab) }
+            - if User.can_edit?(@user.id, session[:user_id])
+              %li
+                = link_to I18n.t('common.annotations'), user_path(id: @user.id, tab: "annotations"), { id: "tab_annotations", class: get_tab_class("annotations", @tab) }
+              %li
+                = link_to I18n.t('common.queries'), user_path(id: @user.id, tab: "queries"), { id: "tab_queries", class: get_tab_class("queries", @tab) }
+              %li
+                = link_to I18n.t('common.history'), user_path(id: @user.id, tab: "history"), { id: "tab_history", class: get_tab_class("history", @tab) }
+            %li
+              = link_to I18n.t('common.activity_log'), user_path(id: @user.id, tab: "activity"), { id: "tab_activity", class: get_tab_class("activity", @tab) }
+            %li
+              = link_to I18n.t('common.collections'), user_path(id: @user.id, tab: "activity"), { id: "tab_collections", class: get_tab_class("collections", @tab) }
+        
+        = render partial: "users/#{@tab}"

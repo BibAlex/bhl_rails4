@@ -74,6 +74,7 @@ BhlRails4::Application.routes.draw do
       end
       member do
         get 'logout'
+        get 'get_user_profile_photo'
       end
     end
     

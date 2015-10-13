@@ -1,0 +1,24 @@
+function confirmDelete(text){
+  return confirm(text);
+}
+
+  function confirmDeletePhoto(user_id){
+    var is_delete = confirm("<%= I18n.t('msgs.delete_profile_photo_confirm') %>");
+    if (is_delete)
+      load_user_photo(1, user_id);
+    else{
+      $('#delete_photo').removeAttr('checked');
+      return false;
+      }
+  }
+  
+function load_user_photo(is_delete, id)
+{
+	$.ajax({
+        url: "/users/" + id + "/get_user_profile_photo?is_delete=" + is_delete,
+        type: "GET",        
+        success: function (data) { 
+          $("#user_photo").html(data);        
+        }
+      });
+}

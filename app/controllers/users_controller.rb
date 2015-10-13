@@ -44,6 +44,7 @@ class UsersController < ApplicationController
   end
   
   def create
+    params[:user][:photo_name] = User.process_user_photo_name(params[:user][:photo_name])    
     @user = User.new(User.user_params(params[:user]))
     if @user.valid? && verify_recaptcha
       handle_successful_registration
@@ -64,8 +65,20 @@ class UsersController < ApplicationController
   end
   
   def show
-    
+    load_user
+    send("load_#{@tab}_tab") unless @tab == "profile"
   end
+  
+  def get_user_profile_photo
+     @user = User.find(params[:id])
+     if (User.can_edit?(@user.id, session[:user_id]) && params[:is_delete].to_i == 1)
+      @user.delete_photo
+     end
+     respond_to do |format|
+       format.html { render partial: "users/get_user_profile_photo" }
+     end
+  end
+
   
   private
   
@@ -109,5 +122,10 @@ class UsersController < ApplicationController
       return redirect_to params[:return_to], flash: { notice: I18n.t('msgs.sign_in_successful_notice') }
     end
   end
-
+  
+  def load_user
+    @user = User.find_by_id(params[:id])
+    return redirect_to root_path unless @user
+    @tab = params[:tab].nil? ? "profile" : params[:tab]
+  end  
 end

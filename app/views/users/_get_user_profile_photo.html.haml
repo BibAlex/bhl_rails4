@@ -1,0 +1,6 @@
+- thumb = !(@user.photo_name.blank?) ? @user.photo_name_url(:thumb) : "/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
+= image_tag("#{thumb}", class: "img-thumbnail")
+- if User.can_edit?(@user.id, session[:user_id]) && !(@user.photo_name.blank?)
+  %div{ class: "checkbox-inline", style: "padding-left: 13px;" }
+    = check_box_tag("delete_photo", "delete_photo" , false , onclick: "confirmDeletePhoto(\"#{params[:id]}\")")
+    = I18n.t('common.delete_photo')

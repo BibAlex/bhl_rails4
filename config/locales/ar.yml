@@ -58,6 +58,13 @@ ar:
     upload_photo: "تحميل الصور"
     forgot_password: "هل نسيت كلمة المرور؟"
     not_member: لست عضوًا؟
+    annotations: "الملاحظات"
+    queries: "الاستعلامات التي تم حفظها"
+    history: "الكتب التي تم التعامل معها مؤخرًا"
+    edit: "تعديل"
+    member_since: "عضو منذ"
+    last_login: "تسجيل الدخول الأخير"
+    delete_photo: حذف صورة
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     actions:
@@ -98,6 +105,7 @@ ar:
     recaptcha_error: "يوجد خطأ تحقق من الصحة في عنصر التأكد من تسجيل الدخول" 
     sign_in_unsuccessful_error: "فشل تسجيل الدخول. اسم مستخدم غير سليم أو كلمة مرور غير سليمة" 
     sign_in_successful_notice: "تسجيل دخول ناجح"
+    delete_profile_photo_confirm: هل تريد فعلاً حذف صورة البروفيل؟
 
   
   header:

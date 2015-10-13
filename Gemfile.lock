@@ -149,6 +149,9 @@ GEM
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
+    rack_session_access (0.1.1)
+      builder (>= 2.0.0)
+      rack (>= 1.0.0)
     rails (4.2.4)
       actionmailer (= 4.2.4)
       actionpack (= 4.2.4)
@@ -293,6 +296,7 @@ DEPENDENCIES
   mysql2 (= 0.3.20)
   name-spotter
   nokogiri
+  rack_session_access
   rails (~> 4.2.4)
   rails-erd
   recaptcha

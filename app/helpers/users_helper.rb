@@ -13,4 +13,8 @@ module UsersHelper
     end
   end
   
+  def get_tab_class(tab, current_tab)
+    tab == current_tab ? "active" : ""
+  end
+  
 end
