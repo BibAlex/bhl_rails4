@@ -100,5 +100,8 @@ BhlRails4::Application.routes.draw do
     resources :geographics
     
     resources :collections
+    
+    get "hadoop/failedbibids"
+    get "hadoop/metadata/:xml", to: 'hadoop#metadata'
   end
 end
