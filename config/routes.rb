@@ -59,6 +59,7 @@ BhlRails4::Application.routes.draw do
    
     root :to => 'pages#home'
     get "users/activate/:guid/:activation_code" => "users#activate"
+    get "user_search_history/save_query"
     
     resources :books do
       collection do

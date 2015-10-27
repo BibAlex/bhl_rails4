@@ -1,0 +1,21 @@
+= stylesheet_link_tag 'jquery/themes/jquery-ui1.10.3-smoothness' #For add book to collection
+= javascript_include_tag 'jquery/jquery.tooltipster.min'
+= stylesheet_link_tag 'jquery/rating/jRating.jquery.css'
+= javascript_include_tag 'jquery/rating/jRating.jquery.js'
+= javascript_include_tag 'books_functions'
+
+.row
+  .col-md-4.sidebar-offcanvas.pull-right
+    = render partial: "books/right_column"
+  .col-md-8
+    = render partial: "books/breadcrumb"  
+    - if (@response.count > 0)
+      - @books.each_with_index  do |doc, index|
+        = render partial: "books/listresult", locals: { index: index, doc: doc }
+      %div
+        .pagination-centered
+          = will_paginate @books
+    - else
+      .well-sm.center-block
+        %h2
+          = I18n.t('common.no_entity_found', entity: I18n.t('common.book').pluralize)
