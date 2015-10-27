@@ -40,7 +40,7 @@ BhlRails4::Application.routes.draw do
   #       get 'recent', on: :collection
   #     end
   #   end
-  
+
   # Example resource route with concerns:
   #   concern :toggleable do
   #     post 'toggle'
@@ -54,18 +54,18 @@ BhlRails4::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-  
-  
-   
+
+
+
     root :to => 'pages#home'
     get "users/activate/:guid/:activation_code" => "users#activate"
-    
+
     resources :books do
       collection do
         get 'autocomplete'
       end
     end
-    
+
     resources :users do
       collection do
         get 'login'
@@ -77,8 +77,8 @@ BhlRails4::Application.routes.draw do
         get 'get_user_profile_photo'
       end
     end
-    
-     
+
+
     resources :pages do
       collection do
         get 'about'
@@ -88,20 +88,20 @@ BhlRails4::Application.routes.draw do
         post 'send_contact_us_message'
       end
     end
-    
+
     resources :activities do
       collection do
         get 'get_activity_log'
       end
     end
-    
+
     resources :names
-    
+
     resources :geographics
-    
+
     resources :collections
-    
-    get "hadoop/failedbibids"
+
+    get "hadoop/pending_metadata"
     get "hadoop/metadata/:xml", to: 'hadoop#metadata'
   end
 end

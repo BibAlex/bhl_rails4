@@ -2,15 +2,17 @@ class HadoopController < ApplicationController
   require 'nokogiri'
   require 'uri'
 
-  def failedbibids
-
-    failed_books = Book.find_all_by_status_code("10")
+  def pending_metadata
+    #failed_books = Book.find_all_by_status_code("10")
+    pending_metadata_books = Book.get_pending_metadata_books
     @json = "{\"Books\" : [ "
-    failed_books.each do |b|
+    pending_metadata_books.each do |b|
       @json += "\"#{b.bib_id}\","
     end
     @json = @json[0...@json.length-1]
     @json += " ]}"
+
+    render json: @json
   end
 
   def metadata
@@ -20,7 +22,7 @@ class HadoopController < ApplicationController
     @xml = File.open("#{Rails.root}/public/sample.xml") #Sample to be provided by Mina
     doc = Nokogiri::XML(@xml)
     books = doc.xpath("//BIBID")
-    
+
     books.each do |item|
       bibtex = item.xpath("BIBTex").text
       endnote = item.xpath("EndNote").text
