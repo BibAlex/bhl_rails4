@@ -47,4 +47,24 @@ RSpec.describe Book, type: :model do
     end
 
   end
+
+  describe "Hadoop functions" do
+    before do
+      # make sure that book_statuses table is populated
+      BookStatus.delete_all
+      ["Pending metadata", "Pending content", "Pending indexing", "Indexed"].each do |status|
+        BookStatus.create(:status_code => status)
+      end
+
+      # add a book in all statuses
+      BookStatus.all.each do |book_status|
+        Book.create(:book_status_id => book_status.id)
+      end
+    end
+
+    it "returns a pending metadata book" do
+      books = Book.get_pending_metadata_books
+      expect(books.count).to eq(1)
+    end
+  end
 end
