@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151027185441) do
+ActiveRecord::Schema.define(version: 20151029113634) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -104,9 +104,10 @@ ActiveRecord::Schema.define(version: 20151027185441) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "bib_id",            limit: 255
-    t.string   "bibtex",            limit: 255
-    t.string   "endnote",           limit: 255
+    t.text     "bibtex",            limit: 65535
+    t.text     "endnote",           limit: 65535
     t.integer  "book_status_id",    limit: 4
+    t.string   "contributor",       limit: 255
   end
 
   create_table "collection_ratings", force: :cascade do |t|

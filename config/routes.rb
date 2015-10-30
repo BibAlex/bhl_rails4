@@ -102,6 +102,6 @@ BhlRails4::Application.routes.draw do
     resources :collections
 
     get "hadoop/pending_metadata"
-    get "hadoop/metadata/:xml", to: 'hadoop#metadata'
+    get "hadoop/ingest_metadata", to: 'hadoop#ingest_metadata'
   end
 end

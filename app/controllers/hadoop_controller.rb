@@ -1,4 +1,5 @@
 class HadoopController < ApplicationController
+  include HadoopHelper
   require 'nokogiri'
   require 'uri'
 
@@ -15,19 +16,51 @@ class HadoopController < ApplicationController
     render json: @json
   end
 
-  def metadata
-    #TODO: Kamal Micheal. Edit code to grab XML from url as parameter ### Read Mods and JobIds
-    #@xml = URI.decode(params[:xml])
+  def ingest_metadata
+    # this xml file should be POSTED in this request
+    xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "metadata_sample.xml"))
+    mods_xml = Nokogiri::XML(xml_file_path)
+    xml_file_path.close
 
-    @xml = File.open("#{Rails.root}/public/sample.xml") #Sample to be provided by Mina
-    doc = Nokogiri::XML(@xml)
-    books = doc.xpath("//BIBID")
+    mods_xml.xpath("//BHLMeta//BIBID").each do |book_xml|
+      bib_id = book_xml.attr("value").gsub("DAF-BHL:","")
 
-    books.each do |item|
-      bibtex = item.xpath("BIBTex").text
-      endnote = item.xpath("EndNote").text
-      mods = Nokogiri::XML(item.xpath("mods").to_xml)
-      bibid = item.attr("value")
+      book = Book.find_or_create_by(bib_id: bib_id)
+
+      if book_xml.xpath(".//mods").count == 0
+        # this means that this book has failed
+        book.book_status_id = BookStatus.pending_metadata.id
+        book.save
+      else
+        book.bibtex = book_xml.xpath(".//BIBTex").text
+        book.endnote = book_xml.xpath(".//EndNote").text
+        book.mods = book_xml.xpath(".//mods").text
+
+        metadata_hash = process_mods(book_xml.xpath(".//mods").text)
+
+        if metadata_hash[:title_alternative].nil? &&  metadata_hash[:title].nil?
+          # this means that this book has failed
+          book.book_status_id = BookStatus.pending_metadata.id
+          book.save
+        else
+          book.title = metadata_hash[:title]
+          book.title_alternative = metadata_hash[:title_alternative]
+          book.published_at = metadata_hash[:published_at]
+          book.publisher = metadata_hash[:publisher]
+          book.contributor = metadata_hash[:contributor]
+
+          book.book_status_id = BookStatus.pending_content.id
+          book.save
+        end
+
+        book.authors << metadata_hash[:authors]
+        book.locations << metadata_hash[:locations]
+        book.languages << metadata_hash[:languages]
+        book.subjects << metadata_hash[:subjects]
+
+        book.save
+      end
     end
+    @mods_hash = mods_xml.xpath("//BHLMeta//BIBID").count
   end
 end
