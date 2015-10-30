@@ -58,6 +58,10 @@ class HadoopController < ApplicationController
         book.languages << metadata_hash[:languages]
         book.subjects << metadata_hash[:subjects]
 
+        book_xml.xpath(".//JobIDs//JobID").each do |job_id|
+          book.volumes << Volume.find_or_create_by(job_id: job_id.text.gsub("DAF-Job:",""))
+        end
+
         book.save
       end
     end

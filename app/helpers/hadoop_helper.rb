@@ -29,6 +29,8 @@ module HadoopHelper
     return mods_hash
   end
 
+private
+
   def get_title(title_info)
     title = []
     title << title_info.xpath(".//xmlns:nonSort").text unless title_info.xpath(".//xmlns:nonSort").text.empty?
