@@ -49,7 +49,8 @@ module SolrHelper
   end
   
   def get_volumes_contain_sci_name(sci_names)
-    values = "\"" + sci_names.join(" AND ") + "\""
+    exact_sci_names = get_exact_sci_names(sci_names)
+    values = "\"" + exact_sci_names.join(" AND ") + "\""
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
     response = rsolr.find 'q' => "sci_name:#{values}", 'fl' => "job_id"
     job_ids = []
@@ -59,5 +60,18 @@ module SolrHelper
       end
     end
     job_ids
+  end
+  
+  def get_exact_sci_names(sci_names)
+    exact_sci_names = []
+    values = "\"" + sci_names.join(" OR ") + "\""
+    rsolr = RSolr.connect url: SOLR_SCI_NAMES
+    response = rsolr.find 'q' => "sci_name_search:#{values}", 'fl' => "sci_name"
+    unless response["response"]["numFound"] == 0
+      response["response"]["docs"].each do |doc|
+        exact_sci_names << doc[:sci_name]
+      end
+    end
+    exact_sci_names
   end
 end

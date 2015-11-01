@@ -38,11 +38,11 @@
       
       %span |
       
-      = link_to "", books_path(sort_type: nil), class: "fa fa-check-square", style: "#{get_class_for_sort_option(params[:sort_type],'title_facet')};"
-      = link_to "", books_path(sort_type: "title_facet DESC"), class: "fa fa-square-o", style: "#{get_class_for_active_sort_option(params[:sort_type],'title_facet')};"
-      = link_to I18n.t('common.title'), books_path(sort_type: "title_facet #{toggle_sort_option(params[:sort_type],'title_facet')}"), style: "color:#777777;"
-      = link_to "", books_path(sort_type: "title_facet ASC"), class: "fa fa-arrow-down", style: "#{get_class_for_sort_option(params[:sort_type],'title_facet DESC')};"
-      = link_to "", books_path(sort_type: "title_facet DESC"), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'title_facet ASC')};"
+      = link_to "", books_path(sort_type: nil), class: "fa fa-check-square", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort')};"
+      = link_to "", books_path(sort_type: "title_sort DESC"), class: "fa fa-square-o", style: "#{get_class_for_active_sort_option(params[:sort_type],'title_sort')};"
+      = link_to I18n.t('common.title'), books_path(sort_type: "title_sort #{toggle_sort_option(params[:sort_type],'title_sort')}"), style: "color:#777777;"
+      = link_to "", books_path(sort_type: "title_sort ASC"), class: "fa fa-arrow-down", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort DESC')};"
+      = link_to "", books_path(sort_type: "title_sort DESC"), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort ASC')};"
       
 %h4.text-muted.clearfix
   = I18n.t('common.entity_found_all', count: @response[:total_number_of_volumes], entity: I18n.t('common.book').pluralize)
