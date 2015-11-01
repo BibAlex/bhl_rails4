@@ -2,7 +2,8 @@ $(document).ready(function() {
     autocomplete();
   });
 
-function searchfnc(searchquery, e, field){
+function searchfnc(search_select, field){
+	searchquery = '';
     if(field == null || field == ''){
       alert("<%= I18n.t('warn.empty_search_query_warn') %>");
       return;
@@ -12,21 +13,34 @@ function searchfnc(searchquery, e, field){
      alert("<%= I18n.t('warn.invalid_input') %>");
      return;
     }
-    
-    url = window.location.href.split('?')[0];
-    url = url.split('#')[0];  
-    var type = e.options[e.selectedIndex].value;
-    if(url == window.location.protocol + "//" + window.location.host + "/books"){
-      if(searchquery == null || searchquery == '' || searchquery == '*:*'){
-        searchquery = "_" + type + "=" + field;
-      } 
-      else if(searchquery.toLowerCase().indexOf("_" + type.toLowerCase()) != -1){
-        searchquery = searchquery.replace("_" + type.toLowerCase() + "=","_" + type.toLowerCase() + "=" + field + " _AND ");
+    var url_parts = window.location.href.split('?');
+    var path = url_parts[0];
+    var type = search_select.options[search_select.selectedIndex].value;
+    if(path == window.location.protocol + "//" + window.location.host + "/books"){
+      if(typeof url_parts[1] === 'undefined')
+       {
+         searchquery = "_" + type + "=" + field;
+	   }
+      else
+      {
+      	var params = url_parts[1].split('&');
+      	var field_found = false;
+      	for(var i = 0; i<params.length; i++)
+      	{      		
+      		var search_tokens = params[i].split('=');
+      		if(search_tokens[0] === "_" + type)
+      		{
+      			params[i] = search_tokens[0] + "=" + search_tokens[1] + " _AND " + field;
+      			field_found = true;  			
+      		}
+      		searchquery += params[i] + "&_";
+      		i++;      			
+      	}
+      	searchquery = searchquery.substring(0, searchquery.length - 2);
+      	if(field_found === false)
+      		searchquery += "&_" + type + "=" + field;      	 
       }
-      else{
-        searchquery += "&_" + type + "=" + field;
-      }
-      window.location = url + "?" + searchquery;
+      window.location = path + "?" + searchquery;
     }
     else{
       searchquery = "_" + type + "=" + field;
@@ -48,12 +62,28 @@ function autocomplete()
           return;
         }
         search_by = $("#headersearchby").val();
-        searchfield = $("#headersearchfield").val();
-        return $.getJSON("/<%= I18n.locale %>/books/autocomplete?type=" + search_by, request, function(data, status, xhr) {
-          cache[term] = data;
-          return response(data);
-        });
+        if(search_by != "content" && search_by != "ALL")
+        {
+        	searchfield = $("#headersearchfield").val();
+            return $.getJSON("/<%= I18n.locale %>/books/autocomplete?type=" + search_by, request, function(data, status, xhr) {
+              cache[term] = data;
+              return response(data);
+            });
+        }
+        
       }
-    });
-  
+    }); 
+}
+
+function save_query(query)
+{
+	alert(query);
+	$.ajax({
+	    url: "/user_search_history/save_query?query=" + encodeURIComponent(query),
+	    type: "GET",        
+	    success: function (data) { 
+	      $("#flash").html(data);
+	      document.getElementById( 'save_query' ).style.display = 'none';    
+	    }
+	  });
 }

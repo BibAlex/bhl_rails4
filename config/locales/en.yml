@@ -87,8 +87,27 @@ en:
     member_since: Member since
     last_login: "Last login"
     delete_photo: Delete Photo
+    save_query: Save Search
+    sort_by: Sort By
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
+    entity_found_all: "Found %{count} %{entity}"
+    book: Book
+    number_of_viewes: Number of views
+    entity_saved: "%{entity} Saved"
+    search_query: Search Query
+    subject: Subject
+    language: Language
+    location: Location
+    author: Author
+    publisher: Publisher
+    name: Name
+    name_facet: "TAGGED SPECIES"
+    language_facet: "LANGUAGES"
+    author_facet: "AUTHORS"
+    location_facet: "REGIONAL AFFILIATION"
+    subject_facet: "GENRE"
+    publisher_facet: "PUBLISHER"
     actions:
       create: Created
       rate: Rated

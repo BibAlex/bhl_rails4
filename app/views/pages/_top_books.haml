@@ -1,6 +1,6 @@
 = javascript_include_tag 'grey_stars.js'
 - if (top_books.count > 0)  
-  - top_books.each_with_index  do |doc, index|    
+  - top_books.each_with_index  do |doc, index|
     - doc = doc      
     .browse
       .col-md-2
@@ -18,7 +18,7 @@
             - names = fill_response_array(doc[:sci_names])
             = render partial: "books/book_names", locals: { sci_names: doc[:sci_names], id: doc[:job_id], sci_names_info: get_names_info(names) }
       .col-md-3.controls
-        = render partial: "pages/sidelinks", locals: { id: doc[:job_id], rate: doc[:rate], views: doc[:views] }
+        = render partial: "books/sidelinks", locals: { id: doc[:job_id], rate: doc[:rate], views: doc[:views] }
     .clearfix    
   .pull-right  
     = link_to I18n.t('common.tabs_more'), { controller: 'books', action: 'index', sort_type: "#{top_criteria} desc" }
