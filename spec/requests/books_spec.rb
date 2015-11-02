@@ -69,7 +69,7 @@ RSpec.describe "Books", type: :request do
     
     it "displays a link for sort books by book title" do
       visit books_path(locale: I18n.locale)
-      expect(page).to have_selector("a[href='/#{I18n.locale}/books?sort_type=title_facet+DESC']")
+      expect(page).to have_selector("a[href='/#{I18n.locale}/books?sort_type=title_sort+DESC']")
     end
     
     describe "volume entry for most viewed books" do

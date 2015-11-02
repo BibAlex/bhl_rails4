@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150902091142) do
+ActiveRecord::Schema.define(version: 20151029113634) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -82,6 +82,12 @@ ActiveRecord::Schema.define(version: 20150902091142) do
     t.datetime "updated_at"
   end
 
+  create_table "book_statuses", force: :cascade do |t|
+    t.string   "status_code", limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
   create_table "book_subjects", force: :cascade do |t|
     t.integer  "book_id",    limit: 4, null: false
     t.integer  "subject_id", limit: 4, null: false
@@ -90,21 +96,18 @@ ActiveRecord::Schema.define(version: 20150902091142) do
   end
 
   create_table "books", force: :cascade do |t|
-    t.string   "title",             limit: 2000,  null: false
+    t.string   "title",             limit: 2000
     t.string   "title_alternative", limit: 2000
     t.string   "published_at",      limit: 255
     t.string   "publisher",         limit: 1000
     t.text     "mods",              limit: 65535
-    t.string   "status_code",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "bookstatuses", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.string   "code",       limit: 2,   null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "bib_id",            limit: 255
+    t.text     "bibtex",            limit: 65535
+    t.text     "endnote",           limit: 65535
+    t.integer  "book_status_id",    limit: 4
+    t.string   "contributor",       limit: 255
   end
 
   create_table "collection_ratings", force: :cascade do |t|

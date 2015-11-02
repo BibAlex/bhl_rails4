@@ -13,3 +13,6 @@
 /tmp
 /config/database.yml
 /config/environment.rb
+/.project
+/public/uploads/*
+public/avatar_test/*
