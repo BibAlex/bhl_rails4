@@ -1,0 +1,31 @@
+<BHLMeta><BIBID value="DAF-BHL:indianmedicinalp01kirt"><BIBTex>@Book{Kirtikar1918,
+author="Kirtikar, Kanhoba Ranchoddas
+and Basu, Baman Das",
+title="Indian medicinal plants",
+year="1918",
+publisher="Sudhindra Nath Basu, P?anin?i office; [etc., etc.]",
+address="Bahadurganj, India",
+keywords="Botany",
+keywords="India",
+keywords="Botany, Medical",
+note="by Lietenant-Colonel K.R. Kirtikar ... Major B.D. Basu ... and I.C.S. (retired).",
+note="The letters I.C.S. in title probably refer to ``an able member of the Indian civil service,'' who assisted in the botanical description. cf. Pref., p. [v]-vi.",
+note="extracted picklist 20100105 BHLEX"
+}
+
+</BIBTex><EndNote>%0 Generic
+%T Indian medicinal plants
+%A Kirtikar, Kanhoba Ranchoddas
+%A Basu, Baman Das
+%D 1918
+%I Sudhindra Nath Basu, P?anin?i office; [etc., etc.]
+%C Bahadurganj, India
+%F Kirtikar1918
+%O by Lietenant-Colonel K.R. Kirtikar ... Major B.D. Basu ... and I.C.S. (retired).
+%O The letters I.C.S. in title probably refer to "an able member of the Indian civil service," who assisted in the botanical description. cf. Pref., p. [v]-vi.
+%O extracted picklist 20100105 BHLEX
+%K Botany
+%K India
+%K Botany, Medical
+
+</EndNote><mods>&lt;mods xmlns="http://www.loc.gov/mods/v3" version="3.3"&gt;&lt;titleInfo&gt;&lt;title&gt;Indian medicinal plants&lt;/title&gt;&lt;/titleInfo&gt;&lt;name type="personal"&gt;&lt;namePart&gt;Kirtikar, Kanhoba Ranchoddas&lt;/namePart&gt;&lt;namePart type="date"&gt;1849-1917&lt;/namePart&gt;&lt;role&gt;&lt;roleTerm authority="marcrelator" type="text"&gt;creator&lt;/roleTerm&gt;&lt;/role&gt;&lt;/name&gt;&lt;name type="personal"&gt;&lt;namePart&gt;Basu, Baman Das&lt;/namePart&gt;&lt;namePart type="date"&gt;1867-1930&lt;/namePart&gt;&lt;/name&gt;&lt;typeOfResource&gt;text&lt;/typeOfResource&gt;&lt;originInfo&gt;&lt;place&gt;&lt;placeTerm authority="marccountry" type="code"&gt;ii&lt;/placeTerm&gt;&lt;/place&gt;&lt;place&gt;&lt;placeTerm type="text"&gt;Bahadurganj, India&lt;/placeTerm&gt;&lt;/place&gt;&lt;publisher&gt;Sudhindra Nath Basu, P�anin�i office; [etc., etc.]&lt;/publisher&gt;&lt;dateIssued&gt;1918&lt;/dateIssued&gt;&lt;issuance&gt;monographic&lt;/issuance&gt;&lt;/originInfo&gt;&lt;language&gt;&lt;languageTerm authority="iso639-2b" type="code"&gt;eng&lt;/languageTerm&gt;&lt;/language&gt;&lt;physicalDescription&gt;&lt;form authority="marcform"&gt;print&lt;/form&gt;&lt;extent&gt;2 v. 26 cm. atlas of 4 v. (1033 pl., part double, part fold.)&lt;/extent&gt;&lt;/physicalDescription&gt;&lt;note type="statement of responsibility"&gt;by Lietenant-Colonel K.R. Kirtikar ... Major B.D. Basu ... and I.C.S. (retired).&lt;/note&gt;&lt;note&gt;The letters I.C.S. in title probably refer to "an able member of the Indian civil service," who assisted in the botanical description. cf. Pref., p. [v]-vi.&lt;/note&gt;&lt;note type="action"&gt;extracted picklist 20100105 BHLEX&lt;/note&gt;&lt;subject authority="lcsh"&gt;&lt;topic&gt;Botany&lt;/topic&gt;&lt;geographic&gt;India&lt;/geographic&gt;&lt;/subject&gt;&lt;subject authority="lcsh"&gt;&lt;topic&gt;Botany, Medical&lt;/topic&gt;&lt;/subject&gt;&lt;identifier type="lccn"&gt;agr18000807&lt;/identifier&gt;&lt;recordInfo&gt;&lt;recordContentSource authority="marcorg"&gt;Library, U.S. Dept. of Agriculture&lt;/recordContentSource&gt;&lt;recordCreationDate encoding="marc"&gt;850604&lt;/recordCreationDate&gt;&lt;recordChangeDate encoding="iso8601"&gt;19990129000000.0&lt;/recordChangeDate&gt;&lt;/recordInfo&gt;&lt;/mods&gt;</mods><JobIDs><JobID>DAF-Job:361720</JobID></JobIDs></BIBID></BHLMeta>

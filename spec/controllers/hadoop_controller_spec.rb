@@ -3,12 +3,7 @@ require 'rails_helper'
 RSpec.describe HadoopController, type: :controller do
   describe "Test pending metadata" do
     before :each do
-      # make sure that book_statuses table is populated
-      BookStatus.delete_all
-      ["Pending metadata", "Pending content", "Pending indexing", "Indexed"].each do |status|
-        BookStatus.create(:status_code => status)
-      end
-
+      load_book_statuses
       Book.delete_all
       # add a book in all statuses
       BookStatus.all.each do |book_status|
@@ -31,6 +26,22 @@ RSpec.describe HadoopController, type: :controller do
       expect(json_response["Books"].count).to eq(1)
       id = json_response["Books"][0]
       expect(Book.find_by_bib_id(id).book_status_id).to eq(BookStatus.pending_metadata.id)
+    end
+  end
+
+  describe "Test metadata ingestion" do
+    it "should return failed if nothing gets posted" do
+      post :ingest_metadata
+      expect(response.body).to eq("Error invalid post")
+    end
+
+    it "should ingest data and returun Success" do
+      xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "metadata_sample.xml"))
+      mods_xml = Nokogiri::XML(xml_file_path)
+      xml_file_path.close
+
+      post :ingest_metadata, body: mods_xml.to_s
+      expect(response.body).to eq("Success")
     end
   end
 end

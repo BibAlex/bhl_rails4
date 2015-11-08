@@ -65,7 +65,7 @@ group :development, :test do
   gem 'uuidtools'
 end
 
-group :test do  
+group :test do
   gem 'guard-rspec'
   gem 'database_cleaner'
   gem 'rack_session_access'
