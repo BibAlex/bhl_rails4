@@ -29,5 +29,5 @@
             = I18n.t('home.top_rated')
     .tab-content
       .tab-pane.active#mostviewd
-        = render partial: "pages/top_books", locals: { top_books: @most_viewed_response, top_criteria: "views" }
+        = render partial: "pages/top_books", locals: { top_books: @most_viewed_response[:volumes], top_criteria: "views" }
       .tab-pane#toprated

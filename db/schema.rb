@@ -201,6 +201,11 @@ ActiveRecord::Schema.define(version: 20151029113634) do
     t.datetime "updated_at"
   end
 
+  create_table "notifiers", force: :cascade do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "queries", force: :cascade do |t|
     t.string   "string",     limit: 255
     t.integer  "user_id",    limit: 4,   null: false

@@ -1,14 +1,11 @@
 = javascript_include_tag 'books_functions.js'
 .col-md-6
-  - jsquery = ""
-  - if(params[:controller] == "books" && params[:action] == "index")
-    - jsquery = set_query_string(@query_array, true) 
   .topsearch
     .input-append
       %span.separator.pull-left.searchicon
         %i.fa.fa-search.fa-lg.pull-left
       .col-xs-5
-        %input.form-control{ id: "headersearchfield", type: "text",  onkeypress: "if(event.keyCode == 13){searchfnc('#{jsquery}', document.getElementById('headersearchby'), document.getElementById('headersearchfield').value);return false;}"}
+        %input.form-control{ id: "headersearchfield", type: "text",  onkeypress: "if(event.keyCode == 13){searchfnc(document.getElementById('headersearchby'), document.getElementById('headersearchfield').value);return false;}"}
       %span.separator.pull-left 
         |
       .btn-group.pull-left
@@ -19,7 +16,7 @@
             = I18n.t('header.search.option_title')
           %option.text-left{ value: "language" } 
             = I18n.t('header.search.option_language')
-          %option.text-left{ value: "geo_location" } 
+          %option.text-left{ value: "location" } 
             = I18n.t('header.search.option_regional_affiliation')
           %option.text-left{ value: "author" } 
             = I18n.t('header.search.option_author')
@@ -27,9 +24,13 @@
             = I18n.t('header.search.option_tagged_species')
           %option.text-left{ value: "subject" } 
             = I18n.t('header.search.option_genre')
+          %option.text-left{ value: "publisher" } 
+            = I18n.t('header.search.option_publisher')
+          %option.text-left{ value: "content" } 
+            = I18n.t('header.search.option_content')
       .clearfix.visible-xs  
     %span.separator.pull-left 
       |    
-    %a.go.pull-left.rotate{ href: "#", onclick: "searchfnc('#{jsquery}', document.getElementById('headersearchby'), document.getElementById('headersearchfield').value); return false;"}
+    %a.go.pull-left.rotate{ href: "#", onclick: "searchfnc(document.getElementById('headersearchby'), document.getElementById('headersearchfield').value); return false;"}
       %i.fa.fa-arrow-circle-right.fa-2x
     .clearfix

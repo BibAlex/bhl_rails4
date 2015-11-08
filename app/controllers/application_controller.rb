@@ -1,7 +1,30 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   
-  before_filter :set_locale  
+  before_filter :set_locale
+  
+  
+  def check_authentication
+    must_log_in unless logged_in?
+    return false
+  end
+  
+  def logged_in?
+    session[:user_id]
+  end
+  
+  def must_log_in
+    respond_to do |format|
+      format.html { store_location; redirect_to login_users_path }
+      format.js   { render partial: 'content/must_login', layout: false }
+    end
+    return false
+  end
+  
+  def store_location(url = url_for(controller: controller_name, action: action_name))
+    url = nil unless url =~ /\A([%2F\/]|#{root_url})/
+    session[:return_to] = url
+  end
   
    private
     def extract_locale_from_accept_language_header

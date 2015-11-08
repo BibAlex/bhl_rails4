@@ -19,7 +19,7 @@ class PagesController < ApplicationController
   def top_rated_books
    prepare_top_rated_books_part
    respond_to do |format|  
-     format.html { render partial: 'pages/top_books', locals: { top_books: @top_rated_response, top_criteria: "rate" } }
+     format.html { render partial: 'pages/top_books', locals: { top_books: @top_rated_response[:volumes], top_criteria: "rate" } }
    end
   end
   

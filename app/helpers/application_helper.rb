@@ -27,11 +27,7 @@ module ApplicationHelper
       sort_option = "ASC" if sort_parts[1] == "DESC"
       sort_option = "DESC" if sort_parts[1] == "ASC"
     else
-      if sort_type == "single_bok_title"
-        sort_option = "ASC"
-      else
-        sort_option = "DESC"
-      end
+      sort_option = "DESC"
     end
     sort_option
   end
