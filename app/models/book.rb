@@ -29,6 +29,10 @@ class Book < ActiveRecord::Base
     Book.where(:book_status_id => BookStatus.pending_metadata.id)
   end
 
+  def self.get_pending_content_books
+    Book.where(:book_status_id => BookStatus.pending_content.id)
+  end
+
   def meta_author
 
   end

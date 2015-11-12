@@ -1,4 +1,16 @@
 module HadoopHelper
+
+  def generate_json_book_listing(book_list)
+    json_output = "{\"Books\":["
+    book_list.each do |b|
+      json_output << "\"#{b.bib_id}\","
+    end
+    json_output = json_output[0...json_output.length-1] if book_list.count > 0
+    json_output << "]}"
+
+    json_output
+  end
+
   def ingest_metadata_from_xml_string(xml_content)
     begin
       mods_xml = Nokogiri::XML(xml_content)

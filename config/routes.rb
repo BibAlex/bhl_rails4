@@ -59,7 +59,7 @@ BhlRails4::Application.routes.draw do
 
     root :to => 'pages#home'
     get "users/activate/:guid/:activation_code" => "users#activate"
-    get "user_search_history/save_query"    
+    get "user_search_history/save_query"
 
     resources :books do
       collection do
@@ -104,5 +104,6 @@ BhlRails4::Application.routes.draw do
 
     get "hadoop/pending_metadata"
     post "hadoop/ingest_metadata", to: 'hadoop#ingest_metadata'
+    get "hadoop/pending_content"
   end
 end
