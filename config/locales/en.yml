@@ -23,7 +23,8 @@ en:
   
   common:
     all: All
-    authors_page_header: "Authors"    
+    ALL: All
+    authors_page_header: "Authors"
     subjects_page_header: "Subjects"
     no_entity_found: "No %{entity} Found"
     signup: Sign Up    

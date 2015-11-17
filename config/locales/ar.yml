@@ -2,6 +2,7 @@ ar:
   
   common:
     all: الكل
+    ALL: الكل
     authors_page_header: "المؤلفون"    
     subjects_page_header: "الموضوعات"
     no_entity_found: "No %{entity} Found"
