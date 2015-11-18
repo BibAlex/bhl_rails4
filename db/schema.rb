@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151029113634) do
+ActiveRecord::Schema.define(version: 20151118075453) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -201,6 +201,15 @@ ActiveRecord::Schema.define(version: 20151029113634) do
     t.datetime "updated_at"
   end
 
+  create_table "names", force: :cascade do |t|
+    t.string   "sci_name",       limit: 255
+    t.integer  "eol_page_link",  limit: 4
+    t.string   "eol_thumb_link", limit: 255
+    t.integer  "lookup_fail",    limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "notifiers", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -247,6 +256,15 @@ ActiveRecord::Schema.define(version: 20151029113634) do
   add_index "users", ["guid"], name: "index_users_on_guid", using: :btree
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
+  create_table "volume_names", force: :cascade do |t|
+    t.integer  "volume_id",   limit: 4,   null: false
+    t.integer  "name_id",     limit: 4,   null: false
+    t.string   "name_found",  limit: 255
+    t.integer  "page_number", limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "volume_ratings", force: :cascade do |t|
     t.integer  "volume_id",  limit: 4,                                       null: false
     t.integer  "user_id",    limit: 4,                                       null: false
@@ -270,12 +288,5 @@ ActiveRecord::Schema.define(version: 20151029113634) do
 
   add_index "volumes", ["book_id"], name: "index_volumes_on_book_id", using: :btree
   add_index "volumes", ["job_id"], name: "index_volumes_on_job_id", using: :btree
-
-  create_table "volumestatuses", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.string   "code",       limit: 2,   null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
 end

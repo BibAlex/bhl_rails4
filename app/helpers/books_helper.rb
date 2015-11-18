@@ -187,9 +187,11 @@ module BooksHelper
     normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['location']
     normal_attributes[:language_facet] = query_array['language'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['language']
     sci_names = query_array['name'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['name']
-    job_ids = get_volumes_contain_sci_name(sci_names)
-    normal_attributes[:job_id] = job_ids.empty? ? nil : job_ids
-    normal_attributes.delete_if { |key, value| value.blank? }    
+    unless sci_names.nil?
+      job_ids = get_volumes_contain_sci_name(sci_names)
+      normal_attributes[:job_id] = job_ids.empty? ? nil : job_ids
+    end    
+    normal_attributes.delete_if { |key, value| value.blank? }  
   end
   
   

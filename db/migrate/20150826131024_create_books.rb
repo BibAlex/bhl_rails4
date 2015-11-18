@@ -6,7 +6,7 @@ class CreateBooks < ActiveRecord::Migration
       t.string :published_at
       t.string :publisher, limit: 1000
       t.text :mods
-      t.string :status_code, references: :bookstatuses
+      t.string :status_code, references: :book_statuses
       t.timestamps
     end
   end
