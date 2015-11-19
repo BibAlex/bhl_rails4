@@ -6,7 +6,7 @@
   %li
     %i.fa.fa-li.fa-info
     %small
-      = link_to I18n.t('common.sidelinks.detail'), { controller: 'books', id: id }
+      = link_to I18n.t('common.sidelinks.detail'), book_path(id: id)
 
   
   - if is_logged_in?

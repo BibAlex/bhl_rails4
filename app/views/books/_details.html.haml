@@ -1,0 +1,49 @@
+.col-md-8.column.media
+  - coverauthor = @volume[:author] ? @volume[:author][0] : ""
+  = render partial: "books/covers", locals: { coverno: rand(1..10), covertitle: @volume[:title][0].html_safe, coverauthor: coverauthor }
+  .media-body
+    %h3.media-heading
+      = @volume[:title][0].html_safe
+    %dl.dl-horizontal.text-left
+      - unless @volume[:language].nil?
+        %dt
+          = I18n.t('common.language') + ':'
+        %dd
+          - @volume[:language].each do |item|
+            = item_count_format('language_facet', item)
+            
+      - unless @volume[:location].nil?
+        %dt
+          = I18n.t('common.location') + ':'
+        %dd
+          - @volume[:location].each do |item|
+            = item_count_format('location_search', item)
+          
+      - unless @volume[:date].nil?
+        %dt
+          = I18n.t(:book_date_title) + ':'
+        %dd
+          = @volume[:date].first(4)
+      
+      - unless @types.nil?
+        - @types.each do |type, value|
+          - count = 0
+          - unless @volume[type].nil?
+            %dt
+              = value + ':'
+            %dd
+              - @volume[type].each do |item|
+                - count = count + 1
+                = item_count_format("#{type}_#{@volume[:language][0][0..1]}", item)
+                -if count != @volume[type].length
+                  %b
+                    = I18n.t('common.separator')      
+              %b
+                = I18n.t('common.terminator')
+      - unless @volume[:sci_names].blank?
+        %dt
+          = I18n.t('header.search.option_tagged_species') + ':'
+        %dd
+          - names = fill_response_array(@volume[:sci_names])
+          = render partial: "books/book_names", locals: { sci_names: @volume[:sci_names], id: @volume[:job_id], 
+                                                          sci_names_info: get_names_info(names), names: names, display_title: false }

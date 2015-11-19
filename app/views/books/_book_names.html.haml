@@ -1,6 +1,7 @@
 %i
-  %b
-    = I18n.t('common.names')
+  - if display_title
+    %b
+      = I18n.t('common.names')
 - sci_names_info.each_with_index do |item, index|
   %a.tooltipname{ title: name_tip(id, item[:sci_name], item[:thumb], item[:eol_url]), href: "#" }
     = item[:sci_name].html_safe

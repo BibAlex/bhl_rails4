@@ -74,4 +74,18 @@ module SolrHelper
     end
     exact_sci_names
   end
+  
+  
+  def load_volume(job_id)
+    rsolr = RSolr.connect url: SOLR_BOOKS_METADATA
+    rsolr.find 'q' => "job_id:#{job_id}"
+  end
+  
+  def item_count (type, item)
+    rsolr = RSolr.connect url: SOLR_BOOKS_METADATA
+    #Added double quotes over item to handle special characters like "[" and "]"
+    search = rsolr.find 'q' => type + ":" + "\"#{item}\"", 'rows' => 0
+    search['response']['numFound']
+  end
+  
 end

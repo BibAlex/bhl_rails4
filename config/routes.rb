@@ -64,6 +64,7 @@ BhlRails4::Application.routes.draw do
     resources :books do
       collection do
         get 'autocomplete'
+        get 'detailed_rate'
       end
     end
 

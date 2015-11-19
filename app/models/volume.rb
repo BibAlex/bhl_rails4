@@ -8,5 +8,5 @@ class Volume < ActiveRecord::Base
   has_many :activities, class_name: "Activity", as: :activitable, dependent: :destroy
   
   validates :book_id, presence: true
-  validates :job_id, presence: true
+  validates :job_id, presence: true  
 end

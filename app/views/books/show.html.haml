@@ -1,0 +1,19 @@
+- content_for :head do
+  %meta{ name: "description", content: @meta_description }
+  %meta{ name: "keywords", content: @meta_keywords }
+  %meta{ name: "author", content: @meta_author }
+
+= javascript_include_tag 'jquery/jquery.tooltipster.min'
+
+- if(params[:tab] != 'read')
+  .row.clearfix
+    = render partial: "books/details"
+    = render partial: "books/sidepanel"
+  .row.clearfix
+    = render partial: "books/reviews"
+  .row.clearfix
+    = render partial: "books/others"
+- else
+  .row.clearfix
+    %center
+      = render partial: "books/read"

@@ -38,21 +38,7 @@ module BooksHelper
   end
   
   def fill_response_array(arr)
-    counter = 1
-    array = []
-    if(arr.count > 1)
-      arr.each do |term|
-        if(counter > MAX_NAMES_PER_BOOK)
-          break
-        else
-          array << term
-          counter += 1
-        end
-      end
-    else
-      array << arr[0]
-    end
-    array
+    arr.slice(0, MAX_NAMES_PER_BOOK)
   end
   
   def get_names_info(sci_names)
@@ -262,6 +248,68 @@ module BooksHelper
       facet_fields[:name] = all_sci_names_with_facets[:facets]
     end
     { volumes: volumes, total_number_of_volumes: solr_response["response"]["numFound"], facets: facet_fields }
+  end
+  
+  def load_volume_from_solr(job_id)
+    solr_response = load_volume(job_id)
+    volume = {}
+    unless solr_response["response"]["numFound"] == 0
+      doc = solr_response["response"]["docs"][0]
+      all_sci_names_with_facets = get_sci_names_of_volumes("#{job_id}")
+      tmp = all_sci_names_with_facets[:sci_names]["#{doc[:job_id]}"]
+      sci_names = tmp.nil? ? [] : tmp
+      lang = doc["language_facet"][0][0..1]
+      volume = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
+                 rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
+                 language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
+    end
+    volume
+  end 
+  
+  def item_count_format (type, item)
+    format = item
+    unless item_count(type, item).nil?
+      format += ' (' + item_count(type, item).to_s + ')'      
+    end
+    format
+  end
+  
+  def get_format(id, format)    
+    if format == 'mods'
+      handle_mods_format(id)
+    else
+      handle_other_formats(id, format)
+   end
+  end
+  
+  def handle_mods_format(id)
+    format = ""
+    volume = Volume.find_by_job_id(id)
+    unless volume.nil?
+      mods = Book.find_by_id(volume.book_id).mods
+      unless mods.nil?
+        mods.slice!(0) if mods[0] == "?" # This should remove leading "?" from mods
+        # this is used to beautify xml display 
+        doc = REXML::Document.new mods
+        out = ""
+        doc.write(out, 1)
+        format = out
+      end
+    end
+    format
+  end
+  
+  def handle_other_formats(id, book_field)
+    format = ""
+    volume = Volume.find_by_job_id(id)
+    unless volume.nil?
+      book_format = Book.find_by_id(volume.book_id).book_field   
+      unless book_format.nil?
+        book_format = book_format[1..-1] if book_format[0] == "?"
+        format = book_format if book_format
+      end
+    end
+    format
   end
 
 end
