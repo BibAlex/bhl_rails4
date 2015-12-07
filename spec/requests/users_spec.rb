@@ -83,13 +83,6 @@ RSpec.describe "Users", type: :request do
     
     describe "profile tab" do
       
-      # let(:file) { ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
-                                                        # filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))}
-      # let(:@owner_user) { FactoryGirl.create(:user, active: true, username: "@owner_user", password: User.hash_password("@owner_user_password"),
-                                                  # photo_name: file, real_name: "@owner_user_real", email: "owner@example.com") }
-      # let(:other_user) { FactoryGirl.create(:user, active: true, username: "other_user", password: User.hash_password("other_user_password"),
-                                                    # email: "other@example.com") }      
-      
       context "when the user access his page" do
       
         before do

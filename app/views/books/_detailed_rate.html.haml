@@ -1,0 +1,4 @@
+- 5.downto(1) do |n|
+  = I18n.t('common.rate_details', count: n.to_i)
+  ="(#{@rate_array[n-1]})"
+  %br

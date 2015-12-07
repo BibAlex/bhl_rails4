@@ -1,0 +1,33 @@
+:javascript  
+  $(document).ready(function() {
+    $("#" + "#{type}_pagination").find(".previous_page").addClass("fa fa-arrow-left");
+    $("#" + "#{type}_pagination").find(".next_page").addClass("fa fa-arrow-right");
+  
+    $("#" + "#{type}_pagination").find(".previous_page").click(function(event) {      
+      href = $(this).attr('href');
+      event.preventDefault();
+      get_carousel(href, "#{object_id}", "#{type}");
+    });
+    
+    $("#" + "#{type}_pagination").find(".next_page").click(function(event) {
+      href = $(this).attr('href');
+      event.preventDefault();
+      get_carousel(href, "#{object_id}", "#{type}");
+    });    
+  });
+  
+
+
+- unless items.blank?
+  .col-md-4
+    %h4 
+      = carousel_title
+    %ul.list-group
+      - items.each do |item|
+        %li.list-group-item
+          = link_to item[:title], { controller: controller, action: action, id: item[:id] || item[:job_id] }
+          
+    %center{  id: "#{type}_pagination" }
+      = will_paginate items, page_links: false, previous_label: "", next_label: ""
+
+

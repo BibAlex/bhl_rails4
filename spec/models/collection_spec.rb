@@ -11,7 +11,6 @@ RSpec.describe Collection, type: :model do
   describe Collection, 'association' do
     it { should have_many(:volumes) }
     it { should have_many(:collection_volumes) }
-    it { should have_many(:collection_ratings) }
     it { should have_many(:comments) }
     it { should have_many(:activities).dependent(:destroy) }
     it { should belong_to(:user) }

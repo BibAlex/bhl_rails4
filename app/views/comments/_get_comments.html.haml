@@ -1,0 +1,32 @@
+:javascript  
+  $(document).ready(function() {
+    $("#comments_pagination").find(".previous_page").addClass("btn btn-sm");
+    $("#comments_pagination").find(".next_page").addClass("btn btn-sm");
+  
+    $("#comments_pagination").find(".previous_page").click(function(event) {      
+      href = $(this).attr('href');
+      event.preventDefault();
+      get_comments(href, "#{commentable_id}", "#{commentable_type}");
+    });
+    
+    $("#comments_pagination").find(".next_page").click(function(event) {
+      href = $(this).attr('href');
+      event.preventDefault();
+      get_comments(href, "#{commentable_id}", "#{commentable_type}");
+    });    
+  });
+
+
+
+
+- if !(comments.blank?)
+  - comments.each do |comment| 
+    = render partial: "comments/comment_element", locals: { comment: comment, commentable_type: commentable_type, commentable_id: commentable_id }
+  .clearfix
+  .clearfix
+  %ul.pager
+    %center{  id: "comments_pagination" }
+      = will_paginate comments, page_links: false, previous_label: I18n.t('common.newer'), next_label: I18n.t('common.older') 
+- else
+  %h5
+    = I18n.t('common.no_entity_found', entity: I18n.t('common.comments'))

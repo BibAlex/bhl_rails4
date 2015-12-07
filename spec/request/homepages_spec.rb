@@ -208,7 +208,7 @@ RSpec.describe "Homepages", type: :feature do
       describe "volume entry for most viewed books" do
         
         it "display a link for volume page" do
-          expect(page).to have_selector("a[href='/#{I18n.locale}/books?id=2']", text: "title_2")
+          expect(page).to have_selector("a[href='/#{I18n.locale}/books/2']", text: "title_2")
         end
         
         it "display a link for volume read page" do
@@ -216,7 +216,7 @@ RSpec.describe "Homepages", type: :feature do
         end
         
         it "display a link for volume details page" do
-          expect(page).to have_selector("a[href='/#{I18n.locale}/books?id=2']", text: I18n.t('common.sidelinks.detail'))
+          expect(page).to have_selector("a[href='/#{I18n.locale}/books/2']", text: I18n.t('common.sidelinks.detail'))
         end
         
         it "display a cover photo for the volume" do

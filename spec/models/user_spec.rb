@@ -1,7 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe User, type: :model do  
+RSpec.describe User, type: :model do
   
+ 
   describe User, 'FactoryGirl' do
     it 'has a valid factory' do
       expect(build(:user)).to be_valid
@@ -9,8 +10,7 @@ RSpec.describe User, type: :model do
   end  
   
   describe User, 'association' do
-    it { should have_many(:collection_ratings).dependent(:destroy) }
-    it { should have_many(:volume_ratings).dependent(:destroy) }
+    it { should have_many(:rates).dependent(:destroy) }
     it { should have_many(:user_volume_histories).dependent(:destroy) }
     it { should have_many(:activities).dependent(:destroy) }
     it { should have_many(:annotations).dependent(:destroy) }
@@ -20,37 +20,37 @@ RSpec.describe User, type: :model do
   
   describe User, 'validation' do
     
-     it "is invalid without username" do
+    it "is invalid without username" do
       expect(FactoryGirl.build(:user, username: nil)).to_not be_valid
     end
     
-     it "is invalid with duplicate username" do
+    it "is invalid with duplicate username" do
       FactoryGirl.create(:user, username: 'user')
       expect(FactoryGirl.build(:user, username: 'user')).to_not be_valid
     end
     
-     it "is invalid with too short username" do
+    it "is invalid with too short username" do
       expect(FactoryGirl.build(:user, username: 'usr')).to_not be_valid
     end
     
-     it "is invalid with too long username" do
+    it "is invalid with too long username" do
       expect(FactoryGirl.build(:user, username: Faker::Internet.user_name(17))).to_not be_valid
     end
     
-     it "is invalid without email" do
+    it "is invalid without email" do
       expect(FactoryGirl.build(:user, email: nil)).to_not be_valid
     end
     
-     it "is invalid with duplicated email" do
+    it "is invalid with duplicated email" do
       FactoryGirl.create(:user, email: 'user@example.com')
       expect(FactoryGirl.build(:user, email: 'user@example.com')).to_not be_valid
     end    
     
-     it "is invalid without real_name" do
+    it "is invalid without real_name" do
       expect(FactoryGirl.build(:user, real_name: nil)).to_not be_valid
     end    
     
-     it "is invalid with duplicated guid" do
+    it "is invalid with duplicated guid" do
       FactoryGirl.create(:user, guid: 'guid')
       expect(FactoryGirl.build(:user, guid: 'guid')).to_not be_valid
     end    
@@ -87,7 +87,7 @@ RSpec.describe User, type: :model do
   describe '#activate' do    
     
     before do
-      @user = FactoryGirl.create(:user)
+      @user = FactoryGirl.create(:user, username: "user_activate", email: "user_activate@example.com", guid: "activite")
       @user.activate
     end
     

@@ -1,25 +1,43 @@
 = javascript_include_tag 'book_collection.js'
-#approvalModal.modal.fade{ "aria-hidden" => "true", "aria-labelledby" => "approvalModalLabel", "role" => "dialog", "tabindex" => "-1" }
-  .modal-dialog
-    .modal-content
-      .modal-header
-        %button.close{ "data-dismiss" => "modal", "type" => "button" }
-          %span{ "aria-hidden" => "true" } &times;
-          %span.sr-only Close
-        %h4.modal-title 
-          = I18n.t('common.sidelinks.add_collection')
-      .modal-body
-        = check_box_tag(:create_new_collection)
-        = label_tag(:create_new_collection, I18n.t('common.create_new_collection'))
-        %div{ id: "new_collection", style: "display: none;" }
-          = form_tag collections_path, method: :get, class: "form-horizontal" do
-            = label_tag 'title', I18n.t('common.title'), class: 'control-label'
-            = text_field_tag :title, params[:reason], class: "form-control"
-            = label_tag 'description', I18n.t('common.description'), class: 'control-label'
-            = text_field_tag :title, params[:reason], class: "form-control"
-            = check_box_tag(:is_public)
-            = label_tag(:is_public, I18n.t('common.public'))
-            .modal-footer
-              %button.btn.btn-danger{ "data-dismiss" => "modal", "type" => "button" }
-                = I18n.t('common.cancel')
-              = submit_tag I18n.t('common.save'), name: nil, class: "btn btn-success"
+
+:Javascript
+  $(document).ready(function($) {
+    $("#create_new_collection_#{job_id}").click(function(){      
+      $('#new_collection').css('display', ($(this).is(':checked') ? 'block' : 'none'));
+    });
+  });
+
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{ "data-dismiss" => "modal", "type" => "button" }
+        %span{ "aria-hidden" => "true" } &times;
+        %span.sr-only Close
+      %h4.modal-title 
+        = I18n.t('common.sidelinks.add_collection')
+    .modal-body        
+      - if collections.count > 0
+        %div
+          = I18n.t('common.choose_collection')
+          %select{ id: "idselect_#{job_id}" }
+            - collections.each_with_index do |collection, index|
+              - if disabled[index] == 1
+                %option{ disabled: "disabled", value: collection.id, id: collection.id }
+                  = collection.title
+              - else
+                %option{ value: collection.id, id: collection.id }
+                  = collection.title
+      %br
+      = check_box_tag("create_new_collection_#{job_id}")
+      = label_tag(:create_new_collection, I18n.t('common.create_new_collection'))
+      %div{ id: "new_collection", style: "display: none;" }
+        = label_tag 'title', I18n.t('common.title'), class: 'control-label'
+        = text_field_tag :title, params[:reason], class: "form-control", id: "collection_title_#{job_id}"
+        = label_tag 'description', I18n.t('common.description'), class: 'control-label'
+        = text_field_tag :title, params[:reason], class: "form-control", id: "collection_description_#{job_id}"
+        = check_box_tag("is_public_#{job_id}")
+        = label_tag(:is_public, I18n.t('common.public'))
+      .modal-footer
+        %button.btn.btn-danger{ "data-dismiss" => "modal", "type" => "button" }
+          = I18n.t('common.cancel')
+        = submit_tag I18n.t('common.save'), name: nil, class: "btn btn-success", id: "add_book_to_collection", :onClick => "add_book_to_collection(#{job_id})"

@@ -2,8 +2,7 @@ include ActionView::Helpers::SanitizeHelper
 
 class User < ActiveRecord::Base
   
-  has_many :collection_ratings, dependent: :destroy
-  has_many :volume_ratings, dependent: :destroy
+  has_many :rates, dependent: :destroy
   has_many :user_volume_histories, dependent: :destroy
   has_many :activities, dependent: :destroy
   has_many :annotations, dependent: :destroy

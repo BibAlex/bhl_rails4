@@ -1,0 +1,95 @@
+function updatedetailedrate(rateable_id, rateable_type)
+{
+	$.ajax({
+	    url: "/rating/detailed_rate/" + rateable_id + "/" + rateable_type,
+	    type: "GET",        
+	    success: function (data) { 
+	      $("#detailedrate").html(data);
+	    }
+	  });
+}
+
+
+function rate_volume(user_id, rateable_id, rateable_type, count)
+{
+ // value == 0 then it is static star
+  if(parseInt($(this).attr("value")) != 0){
+    
+    // if off then user want to reset his rating to 0
+    var off = false;
+    if(count == 1 && (($("#star1").attr("class")).split(' ')).length == 3 &&  ($("#star2").attr("class")).localeCompare("starrating") == 0){
+      for(i=1; i <= 5; i++){
+        $("#star"+ i).removeClass("on");
+      }
+      off = true;
+    }else{
+      for(i=1; i <= 5; i++){
+        if(i <= count){
+              $("#star"+ i).addClass("on");
+            } else {
+              $("#star"+ i).removeClass("on");
+            }
+          }
+        }
+        if(off){
+          off = false;
+          count = 0;
+        }
+        $.ajax({type: "GET", 
+                url: "/rating/rate/" + count + "/" + rateable_type + "/" + user_id + "/" + rateable_id, 
+                success: function(data){
+                			  update_avg_rate(data);
+                              updatedetailedrate(rateable_id, rateable_type);
+                              
+                              
+                         }
+               });
+      }
+}
+
+
+function load_user_rating(user_rate)
+{
+	//load dynamic (user rate) stars
+    //when user rate == -1 this means that he never rated this book before
+    if(user_rate != -1){
+      var count = user_rate;
+      for(i=1; i <= count; i++){
+          $("#star"+ i).addClass("on");
+      }
+    }
+}
+
+
+$(function () {
+    $('#star1, #star2, #star3, #star4, #star5').mouseover(function(){
+      var count = parseInt($(this).attr("value"));
+      for(i=1; i <= 5; i++){
+        if(i <= count){
+          $("#star"+ i).addClass("shine");
+        } else {
+          $("#star"+ i).removeClass("shine");
+        }
+      }
+    });
+    
+$('#star1, #star2, #star3, #star4, #star5').mouseout(function(){
+  for(i=1; i <= 5; i++){
+      $("#star"+ i).removeClass("shine");
+  }
+});
+});
+
+function prepare_avg_rate()
+{
+	$(".averagerate").jRating({
+      isDisabled : true,
+      bigStarsPath: "/images_<%= I18n.locale %>/<%= I18n.t('common.stars_white') %>"
+    });
+}
+
+function update_avg_rate(data)
+{
+	 $("#rating_part").html(data);
+	 prepare_avg_rate();
+}

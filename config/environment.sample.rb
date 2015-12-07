@@ -20,6 +20,7 @@ RESIZED_PHOTO_HIGHT_SMALL = 120
 LOGIN_ATTEMPTS = 1
 
 FACET_COUNT = 10
+MAX_NO_ABUSE = 1
 
 Recaptcha.configure do |config|
   config.public_key  = ''

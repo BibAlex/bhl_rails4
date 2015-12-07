@@ -1,3 +1,4 @@
+= javascript_include_tag 'book_collection.js'
 %ul.fa-ul.tools
   %li
     %i.fa.fa-li.fa-book
@@ -12,10 +13,10 @@
   - if is_logged_in?
     %li
       %i.fa.fa-li.fa-plus-square
-      %small        
-        %a{ href: "#", "data-target" => "#approvalModal", "data-toggle" => "modal" }
+      %small
+        %a{ onclick: "load_collections(#{id})", style: "cursor:pointer;" }
           = I18n.t('common.sidelinks.add_collection')
-        = render partial: "books/add_book_to_collection"
+      .modal.fade{ "aria-hidden" => "true", "aria-labelledby" => "approvalModalLabel", "role" => "dialog", "tabindex" => "-1", id: "collection_modal_#{id}" }
 .rate
   - if rate
     .starsidelink_gray{ id: "starsidelink_#{id}", data: "#{rate}" }

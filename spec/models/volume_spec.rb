@@ -16,7 +16,6 @@ RSpec.describe Volume, type: :model do
     it { should have_many(:user_volume_histories).dependent(:destroy) }
     it { should have_many(:comments).dependent(:destroy) }
     it { should have_many(:activities).dependent(:destroy) }
-    it { should have_many(:volume_ratings).dependent(:destroy) }
     it { should belong_to(:book) }
   end
   

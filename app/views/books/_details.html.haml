@@ -1,9 +1,10 @@
 .col-md-8.column.media
   - coverauthor = @volume[:author] ? @volume[:author][0] : ""
-  = render partial: "books/covers", locals: { coverno: rand(1..10), covertitle: @volume[:title][0].html_safe, coverauthor: coverauthor }
+  - covertitle = @volume[:title] ? @volume[:title][0].html_safe : ""
+  = render partial: "books/covers", locals: { coverno: rand(1..10), covertitle: covertitle, coverauthor: coverauthor }
   .media-body
     %h3.media-heading
-      = @volume[:title][0].html_safe
+      = covertitle
     %dl.dl-horizontal.text-left
       - unless @volume[:language].nil?
         %dt

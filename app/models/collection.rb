@@ -18,8 +18,16 @@ class Collection < ActiveRecord::Base
   scope :top, -> { where("is_public = true").order("rate desc").limit(TOP_COLLECTIONS_COUNT).offset(0) }
   
   def sanitize_html
-     self.title = sanitize(title, :tags=>[])
-     self.description = sanitize(description, :tags=>[])
-   end
+    self.title = sanitize(title, :tags=>[])
+    self.description = sanitize(description, :tags=>[])
+  end
+   
+  def self.collection_params(params)
+    params.permit(:title, :description, :is_public, :user_id, :rate, :photo_name)
+  end
+  
+  def self.get_count_by_volume(volume_job_id, user_id)
+    Collection.includes(:collection_volumes).where(collection_volumes: { volume_id: volume_job_id }).where('is_public=true or user_id=?', user_id).count
+  end
 
 end

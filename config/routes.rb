@@ -59,12 +59,19 @@ BhlRails4::Application.routes.draw do
 
     root :to => 'pages#home'
     get "users/activate/:guid/:activation_code" => "users#activate"
+    get "rating/rate//:value/:rateable_type/:user_id/:rateable_id" => "rating#rate"
+    get "rating/detailed_rate/:rateable_id/:rateable_type" => "rating#detailed_rate"
     get "user_search_history/save_query"
+    get "carousel/index"
+    get "carousel/get_carousel"
+    get "comments/insert_comment"
+    get "comments/get_comments"
+    get "comments/mark"
+    get "comments/delete"
 
     resources :books do
       collection do
         get 'autocomplete'
-        get 'detailed_rate'
       end
     end
 
@@ -95,14 +102,21 @@ BhlRails4::Application.routes.draw do
       collection do
         get 'get_activity_log'
       end
-    end
+    end    
 
     resources :names
 
     resources :geographics
 
-    resources :collections
-
+    resources :collections do
+      collection do
+        get 'add_book'
+        get 'load'
+      end
+    end
+    
+    resources :comments, only: [:create]
+    
     get "hadoop/pending_metadata"
     post "hadoop/ingest_metadata", to: 'hadoop#ingest_metadata'
     get "hadoop/pending_content"

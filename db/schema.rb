@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118075453) do
+ActiveRecord::Schema.define(version: 20151124141703) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -95,6 +95,15 @@ ActiveRecord::Schema.define(version: 20151118075453) do
     t.datetime "updated_at"
   end
 
+  create_table "book_views", force: :cascade do |t|
+    t.integer  "source_book_id",    limit: 4,   null: false
+    t.integer  "dest_book_id",      limit: 4,   null: false
+    t.string   "source_book_title", limit: 255
+    t.string   "dest_book_title",   limit: 255
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
   create_table "books", force: :cascade do |t|
     t.string   "title",             limit: 2000
     t.string   "title_alternative", limit: 2000
@@ -109,17 +118,6 @@ ActiveRecord::Schema.define(version: 20151118075453) do
     t.integer  "book_status_id",    limit: 4
     t.string   "contributor",       limit: 255
   end
-
-  create_table "collection_ratings", force: :cascade do |t|
-    t.integer  "collection_id", limit: 4,                                       null: false
-    t.integer  "user_id",       limit: 4,                                       null: false
-    t.decimal  "rate",                    precision: 2, scale: 1, default: 0.0, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "collection_ratings", ["collection_id"], name: "index_collection_ratings_on_collection_id", using: :btree
-  add_index "collection_ratings", ["user_id"], name: "index_collection_ratings_on_user_id", using: :btree
 
   create_table "collection_volumes", force: :cascade do |t|
     t.integer  "volume_id",     limit: 4, null: false
@@ -224,6 +222,18 @@ ActiveRecord::Schema.define(version: 20151118075453) do
 
   add_index "queries", ["user_id"], name: "index_queries_on_user_id", using: :btree
 
+  create_table "rates", force: :cascade do |t|
+    t.integer  "rateable_id",   limit: 4
+    t.string   "rateable_type", limit: 255
+    t.integer  "user_id",       limit: 4,                                         null: false
+    t.decimal  "rate",                      precision: 2, scale: 1, default: 0.0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rates", ["rateable_id"], name: "index_rates_on_rateable_id", using: :btree
+  add_index "rates", ["user_id"], name: "index_rates_on_user_id", using: :btree
+
   create_table "subjects", force: :cascade do |t|
     t.string   "name",       limit: 255, null: false
     t.datetime "created_at"
@@ -264,17 +274,6 @@ ActiveRecord::Schema.define(version: 20151118075453) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "volume_ratings", force: :cascade do |t|
-    t.integer  "volume_id",  limit: 4,                                       null: false
-    t.integer  "user_id",    limit: 4,                                       null: false
-    t.decimal  "rate",                 precision: 2, scale: 1, default: 0.0, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "volume_ratings", ["user_id"], name: "index_volume_ratings_on_user_id", using: :btree
-  add_index "volume_ratings", ["volume_id"], name: "index_volume_ratings_on_volume_id", using: :btree
 
   create_table "volumes", force: :cascade do |t|
     t.integer  "book_id",       limit: 4,                                         null: false

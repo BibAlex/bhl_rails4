@@ -77,7 +77,6 @@ function autocomplete()
 
 function save_query(query)
 {
-	alert(query);
 	$.ajax({
 	    url: "/user_search_history/save_query?query=" + encodeURIComponent(query),
 	    type: "GET",        
@@ -86,4 +85,14 @@ function save_query(query)
 	      document.getElementById( 'save_query' ).style.display = 'none';    
 	    }
 	  });
+}
+
+function loadformats(format){
+    div_name = "#" + format.toLowerCase() + "_hidden";
+    content = $(div_name).html();
+    content = content.replace(/\n/g, '<br />'); // to convert \n to <br />
+    if (format.toLowerCase() == "mods")
+      content = content.replace(/\s/g, " &nbsp;");  // to display xml indentation
+    $("#modallabel").html(format);
+    $("#modalcontent").html(content);
 }

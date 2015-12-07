@@ -12,6 +12,19 @@ class Comment < ActiveRecord::Base
   before_save :sanitize_html
   
   def sanitize_html
-     self.text = sanitize(text, :tags=>[])
+    self.text = sanitize(text, :tags=>[])
+  end
+  
+  def self.comment_params(params)
+    params.permit(:user_id, :text, :commentable_id, :commentable_type)
+  end
+   
+   def can_delete?
+     replies = Comment.where(commentable_id: self.id, commentable_type: "comment")
+      if replies.count > 0
+        false
+      else
+        true
+      end
    end
 end

@@ -1,0 +1,29 @@
+= javascript_include_tag 'comments_functions.js'
+
+:javascript
+  $(document).ready(function() {
+    load_comments("#{params[:id]}", "volume");
+  });
+  
+
+#new_comment_modal.modal.fade{ "aria-hidden" => "true", "aria-labelledby" => "myModalLabel", "role" => "dialog" }
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{ "aria-hidden" => "true", "data-dismiss" => "modal", "type" => "button" } ×
+        %h4#myModalLabel.modal-title 
+        = I18n.t('common.write_review')
+      .modal-body
+        - if is_logged_in?
+          = render partial: "comments/new_comment", locals: { commentable_id: params[:id], commentable_type: "volume" }
+        - if !(is_logged_in?)
+          = link_to I18n.t('msgs.please_login'), login_users_path(locale: I18n.locale)
+
+
+.reviews
+  %a#modal-4.btn.btn-primary.btn-sm.pull-right{ "data-toggle" => "modal", "href" => "#new_comment_modal", "role" => "button" } 
+    = I18n.t('common.write_review')
+  %h3 
+    = I18n.t('common.reviews')
+  %hr.clearfix
+  #reviews

@@ -87,6 +87,35 @@ ar:
     publisher_facet: "الناشر"
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
+    tools: الأدوات
+    avg_rate: المعدل المتوسط
+    your_rate: المعدل الخاص بك
+    choose_collection: "اختر مجموعة"
+    mods: MODs
+    bibtex: BibTeX
+    endnote: EndNote
+    replies: ردود
+    abuse: بلِّغ
+    delete: "حذف"
+    write_review: اكتب مراجعة
+    reviews: مراجعات
+    reply: رد
+    older: أقدم
+    newer: أحدث
+    user_viewed: قام المستخدم أيضًا بمشاهدة
+    related_books: كتب ذات صلة 
+    post: نشر
+    show: "اعرض"
+    abuse: بلِّغ
+    book_details_collection_count:
+      one:   "مجموعة"
+      two: "مجموعتين"
+      other: "مجموعات"
+    rate_details: 
+      zero: ""
+      one: "نجمة واحدة"
+      two: "نجمتين"
+      other: "نجمات %{count}"
     actions:
       create: "أنشأ"
       rate: "قيم"
@@ -126,7 +155,12 @@ ar:
     sign_in_unsuccessful_error: "فشل تسجيل الدخول. اسم مستخدم غير سليم أو كلمة مرور غير سليمة" 
     sign_in_successful_notice: "تسجيل دخول ناجح"
     delete_profile_photo_confirm: هل تريد فعلاً حذف صورة البروفيل؟
-
+    book_added_to_collection: "تمت إضافة الكتاب بنجاح إلى مجموعتك"
+    please_login: من فضلك سجل الدخول
+    delete_comment_confirm: هل ترغب فعلاً في حذف هذا التعليق؟
+    reply_deleted: "حذف الرد"
+    comment_deleted: "حذف التعليق"
+    can_not_delete_comment: "لا يمكنك حذف التعليق الذي له رد"
   
   header:
     page_title:

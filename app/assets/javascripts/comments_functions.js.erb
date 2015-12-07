@@ -1,0 +1,54 @@
+function get_comments(href, commentable_id, commentable_type)
+  {
+    $.ajax({
+      url: href + "&commentable_id=" + commentable_id + "&commentable_type=" + commentable_type,
+      type: "GET",        
+      success: function (data) {
+        $("#reviews").html(data);
+      }
+    });
+}
+
+function load_comments(commentable_id, commentable_type)
+    {
+      $.ajax({
+      url: "/comments/get_comments?commentable_id=" + commentable_id + "&commentable_type=" + commentable_type + "&page=1",
+      type: "GET",        
+      success: function (data) {
+        $("#reviews").html(data);
+      }
+    });
+}
+
+
+    
+function show_replies(id) {
+  $('#replies'+id).toggle();
+}
+  
+function show_reply(id) {
+  $('#open_reply'+id).toggle();
+}
+  
+function open_comment(id) {
+  $('#comment'+id).toggle();
+  $('#abuse'+id).toggle();
+}
+  
+function confirmDelete(){
+  var r= confirm("<%= I18n.t('msgs.delete_comment_confirm') %>");
+  return r;
+}
+
+function mark_comment(id) {
+  $.ajax({type: "GET", 
+    url: "/comments/mark?id=" + id , 
+    dataType: "script",
+    success: function(data){
+      if(parseInt(data) >= "<%= MAX_NO_ABUSE %>"){
+        $('#comment'+id).toggle();
+        $('#abuse'+id).toggle();
+      }
+    }
+  });
+}
