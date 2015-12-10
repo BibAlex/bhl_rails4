@@ -80,7 +80,7 @@ RSpec.describe "Homepages", type: :feature do
     end
     
     it "includes bibalex logo" do
-      expect(page).to have_selector("img[src='/images_#{I18n.locale}/#{I18n.t('footer.ba_logo')}']")
+      expect(page).to have_selector("img[src='/images_#{I18n.locale}/#{I18n.t('common.ba_logo')}']")
     end    
     
     it "includes a link for home page" do
@@ -212,11 +212,11 @@ RSpec.describe "Homepages", type: :feature do
         end
         
         it "display a link for volume read page" do
-          expect(page).to have_selector("a[href='/#{I18n.locale}/books?id=2&tab=read']", text: I18n.t('common.sidelinks.read'))
+          expect(page).to have_selector("a[href='/#{I18n.locale}/books?id=2&tab=read']", text: I18n.t('common.read'))
         end
         
         it "display a link for volume details page" do
-          expect(page).to have_selector("a[href='/#{I18n.locale}/books/2']", text: I18n.t('common.sidelinks.detail'))
+          expect(page).to have_selector("a[href='/#{I18n.locale}/books/2']", text: I18n.t('common.details'))
         end
         
         it "display a cover photo for the volume" do

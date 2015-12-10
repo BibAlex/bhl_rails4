@@ -2,11 +2,7 @@ ar:
   
   common:
     all: الكل
-    ALL: الكل
-    authors_page_header: "المؤلفون"    
-    subjects_page_header: "الموضوعات"
-    no_entity_found: "No %{entity} Found"
-    signup: تسجيل    
+    all_categories: كل التصنيفات
     login: دخول
     profile: الصفحة الشخصية
     by: بواسطة
@@ -21,6 +17,8 @@ ar:
     as: "بأنها"
     with: "بمقدار"
     no_activities: "لا توجد أنشطة .."
+    no_books_found: لا يوجد كتب...
+    no_comments_found: لا توجد مراجعات ..
     default_collection: "default_collection.png"
     default_user_small: "default_user_small.png"
     default_user: "default_user.png"
@@ -54,7 +52,6 @@ ar:
     real_name: "الاسم الفعلي"
     password: "كلمة المرور"
     password_confirmation: "تأكيد اسم المرور"
-    email: "عنوان البريد الإلكتروني"
     email_confirmation: "تأكيد بريد إلكتروني"
     upload_photo: "تحميل الصور"
     forgot_password: "هل نسيت كلمة المرور؟"
@@ -68,7 +65,6 @@ ar:
     delete_photo: حذف صورة
     save_query: "حفظ البحث"
     sort_by: "الترتيب حسب"
-    entity_found_all:  "%{entity} الموجودة %{count}"
     book: "كتاب"
     number_of_viewes: عدد المشاهدات
     entity_saved: "%{entity} تم حفظ"
@@ -106,7 +102,25 @@ ar:
     related_books: كتب ذات صلة 
     post: نشر
     show: "اعرض"
-    abuse: بلِّغ
+    read: "اقرأ"
+    details: "تفاصيل"
+    add_collection: "أضف إلى المجموعة"
+    bhl_site_name: "مكتبة تراث التنوع الحيوي- مصر"
+    bhl_short_title: "مصر BHL"
+    regional_affiliation: التبعية الإقليمية
+    content: المحتوى 
+    about_us: من نحن
+    contact_us: اتصل بنا
+    browse_all: تصفح الكل
+    geographics: جغرافيات
+    signout: تسجيل خروج
+    logo: "logo.png"
+    ba_logo: "balogo-white.svg"
+    home: الصفحة الرئيسية
+    views:
+      one: "مشاهدة واحدة"
+      two: "مشاهدتين"
+      other: " %{count} مشاهدات "
     book_details_collection_count:
       one:   "مجموعة"
       two: "مجموعتين"
@@ -124,14 +138,7 @@ ar:
       collection: "المجموعة"
       book: "الكتاب"
       comment: "التعليق"
-    sidelinks:
-      read: "اقرأ"
-      detail: "تفاصيل"
-      add_collection: "أضف إلى المجموعة"
-      views:
-        one: "مشاهدة واحدة"
-        two: "مشاهدتين"
-        other: " %{count} مشاهدات "
+      
   
   
   warn:
@@ -163,50 +170,22 @@ ar:
     can_not_delete_comment: "لا يمكنك حذف التعليق الذي له رد"
   
   header:
-    page_title:
-      bhl_page_title: "مكتبة تراث التنوع الحيوي - مصر"
-      bhl_short_title: "مصر BHL"      
     search:
-      option_all: كل التصنيفات
-      option_title: عنوان
-      option_language: لغة
-      option_publish_time: تم النشر في
-      option_publisher: الناشر
-      option_regional_affiliation: التبعية الإقليمية
-      option_author: المؤلف
       option_tagged_species: الأنواع المسماة
-      option_genre: النوع
-      option_content: المحتوى 
     pages:
-      about_us_link: من نحن
-      contact_us_link: اتصل بنا
-      browse_all_link: تصفح الكل
-      authors_link: المؤلفون 
-      subjects_link: الموضوعات
       names_link: الأسماء
-      collections_link: المجموعات
-      geographics_link: جغرافيات
-      bhl_homepage: مصر BHL
-    user:
-      signout: تسجيل خروج
-    logo:
-      logo: "logo.png"
-      bhl_site_name: "مكتبة تراث التنوع الحيوي- مصر"
+      
+      
       
   footer:
-    ba_logo: "balogo-white.svg"
-    home: الصفحة الرئيسية
-    about: نبذة
-    contact: اتصل بنا
+    
     copyright_statement: جميع الحقوق محفوظة @ مكتبة الاسكندرية
-    share_msg: BHLمصر
   
   about_us:
     paragraph_1: يكرس %{ba_link} الجديد لاستعادة روح الانفتاح والبحث التي ميزت مكتبةالإسكندرية القديمة وبالتالي، كان حريصًا على المشاركة في مشروع مكتبة تراث التنوع الحيوي  العالمي (BHL)، وذلك لأن المشروع يعتبر إثراءً أساسيًّا لمجموعات مكتبة الإسكندرية، وبالتالي فهو يعد أفضل قناة للمشاركة في مجموعات المكتبة الخاصة بالتنوع الحيوي باللغة العربية وغير العربية وتنميتها. ويأتي هذا التعاون المتبادل متوافقًا مع هدف مكتبة الإسكندرية في نشر المعرفة للجميع ويدعم إدراج الدول الناطقة للغة العربية والمدخلات الخاصة بها
     paragraph_2: بناءً على ذلك، اتجهت مكتبة الإسكندرية لمطابقة وتكرار مكتبة تراث التنوع الحيوي BHL منذ أوائل عام 2011. وبرزت مشاركتها في هذا المشروع لكونها واحدة من المساهمين الرئيسيين في عملية النشر على المستوى الدولي والمحلي والتطابق في مشروع موسوعة الحياة، ووضع المحتوي العربي له. وفي هذا السياق، تتضمن مساهمة مكتبة الإسكندرية في مشروع مكتبة تراث التنوع الحيوي بصفة عامة ما يلي وضع البنية التحتية لعملية المطابقة والتكرار لمجموعة الكتب الأصلية الخاصة بمشروع BHL، وتطوير نظام محلي لمشروع BHL، وإضافة مواد خاصة بالتنوع الحيوي من مجموعة مكتبة الإسكندرية بحيث تحتوي على مواد من العالم العربي، باللغة العربية، بالإضافة إلى اللغات الأخرى.
   
   contact_us:
-    title: اتصل بنا
     successful_feedback: "نشكرك على رسالتك"
     unsuccessful_feedback: "لقد حدث خطأ اثناء إرسال رسالتك من فضلك حاول مرة اخرى"
     

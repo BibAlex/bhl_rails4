@@ -6,19 +6,19 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      = link_to(" #{I18n.t('header.pages.bhl_homepage')}", root_path(locale: I18n.locale), class: " navbar-brand fa fa-home")
+      = link_to(" #{I18n.t('common.bhl_short_title')}", root_path(locale: I18n.locale), class: " navbar-brand fa fa-home")
     #bs-example-navbar-collapse-1.collapse.navbar-collapse
       %ul.nav.navbar-nav
         %li{ class: link_class({ controller: 'pages', action: 'about' })}
-          = link_to(" #{I18n.t('header.pages.about_us_link')}", about_pages_path(locale: I18n.locale), class: "fa fa-info-circle")
+          = link_to(" #{I18n.t('common.about_us')}", about_pages_path(locale: I18n.locale), class: "fa fa-info-circle")
         %li{ class: link_class({ controller: 'books', action: 'index' })}
-          = link_to(" #{I18n.t('header.pages.browse_all_link')}", books_path(locale: I18n.locale), class: "fa fa-globe")
+          = link_to(" #{I18n.t('common.browse_all')}", books_path(locale: I18n.locale), class: "fa fa-globe")
         %li{ class: link_class({ controller: 'names', action: 'index' })}
           = link_to(" #{I18n.t('header.pages.names_link')}", names_path(locale: I18n.locale), class: "fa fa-tags")
         %li{ class: link_class({ controller: 'geographics', action: 'index' })}
-          = link_to(" #{I18n.t('header.pages.geographics_link')}", geographics_path(locale: I18n.locale), class: "fa fa-map-marker")
+          = link_to(" #{I18n.t('common.geographics')}", geographics_path(locale: I18n.locale), class: "fa fa-map-marker")
         %li{ class: link_class({ controller: 'collections', action: 'index' })}
-          = link_to(" #{I18n.t('header.pages.collections_link')}", collections_path(locale: I18n.locale), class: "fa fa-stack-overflow")
+          = link_to(" #{I18n.t('common.collections')}", collections_path(locale: I18n.locale), class: "fa fa-stack-overflow")
       .visible-xs.visible-sm
         .form-group
           %input.form-control{ id: "appendedDropdownButton focusedInput", placeholder: "Search", type: "text" }

@@ -45,5 +45,5 @@
       = link_to "", books_path(sort_type: "title_sort DESC"), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort ASC')};"
       
 %h4.text-muted.clearfix
-  = I18n.t('common.entity_found_all', count: @response[:total_number_of_volumes], entity: I18n.t('common.book').pluralize)
+  = "#{I18n.t('common.found')} #{I18n.t('home.statistics.book_count', count: @response[:total_number_of_volumes])}"
 %hr

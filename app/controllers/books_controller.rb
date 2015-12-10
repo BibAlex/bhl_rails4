@@ -5,6 +5,7 @@ class BooksController < ApplicationController
   include ApplicationHelper
   include BooksHelper
   include SolrHelper
+  include UsersHelper
   
   def index
     @page = params[:page] ? params[:page].to_i : 1
@@ -32,18 +33,36 @@ class BooksController < ApplicationController
   end
   
   def show
+    load_volume_details
+    if params[:tab] == "read"
+      load_read_page
+    else
+      load_details_page
+    end
+    
+  end
+  
+  private
+  
+  def load_volume_details
     @volume = load_volume_from_solr(params[:id])
+  end
+  
+  def load_details_page    
     @types = { author: I18n.t('common.author'), subject: I18n.t('common.subject'), publisher: I18n.t('common.publisher') }
     @user_rate = Rate.load_user_rate(session[:user_id], params[:id], "volume")
     @collections_count = Collection.get_count_by_volume(params[:id], session[:user_id])
-     if(session[:book_id] != nil && session[:book_id] != params[:id].to_i)
-       if BookView.where(source_book_id: params[:id].to_i, dest_book_id: session[:book_id]).blank? && 
-          BookView.where(source_book_id: session[:book_id], dest_book_id: params[:id].to_i).blank?
-         source_book_title = find_field_in_document(session[:book_id], "title")[0]
-         BookView.create(source_book_id: session[:book_id], dest_book_id: params[:id].to_i, source_book_title: source_book_title, dest_book_title: @volume[:title][0])
-      end
-    end
-    session[:book_id] = params[:id].to_i
+    save_book_also_viewed(params)
     @comment = Comment.new
+  end
+  
+  def save_book_also_viewed(params)
+    BookView.save_book_also_viewed(params, session[:book_id], @volume)
+    session[:book_id] = params[:id].to_i
+  end
+  
+  def load_read_page
+    UserVolumeHistory.save_user_history(params[:id], session[:user_id]) if is_logged_in?  
+    @reader_path = (DAR_JAR_API_URL.sub DAR_JAR_API_URL_STRING, params[:id]).sub DAR_JAR_API_URL_LANGUAGE, I18n.locale.to_s
   end  
 end

@@ -81,8 +81,8 @@ module BooksHelper
   end
   
   def fill_query_array(params)
-    search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_ALL"].include?(key) }
-    query_array = { 'ALL' => [], 'title'=> [], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> [],
+    search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_all"].include?(key) }
+    query_array = { 'all' => [], 'title'=> [], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> [],
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query_array.each do  |key, value|
       query_array[key] = search_params["_#{key}".to_sym] ? search_params["_#{key}".to_sym].split(' _AND ') : []
@@ -98,7 +98,7 @@ module BooksHelper
     else
       multilingual_attributes = get_multilingual_attributes(query_array)
       normal_attributes = get_normal_attributes(query_array, name_query_join_operator)      
-      if(!(query_array['ALL'].empty?))
+      if(!(query_array['all'].empty?))
         query = prepare_search_query(multilingual_attributes, normal_attributes, "OR")
       else
         query = prepare_search_query(multilingual_attributes, normal_attributes, "AND")      
@@ -160,19 +160,19 @@ module BooksHelper
   
   def get_multilingual_attributes(query_array)
     multilingual_attributes = { }
-    multilingual_attributes[:title] = query_array['title'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['title']
-    multilingual_attributes[:author] = query_array['author'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['author']
-    multilingual_attributes[:subject] = query_array['subject'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['subject']
-    multilingual_attributes[:publisher] = query_array['publisher'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['publisher']
-    multilingual_attributes[:content] = query_array['content'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['content']   
+    multilingual_attributes[:title] = query_array['title'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['title']
+    multilingual_attributes[:author] = query_array['author'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['author']
+    multilingual_attributes[:subject] = query_array['subject'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['subject']
+    multilingual_attributes[:publisher] = query_array['publisher'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['publisher']
+    multilingual_attributes[:content] = query_array['content'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['content']   
     multilingual_attributes.delete_if { |key, value| value.blank? }
   end
   
   def get_normal_attributes(query_array, name_query_join_operator)
     normal_attributes = { }
-    normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['location']
-    normal_attributes[:language_facet] = query_array['language'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['language']
-    sci_names = query_array['name'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['name']
+    normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['location']
+    normal_attributes[:language_facet] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
+    sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
     unless sci_names.nil?
       job_ids = get_volumes_contain_sci_name(sci_names, name_query_join_operator)
       normal_attributes[:job_id] = job_ids.empty? ? nil : job_ids
@@ -334,7 +334,7 @@ module BooksHelper
   
   def get_related_books(params)    
     volume = load_volume_from_solr(params[:job_id])
-    query_array = { 'ALL' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
+    query_array = { 'all' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query = set_query_string(query_array, " OR ")
     query.gsub!(" AND ", " OR ")

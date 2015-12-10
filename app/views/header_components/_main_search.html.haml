@@ -10,24 +10,24 @@
         |
       .btn-group.pull-left
         %select.width.btn.allcat.text-left#headersearchby
-          %option.text-left{ value: "ALL" } 
-            = I18n.t('header.search.option_all')
+          %option.text-left{ value: "all" } 
+            = I18n.t('common.all_categories')
           %option.text-left{ value: "title", selected: true } 
-            = I18n.t('header.search.option_title')
+            = I18n.t('common.title')
           %option.text-left{ value: "language" } 
-            = I18n.t('header.search.option_language')
+            = I18n.t('common.language')
           %option.text-left{ value: "location" } 
-            = I18n.t('header.search.option_regional_affiliation')
+            = I18n.t('common.regional_affiliation')
           %option.text-left{ value: "author" } 
-            = I18n.t('header.search.option_author')
+            = I18n.t('common.author')
           %option.text-left{ value: "name" } 
             = I18n.t('header.search.option_tagged_species')
           %option.text-left{ value: "subject" } 
-            = I18n.t('header.search.option_genre')
+            = I18n.t('common.genre')
           %option.text-left{ value: "publisher" } 
-            = I18n.t('header.search.option_publisher')
+            = I18n.t('common.publisher')
           %option.text-left{ value: "content" } 
-            = I18n.t('header.search.option_content')
+            = I18n.t('common.content')
       .clearfix.visible-xs  
     %span.separator.pull-left 
       |    

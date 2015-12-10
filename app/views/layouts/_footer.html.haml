@@ -1,17 +1,17 @@
 .footer
   .container
     .col-md-3.social
-      = social_share_button_tag(I18n.t('footer.share_msg'), url: "#{BHL_LINK}")
+      = social_share_button_tag(I18n.t('common.bhl_short_title'), url: "#{BHL_LINK}")
     .col-md-6
       %p.text-center
         %a{ href: "/" } 
-          = I18n.t('footer.home')
+          = I18n.t('common.home')
         |
-        = link_to I18n.t('footer.about'), { controller: 'pages', action: 'about', locale: I18n.locale }
+        = link_to I18n.t('common.about_us'), { controller: 'pages', action: 'about', locale: I18n.locale }
         |
-        = link_to I18n.t('footer.contact'), { controller: 'pages', action: 'contact', locale: I18n.locale }
+        = link_to I18n.t('common.contact_us'), { controller: 'pages', action: 'contact', locale: I18n.locale }
       %p.text-center 
         = I18n.t('footer.copyright_statement')
     .col-md-3.ba-logo
       %a{ href: "http://bibalex.org", target: "_blank" }
-        = image_tag("/images_#{I18n.locale}/#{I18n.t('footer.ba_logo')}", alt: I18n.t(:bibalex), title: I18n.t(:bibalex))
+        = image_tag("/images_#{I18n.locale}/#{I18n.t('common..ba_logo')}", alt: I18n.t(:bibalex), title: I18n.t(:bibalex))

@@ -3,7 +3,7 @@
     .center-block
       %fieldset
         %legend 
-          = I18n.t('contact_us.title')
+          = I18n.t('common.contact_us')
         .form-horizontal
           = validation_errors_for(@email_message)
           = form_for @email_message, url: send_contact_us_message_pages_path, builder: FormHelper::BHLFormBuilder do |f|
