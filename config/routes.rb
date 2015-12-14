@@ -68,7 +68,7 @@ BhlRails4::Application.routes.draw do
     get "comments/get_comments"
     get "comments/mark"
     get "comments/delete"
-    # get "names/show"
+    get "names/show"
     get "names/get_content/:id" => "names#get_content"
 
     resources :books do
@@ -108,7 +108,7 @@ BhlRails4::Application.routes.draw do
 
     resources :geographics
     
-    resources :names, only: [:index, :show]
+    resources :names, only: [:index]
 
     resources :collections do
       collection do

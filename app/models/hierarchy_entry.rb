@@ -1,5 +1,5 @@
 class HierarchyEntry < EOLBase
-  establish_connection("eol")
+  establish_connection(:eol)
   
   belongs_to :hierarchy
   
