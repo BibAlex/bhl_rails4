@@ -121,4 +121,8 @@ BhlRails4::Application.routes.draw do
     post "hadoop/ingest_metadata", to: 'hadoop#ingest_metadata'
     get "hadoop/pending_content"
   end
+  
+  get "darviewer/user"
+  get "darviewer/book"
+  get "darviewer/annotations"
 end
