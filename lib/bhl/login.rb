@@ -17,7 +17,7 @@ module BHL
     end
 
     def anybody_logged_in?
-      session[:user_id].nil? ? false : true
+      session[:user_id].blank? ? false : true
     end
 
     def log_out
