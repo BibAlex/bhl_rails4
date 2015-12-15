@@ -16,7 +16,7 @@ module BHL
       }
     end
 
-    def is_loggged_in?
+    def is_there_logged_in_user?
       session[:user_id].nil? ? false : true
     end
 
