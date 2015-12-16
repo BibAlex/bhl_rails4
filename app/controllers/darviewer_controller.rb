@@ -1,4 +1,7 @@
 class DarviewerController < ApplicationController
+  
+  protect_from_forgery except: :book
+  
   include SolrHelper
   include DarviewerHelper
   include BooksHelper
@@ -31,7 +34,26 @@ class DarviewerController < ApplicationController
         # :Title => bookdata['bok_title'] != nil ? bookdata['bok_title'][0] : ""
       # }
     # end
-    @json = params[:callback] + "(" + jsonArray.to_json  + ");"
+    # arr = { "Subjects" => "[Liver--Cancer--Etiology., Liver--Cancer--Research--Methodology., Liver--Cancer.]",
+            # "Contributor" => "Bibliotheca Alexandrina",
+            # "ISBN" => "",
+            # "PublicationDate" => "2000.",
+            # "Project" => "Million Book Project",
+            # "CallNumber" => "",
+            # "Language" => "English",
+            # "Authors" => "Gazy, Hayam Fathy Abd El-Hay.",
+            # "Publishers" => "",
+            # "Keywords" => "[   Liver Cancer Etiology.   Liver Cancer Research Methodology.   Liver Cancer.]",
+            # "Title" => "Hepatocellular carcinoma update" }
+    # @json = params[:callback] + "(" + jsonArray.to_json  + ");"
+    # @json = params[:callback] + "(" + arr.to_json  + ");"
+    render :json =>  jsonArray.to_json, :callback => params[:callback]
+    
+    # respond_to do |format|      
+      # format.json { render json: @json, :callback => params[:callback] }
+      # # format.js { }
+    # end
+    
     
   end
   
