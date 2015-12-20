@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   
   # POST /users/recover_password
   def recover_password
-    redirect_to user_path(id: session[:user_id]) if is_logged_in?
+    return redirect_to user_path(id: session[:user_id]) if is_logged_in?
     if verify_recaptcha
       @user = User.find_by_email(params[:user][:email])# unless @email
       if @user
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
   end
   
   def reset_password
-    redirect_to user_path(id: session[:user_id]) if is_logged_in?
+    return redirect_to user_path(id: session[:user_id]) if is_logged_in?
     @user = User.find_by_guid_and_verification_code(params[:guid], params[:activation_code])
     if @user
       @page_title = I18n.t('header.pages.reset_password')
@@ -47,7 +47,7 @@ class UsersController < ApplicationController
   end
   
   def reset_password_action
-    redirect_to user_path(id: session[:user_id]) if is_logged_in?
+    return redirect_to user_path(id: session[:user_id]) if is_logged_in?
     @user = User.find_by_guid_and_verification_code(params[:user][:guid], params[:user][:activation_code])
     if @user
       @user.entered_password = params[:user][:entered_password]
