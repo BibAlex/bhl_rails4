@@ -13,8 +13,54 @@ class UsersController < ApplicationController
     redirect_to root_path
   end
   
+  #GET /users/forgot_password
   def forgot_password
-    
+    redirect_to user_path(id: session[:user_id]) if is_logged_in?
+    @page_title = I18n.t('header.pages.forgot_password')
+  end
+  
+  # POST /users/recover_password
+  def recover_password
+    redirect_to user_path(id: session[:user_id]) if is_logged_in?
+    if verify_recaptcha
+      @user = User.find_by_email(params[:user][:email])# unless @email
+      if @user
+        @user.change_activation_code
+        send_reset_password_email
+        redirect_to login_users_path, flash: { notice: I18n.t('header.user.recover_password_success') }
+      else
+        redirect_to forgot_password_users_path, flash: { error: I18n.t('header.user.email_not_found', email: @email) }
+      end
+    else
+      redirect_to forgot_password_users_path, flash: { error: I18n.t('msgs.recaptcha_error') }
+    end
+  end
+  
+  def reset_password
+    redirect_to user_path(id: session[:user_id]) if is_logged_in?
+    @user = User.find_by_guid_and_verification_code(params[:guid], params[:activation_code])
+    if @user
+      @page_title = I18n.t('header.pages.reset_password')
+    else
+      redirect_to root_path, flash: { error: I18n.t('msgs.reset_password_failed') }
+    end
+  end
+  
+  def reset_password_action
+    redirect_to user_path(id: session[:user_id]) if is_logged_in?
+    @user = User.find_by_guid_and_verification_code(params[:user][:guid], params[:user][:activation_code])
+    if @user
+      @user.entered_password = params[:user][:entered_password]
+      @user.entered_password_confirmation = params[:user][:entered_password_confirmation]
+      if @user.save
+        redirect_to login_users_path, flash: {notice: I18n.t('msgs.reset_password_success')}
+      else
+        redirect_to "/users/reset_password/#{params[:user][:guid]}/#{params[:user][:activation_code]}",
+          flash: {error: @user.errors.full_messages.join("<br>")}
+      end
+    else
+      redirect_to root_path, flash: { error: I18n.t('msgs.reset_password_failed') }
+    end
   end
   
     # POST /users/validate
@@ -97,6 +143,11 @@ class UsersController < ApplicationController
   def send_registration_confirmation_email
     url = "#{request.host}/users/activate/#{@user.guid}/#{@user.verification_code}"
     # Notifier.user_verification(@user, url).deliver_now
+  end
+  
+  def send_reset_password_email
+    url = "#{request.host}/users/reset_password/#{@user.guid}/#{@user.verification_code}"
+    #Notifier.user_verification(@user, url).deliver_now
   end
   
   def activate_user
