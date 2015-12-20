@@ -1,7 +1,6 @@
 require 'cartographer/cartographer'
 require 'cartographer/header'
 require 'cartographer/gmap'
-# require 'cartographer/gad'
 require 'cartographer/gicon'
 require 'cartographer/gmarker'
 require 'cartographer/infowindow'

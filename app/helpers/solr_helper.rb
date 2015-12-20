@@ -101,7 +101,7 @@ module SolrHelper
     solr.optimize
   end
   
-  def solr_find_document(query)
+  def self.solr_find_document(query)
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
     response = solr.find q: query, start: 0, limit: 1
     response['response']['docs'][0]

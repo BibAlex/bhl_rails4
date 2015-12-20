@@ -1,0 +1,13 @@
+= javascript_include_tag "geographics"
+= stylesheet_link_tag "geographics"
+.row.clearfix
+  .col-md-12.column
+    %h2
+      = @page_title
+    .well  
+      = render partial: "pins"
+    %center  
+      = raw @header
+      = raw @map.to_html
+      #map
+

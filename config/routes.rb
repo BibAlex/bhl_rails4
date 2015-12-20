@@ -106,7 +106,9 @@ BhlRails4::Application.routes.draw do
 
     resources :names
 
-    resources :geographics
+    resources :geographics 
+    get "/geographics/show/:id" => "geographics#show"
+    get "/geographics/index/:range" => "geographics#index"
 
     resources :collections do
       collection do

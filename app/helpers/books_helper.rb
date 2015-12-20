@@ -326,8 +326,8 @@ module BooksHelper
     {collections: collections,  disabled: disabled }
   end
   
-  def find_field_in_document(job_id, field)
-    doc = solr_find_document("job_id:#{session[:book_id]}")
+  def self.find_field_in_document(job_id, field)
+    doc = SolrHelper.solr_find_document("job_id:#{job_id}")
     lang = doc["language_facet"][0][0..1]
     doc["#{field}_#{lang}"]
   end

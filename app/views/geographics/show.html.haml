@@ -1,0 +1,8 @@
+= "#{@location_name} (#{@books_count})"
+%ol.geographics 
+  - @books.each do |key, value|
+    %li
+      =link_to value, "/books/#{key}"
+- if @books_count > 10
+  = link_to I18n.t(:geo_show_all_titles),
+      books_path(params: add_facet_search({}, 'location', @location_name))
