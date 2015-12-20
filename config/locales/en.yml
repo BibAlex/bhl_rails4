@@ -23,11 +23,7 @@ en:
   
   common:
     all: All
-    ALL: All
-    authors_page_header: "Authors"
-    subjects_page_header: "Subjects"
-    no_entity_found: "No %{entity} Found"
-    signup: Sign Up    
+    all_categories: All Categories
     login: Login
     profile: Profile
     by: By
@@ -37,11 +33,13 @@ en:
     and_count_more: "and %{count} more"
     genre: Genre
     tabs_more: "more..."
-    names: "Names:"
+    names: "Names"
     at: At
     as: as
     with: with
     no_activities: No activities found..
+    no_books_found: No Books found..
+    no_comments_found: No Reviews found...
     default_collection: "default_collection.png"
     default_user_small: "default_user_small.png"
     default_user: "default_user.png"
@@ -75,9 +73,7 @@ en:
     real_name: Real name
     password: Password
     password_confirmation: Password confirmation
-    email: Email
     email_confirmation: Email confirmation
-    recaptcha: Recaptcha
     upload_photo: Upload photo
     forgot_password: Forgot your password?
     not_member: Not a member?
@@ -92,7 +88,7 @@ en:
     sort_by: Sort By
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
-    entity_found_all: "Found %{count} %{entity}"
+    found: "Found"
     book: Book
     number_of_viewes: Number of views
     entity_saved: "%{entity} Saved"
@@ -128,7 +124,40 @@ en:
     related_books: Related Books
     post: Post
     show: Show
-    abuse: Report
+    read: Read
+    details: Details
+    add_collection: Add to Collection
+    bhl_site_name: "Biodivestiry Heritage Library - Egypt"
+    bhl_short_title: "BHL Egypt"
+    regional_affiliation: Regional Affiliation
+    content: Content
+    about_us: About Us
+    contact_us: Contact Us
+    browse_all: Browse All
+    geographics: Geographics
+    signout: Sign Out
+    logo: "logo.png"
+    ba_logo: "balogo-white.svg"
+    home: Home
+    tagged_species: Tagged Species
+    copyright_statement: Copyright © Bibliotheca Alexandrina
+    about_us_paragraph_1: "The New %{ba_link} is dedicated to recapture the spirit of openness and scholarship of the original Bibliotheca Alexandrina. Hence, it was keen to take part in the Global Biodiversity Heritage Library (BHL) project, as the project is regarded as a substantial enrichment to the BA's collection and simultaneously an optimum channel for sharing and propagating the Library's Arabic and non-Arabic biodiversity collection. This mutual collaboration comes in accordance with the BA's mission in availing knowledge to all, and furthers the inclusion and input of the Arabic-speaking countries."
+    about_us_paragraph_2: "Accordingly, the BA has been pursuing the mirroring and replication of BHL since early 2011. Its participation in BHL project emerged inevitably in its course of being one of the main players in the internationalization, localization and mirroring of the Encyclopedia of Life, creating the EOL in Arabic. In this context, the scope of the BA's contribution in BHL project generally includes: setting the infrastructure for the mirroring and replication of the original BHL book collection, development of Local-BHL system, and adding biodiversity material from the BA's collection to comprise material from the Arab world in Arabic as well as other languages."
+    most_viewed: Most Viewed
+    top_rated: Top Rated
+    top_collections: Top Collections
+    book_count:
+      one: "one Book"
+      other: "%{count} books"       
+    author_count:
+      one: "one Author"
+      other: "%{count} Authors"
+    species_count:
+      one: "one Tagged Specie"
+      other: "%{count} Tagged Species"
+    views:
+      one: "1 view"
+      other: "%{count} views"
     book_collections_count:
       one:   "Collection"
       other: "Collections"
@@ -143,15 +172,7 @@ en:
     types:
       collection: a collection
       book: a book
-      comment: a comment
-    sidelinks:
-      read: Read
-      detail: Details
-      add_collection: Add to Collection
-      views:
-        one: "1 view"
-        other: "%{count} views"
-     
+      comment: a comment     
     
   warn:
     empty_search_query_warn: "Search statement shouldn't be empty"
@@ -180,70 +201,8 @@ en:
     reply_deleted: "Reply deleted"
     comment_deleted: "Comment deleted"
     can_not_delete_comment: "You can't delete comment that has a reply"
-    
-  header:
-    page_title:
-      bhl_page_title: "Biodivestiry Heritage Library - Egypt"
-      bhl_short_title: "BHL Egypt"      
-    search:
-      option_all: All Categories
-      option_title: Title
-      option_language: Language
-      option_publish_time: Published On
-      option_publisher: Publisher
-      option_regional_affiliation: Regional Affiliation
-      option_author: Author
-      option_tagged_species: Tagged Species
-      option_genre: Genre
-      option_content: Content
-    pages:
-      about_us_link: About Us
-      contact_us_link: Contact Us
-      browse_all_link: Browse All
-      authors_link: Authors
-      subjects_link: Subjects
-      names_link: Species
-      collections_link: Collections
-      geographics_link: Geographics
-      bhl_homepage: BHL Egypt
-    user:
-      signout: Sign Out
-    logo:
-      logo: "logo.png"
-      bhl_site_name: "Biodivestiry Heritage Library - Egypt"
-      
-  footer:
-    ba_logo: "balogo-white.svg"
-    home: Home
-    about: About
-    contact: Contact Us
-    copyright_statement: Copyright © Bibliotheca Alexandrina
-    share_msg: BHL Egypt
-    
-  about_us:
-    paragraph_1: "The New %{ba_link} is dedicated to recapture the spirit of openness and scholarship of the original Bibliotheca Alexandrina. Hence, it was keen to take part in the Global Biodiversity Heritage Library (BHL) project, as the project is regarded as a substantial enrichment to the BA's collection and simultaneously an optimum channel for sharing and propagating the Library's Arabic and non-Arabic biodiversity collection. This mutual collaboration comes in accordance with the BA's mission in availing knowledge to all, and furthers the inclusion and input of the Arabic-speaking countries."
-    paragraph_2: "Accordingly, the BA has been pursuing the mirroring and replication of BHL since early 2011. Its participation in BHL project emerged inevitably in its course of being one of the main players in the internationalization, localization and mirroring of the Encyclopedia of Life, creating the EOL in Arabic. In this context, the scope of the BA's contribution in BHL project generally includes: setting the infrastructure for the mirroring and replication of the original BHL book collection, development of Local-BHL system, and adding biodiversity material from the BA's collection to comprise material from the Arab world in Arabic as well as other languages."
-  
-  contact_us:
-    title: Contact Us
-    successful_feedback: Thank you for your message
-    unsuccessful_feedback: An error occured while sending your message, please check try again
-    
-  home:
-    statistics:
-      book_count:
-        one: "one Book"
-        other: "%{count} books"       
-      author_count:
-        one: "one Author"
-        other: "%{count} Authors"
-      species:
-        one: "one Tagged Specie"
-        other: "%{count} Tagged Species"
-    
-    most_viewed: Most Viewed
-    top_rated: Top Rated
-    top_collections: Top Collections
+    contact_us_successful_feedback: Thank you for your message
+    contact_us_unsuccessful_feedback: An error occured while sending your message, please check try again
     
   activerecord:
       attributes:

@@ -80,7 +80,7 @@ RSpec.describe "Homepages", type: :feature do
     end
     
     it "includes bibalex logo" do
-      expect(page).to have_selector("img[src='/images_#{I18n.locale}/#{I18n.t('footer.ba_logo')}']")
+      expect(page).to have_selector("img[src='/images_#{I18n.locale}/#{I18n.t('common.ba_logo')}']")
     end    
     
     it "includes a link for home page" do
@@ -96,7 +96,7 @@ RSpec.describe "Homepages", type: :feature do
     end
     
     it "includes copyright of bibalex" do
-      expect(page).to have_selector("p", text: I18n.t('footer.copyright_statement'))
+      expect(page).to have_selector("p", text: I18n.t('common.copyright_statement'))
     end
     
     it "includes a link for facebook share" do
@@ -152,15 +152,15 @@ RSpec.describe "Homepages", type: :feature do
     
     describe "statistics" do
       it "displays a link for books page with total number of books in BHL" do          
-        expect(page).to have_selector("a[href='/#{I18n.locale}/books']", text: I18n.t('home.statistics.book_count', count: 2))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/books']", text: I18n.t('common.book_count', count: 2))
       end
       
       it "displays the total number of authors in BHL" do          
-        expect(page).to have_selector("h4[class='alert alert-warning']", text: I18n.t('home.statistics.author_count', count: 2))
+        expect(page).to have_selector("h4[class='alert alert-warning']", text: I18n.t('common.author_count', count: 2))
       end
       
       it "displays a link for species page with total number of species in BHL" do          
-        expect(page).to have_selector("a[href='/#{I18n.locale}/names']", text: I18n.t('home.statistics.species', count: 2))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/names']", text: I18n.t('common.tagged_species', count: 2))
       end
     end
     
@@ -181,7 +181,7 @@ RSpec.describe "Homepages", type: :feature do
     
     describe "top_collections" do
       it "displays a link for collections page" do          
-        expect(page).to have_selector("a[href='/#{I18n.locale}/collections?sort_type=rate+desc']", text: I18n.t('home.top_collections'))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/collections?sort_type=rate+desc']", text: I18n.t('common.top_collections'))
       end
       
       describe "top collections entry" do
@@ -202,7 +202,7 @@ RSpec.describe "Homepages", type: :feature do
     
     describe "most_viewed_books" do
       it "displays a tab for most viewed books" do          
-        expect(page).to have_selector("h4", text: I18n.t('home.most_viewed'))
+        expect(page).to have_selector("h4", text: I18n.t('common.most_viewed'))
       end
       
       describe "volume entry for most viewed books" do
@@ -212,11 +212,11 @@ RSpec.describe "Homepages", type: :feature do
         end
         
         it "display a link for volume read page" do
-          expect(page).to have_selector("a[href='/#{I18n.locale}/books?id=2&tab=read']", text: I18n.t('common.sidelinks.read'))
+          expect(page).to have_selector("a[href='/#{I18n.locale}/books?id=2&tab=read']", text: I18n.t('common.read'))
         end
         
         it "display a link for volume details page" do
-          expect(page).to have_selector("a[href='/#{I18n.locale}/books/2']", text: I18n.t('common.sidelinks.detail'))
+          expect(page).to have_selector("a[href='/#{I18n.locale}/books/2']", text: I18n.t('common.details'))
         end
         
         it "display a cover photo for the volume" do

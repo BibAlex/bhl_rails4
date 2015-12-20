@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151124141703) do
+ActiveRecord::Schema.define(version: 20151220080050) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20151124141703) do
   create_table "annotations", force: :cascade do |t|
     t.integer  "volume_id",   limit: 4,   null: false
     t.integer  "user_id",     limit: 4,   null: false
-    t.integer  "page",        limit: 4,   null: false
+    t.integer  "page",        limit: 4
     t.integer  "location_x",  limit: 4
     t.integer  "location_y",  limit: 4
     t.integer  "height",      limit: 4
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 20151124141703) do
     t.string   "basketpages", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "color",       limit: 255
   end
 
   add_index "annotations", ["user_id"], name: "index_annotations_on_user_id", using: :btree
