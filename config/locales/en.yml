@@ -33,7 +33,7 @@ en:
     and_count_more: "and %{count} more"
     genre: Genre
     tabs_more: "more..."
-    names: "Names:"
+    names: "Names"
     at: At
     as: as
     with: with
@@ -139,6 +139,22 @@ en:
     logo: "logo.png"
     ba_logo: "balogo-white.svg"
     home: Home
+    tagged_species: Tagged Species
+    copyright_statement: Copyright © Bibliotheca Alexandrina
+    about_us_paragraph_1: "The New %{ba_link} is dedicated to recapture the spirit of openness and scholarship of the original Bibliotheca Alexandrina. Hence, it was keen to take part in the Global Biodiversity Heritage Library (BHL) project, as the project is regarded as a substantial enrichment to the BA's collection and simultaneously an optimum channel for sharing and propagating the Library's Arabic and non-Arabic biodiversity collection. This mutual collaboration comes in accordance with the BA's mission in availing knowledge to all, and furthers the inclusion and input of the Arabic-speaking countries."
+    about_us_paragraph_2: "Accordingly, the BA has been pursuing the mirroring and replication of BHL since early 2011. Its participation in BHL project emerged inevitably in its course of being one of the main players in the internationalization, localization and mirroring of the Encyclopedia of Life, creating the EOL in Arabic. In this context, the scope of the BA's contribution in BHL project generally includes: setting the infrastructure for the mirroring and replication of the original BHL book collection, development of Local-BHL system, and adding biodiversity material from the BA's collection to comprise material from the Arab world in Arabic as well as other languages."
+    most_viewed: Most Viewed
+    top_rated: Top Rated
+    top_collections: Top Collections
+    book_count:
+      one: "one Book"
+      other: "%{count} books"       
+    author_count:
+      one: "one Author"
+      other: "%{count} Authors"
+    species_count:
+      one: "one Tagged Specie"
+      other: "%{count} Tagged Species"
     views:
       one: "1 view"
       other: "%{count} views"
@@ -156,9 +172,7 @@ en:
     types:
       collection: a collection
       book: a book
-      comment: a comment
-      
-     
+      comment: a comment     
     
   warn:
     empty_search_query_warn: "Search statement shouldn't be empty"
@@ -187,44 +201,8 @@ en:
     reply_deleted: "Reply deleted"
     comment_deleted: "Comment deleted"
     can_not_delete_comment: "You can't delete comment that has a reply"
-    
-  header:
-    search:
-      option_tagged_species: Tagged Species      
-    pages:      
-      names_link: Species
-      
-      
-      
-      
-  footer:
-    
-    
-    copyright_statement: Copyright © Bibliotheca Alexandrina
-    
-  about_us:
-    paragraph_1: "The New %{ba_link} is dedicated to recapture the spirit of openness and scholarship of the original Bibliotheca Alexandrina. Hence, it was keen to take part in the Global Biodiversity Heritage Library (BHL) project, as the project is regarded as a substantial enrichment to the BA's collection and simultaneously an optimum channel for sharing and propagating the Library's Arabic and non-Arabic biodiversity collection. This mutual collaboration comes in accordance with the BA's mission in availing knowledge to all, and furthers the inclusion and input of the Arabic-speaking countries."
-    paragraph_2: "Accordingly, the BA has been pursuing the mirroring and replication of BHL since early 2011. Its participation in BHL project emerged inevitably in its course of being one of the main players in the internationalization, localization and mirroring of the Encyclopedia of Life, creating the EOL in Arabic. In this context, the scope of the BA's contribution in BHL project generally includes: setting the infrastructure for the mirroring and replication of the original BHL book collection, development of Local-BHL system, and adding biodiversity material from the BA's collection to comprise material from the Arab world in Arabic as well as other languages."
-  
-  contact_us:
-    successful_feedback: Thank you for your message
-    unsuccessful_feedback: An error occured while sending your message, please check try again
-    
-  home:
-    statistics:
-      book_count:
-        one: "one Book"
-        other: "%{count} books"       
-      author_count:
-        one: "one Author"
-        other: "%{count} Authors"
-      species:
-        one: "one Tagged Specie"
-        other: "%{count} Tagged Species"
-    
-    most_viewed: Most Viewed
-    top_rated: Top Rated
-    top_collections: Top Collections
+    contact_us_successful_feedback: Thank you for your message
+    contact_us_unsuccessful_feedback: An error occured while sending your message, please check try again
     
   activerecord:
       attributes:

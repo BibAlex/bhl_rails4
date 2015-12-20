@@ -10,10 +10,7 @@ module BHL
       user.save
       #cookies[:SSid] = user.guid
 
-      cookies[:SSid] = {
-        :value => user.guid,
-        :domain => 'bhl.bibalex.org'
-      }
+      cookies[:SSid] = user.guid
     end
 
     def is_loggged_in?

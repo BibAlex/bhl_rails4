@@ -67,9 +67,9 @@ class PagesController < ApplicationController
     @email_message.save
     if Notifier.contact_message(params[:email_message][:name],params[:email_message][:email],
                                 params[:email_message][:subject],params[:email_message][:message]).deliver
-      redirect_to contact_pages_path, flash: { notice: I18n.t('contact_us.successful_feedback') }
+      redirect_to contact_pages_path, flash: { notice: I18n.t('msgs.contact_us_successful_feedback') }
     else
-      redirect_to contact_pages_path, flash: { notice: I18n.t('contact_us.unsuccessful_feedback') }
+      redirect_to contact_pages_path, flash: { notice: I18n.t('msgs.contact_us_unsuccessful_feedback') }
     end
     
   end

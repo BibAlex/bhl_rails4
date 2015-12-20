@@ -15,7 +15,6 @@ module BooksHelper
     list
   end
 
-
   # not updated: will be updated after finishing books search function
   def add_facet_search(params, type, field)
       tmp_params = params.clone
@@ -211,6 +210,53 @@ module BooksHelper
   def already_saved?(user_id, user_query)
    !(Query.where("user_id = ? and string = ?", user_id, user_query).empty?)
  end
+ 
+ def load_volume_from_solr(job_id)
+    solr_response = load_volume(job_id)
+    volume = {}
+    unless solr_response["response"]["numFound"] == 0
+      doc = solr_response["response"]["docs"][0]
+      all_sci_names_with_facets = get_sci_names_of_volumes("#{job_id}")
+      tmp = all_sci_names_with_facets[:sci_names]["#{doc[:job_id]}"]
+      sci_names = tmp.nil? ? [] : tmp
+      lang = doc["language_facet"][0][0..1]
+      volume = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
+                 rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
+                 language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
+    end
+    volume
+  end
+  
+  def item_count_format(type, item)
+    format = item
+    unless item_count(type, item).nil?
+      format += ' (' + item_count(type, item).to_s + ')'      
+    end
+    format
+  end
+  
+  def get_format(id, format)    
+    if format == 'mods'
+      handle_mods_format(id)
+    else
+      handle_other_formats(id, format)
+    end
+  end
+  
+  def self.find_field_in_document(job_id, field)
+    doc = SolrHelper.solr_find_document("job_id:#{job_id}")
+    lang = doc["language_facet"][0][0..1]
+    doc["#{field}_#{lang}"]
+  end
+  
+  def get_related_books(params)    
+    volume = load_volume_from_solr(params[:job_id])
+    query_array = { 'all' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
+                    'subject'=> [], 'content' => [], 'publisher' => [] }
+    query = set_query_string(query_array, " OR ")
+    query.gsub!(" AND ", " OR ")
+    search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "")  
+  end
 
   
   private
@@ -245,42 +291,10 @@ module BooksHelper
         end
          facet_fields["#{field.name}"] = items      
       end
-      facet_fields[:name] = all_sci_names_with_facets[:facets]
+      facet_fields["name_facet"] = all_sci_names_with_facets[:facets]
     end
     { volumes: volumes, total_number_of_volumes: solr_response["response"]["numFound"], facets: facet_fields }
-  end
-  
-  def load_volume_from_solr(job_id)
-    solr_response = load_volume(job_id)
-    volume = {}
-    unless solr_response["response"]["numFound"] == 0
-      doc = solr_response["response"]["docs"][0]
-      all_sci_names_with_facets = get_sci_names_of_volumes("#{job_id}")
-      tmp = all_sci_names_with_facets[:sci_names]["#{doc[:job_id]}"]
-      sci_names = tmp.nil? ? [] : tmp
-      lang = doc["language_facet"][0][0..1]
-      volume = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
-                 rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
-                 language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
-    end
-    volume
-  end 
-  
-  def item_count_format (type, item)
-    format = item
-    unless item_count(type, item).nil?
-      format += ' (' + item_count(type, item).to_s + ')'      
-    end
-    format
-  end
-  
-  def get_format(id, format)    
-    if format == 'mods'
-      handle_mods_format(id)
-    else
-      handle_other_formats(id, format)
-   end
-  end
+  end  
   
   def handle_mods_format(id)
     format = ""
@@ -310,34 +324,5 @@ module BooksHelper
       end
     end
     format
-  end
-  
-  def load_volume_collections(job_id)
-    collections = Collection.where(user_id: session[:user_id])
-    disabled = []
-    collections.each do |col|
-      found = CollectionVolume.where(volume_id: job_id, collection_id: col.id)
-      if found.count > 0
-        disabled << 1
-      else
-        disabled << 0
-      end
-    end
-    {collections: collections,  disabled: disabled }
-  end
-  
-  def find_field_in_document(job_id, field)
-    doc = solr_find_document("job_id:#{session[:book_id]}")
-    lang = doc["language_facet"][0][0..1]
-    doc["#{field}_#{lang}"]
-  end
-  
-  def get_related_books(params)    
-    volume = load_volume_from_solr(params[:job_id])
-    query_array = { 'all' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
-                    'subject'=> [], 'content' => [], 'publisher' => [] }
-    query = set_query_string(query_array, " OR ")
-    query.gsub!(" AND ", " OR ")
-    search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "")  
-  end  
+  end    
 end

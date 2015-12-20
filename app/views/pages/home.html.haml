@@ -22,11 +22,11 @@
       %li.active
         %a{ "href" => "#mostviewd", "data-toggle" => "tab", "style" => "padding: 0px 15px 10px 15px;" }
           %h4
-            = I18n.t('home.most_viewed')
+            = I18n.t('common.most_viewed')
       %li
         %a{ "href" => "#toprated", "data-toggle" => "tab", "style" => "padding: 0px 15px 10px 15px;", "id" => "top_rated" }
           %h4
-            = I18n.t('home.top_rated')
+            = I18n.t('common.top_rated')
     .tab-content
       .tab-pane.active#mostviewd
         = render partial: "pages/top_books", locals: { top_books: @most_viewed_response[:volumes], top_criteria: "views" }
