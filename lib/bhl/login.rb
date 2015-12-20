@@ -13,10 +13,6 @@ module BHL
       cookies[:SSid] = user.guid
     end
 
-    def is_loggged_in?
-      session[:user_id].nil? ? false : true
-    end
-
     def log_out
       session.clear
       #cookies.delete :SSid
