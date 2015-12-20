@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :location do
-    formatted_address Faker::Address.city
-    latitude Faker::Address.latitude
-    longitude Faker::Address.longitude
-    country_id Faker::Address.country_code
+    sequence(:formatted_address, 10) {|n| "#{Faker::Address.city}_#{n}"}
+    sequence(:latitude, 10 ) {|n| Faker::Address.latitude  }
+    sequence(:longitude, 100) {|n| Faker::Address.longitude }
+    sequence(:country_id, 100) {|n| Faker::Address.country_code }
   end
 end

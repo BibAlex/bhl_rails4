@@ -2,6 +2,7 @@ class GeographicsController < ApplicationController
   before_filter :initialize_rsolr
 
   def index
+
     @page_title = I18n.t(:geographics_link)
     @map = Cartographer::Gmap.new('map' , zoom: 2)
     @header = Cartographer::Header.new.to_s
@@ -24,8 +25,7 @@ class GeographicsController < ApplicationController
       gicons[i] = temp_icon
       @map.icons << temp_icon
     end
-    response = @rsolr.find q: "*:*", facet: true, 'facet.field' => 'location_facet', rows: 0, 'facet.limit' => 8
-    # debugger
+    response = @rsolr.find q: "*:*", facet: true, 'facet.field' => 'location_facet', rows: 0, 'facet.limit' => 15
     response.facets.first.items.each do |item|
       # specify icon
       case item.hits
@@ -42,16 +42,15 @@ class GeographicsController < ApplicationController
       end
       
       if @range.include?(icon_in.to_s)
-       
+
         values= item.value.split(",") #"city, longitude, latitude"
         #inverted the indecies in the solr query ("to match the fake data in the solr core")
-        location= Location.get_by_lattitude_and_longitude(values[-1].to_f, values[-2].to_f ).first
-        
+        location= Location.get_by_lattitude_and_longitude(values[-2].to_f, values[-1].to_f ).first
+
         @map.markers << Cartographer::Gmarker.new( marker_type: "Building",
                           position: [location.latitude,location.longitude],
                           info_window_url: "/geographics/show/#{location.id}",
                           icon: gicons[icon_in]) unless location.nil?
-
       end
     end
   end
