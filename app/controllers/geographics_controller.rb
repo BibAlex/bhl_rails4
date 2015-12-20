@@ -22,7 +22,7 @@ class GeographicsController < ApplicationController
                                            anchor_x: 6, #width/2 
                                            anchor_y: 20)
       gicons[i] = temp_icon
-      @map.icons << temp_icon      
+      @map.icons << temp_icon
     end
     response = @rsolr.find q: "*:*", facet: true, 'facet.field' => 'location_facet', rows: 0, 'facet.limit' => 8
     # debugger
@@ -73,6 +73,6 @@ class GeographicsController < ApplicationController
   private
 
   def initialize_rsolr
-    @rsolr = RSolr.connect :url => SOLR_BOOKS_METADATA
+    @rsolr = RSolr.connect url: SOLR_BOOKS_METADATA
   end
 end

@@ -4,9 +4,9 @@
   .col-md-12.column
     %h2
       = @page_title
-    .well  
+    .well
       = render partial: "pins"
-    %center  
+    %center
       = raw @header
       = raw @map.to_html
       #map
