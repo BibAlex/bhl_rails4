@@ -8,8 +8,6 @@ module BHL
 
       user.last_login = Time.now
       user.save
-      #cookies[:SSid] = user.guid
-
       cookies[:SSid] = user.guid
     end
 
