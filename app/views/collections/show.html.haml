@@ -1,0 +1,55 @@
+= stylesheet_link_tag 'jquery/rating/jRating.jquery.css'
+= javascript_include_tag 'jquery/rating/jRating.jquery.js'
+= javascript_include_tag 'collections_functions.js'
+
+-# :javascript
+  -# $(document).ready(function(){
+    -# $("#starsidelink_#{@collection.id}").jRating({
+      -# isDisabled : true,
+      -# bigStarsPath: "/images_#{I18n.locale}/#{I18n.t(:stars_white)}"
+    -# });
+  -# });
+:javascript
+  get_or_delete_photo("#{@collection.id}", 0)
+
+.row.clearfix
+  .col-md-12.column
+    %h2
+      = @collection.title
+      %span.badge
+        = "#{@collection_volumes.count}"
+      - if @collection.rate != 0.0
+        %span.rate
+          -#.starsidelink{:id => "starsidelink_#{@collection.id}", :data => "#{@collection.rate}"}
+    %blockquote
+      #photo
+      %p
+        = @collection.description
+      %small
+        %i.fa.fa-user      
+        = link_to controller: :users, action: :show, id: @collection.user_id do
+          = @user.real_name
+        - if !is_logged_in_user?(@collection.user_id)
+          = " - "
+          = link_to controller: :collections, action: :edit, id: @collection.id do
+            %i.fa.fa-edit
+            = I18n.t('collection.edit_collection')
+        %br
+        %i.fa.fa-calendar-o
+        = @collection.created_at
+        %br
+        .center-block
+          - if is_logged_in?
+            %span.text-muted
+              = I18n.t('collection.collection_your_rate')
+          .usercollectionrate
+            -# = render :partial => "collections/rating"
+    .clearfix
+    %hr    
+.row.clearfix
+  .col-md-8.column.browse
+    =render :partial => "collections/collection_books"
+    = will_paginate @collection_volumes
+  .col-xs-6.col-sm-4.sidebar-offcanvas
+    .spacing-left.panel.panel-styled
+      =render :partial => "collections/collection_reviews"

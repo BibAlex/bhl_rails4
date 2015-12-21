@@ -250,18 +250,26 @@ module BooksHelper
     { volumes: volumes, total_number_of_volumes: solr_response["response"]["numFound"], facets: facet_fields }
   end
   
-  def load_volume_from_solr(job_id)
+  def load_volume_with_names_from_solr(job_id)
+    !volume = load_volume_without_names_from_solr(job_id)
+    if !volume.blank?
+      all_sci_names_with_facets = get_sci_names_of_volumes("#{job_id}")
+      tmp = all_sci_names_with_facets[:sci_names]["#{job_id}"]
+      sci_names = tmp.nil? ? [] : tmp
+      volume[:sci_names] = sci_names  
+    end
+    volume
+  end 
+  
+  def load_volume_without_names_from_solr(job_id)
     solr_response = load_volume(job_id)
     volume = {}
     unless solr_response["response"]["numFound"] == 0
       doc = solr_response["response"]["docs"][0]
-      all_sci_names_with_facets = get_sci_names_of_volumes("#{job_id}")
-      tmp = all_sci_names_with_facets[:sci_names]["#{doc[:job_id]}"]
-      sci_names = tmp.nil? ? [] : tmp
       lang = doc["language_facet"][0][0..1]
       volume = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
                  rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
-                 language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
+                 language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"] }
     end
     volume
   end 
@@ -333,7 +341,7 @@ module BooksHelper
   end
   
   def get_related_books(params)    
-    volume = load_volume_from_solr(params[:job_id])
+    volume = load_volume_with_names_from_solr(params[:job_id])
     query_array = { 'all' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query = set_query_string(query_array, " OR ")

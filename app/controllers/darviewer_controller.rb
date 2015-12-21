@@ -19,7 +19,7 @@ class DarviewerController < ApplicationController
     jobid = pid.gsub("DAF-Job:", "")
     # volume = Volume::find_by_job_id(jobid)
     
-    jsonArray = load_volume_from_solr(jobid)
+    jsonArray = load_volume_with_names_from_solr(jobid)
     # bookdata = solr_search("vol_jobid:#{volume.job_id}", "bok_title, author, subject, bok_start_date, bok_start_date, bok_language, author")
     # if(bookdata != nil)
       # jsonArray = {
