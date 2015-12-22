@@ -31,12 +31,12 @@ RSpec.describe CollectionsController, type: :controller do
       @empty_collection = FactoryGirl.create(:collection, user_id: @user.id, is_public: true)
       
       # volumes in private collection
-      @c1_v1 = FactoryGirl.create(:collection_volume, collection_id: @private_collection.id, volume_id: @vol_1.id, position: 1)
-      @c1_v2 = FactoryGirl.create(:collection_volume, collection_id: @private_collection.id, volume_id: @vol_2.id, position: 2)
+      @c1_v1 = FactoryGirl.create(:collection_volume, collection_id: @private_collection.id, volume_id: @vol_1.job_id, position: 1)
+      @c1_v2 = FactoryGirl.create(:collection_volume, collection_id: @private_collection.id, volume_id: @vol_2.job_id, position: 2)
       
       # volumes in public collection
-      @c2_v1 = FactoryGirl.create(:collection_volume, collection_id: @public_collection.id, volume_id: @vol_1.id, position: 1)
-      @c2_v2 = FactoryGirl.create(:collection_volume, collection_id: @public_collection.id, volume_id: @vol_2.id, position: 2)
+      @c2_v1 = FactoryGirl.create(:collection_volume, collection_id: @public_collection.id, volume_id: @vol_1.job_id, position: 1)
+      @c2_v2 = FactoryGirl.create(:collection_volume, collection_id: @public_collection.id, volume_id: @vol_2.job_id, position: 2)
     end
 
     describe "show collection's info" do
@@ -66,8 +66,6 @@ RSpec.describe CollectionsController, type: :controller do
         
         it "should display collection title" do
           get :show, id: @public_collection.id
-          # debugger
-          # <h2>\ncollection\n<span class='badge'>\n2\n</span>
           expect(response.body).to have_selector 'h2', text: "#{@public_collection.title}", exact: false
         end
         
@@ -122,7 +120,7 @@ RSpec.describe CollectionsController, type: :controller do
           end
           
           it "should have pagination bar" do
-            20.times { |i| FactoryGirl.create(:collection_volume, volume_id: @vol_1.id,
+            20.times { |i| FactoryGirl.create(:collection_volume, volume_id: @vol_1.job_id,
                collection_id: @public_collection.id, position: i)}
             get :show, id: @public_collection.id
             expect(response.body).to have_css 'div.pagination'

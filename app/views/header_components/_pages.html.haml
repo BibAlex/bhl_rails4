@@ -14,7 +14,7 @@
         %li{ class: link_class({ controller: 'books', action: 'index' })}
           = link_to(" #{I18n.t('common.browse_all')}", books_path(locale: I18n.locale), class: "fa fa-globe")
         %li{ class: link_class({ controller: 'names', action: 'index' })}
-          = link_to(" #{I18n.t('header.pages.names_link')}", names_path(locale: I18n.locale), class: "fa fa-tags")
+          = link_to(" #{I18n.t('common.names')}", names_path(locale: I18n.locale), class: "fa fa-tags")
         %li{ class: link_class({ controller: 'geographics', action: 'index' })}
           = link_to(" #{I18n.t('common.geographics')}", geographics_path(locale: I18n.locale), class: "fa fa-map-marker")
         %li{ class: link_class({ controller: 'collections', action: 'index' })}

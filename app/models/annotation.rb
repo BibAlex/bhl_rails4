@@ -4,6 +4,5 @@ class Annotation < ActiveRecord::Base
   
   validates :user_id, presence: true
   validates :volume_id, presence: true
-  validates :page, presence: true
   validates :anntype, presence: true
 end

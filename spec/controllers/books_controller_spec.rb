@@ -1,6 +1,11 @@
 require 'rails_helper'
+require_relative '../../lib/bhl/login'
+
 
 RSpec.describe BooksController, type: :controller do
+  
+  include BHL::Login
+
   
   describe "books autocomplete" do
     before(:all) do
@@ -277,6 +282,60 @@ RSpec.describe BooksController, type: :controller do
     it "renders the index template partial" do
       get :show, { id: @volume.id }
       expect(response).to render_template(:show)
+    end
+    
+    describe "add_book_to_collection" do
+      context "when user is logged in" do
+        it "displays a link for add book to collection" do
+          FactoryGirl.create(:user, password: User.hash_password('add_book_to_password'), active: true) unless User.first
+          user = User.first
+          log_out
+          log_in(user)
+          get :show, { id: @volume.id }
+          expect(response.body).to have_selector("a", text: I18n.t('common.add_collection'))
+          log_out
+        end
+      end
+      
+      context "when user is not logged in" do
+        it "displays a link for add book to collection" do
+          get :show, { id: @volume.id }
+          expect(response.body).not_to have_selector("a", text: I18n.t('common.add_collection'))
+        end
+      end
+    end
+    
+    describe "read tab" do
+      describe "add_book_to_collection" do
+        context "when user is logged in" do
+          it "displays a link for add book to collection" do
+            FactoryGirl.create(:user, password: User.hash_password('add_book_to_password'), active: true) unless User.first
+            user = User.first
+            log_out
+            log_in(user)
+            get :show, { id: @volume.id, tab: "read" }
+            expect(response.body).to have_selector("a", text: I18n.t('common.add_collection'))
+            log_out
+          end
+        end
+        
+        context "when user is not logged in" do
+          it "displays a link for add book to collection" do
+            get :show, { id: @volume.id, tab: "read" }
+            expect(response.body).not_to have_selector("a", text: I18n.t('common.add_collection'))
+          end
+        end
+      end
+      
+      it "adds record in history table when visit read tab" do
+        FactoryGirl.create(:user, password: User.hash_password('add_book_to_password'), active: true) unless User.first
+        user = User.first
+        log_out
+        log_in(user)
+        user_history_count = UserVolumeHistory.where(user_id: user.id).count
+        get :show, { id: @volume.id, tab: "read" }
+        expect(UserVolumeHistory.where(user_id: user.id).count).to eq(user_history_count + 1)
+      end
     end
   end 
 end

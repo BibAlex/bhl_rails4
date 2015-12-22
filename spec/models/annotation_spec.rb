@@ -20,11 +20,7 @@ RSpec.describe Annotation, type: :model do
     
     it "is invalid without user_id" do
       expect(FactoryGirl.build(:annotation, user_id: nil)).to_not be_valid
-    end
-    
-    it "is invalid without page" do
-      expect(FactoryGirl.build(:annotation, page: nil)).to_not be_valid
-    end
+    end    
     
     it "is invalid without anntype" do
       expect(FactoryGirl.build(:annotation, anntype: nil)).to_not be_valid

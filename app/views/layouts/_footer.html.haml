@@ -11,7 +11,7 @@
         |
         = link_to I18n.t('common.contact_us'), { controller: 'pages', action: 'contact', locale: I18n.locale }
       %p.text-center 
-        = I18n.t('footer.copyright_statement')
+        = I18n.t('common.copyright_statement')
     .col-md-3.ba-logo
       %a{ href: "http://bibalex.org", target: "_blank" }
         = image_tag("/images_#{I18n.locale}/#{I18n.t('common..ba_logo')}", alt: I18n.t(:bibalex), title: I18n.t(:bibalex))

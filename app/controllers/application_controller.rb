@@ -47,5 +47,5 @@ class ApplicationController < ActionController::Base
         user = User.find_by_id(session[:user_id])
         user.update_attributes(last_login_language: I18n.locale)
       end
-    end
+    end   
 end

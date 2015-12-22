@@ -96,7 +96,7 @@ RSpec.describe "Homepages", type: :feature do
     end
     
     it "includes copyright of bibalex" do
-      expect(page).to have_selector("p", text: I18n.t('footer.copyright_statement'))
+      expect(page).to have_selector("p", text: I18n.t('common.copyright_statement'))
     end
     
     it "includes a link for facebook share" do
@@ -152,15 +152,15 @@ RSpec.describe "Homepages", type: :feature do
     
     describe "statistics" do
       it "displays a link for books page with total number of books in BHL" do          
-        expect(page).to have_selector("a[href='/#{I18n.locale}/books']", text: I18n.t('home.statistics.book_count', count: 2))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/books']", text: I18n.t('common.book_count', count: 2))
       end
       
       it "displays the total number of authors in BHL" do          
-        expect(page).to have_selector("h4[class='alert alert-warning']", text: I18n.t('home.statistics.author_count', count: 2))
+        expect(page).to have_selector("h4[class='alert alert-warning']", text: I18n.t('common.author_count', count: 2))
       end
       
       it "displays a link for species page with total number of species in BHL" do          
-        expect(page).to have_selector("a[href='/#{I18n.locale}/names']", text: I18n.t('home.statistics.species', count: 2))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/names']", text: I18n.t('common.tagged_species', count: 2))
       end
     end
     
@@ -181,7 +181,7 @@ RSpec.describe "Homepages", type: :feature do
     
     describe "top_collections" do
       it "displays a link for collections page" do          
-        expect(page).to have_selector("a[href='/#{I18n.locale}/collections?sort_type=rate+desc']", text: I18n.t('home.top_collections'))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/collections?sort_type=rate+desc']", text: I18n.t('common.top_collections'))
       end
       
       describe "top collections entry" do
@@ -202,7 +202,7 @@ RSpec.describe "Homepages", type: :feature do
     
     describe "most_viewed_books" do
       it "displays a tab for most viewed books" do          
-        expect(page).to have_selector("h4", text: I18n.t('home.most_viewed'))
+        expect(page).to have_selector("h4", text: I18n.t('common.most_viewed'))
       end
       
       describe "volume entry for most viewed books" do
