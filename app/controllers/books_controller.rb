@@ -48,7 +48,7 @@ class BooksController < ApplicationController
     @volume = load_volume_from_solr(params[:id])
   end
   
-  def load_details_page    
+ def load_details_page    
     @types = { author: I18n.t('common.author'), subject: I18n.t('common.subject'), publisher: I18n.t('common.publisher') }
     @user_rate = Rate.load_user_rate(session[:user_id], params[:id], "volume")
     @collections_count = Collection.get_count_by_volume(params[:id], session[:user_id])
