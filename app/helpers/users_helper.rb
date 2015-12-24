@@ -16,5 +16,10 @@ module UsersHelper
   def get_tab_class(tab, current_tab)
     tab == current_tab ? "active" : ""
   end
-  
+
+  def authenticate_user
+    redirect_to login_users_path and return false unless is_logged_in?
+    redirect_to users_path(id: params[:id]), flash: {error: I18n.t(:access_denied_error)} and return false unless session[:user_id].to_i == params[:id].to_i
+    return true
+  end
 end
