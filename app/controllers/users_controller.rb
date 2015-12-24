@@ -2,6 +2,8 @@ class UsersController < ApplicationController
   
   include UsersHelper
   include BHL::Login
+  before_filter :load_user, only: [:show]
+  before_filter :authinticate_user, only: [:load_annotations_tab]
   
   def login
     session[:login_attempts] ||= 0
@@ -44,7 +46,7 @@ class UsersController < ApplicationController
   end
   
   def create
-    params[:user][:photo_name] = User.process_user_photo_name(params[:user][:photo_name])    
+    params[:user][:photo_name] = User.process_user_photo_name(params[:user][:photo_name])
     @user = User.new(User.user_params(params[:user]))
     if @user.valid? && verify_recaptcha
       handle_successful_registration
@@ -65,7 +67,6 @@ class UsersController < ApplicationController
   end
   
   def show
-    load_user
     send("load_#{@tab}_tab") unless @tab == "profile"
   end
   
@@ -128,4 +129,21 @@ class UsersController < ApplicationController
     return redirect_to root_path unless @user
     @tab = params[:tab].nil? ? "profile" : params[:tab]
   end  
+
+  def load_annotations_tab
+    @page = params[:page] ? params[:page].to_i : 1
+    @total_number = Annotation.count(conditions: "user_id = #{@user.id}")
+    @annotations = Annotation.where(user_id: @user).select(:volume_id).
+    group(:volume_id).paginate(page: @page, per_page: TAB_GALLERY_PAGE_SIZE)
+    @collected_annotations = []
+    @annotations.each do |annotation|
+      job_id = annotation.volume_id
+      @collected_annotations << {
+        job_id: job_id,
+        book_title:  BooksHelper.find_field_in_document(job_id, :title).first,
+        notes: Annotation.notes.where(user_id: @user.id, volume_id: job_id),
+        highlights: Annotation.highlights.where(user_id: @user.id, volume_id: job_id)
+      }
+    end
+  end
 end

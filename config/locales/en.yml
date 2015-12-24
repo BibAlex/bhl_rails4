@@ -266,3 +266,8 @@ en:
       user_recover_account:
         subject: "Recover your BHL account"
         message: "The BHL received a request to recover your account. If you did not make this request, please ignore this email.The following link provides a one time log in to allow you to change your password"
+  annotations:
+    no_annotations_found: "No annotations found..."
+    title: Annotations
+    note: Notes
+    highlight: Highlights
