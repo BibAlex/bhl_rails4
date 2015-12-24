@@ -28,7 +28,7 @@ RSpec.describe GeographicsController, type: :controller do
     end
     it 'has the the title of geographics link' do
       get :index
-      expect(assigns[:page_title]).to eq(I18n.t :geographics_link)
+      expect(assigns[:page_title]).to eq(I18n.t 'header.pages.geographics_link')
     end
     it 'loads all the books in solr on the map' do
       get :index

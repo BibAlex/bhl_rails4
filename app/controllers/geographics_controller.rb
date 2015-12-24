@@ -3,16 +3,16 @@ class GeographicsController < ApplicationController
 
   def index
 
-    @page_title = I18n.t(:geographics_link)
+    @page_title = I18n.t('header.pages.geographics_link')
     @map = Cartographer::Gmap.new('map' , zoom: 2)
     @header = Cartographer::Header.new.to_s
     @range = params[:range] ? params[:range] : "10,20,30,40,50"
     @icons = {
-      10 => "/images_#{I18n.locale}/#{I18n.t(:map_pin_blue)}",
-      20 => "/images_#{I18n.locale}/#{I18n.t(:map_pin_green)}",
-      30 => "/images_#{I18n.locale}/#{I18n.t(:map_pin_yellow)}",
-      40 => "/images_#{I18n.locale}/#{I18n.t(:map_pin_orange)}",
-      50 => "/images_#{I18n.locale}/#{I18n.t(:map_pin_red)}"
+      10 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_blue')}",
+      20 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_green')}",
+      30 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_yellow')}",
+      40 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_orange')}",
+      50 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_red')}"
       }
     # defining icons
     gicons = {}
