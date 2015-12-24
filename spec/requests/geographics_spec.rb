@@ -27,15 +27,15 @@ RSpec.describe "Geographics", type: :request do
       visit geographics_path(locale: I18n.locale)
       expect(page).to have_selector("div[class='well']")
       expect(page).to have_selector("input[id='check10']")
-      expect(page).to have_selector("img[title=\'#{I18n.t :blue_pin}\']")
+      expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.blue_pin'}\']")
       expect(page).to have_selector("input[id='check20']")
-      expect(page).to have_selector("img[title=\'#{I18n.t :green_pin}\']")
+      expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.green_pin'}\']")
       expect(page).to have_selector("input[id='check30']")
-      expect(page).to have_selector("img[title=\'#{I18n.t :yellow_pin}\']")
+      expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.yellow_pin'}\']")
       expect(page).to have_selector("input[id='check40']")
-      expect(page).to have_selector("img[title=\'#{I18n.t :orange_pin}\']")
+      expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.orange_pin'}\']")
       expect(page).to have_selector("input[id='check50']")
-      expect(page).to have_selector("img[title=\'#{I18n.t :red_pin}\']")
+      expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.red_pin'}\']")
     end
 
     it "unchecks the pins if not included in the range" do

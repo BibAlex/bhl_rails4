@@ -4,5 +4,5 @@
     %li
       =link_to value, "/books/#{key}"
 - if @books_count > 10
-  = link_to I18n.t(:geo_show_all_titles),
+  = link_to I18n.t('geographics.geo_show_all'),
       books_path(params: add_facet_search({}, 'location', @location_name))

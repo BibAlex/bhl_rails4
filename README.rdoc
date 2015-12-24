@@ -45,7 +45,7 @@ Things you need:
       mkdir solr_test
       git clone https://github.com/BibAlex/bhl_rails_4_solr_test.git solr_test
       cd solr_test/example
-      java -jar start;jar
+      java -jar start.jar
       make sure localhost:8989/solr is up and running  
 
   10.  Prepare the environment
