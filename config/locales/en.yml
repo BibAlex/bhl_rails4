@@ -140,10 +140,12 @@ en:
       create: Created
       rate: Rated
       comment: Commented on
+      reply: Replied to
     types:
       collection: a collection
       book: a book
       comment: a comment
+      volume: a volume
     sidelinks:
       read: Read
       detail: Details

@@ -3,8 +3,13 @@ require 'rails_helper'
 RSpec.describe Collection, type: :model do
   
   describe Collection, 'FactoryGirl' do
+    let(:collection) {FactoryGirl.build(:collection)}
     it 'has a valid factory' do
-      expect(build(:collection)).to be_valid
+      expect(collection).to be_valid
+    end
+    it "triggers update_activity on save" do
+      expect(collection).to receive(:update_activity)
+      collection.save
     end
   end  
   

@@ -1,7 +1,6 @@
 require 'rails_helper'
-
+include BHL::Login
 RSpec.describe UsersController, type: :controller do
-  
 
   describe "#new" do
     
@@ -110,8 +109,29 @@ RSpec.describe UsersController, type: :controller do
     it "loads tab info" do
       expect(assigns(:tab)).to eq("profile")
     end
+    
+    describe "activity_log" do
+      let!(:owner_user) { FactoryGirl.create(:user, active: true, username: "owner_user", password: User.hash_password("owner_user_password")) }
+    
+    before do
+      session[:user_id] = owner_user.id
+      get :show, { id: owner_user.id , tab: "activity" }
+    end
+    
+    it "returns a 200 ok status" do      
+      expect(response).to have_http_status(:ok)
+    end
+    
+    it "renders the show template" do
+      expect(response).to render_template(partial: 'users/_activity')
+    end
+    
+    it "loads tab info" do
+      expect(assigns(:tab)).to eq("activity")
+    end
+      
   end
-  
+end  
   
   
   describe "#logout" do     
@@ -174,4 +194,4 @@ RSpec.describe UsersController, type: :controller do
       end            
     end    
   end
-end
+ end

@@ -75,4 +75,100 @@ RSpec.describe Activity, type: :model do
     end
     
   end
-end
+  
+  describe "add_activities" do
+    before do
+      Rails.cache.clear
+      user = FactoryGirl.create(:user, active: true, username: "user_activity", email: "user_activity@example.com", guid: "activity")
+      book = FactoryGirl.create(:book, title: "new_book")
+      volume = FactoryGirl.create(:volume, book_id: book.id)
+      comment = FactoryGirl.create(:comment, text: "main_comment")
+      @before_count = Activity.count 
+      
+      @collection_create = FactoryGirl.create(:collection, user_id: user.id, title: "new_collection", is_public: true)
+      @collection_rate = FactoryGirl.create(:rate, user_id: user.id , rateable_id: @collection_create.id , rateable_type: "collection",
+                                     rate: 5 )
+      @collection_comment = FactoryGirl.create(:comment, commentable_id: @collection_create.id,commentable_type: "collection", 
+                                     user_id: user.id, text: "Good_Collection")
+      @volume_comment = FactoryGirl.create(:comment, commentable_id: volume.job_id,  commentable_type: "volume", user_id: user.id, 
+                                     text: "Good_volume")
+      @volume_rate = FactoryGirl.create(:rate, user_id: user.id , rateable_id: volume.job_id ,rateable_type: "volume",
+                                     rate: 5 )
+      @reply_comment = FactoryGirl.create(:comment, commentable_id: comment.id,
+                                     commentable_type: "comment", user_id: user.id, text: "Reply")
+    end
+    
+    it "should add a record for collection creation activity" do
+      activity = Activity.add_activity({ activitable_id: @collection_create.id, action: "create",
+                                         user_id: @collection_create.user_id, activitable_type: "collection", activitable_title: @collection_create.title })
+                                         
+      expect(Activity.count).not_to eq(@before_count)
+      expect(activity).to have_attributes(activitable_id: @collection_create.id, action: "create",
+                                         user_id: @collection_create.user_id, activitable_type: "collection", activitable_title: @collection_create.title)
+    end
+    
+    it "should add a record for collection rate" do
+      activity = Activity.add_activity({ activitable_id: @collection_rate.rateable_id, action: "rate",
+                                         user_id: @collection_rate.user_id, activitable_type: @collection_rate.rateable_type, 
+                                         activitable_title: (Collection.find_by_id(@collection_rate.rateable_id)).title,
+                                         value: @collection_rate.rate.to_s})
+                                         
+      expect(Activity.count).not_to eq(@before_count)
+      expect(activity).to have_attributes(activitable_id: @collection_rate.rateable_id, action: "rate",
+                                         user_id: @collection_rate.user_id, activitable_type: @collection_rate.rateable_type, 
+                                         activitable_title: (Collection.find_by_id(@collection_rate.rateable_id)).title,
+                                         value: @collection_rate.rate.to_s)
+    end
+    
+    it "should add a record for collection comment" do
+    activity = Activity.add_activity({ activitable_id: @collection_comment.commentable_id, action: "comment",
+                                         user_id: @collection_comment.user_id, activitable_type: @collection_comment.commentable_type, 
+                                         activitable_title: (Collection.find_by_id(@collection_comment.commentable_id).title),
+                                         value: @collection_comment.text})
+                                         
+      expect(Activity.count).not_to eq(@before_count)
+      expect(activity).to have_attributes(activitable_id: @collection_comment.commentable_id, action: "comment",
+                                         user_id: @collection_comment.user_id, activitable_type: @collection_comment.commentable_type, 
+                                         activitable_title: (Collection.find_by_id(@collection_comment.commentable_id).title),
+                                          value: @collection_comment.text)  
+    end
+    it "should add record for volume rate" do
+      activity = Activity.add_activity({ activitable_id: @volume_rate.rateable_id, action: "rate",
+                                         user_id: @volume_rate.user_id, activitable_type: @volume_rate.rateable_type, 
+                                         activitable_title: (Book.find_by_id((Volume.find_by_job_id(@volume_rate.rateable_id).book_id)).title),
+                                         value: @volume_rate.rate.to_s})
+                                         
+      expect(Activity.count).not_to eq(@before_count)
+      expect(activity).to have_attributes(activitable_id: @volume_rate.rateable_id, action: "rate",
+                                         user_id: @volume_rate.user_id, activitable_type: @volume_rate.rateable_type, 
+                                         activitable_title: (Book.find_by_id(Volume.find_by_job_id(@volume_rate.rateable_id).book_id).title),
+                                         value: @volume_rate.rate.to_s)
+      
+    end
+    it "should add record for volume comment" do
+      activity = Activity.add_activity({ activitable_id: @volume_comment.commentable_id, action: "comment",
+                                         user_id: @volume_comment.user_id, activitable_type: @volume_comment.commentable_type, 
+                                         activitable_title: (Book.find_by_id((Volume.find_by_job_id(@volume_comment.commentable_id).book_id)).title),
+                                         value: @volume_comment.text})
+                                         
+      expect(Activity.count).not_to eq(@before_count)
+      expect(activity).to have_attributes(activitable_id: @volume_comment.commentable_id, action: "comment",
+                                         user_id: @volume_comment.user_id, activitable_type: @volume_comment.commentable_type, 
+                                         activitable_title: (Book.find_by_id((Volume.find_by_job_id(@volume_comment.commentable_id).book_id)).title),
+                                          value: @volume_comment.text)
+      
+    end
+    
+    it "should add record for reply to comment" do
+    activity = Activity.add_activity({ activitable_id: @reply_comment.commentable_id, action: "comment",
+                                         user_id: @reply_comment.user_id, activitable_type: @reply_comment.commentable_type, 
+                                         activitable_title: (Comment.find_by_id(@reply_comment.commentable_id).text), value: @reply_comment.text})
+                                         
+      expect(Activity.count).not_to eq(@before_count)
+      expect(activity).to have_attributes(activitable_id: @reply_comment.commentable_id, action: "comment",
+                                         user_id: @reply_comment.user_id, activitable_type: @reply_comment.commentable_type, 
+                                         activitable_title: (Comment.find_by_id(@reply_comment.commentable_id).text), value: @reply_comment.text)   
+    end
+ 
+ end
+end 

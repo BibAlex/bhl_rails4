@@ -127,5 +127,22 @@ class UsersController < ApplicationController
     @user = User.find_by_id(params[:id])
     return redirect_to root_path unless @user
     @tab = params[:tab].nil? ? "profile" : params[:tab]
-  end  
+  end
+  
+  def load_activity_tab
+     collections_cond = "is_public = true AND user_id = #{@user.id}"
+     collections_cond = "user_id = #{@user.id}" if @user.id == session[:user_id]
+     @total_activities = Activity.where("#{collections_cond}").count
+     @page = params[:page] ? params[:page].to_i : 1
+     limit = PAGE_SIZE
+     @offset = (@page > 1) ? (@page - 1) * limit : 0
+     @activities = Activity.find_by_sql("SELECT *                                   
+                                                FROM activities
+                                                WHERE #{collections_cond}
+                                                ORDER BY created_at DESC LIMIT #{@offset}, #{limit}")
+
+    @activities= WillPaginate::Collection.create(@page, PAGE_SIZE, @total_activities) do |pager|
+        pager.replace @activities
+      end
+  end
 end

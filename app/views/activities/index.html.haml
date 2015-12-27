@@ -13,7 +13,7 @@
             - if(user.photo_name.blank?)
               - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
             - else
-              - thumb = user.photo_name_url(:thumb)
+              - thumb = user.photo_name_url(:small)
             .media
               = link_to image_tag("#{thumb}", class: "media-object img-circle"), { controller: 'users', action: 'show', id: user.id }, class: "pull-left"
               .media-body.activity-log

@@ -1,0 +1,37 @@
+-if @total_activities > 0
+  .col-md-8.column
+    %h4
+      = I18n.t('common.activity_log')
+      %span.badge
+        = @total_activities
+    %hr
+    - @activities.each_with_index do |activity,index|
+      - owner_of_activity = User.find(activity.user_id)
+      - if( owner_of_activity && (owner_of_activity.photo_name.blank?))
+        - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_user_small')}"
+      - else
+        - thumb = owner_of_activity.photo_name_url(:thumb)
+        
+      .media
+        = link_to image_tag("#{thumb}", class: "media-object img-circle"), { controller: 'users', action: 'show', id: owner_of_activity.id }, class: "pull-left"
+        .media-body.activity-log
+          %p{ style: "line-height:120%;font-size:12px;" }
+            %strong
+              = link_to owner_of_activity.real_name, user_path(id: owner_of_activity.id, tab: "profile"), class: "book_author"
+            %strong
+              = activity_action_and_object(activity)
+              - activity.activitable_type = "book" if activity.activitable_type == "volume"
+            %a.book_title{ href: "/#{activity.activitable_type.pluralize(2)}/#{activity.activitable_id}" } 
+              = activity.activitable_title
+            %strong
+              = "#{activity_action_postfix(activity)} #{activity.value}"
+            %br
+            %br
+            %small.text-muted
+              = "#{I18n.t('common.at')} #{activity.created_at}"
+      - if index < @activities.count
+        %hr
+    %div
+      .pagination-centered
+      = will_paginate @activities
+  

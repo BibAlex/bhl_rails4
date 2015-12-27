@@ -10,6 +10,7 @@ RSpec.describe CommentsController, type: :controller do
   before(:each) do
     @user = FactoryGirl.create(:user, active: true)
     @volume = FactoryGirl.create(:volume, job_id: 1)
+    @book = FactoryGirl.create(:book, id: @volume.book_id)
   end
   
   
