@@ -86,10 +86,10 @@ RSpec.describe Activity, type: :model do
       @before_count = Activity.count 
       
       @collection_create = FactoryGirl.create(:collection, user_id: user.id, title: "new_collection", is_public: true)
-      @collection_rate = FactoryGirl.create(:rate, user_id: user.id , rateable_id: @collection_create.id , rateable_type: "collection",
-                                     rate: 5 )
       @collection_comment = FactoryGirl.create(:comment, commentable_id: @collection_create.id,commentable_type: "collection", 
                                      user_id: user.id, text: "Good_Collection")
+      @collection_rate = FactoryGirl.create(:rate, user_id: user.id , rateable_id: @collection_create.id , rateable_type: "collection",
+                                     rate: 5 )
       @volume_comment = FactoryGirl.create(:comment, commentable_id: volume.job_id,  commentable_type: "volume", user_id: user.id, 
                                      text: "Good_volume")
       @volume_rate = FactoryGirl.create(:rate, user_id: user.id , rateable_id: volume.job_id ,rateable_type: "volume",
