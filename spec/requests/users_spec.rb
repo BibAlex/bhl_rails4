@@ -88,8 +88,7 @@ RSpec.describe "Users", type: :request do
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                         filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-          @owner_user = FactoryGirl.create(:user, active: true, username: "@owner_user", password: User.hash_password("@owner_user_password"),
-                                                  photo_name: file, real_name: "@owner_user_real", email: "owner@example.com")
+          @owner_user = User.first
           page.set_rack_session(user_id: @owner_user.id)
           visit user_path(locale: I18n.locale, id: @owner_user.id)        
         end
@@ -101,7 +100,7 @@ RSpec.describe "Users", type: :request do
         
         it "displays user name of user" do
           expect(page).to have_selector("strong", text: I18n.t('common.username'))
-          expect(page).to have_selector("span", text: "owner_user")
+          expect(page).to have_selector("span", text: @owner_user.username)
         end
         
         it "displays registeration date of user" do
@@ -127,11 +126,9 @@ RSpec.describe "Users", type: :request do
         
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
-                                                        filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-          @owner_user = FactoryGirl.create(:user, active: true, username: "@owner_user", password: User.hash_password("@owner_user_password"),
-                                                  photo_name: file, real_name: "@owner_user_real", email: "owner@example.com")
-          @other_user = FactoryGirl.create(:user, active: true, username: "other_user", password: User.hash_password("other_user_password"),
-                                                   email: "other@example.com") 
+                                                        filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))          
+          @owner_user = User.first
+          @other_user = User.find(2)
           page.set_rack_session(user_id: @owner_user.id)
           visit user_path(locale: I18n.locale, id: @other_user.id)        
         end
@@ -143,7 +140,7 @@ RSpec.describe "Users", type: :request do
         
         it "displays user name of user" do
           expect(page).to have_selector("strong", text: I18n.t('common.username'))
-          expect(page).to have_selector("span", text: "other_user")
+          expect(page).to have_selector("span", text: @other_user.username)
         end
         
         it "displays registeration date of user" do

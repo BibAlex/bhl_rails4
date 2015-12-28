@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   validates :real_name, presence: true
   validate :file_size
   
+  
   mount_uploader :photo_name, ImageUploader
   
   before_create :generate_uuid

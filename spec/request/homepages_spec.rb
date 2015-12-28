@@ -136,7 +136,7 @@ RSpec.describe "Homepages", type: :feature do
       
       BhlStatistic.create(books_count: 2, authors_count: 2, species_count: 2)
       
-      @user = FactoryGirl.create(:user, active: true, username: "user_home", email: "user_home@example.com", guid: "home")
+      @user = User.first
       @collection = FactoryGirl.create(:collection, user: @user, title: "new_collection", is_public: true, rate: 5)
       FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
                                     action: "create", user_id: @user.id, created_at: Time.now)

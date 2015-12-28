@@ -32,7 +32,7 @@ module HadoopHelper
         book.endnote = book_xml.xpath(".//EndNote").text
         book.mods = book_xml.xpath(".//mods").text
 
-        metadata_hash = process_mods(book_xml.xpath(".//mods").text)
+        metadata_hash = process_mods(book_xml.xpath(".//mods").text)       
 
         if metadata_hash[:title_alternative].nil? &&  metadata_hash[:title].nil?
           # this means that this book has failed
@@ -49,7 +49,13 @@ module HadoopHelper
         end
         book.authors << metadata_hash[:authors]
         book.locations << metadata_hash[:locations]
-        book.languages << metadata_hash[:languages]
+        # book.languages << metadata_hash[:languages]
+        metadata_hash[:languages].each do |language|
+          if ["eng", "fre", "ara", "ger", "ita"].include?(language.code) 
+            book.languages << language    
+          end
+        end
+        
         book.subjects << metadata_hash[:subjects]
 
         book_xml.xpath(".//JobIDs//JobID").each do |job_id|
@@ -146,7 +152,9 @@ private
   def get_languages(language_xml)
     languages = []
     language_xml.xpath('.//xmlns:languageTerm').each do |lang|
-      languages << Language.find_or_create_by(code: lang.text) unless lang.text.empty?
+      if ["eng", "fre", "ara", "ger", "ita"].include?(lang.text)
+        languages << Language.find_or_create_by(code: lang.text) unless lang.text.empty?
+      end      
     end
     languages
   end

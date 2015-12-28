@@ -1,5 +1,5 @@
 require 'factory_girl'
-require "rack_session_access/capybara"
+require "rack_session_access/capybara" 
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
@@ -15,10 +15,12 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
+    require "#{Rails.root}/db/seeds.rb"
   end
 
   config.before(:each) do |example|
-    DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
+    # DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
+    DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
   end
 
@@ -28,11 +30,11 @@ RSpec.configure do |config|
 end
 
 def clean_book_tables
-  Book.delete_all
-  Author.delete_all
-  Location.delete_all
-  Subject.delete_all
-  Volume.delete_all
+  # Book.delete_all
+  # Author.delete_all
+  # Location.delete_all
+  # Subject.delete_all
+  # Volume.delete_all
 end
 
 def load_book_statuses

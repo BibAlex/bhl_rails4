@@ -88,7 +88,7 @@ RSpec.describe UsersController, type: :controller do
   
   describe "#show" do 
     
-    let!(:owner_user) { FactoryGirl.create(:user, active: true, username: "owner_user", password: User.hash_password("owner_user_password")) }
+    let!(:owner_user) { User.first }
     
     before do
       session[:user_id] = owner_user.id
@@ -116,7 +116,7 @@ RSpec.describe UsersController, type: :controller do
   
   describe "#logout" do     
       
-   let!(:user) { FactoryGirl.create(:user, active: true, username: "user_logout", password: User.hash_password("user_logout_password")) }
+   let!(:user) { User.first }
     
     before do
       post :validate, { user: { username: "user_logout", password: "user_logout_password" } }
@@ -137,20 +137,20 @@ RSpec.describe UsersController, type: :controller do
     
     context "valid user" do      
       
-      let!(:user) { FactoryGirl.create(:user, active: true, username: "valid_user_login", password: User.hash_password("valid_user_login_password")) }
+      let!(:user) { User.first }
       
       it "sets session of user_id" do
-         post :validate, { user: { username: "valid_user_login", password: "valid_user_login_password" } }
+         post :validate, { user: { username: user.username, password: "password" } }
          expect(session[:user_id]).to eq(user.id)
       end
       
       it "redirects to the profile page of the user" do
-        post :validate, { user: { username: "valid_user_login", password: "valid_user_login_password" } }
+        post :validate, { user: { username: user.username, password: "password" } }
         expect(response).to redirect_to(user_path(id: user.id))
       end
       
       it "displays a flash message for successful login" do
-        post :validate, { user: { username: "valid_user_login", password: "valid_user_login_password" } }
+        post :validate, { user: { username: user.username, password: "password" } }
         expect(flash[:notice]).to eq(I18n.t('msgs.sign_in_successful_notice'))
       end     
     end
