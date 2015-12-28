@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :book do
-    title Faker::Name.name
+    sequence(:title, 100) {|n| "#{Faker::Name.name}_#{n}" }
   end
 
 end

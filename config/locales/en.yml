@@ -203,6 +203,8 @@ en:
     can_not_delete_comment: "You can't delete comment that has a reply"
     contact_us_successful_feedback: Thank you for your message
     contact_us_unsuccessful_feedback: An error occured while sending your message, please check try again
+    access_denied_error: Access denied.
+    user_not_found: "User not found."
     
   activerecord:
       attributes:

@@ -1,10 +1,10 @@
 FactoryGirl.define do
   factory :user do
-    username 'factory_username'
-    email 'factory_email@example.com'
+    sequence(:username, 100) { |n| "factory_username_#{n}" }
+    sequence(:email, 100) {|n| "factory_email#{n}@example.com" }
     password 'password'
     guid Faker::Lorem.characters(16)
-    real_name 'real_name'
+    sequence(:real_name, 100) { |n| "real name #{n}" }
   end
 
 end

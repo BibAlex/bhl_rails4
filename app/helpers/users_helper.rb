@@ -18,8 +18,14 @@ module UsersHelper
   end
 
   def authenticate_user
-    redirect_to login_users_path and return false unless is_logged_in?
-    redirect_to users_path(id: params[:id]), flash: {error: I18n.t(:access_denied_error)} and return false unless session[:user_id].to_i == params[:id].to_i
+    unless is_logged_in?
+      redirect_to login_users_path
+      return false
+    end
+    unless session[:user_id].to_i == params[:id].to_i
+      redirect_to user_path(id: params[:id]), flash:  {error: I18n.t('msgs.access_denied_error')}
+      return false
+    end
     return true
   end
 end
