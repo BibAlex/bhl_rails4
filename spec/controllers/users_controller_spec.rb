@@ -121,25 +121,26 @@ RSpec.describe UsersController, type: :controller do
       context "successful" do 
         before do
           book = FactoryGirl.create(:book)
+          job_ids = [9,20]
           solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
           solr_books_core.delete_by_query('*:*')
           solr_books_core.commit
-          solr_books_core.add({ job_id: 9, language_facet: 'eng',
-             bib_id: 'bib_id_1', title_en: book.title, author_en: "author_1"})
-              solr_books_core.add({ job_id: 20, language_facet: 'eng',
-             bib_id: 'bib_id_2', title_en: book.title, author_en: "author_2"})
+          job_ids.each_with_index do |job_id, i|
+          solr_books_core.add({ job_id: job_id, language_facet: 'eng',
+             bib_id: 'bib_id_#{i}', title_en: book.title, author_en: "author_#{i}"})
+           end
           solr_books_core.commit
           2.times do
-            FactoryGirl.create(:annotation, user_id: @owner_user.id,
-             anntype: "Note", volume_id: 9)
-            FactoryGirl.create(:annotation, user_id: @owner_user.id,
-             anntype: "Note", volume_id: 20)
+            job_ids.each do |job_id|
+              FactoryGirl.create(:annotation, user_id: @owner_user.id,
+               anntype: "Note", volume_id: job_id)
+            end
           end
           3.times do
-            FactoryGirl.create(:annotation, user_id: @owner_user.id,
-             anntype: "Highlight", volume_id: 9)
-            FactoryGirl.create(:annotation, user_id: @owner_user.id,
-             anntype: "Highlight", volume_id: 20)
+            job_ids.each do |job_id|
+              FactoryGirl.create(:annotation, user_id: @owner_user.id,
+               anntype: "Highlight", volume_id: job_id)
+            end
           end
          
         end
