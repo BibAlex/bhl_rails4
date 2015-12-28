@@ -133,6 +133,131 @@ RSpec.describe UsersController, type: :controller do
     end    
   end
   
+  describe '#forgot_password' do
+    
+    let!(:user) { FactoryGirl.create(:user, active: true, username: "user", password: User.hash_password("password")) }
+    
+    it 'should not render forget_password if logged in' do
+      session[:user_id] = user.id
+      get :forgot_password
+      expect(response).to redirect_to("/en/users/#{user.id}")
+    end
+    
+    it 'should render forget password if not logged in' do
+      get :forgot_password
+      expect(response).to render_template('users/forgot_password')
+    end
+  end
+  
+  describe '#recover_password' do
+    
+    let!(:user) { FactoryGirl.create(:user, active: true, username: "user", password: User.hash_password("password")) }
+    
+    it 'should not render recover_password if logged in' do
+      session[:user_id] = user.id
+      post :recover_password, { user: { email: ''} }
+      expect(response).to redirect_to("/en/users/#{user.id}")
+    end
+
+    it "should give an error and redirect to forgot password" do
+      post :recover_password, { user: { email: '' } }
+      expect(flash[:error]).not_to be_blank
+      expect(response).to redirect_to("/users/forgot_password")
+    end
+    
+    it 'should redirect to login' do
+      post :recover_password, { user: { email: user.email } }
+      expect(response).to redirect_to(login_users_path)
+      expect(flash[:error]).to be_blank
+    end
+
+    it 'should change verification activation code if valid email' do
+      old_verification_code = user.verification_code
+      post :recover_password, { user: { email: user.email } }
+      expect(response).to redirect_to("/users/login")
+      user.reload #should reload the object to reflect the verfication_code changes
+      expect(user.verification_code).not_to eq(old_verification_code)
+    end
+  end
+  
+  describe '#reset_password' do
+    
+    let!(:user) { FactoryGirl.create(:user, active: true, username: "user", password: User.hash_password("password")) }
+    
+    it 'should redirect to profile page if user is logged in' do
+      session[:user_id] = user.id
+      get :reset_password, guid: user.guid, activation_code: user.verification_code
+      expect(response).to redirect_to "/en/users/#{user.id}"
+    end
+
+    it 'should raise error and redirect to root if invalid parameters' do
+      get :reset_password, guid: user.guid, activation_code: "1234"
+      expect(response).to redirect_to "/"
+      expect(flash[:error]).not_to be_blank
+    end
+ 
+    it 'should render form if parameters are valid' do
+      get :reset_password, guid: user.guid, activation_code: user.verification_code
+      expect(response).to render_template "users/reset_password"
+      expect(flash[:error]).to be_blank
+    end
+  end
+
+  describe '#reset_password_action' do
+    
+    let!(:user) { FactoryGirl.create(:user, active: true, username: "user", password: User.hash_password("password")) }
+    
+    it 'should redirect to profile page if user is logged in' do
+      session[:user_id] = user.id
+      post :reset_password_action
+      expect(response).to redirect_to "/en/users/#{user.id}"
+    end
+
+    it 'should redirect to home page if user is invalid' do
+      post :reset_password_action, { user: { } }
+      expect(response).to redirect_to "/"
+    end
+      
+    it 'should redirect to home page if invalid parameters' do
+      post :reset_password_action, { user: { guid: user.guid, activation_code: "1234" } }
+      expect(response).to redirect_to "/"
+      expect(flash[:error]).not_to be_blank
+    end
+
+    it 'should reject short passwords' do
+      post :reset_password_action, { user: {
+        guid: user.guid,
+        activation_code: user.verification_code,
+        entered_password: "123",
+        entered_password_confirmation: "123"} }
+      expect(response).to redirect_to "/users/reset_password/#{user.guid}/#{user.verification_code}"
+      expect(flash[:error]).not_to be_blank
+    end
+    
+    it 'should reject mismatched passwords' do
+      post :reset_password_action, { user: {
+        guid: user.guid,
+        activation_code: user.verification_code,
+        entered_password: "1234",
+        entered_password_confirmation: "123456"} }
+      expect(response).to redirect_to "/users/reset_password/#{user.guid}/#{user.verification_code}"
+      expect(flash[:error]).not_to be_blank
+    end
+ 
+    it 'should change password and redirect to login' do
+      old_password = user.password
+      post :reset_password_action, { user: {
+        guid: user.guid,
+        activation_code: user.verification_code,
+        entered_password: "1234",
+        entered_password_confirmation: "1234"} }
+      user.reload
+      expect(user.password).not_to eq(old_password)
+      expect(user.password).to eq(Digest::MD5.hexdigest("1234"))
+      expect(response).to redirect_to "/users/login"
+    end
+  end
+  
   describe "#validate" do
     
     context "valid user" do      
