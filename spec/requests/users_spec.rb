@@ -163,27 +163,27 @@ RSpec.describe "Users", type: :request do
                         password: User.hash_password("owner_user_password"), real_name: "owner_user_real")
         @other_user = FactoryGirl.create(:user, active: true, username: "other_user", 
                       password: User.hash_password("other_user_password"),email: "other@example.com") 
-        @book1 = FactoryGirl.create(:book)
-        @book2 = FactoryGirl.create(:book)
+        @books = [FactoryGirl.create(:book), FactoryGirl.create(:book)]
         solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
         solr_books_core.delete_by_query('*:*')
         solr_books_core.commit
-        solr_books_core.add({ job_id: 9, language_facet: 'eng',
-           bib_id: 'bib_id_1', title_en: @book1.title, author_en: "author_1"})
-            solr_books_core.add({ job_id: 20, language_facet: 'eng',
-           bib_id: 'bib_id_2', title_en: @book2.title, author_en: "author_2"})
+        @job_ids = [9,20]
+        @job_ids.each_with_index do |vol, i|
+          solr_books_core.add({ job_id: vol, language_facet: 'eng',
+             bib_id: 'bib_id_#{i}', title_en: @books[i].title, author_en: "author_#{i}"})
+        end
         solr_books_core.commit
         4.times do
-          FactoryGirl.create(:annotation, user_id: @owner_user.id,
-           anntype: "Note", volume_id: 9)
-          FactoryGirl.create(:annotation, user_id: @owner_user.id,
-           anntype: "Note", volume_id: 20)
+          @job_ids.each do |vol|
+            FactoryGirl.create(:annotation, user_id: @owner_user.id,
+             anntype: "Note", volume_id: vol)
+          end
         end
         6.times do
-          FactoryGirl.create(:annotation, user_id: @owner_user.id,
-           anntype: "Highlight", volume_id: 9)
-          FactoryGirl.create(:annotation, user_id: @owner_user.id,
-           anntype: "Highlight", volume_id: 20)
+          @job_ids.each do |vol|
+            FactoryGirl.create(:annotation, user_id: @owner_user.id,
+             anntype: "Highlight", volume_id: vol)
+          end
         end
       end
       context "user with annotations" do
@@ -201,20 +201,23 @@ RSpec.describe "Users", type: :request do
           expect(page).to have_selector("div[class='annotation clearfix']", count: 2)
         end
         it "displays the tile of each annotated book" do
-          expect(page).to have_selector("h4",text: @book1.title)
-          expect(page).to have_selector("h4",text: @book2.title)
+          @books.each do |book|
+            expect(page).to have_selector("h4",text: book.title)
+          end
         end
         it ' displays the correct notes and highlights numbers' do
           expect(page).to have_selector("span[id='notes']", text: 4, count: 2)
           expect(page).to have_selector("span[id='highlights']", text: 6, count: 2)
         end
         it "has a details link for each annotated book" do
-          expect(page).to have_selector("a[href='#{book_path(id:9)}']", text: I18n.t('common.details'))
-          expect(page).to have_selector("a[href='#{book_path(id:20)}']", text: I18n.t('common.details'))
+          @job_ids.each do |vol|
+            expect(page).to have_selector("a[href='#{book_path(id:vol)}']", text: I18n.t('common.details'))
+          end
         end
         it "has a read link for each annotated book" do
-          expect(page).to have_selector("a[href='#{book_path(id:9, tab: "read")}']", text: I18n.t('common.read'))
-          expect(page).to have_selector("a[href='#{book_path(id:20, tab: "read")}']", text: I18n.t('common.read'))
+          @job_ids.each do |vol|
+            expect(page).to have_selector("a[href='#{book_path(id: vol, tab: "read")}']", text: I18n.t('common.read'))
+          end
         end
       end
       context "user with no annotations" do
