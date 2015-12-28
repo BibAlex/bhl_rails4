@@ -168,21 +168,21 @@ RSpec.describe "Users", type: :request do
         solr_books_core.delete_by_query('*:*')
         solr_books_core.commit
         @job_ids = [9,20]
-        @job_ids.each_with_index do |vol, i|
-          solr_books_core.add({ job_id: vol, language_facet: 'eng',
+        @job_ids.each_with_index do |job_id, i|
+          solr_books_core.add({ job_id: job_id, language_facet: 'eng',
              bib_id: 'bib_id_#{i}', title_en: @books[i].title, author_en: "author_#{i}"})
         end
         solr_books_core.commit
         4.times do
-          @job_ids.each do |vol|
+          @job_ids.each do |job_id|
             FactoryGirl.create(:annotation, user_id: @owner_user.id,
-             anntype: "Note", volume_id: vol)
+             anntype: "Note", volume_id: job_id)
           end
         end
         6.times do
-          @job_ids.each do |vol|
+          @job_ids.each do |job_id|
             FactoryGirl.create(:annotation, user_id: @owner_user.id,
-             anntype: "Highlight", volume_id: vol)
+             anntype: "Highlight", volume_id: job_id)
           end
         end
       end
@@ -210,13 +210,13 @@ RSpec.describe "Users", type: :request do
           expect(page).to have_selector("span[id='highlights']", text: 6, count: 2)
         end
         it "has a details link for each annotated book" do
-          @job_ids.each do |vol|
-            expect(page).to have_selector("a[href='#{book_path(id:vol)}']", text: I18n.t('common.details'))
+          @job_ids.each do |job_id|
+            expect(page).to have_selector("a[href='#{book_path(id:job_id)}']", text: I18n.t('common.details'))
           end
         end
         it "has a read link for each annotated book" do
-          @job_ids.each do |vol|
-            expect(page).to have_selector("a[href='#{book_path(id: vol, tab: "read")}']", text: I18n.t('common.read'))
+          @job_ids.each do |job_id|
+            expect(page).to have_selector("a[href='#{book_path(id: job_id, tab: "read")}']", text: I18n.t('common.read'))
           end
         end
       end
