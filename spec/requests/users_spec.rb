@@ -186,40 +186,48 @@ RSpec.describe "Users", type: :request do
            anntype: "Highlight", volume_id: 20)
         end
       end
-      context "success" do
-        context "user with annotations" do
-          before do
-            page.set_rack_session(user_id: @owner_user.id)
-            visit user_path(id: @owner_user, tab: "annotations")
-          end
-          it 'displays annotations title' do
-            expect(page).to have_selector("h4", text: I18n.t('annotations.title') )
-          end
-          it "displays the correct total number" do
-            expect(page).to have_selector("span[id='total_number']", text: 20 )
-          end
-          it 'displays all the anotatted books' do
-            expect(page).to have_selector("div[class='annotation clearfix']", count: 2)
-          end
-          it "displays the tile of each annotated book" do
-            expect(page).to have_selector("h4",text: @book1.title)
-            expect(page).to have_selector("h4",text: @book2.title)
-          end
-          it ' displays the correct notes and highlights numbers' do
-            expect(page).to have_selector("span[id='notes']", text: 4, count: 2)
-            expect(page).to have_selector("span[id='highlights']", text: 6, count: 2)
-          end
-          it "has a details link for each annotated book" do
-             # expect(page).to have_selector("a", text:  I18n.t('common.details'), count: 2)
-             expect(page).to have_link(book_path(id:@book1))
-          end
+      context "user with annotations" do
+        before do
+          page.set_rack_session(user_id: @owner_user.id)
+          visit user_path(id: @owner_user, tab: "annotations")
         end
-        context "user with no annotations" do
-          
+        it 'displays annotations title' do
+          expect(page).to have_selector("h4", text: I18n.t('annotations.title') )
+        end
+        it "displays the correct total number" do
+          expect(page).to have_selector("span[id='total_number']", text: 20 )
+        end
+        it 'displays all the anotatted books' do
+          expect(page).to have_selector("div[class='annotation clearfix']", count: 2)
+        end
+        it "displays the tile of each annotated book" do
+          expect(page).to have_selector("h4",text: @book1.title)
+          expect(page).to have_selector("h4",text: @book2.title)
+        end
+        it ' displays the correct notes and highlights numbers' do
+          expect(page).to have_selector("span[id='notes']", text: 4, count: 2)
+          expect(page).to have_selector("span[id='highlights']", text: 6, count: 2)
+        end
+        it "has a details link for each annotated book" do
+          expect(page).to have_selector("a[href='#{book_path(id:9)}']", text: I18n.t('common.details'))
+          expect(page).to have_selector("a[href='#{book_path(id:20)}']", text: I18n.t('common.details'))
+        end
+        it "has a read link for each annotated book" do
+          expect(page).to have_selector("a[href='#{book_path(id:9, tab: "read")}']", text: I18n.t('common.read'))
+          expect(page).to have_selector("a[href='#{book_path(id:20, tab: "read")}']", text: I18n.t('common.read'))
         end
       end
-      context "failure" do
-        
+      context "user with no annotations" do
+        before do
+          page.set_rack_session(user_id: @other_user.id)
+          visit user_path(id: @other_user, tab: "annotations")
+        end
+        it "displays a msg of no annotations found" do
+          expect(page).to have_selector("h4", text:  I18n.t('annotations.no_annotations_found'))
+        end
+        it "doesn't display any anottated books" do
+          expect(page).not_to have_selector("div[class='annotation clearfix']")
+        end
       end
     end
   end 

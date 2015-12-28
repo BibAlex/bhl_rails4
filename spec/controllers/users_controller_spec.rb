@@ -169,9 +169,6 @@ RSpec.describe UsersController, type: :controller do
           it 'assigns zero annotations for the user' do
             expect(assigns[:total_number]).to eq(0)
           end
-          it 'displays a msg if no annotations found for the user' do
-            expect(response.body).to have_selector('h4', text: I18n.t('annotations.no_annotations_found'))
-          end
         end
       end
       context "failure" do
