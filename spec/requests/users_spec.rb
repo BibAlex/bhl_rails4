@@ -156,6 +156,71 @@ RSpec.describe "Users", type: :request do
           expect(page).to have_selector("span", text: @other_user.last_login)
         end        
       end      
-    end    
+    end
+    describe "annotations tab" do
+      before do
+        @owner_user = FactoryGirl.create(:user, active: true, username: "owner_user",
+                        password: User.hash_password("owner_user_password"), real_name: "owner_user_real")
+        @other_user = FactoryGirl.create(:user, active: true, username: "other_user", 
+                      password: User.hash_password("other_user_password"),email: "other@example.com") 
+        @book1 = FactoryGirl.create(:book)
+        @book2 = FactoryGirl.create(:book)
+        solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
+        solr_books_core.delete_by_query('*:*')
+        solr_books_core.commit
+        solr_books_core.add({ job_id: 9, language_facet: 'eng',
+           bib_id: 'bib_id_1', title_en: @book1.title, author_en: "author_1"})
+            solr_books_core.add({ job_id: 20, language_facet: 'eng',
+           bib_id: 'bib_id_2', title_en: @book2.title, author_en: "author_2"})
+        solr_books_core.commit
+        4.times do
+          FactoryGirl.create(:annotation, user_id: @owner_user.id,
+           anntype: "Note", volume_id: 9)
+          FactoryGirl.create(:annotation, user_id: @owner_user.id,
+           anntype: "Note", volume_id: 20)
+        end
+        6.times do
+          FactoryGirl.create(:annotation, user_id: @owner_user.id,
+           anntype: "Highlight", volume_id: 9)
+          FactoryGirl.create(:annotation, user_id: @owner_user.id,
+           anntype: "Highlight", volume_id: 20)
+        end
+      end
+      context "success" do
+        context "user with annotations" do
+          before do
+            page.set_rack_session(user_id: @owner_user.id)
+            visit user_path(id: @owner_user, tab: "annotations")
+          end
+          it 'displays annotations title' do
+            expect(page).to have_selector("h4", text: I18n.t('annotations.title') )
+          end
+          it "displays the correct total number" do
+            expect(page).to have_selector("span[id='total_number']", text: 20 )
+          end
+          it 'displays all the anotatted books' do
+            expect(page).to have_selector("div[class='annotation clearfix']", count: 2)
+          end
+          it "displays the tile of each annotated book" do
+            expect(page).to have_selector("h4",text: @book1.title)
+            expect(page).to have_selector("h4",text: @book2.title)
+          end
+          it ' displays the correct notes and highlights numbers' do
+            expect(page).to have_selector("span[id='notes']", text: 4, count: 2)
+            expect(page).to have_selector("span[id='highlights']", text: 6, count: 2)
+          end
+          it "has a details link for each annotated book" do
+             # expect(page).to have_selector("a", text:  I18n.t('common.details'), count: 2)
+             expect(page).to have_link(book_path(id:@book1))
+          end
+        end
+        context "user with no annotations" do
+          
+        end
+      end
+      context "failure" do
+        
+      end
+    end
   end 
 end

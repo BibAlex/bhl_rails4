@@ -3,8 +3,7 @@ class UsersController < ApplicationController
   include UsersHelper
   include BHL::Login
   before_filter :load_user, only: [:show]
-  before_filter :authinticate_user, only: [:load_annotations_tab]
-  
+
   def login
     session[:login_attempts] ||= 0
     @verify_captcha = true if (session[:login_attempts].to_i  >= LOGIN_ATTEMPTS)
@@ -126,24 +125,26 @@ class UsersController < ApplicationController
   
   def load_user
     @user = User.find_by_id(params[:id])
-    return redirect_to root_path unless @user
+    return redirect_to root_path , flash: {error: I18n.t('msgs.user_not_found')} unless @user
     @tab = params[:tab].nil? ? "profile" : params[:tab]
   end  
 
   def load_annotations_tab
-    @page = params[:page] ? params[:page].to_i : 1
-    @total_number = Annotation.count(conditions: "user_id = #{@user.id}")
-    @annotations = Annotation.where(user_id: @user).select(:volume_id).
-    group(:volume_id).paginate(page: @page, per_page: TAB_GALLERY_PAGE_SIZE)
-    @collected_annotations = []
-    @annotations.each do |annotation|
-      job_id = annotation.volume_id
-      @collected_annotations << {
-        job_id: job_id,
-        book_title:  BooksHelper.find_field_in_document(job_id, :title).first,
-        notes: Annotation.notes.where(user_id: @user.id, volume_id: job_id),
-        highlights: Annotation.highlights.where(user_id: @user.id, volume_id: job_id)
-      }
+    if authenticate_user
+      @page = params[:page] ? params[:page].to_i : 1
+      @total_number = Annotation.where("user_id = #{@user.id}").count
+      @annotations = Annotation.where(user_id: @user).select(:volume_id).
+       group(:volume_id).paginate(page: @page, per_page: TAB_GALLERY_PAGE_SIZE)
+      @collected_annotations = []
+      @annotations.each do |annotation|
+        job_id = annotation.volume_id
+        @collected_annotations << {
+          job_id: job_id,
+          book_title:  BooksHelper.find_field_in_document(job_id, :title).first,
+          notes: Annotation.notes.where(user_id: @user.id, volume_id: job_id),
+          highlights: Annotation.highlights.where(user_id: @user.id, volume_id: job_id)
+        }
+      end
     end
   end
 end
