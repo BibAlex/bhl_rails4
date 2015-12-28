@@ -133,6 +133,7 @@ en:
     content: Content
     about_us: About Us
     contact_us: Contact Us
+    book_removed: Book has been removed
     browse_all: Browse All
     geographics: Geographics
     signout: Sign Out
@@ -150,6 +151,8 @@ en:
     change_password: Change password
     reset_password: Reset password
     forget_password_page_header: "Enter the email address associated with your BHL account:"
+    volume_history_page_header: "Recently viewed books"
+    volume_history_viewed_on: "On:"
     book_count:
       one: "one Book"
       other: "%{count} books"       
@@ -213,6 +216,9 @@ en:
     reset_password_success: "Your password has been reset successfully"
     recover_password_success: "Account recovery email has been sent with further instructions"
     email_not_found: "A BHL account with that email address %{email} could not be found"
+    no_volume_history_found: No history found...
+    remove_book_from_history: "Are you sure you want to remove this book ?"
+    access_denied_error: "Access denied."
     
   activerecord:
       attributes:

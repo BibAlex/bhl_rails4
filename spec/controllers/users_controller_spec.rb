@@ -88,28 +88,91 @@ RSpec.describe UsersController, type: :controller do
   
   describe "#show" do 
     
-    let!(:owner_user) { FactoryGirl.create(:user, active: true, username: "owner_user", password: User.hash_password("owner_user_password")) }
-    
-    before do
-      session[:user_id] = owner_user.id
-      get :show, { id: owner_user.id }
+    before :all do
+      @owner_user = FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org", 
+        username: "owner_user", password: User.hash_password("owner_user_password"))
     end
     
-    it "returns a 200 ok status" do      
-      expect(response).to have_http_status(:ok)
+    context "profile tab" do
+      before do
+        session[:user_id] = @owner_user.id
+        get :show, { id: @owner_user.id }
+      end
+      
+      it "returns a 200 ok status" do      
+        expect(response).to have_http_status(:ok)
+      end
+      
+      it "renders the show template" do
+        expect(response).to render_template(:show)
+      end
+      
+      it "loads user info" do
+        expect(assigns(:user)).to eq(@owner_user)
+      end
+      
+      it "loads tab info" do
+        expect(assigns(:tab)).to eq("profile")
+      end
     end
     
-    it "renders the show template" do
-      expect(response).to render_template(:show)
+    context "history tab" do
+      
+      context "owner user" do
+
+        before :all do
+          book_metadata_1 = {job_id: "123", bib_id: "456", title_en: "Book 1", author_en: "Author1", publisher_en: "publisher1",
+            subject_en: "subject1"}
+          book_metadata_2 = {job_id: "234", bib_id: "567", title_en: "Book 2", author_en: "Author2", publisher_en: "publisher2",
+            subject_en: "subject2"}
+  
+          solr = RSolr.connect :url => SOLR_BOOKS_METADATA
+      
+          solr.delete_by_query("*:*")
+          # solr.delete_by_query("job_id: 234")
+          solr.commit
+          solr.add book_metadata_1
+          solr.add book_metadata_2
+          solr.commit
+  
+          @vol_first = Volume.create(book: Book.create(title: 'Book 1', bib_id: '456'), job_id: "123")
+          @vol_second = Volume.create(book: Book.create(title: 'Book 2', bib_id: '567'), job_id: "234")
+          UserVolumeHistory.create(volume_id: @vol_first.id, user_id: @owner_user.id, :updated_at => Time.now)
+          UserVolumeHistory.create(volume_id: @vol_second.id, user_id: @owner_user.id, :updated_at => Time.now)
+        end
+        
+        it 'should have 2 total books' do
+          session[:user_id] = @owner_user.id
+          get :show, { id: @owner_user.id, tab: "history" }
+          expect(assigns[:total_number]).to eq(2)
+        end
+        
+        it 'should have 1 recently viewed volume' do
+          session[:user_id] = @owner_user.id
+          get :show, { id: @owner_user.id, tab: "history" }
+          expect(assigns[:recently_viewed_volume]).to eq(@vol_first)
+        end
+        
+      end
+      
+      context "not owner user" do
+        
+        let!(:another_user) { FactoryGirl.create(:user, active: true, email: "another_user_email@bibalex.org", 
+          username: "another_user", password: User.hash_password("another_password")) }
+        
+        it "should redirect to login if not logged in" do
+          get :show, { id: @owner_user.id, tab: 'history' }
+          expect(response).to redirect_to(login_users_path)
+        end
+        
+        it "should deny access for wrong user" do
+          session[:user_id] = @owner_user.id
+          get :show, { id: another_user.id, tab: 'history' }
+          expect(response).to redirect_to(user_path(id: another_user.id))
+        end
+      end
     end
     
-    it "loads user info" do
-      expect(assigns(:user)).to eq(owner_user)
-    end
-    
-    it "loads tab info" do
-      expect(assigns(:tab)).to eq("profile")
-    end
   end
   
   

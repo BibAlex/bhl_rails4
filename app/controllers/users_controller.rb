@@ -178,5 +178,24 @@ class UsersController < ApplicationController
     @user = User.find_by_id(params[:id])
     return redirect_to root_path unless @user
     @tab = params[:tab].nil? ? "profile" : params[:tab]
-  end  
+  end
+  
+  def load_history_tab
+    if authenticate_user(params[:id])
+      @total_number = UserVolumeHistory.history(@user).count
+      @page = params[:page] ? params[:page].to_i : 1 
+      @history = UserVolumeHistory.history(@user).paginate(page: @page, per_page: PAGE_SIZE)
+
+      if @history.length > 0
+        @recently_viewed_volume = Volume.find_by_id((@history.first).volume)
+      end
+      
+      if @history.blank? and @page > 1
+        redirect_to user_path(id: session[:user_id], tab: "history", page: params[:page].to_i - 1)
+      end
+      
+      @url_params = params.clone
+    end
+  end
+   
 end
