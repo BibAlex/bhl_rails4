@@ -70,7 +70,7 @@ RSpec.describe "Users", type: :request do
       end
       
       it "displays a link for forgot password page" do
-        expect(page).to have_selector("a[href='/#{I18n.locale}/users/forgot_password']", text: I18n.t('common.forgot_password'))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/users/forgot_password']", text: I18n.t('common.forgot_password_link'))
       end
       
       it "displays a link for sign up page" do

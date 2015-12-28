@@ -59,6 +59,7 @@ BhlRails4::Application.routes.draw do
 
     root :to => 'pages#home'
     get "users/activate/:guid/:activation_code" => "users#activate"
+    get "users/reset_password/:guid/:activation_code" => "users#reset_password"
     get "rating/rate//:value/:rateable_type/:user_id/:rateable_id" => "rating#rate"
     get "rating/detailed_rate/:rateable_id/:rateable_type" => "rating#detailed_rate"
     get "user_search_history/save_query"
@@ -80,6 +81,8 @@ BhlRails4::Application.routes.draw do
         get 'login'
         get 'forgot_password'
         post 'validate'
+        post 'recover_password'
+        post 'reset_password_action'
       end
       member do
         get 'logout'
@@ -106,7 +109,9 @@ BhlRails4::Application.routes.draw do
 
     resources :names
 
-    resources :geographics
+    resources :geographics 
+    get "/geographics/show/:id" => "geographics#show"
+    get "/geographics/index/:range" => "geographics#index"
 
     resources :collections do
       collection do
