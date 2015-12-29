@@ -26,6 +26,10 @@ class ApplicationController < ActionController::Base
     session[:return_to] = url
   end
   
+  def redirect_to_user_show_if_logged_in
+    redirect_to({ controller: 'users', action: 'show', id: session[:user_id] }) if logged_in?
+  end
+  
    private
     def extract_locale_from_accept_language_header
       request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first

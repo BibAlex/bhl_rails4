@@ -171,7 +171,7 @@ RSpec.describe "Homepages", type: :feature do
       end
       
       it "displays total number of activities" do          
-        expect(page).to have_selector("span[class='badge']", text: 3)
+        expect(page).to have_selector("span[class='badge']", text: Activity.count)
       end
       
       # this part uses ajax call so we can't test it using rspec

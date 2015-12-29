@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151227104239) do
+ActiveRecord::Schema.define(version: 20151228132337) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -242,10 +242,11 @@ ActiveRecord::Schema.define(version: 20151227104239) do
   end
 
   create_table "user_volume_histories", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4, null: false
-    t.integer  "volume_id",  limit: 4, null: false
+    t.integer  "user_id",               limit: 4,             null: false
+    t.integer  "volume_id",             limit: 4,             null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "total_number_of_views", limit: 4, default: 0
   end
 
   create_table "users", force: :cascade do |t|

@@ -39,6 +39,7 @@ RSpec.describe Collection, type: :model do
     
     before do
       user = User.first
+      Collection.delete_all
       @first_collection = FactoryGirl.create(:collection, title: "first collection", user_id: user.id, is_public: true, rate: 2)
       @second_collection = FactoryGirl.create(:collection, title: "second collection", user_id: user.id, is_public: true, rate: 4)
       @non_public_collection = FactoryGirl.create(:collection, title: "non public collection", user_id: user.id, is_public: false, rate: 5)

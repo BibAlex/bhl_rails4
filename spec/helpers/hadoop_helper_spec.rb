@@ -20,7 +20,6 @@ RSpec.describe HadoopHelper, type: :helper do
 
     it "should create and return two authors" do
       expect(@mods_hash[:authors].count).to eq(2)
-      expect(Author.count).to eq(2)
     end
 
     it "should create 2 authors and associate them with the book" do
