@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe HadoopHelper, type: :helper do
   describe "Testing Process Mods" do
     before :all do
-      clean_book_tables
       load_book_statuses
       xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "sample_mods.xml"))
       mods_xml = Nokogiri::XML(xml_file_path)
@@ -37,7 +36,6 @@ RSpec.describe HadoopHelper, type: :helper do
 
   describe "Test metadata ingestion details" do
     before :each do
-      clean_book_tables
       load_book_statuses
       xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "metadata_single_sample.xml"))
       mods_xml = Nokogiri::XML(xml_file_path)

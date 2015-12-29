@@ -153,6 +153,51 @@ RSpec.describe "Users", type: :request do
           expect(page).to have_selector("span", text: @other_user.last_login)
         end        
       end      
-    end    
+    end
+    
+    describe "activity_tab" do
+        before do
+           book = FactoryGirl.create(:book, title: "new_book")
+           @volume = FactoryGirl.create(:volume, book_id: book.id)
+           comment = FactoryGirl.create(:comment, text: "main_comment")
+           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
+                                                        filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
+           @owner_user = FactoryGirl.create(:user, active: true, username: "@owner_user", password: User.hash_password("@owner_user_password"),
+                                                  photo_name: file, real_name: "@owner_user_real", email: "owner@example.com")
+           @collection_create = FactoryGirl.create(:collection, user_id: @owner_user.id, title: "new_collection", is_public: true)
+           @collection_rate = FactoryGirl.create(:rate, user_id: @owner_user.id , rateable_id: @collection_create.id , rateable_type: "collection",
+                                                  rate: 5 )
+           @collection_comment = FactoryGirl.create(:comment, commentable_id: @collection_create.id,commentable_type: "collection", 
+                                                  user_id: @owner_user.id, text: "Good_Collection")
+           @volume_comment = FactoryGirl.create(:comment, commentable_id: @volume.job_id,  commentable_type: "volume", user_id: @owner_user.id, 
+                                                  text: "Good_volume")
+           @volume_rate = FactoryGirl.create(:rate, user_id: @owner_user.id , rateable_id: @volume.job_id ,rateable_type: "volume",
+                                                  rate: 5 )
+           @reply_comment = FactoryGirl.create(:comment, commentable_id: comment.id,
+                                                  commentable_type: "comment", user_id: @owner_user.id, text: "Reply")
+           page.set_rack_session(user_id: @owner_user.id)
+           visit user_path(locale: I18n.locale, id: @owner_user.id, tab: "activity")        
+        end
+        
+        it "should display total number of activities" do
+           expect(page).to have_selector("span[class='badge']", text: 6  )
+        end
+        
+        it "should display name of owner of activity" do
+           expect(page).to have_selector("a[href='/#{I18n.locale}/users/#{@owner_user.id}?tab=profile']", text: "#{@owner_user.username}")
+        end 
+        
+         it "should display  open link of activity component" do
+           expect(page).to have_selector("a[href= '/collections/#{@collection_create.id}']", text: "#{@collection_create.title}")
+           expect(page).to have_selector("a[href= '/books/#{@volume.job_id}']")
+         end
+    
+        it "should have pagination bar" do
+           20.times {Collection.create(:user_id => @owner_user.id, :title => "other collection",:description => "description", :is_public => true)}
+           visit user_path(locale: I18n.locale, id: @owner_user.id, tab: "activity") 
+           expect(page).to have_selector("div[class='pagination']")
+       end  
   end 
+ end
 end
+

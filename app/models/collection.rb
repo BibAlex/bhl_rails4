@@ -1,4 +1,7 @@
+include ActionView::Helpers::SanitizeHelper
+
 class Collection < ActiveRecord::Base
+   
   has_many :collection_volumes, dependent: :destroy
   has_many :volumes, through: :collection_volumes
   
@@ -14,12 +17,16 @@ class Collection < ActiveRecord::Base
   validates :user_id, presence: true
   
   before_save :sanitize_html
-  
+  after_save :update_activity
   scope :top, -> { where("is_public = true").order("rate desc").limit(TOP_COLLECTIONS_COUNT).offset(0) }
   
   def sanitize_html
     self.title = sanitize(title, :tags=>[])
     self.description = sanitize(description, :tags=>[])
+  end
+  
+  def update_activity
+    Activity.add_activity({ activitable_id: self.id, action: "create", user_id: self.user_id, activitable_type: "collection", activitable_title: self.title })
   end
    
   def self.collection_params(params)

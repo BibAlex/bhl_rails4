@@ -180,5 +180,14 @@ class UsersController < ApplicationController
     @user = User.find_by_id(params[:id])
     return redirect_to root_path unless @user
     @tab = params[:tab].nil? ? "profile" : params[:tab]
-  end  
+  end
+  
+  def load_activity_tab
+     @total_activities = Activity.where(user_id: params[:id]).count
+     @page = params[:page] ? params[:page].to_i : 1
+     limit = PAGE_SIZE
+     @offset = (@page > 1) ? (@page - 1) * limit : 0
+     @activities = Activity.where(user_id: params[:id]).order("created_at DESC").limit(limit).offset(@offset).
+                   paginate(page: @page, per_page:  PAGE_SIZE)
+  end
 end
