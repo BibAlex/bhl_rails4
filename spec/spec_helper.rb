@@ -19,7 +19,6 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do |example|
-    # DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
   end
@@ -27,14 +26,6 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
-end
-
-def clean_book_tables
-  # Book.delete_all
-  # Author.delete_all
-  # Location.delete_all
-  # Subject.delete_all
-  # Volume.delete_all
 end
 
 def load_book_statuses

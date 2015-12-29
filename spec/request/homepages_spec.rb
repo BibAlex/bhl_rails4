@@ -139,8 +139,6 @@ RSpec.describe "Homepages", type: :feature do
       @user = User.first
       @collection = FactoryGirl.create(:collection, user: @user, title: "new_collection", is_public: true, rate: 5)
       FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
-                                    action: "create", user_id: @user.id, created_at: Time.now)
-      FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
                                     action: "rate", user_id: @user.id, value: 5, created_at: Time.now + 2)
       FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
                                     action: "comment", user_id: @user.id, value: "good_collection", created_at: Time.now + 3)                                    

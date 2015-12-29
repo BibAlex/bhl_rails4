@@ -42,26 +42,22 @@ module SAMPLDATA
       end
       
       5.times do |n|
-        Comment.create(commentable_id: rand(Volume.count) , commentable_type:"volume", user_id: rand(User.count), number_of_marks: n, text: "text_volume_#{n}")
+        Comment.create(commentable_id: Volume.find(rand(1..Volume.count)).job_id, commentable_type:"volume", user_id: rand(1..User.count), number_of_marks: n, text: "text_volume_#{n}")
+      end
+      
+      5.times do |n|
+        Rate.create(rateable_id: Volume.find(rand(1..Volume.count)).job_id, rateable_type:"volume", user_id: rand(1..User.count), rate: rand(5))
       end
       
       5.times do |n|
         public_collection_n = Collection.create(title: "title_public_#{n}", description: "description_#{n}", is_public: true, user_id: User.find(n+1).id)
-        Activity.create(activitable_id: public_collection_n.id, action: "create", user_id: public_collection_n.user_id,
-                        activitable_type: "collection", activitable_title: public_collection_n.title)
         private_collection_n = Collection.create(title: "title_private_#{n}", description: "description_#{n}", is_public: false, user_id: User.find(n+1).id)
-        Activity.create(activitable_id: private_collection_n.id, action: "create", user_id: private_collection_n.user_id,
-                        activitable_type: "collection", activitable_title: private_collection_n.title)
-        CollectionVolume.create(collection_id: public_collection_n.id, volume_id: rand(Volume.count))
-        CollectionVolume.create(collection_id: private_collection_n.id, volume_id: rand(Volume.count))
+        CollectionVolume.create(collection_id: public_collection_n.id, volume_id: rand(1..Volume.count))
+        CollectionVolume.create(collection_id: private_collection_n.id, volume_id: rand(1..Volume.count))
         rand(User.count).times do |m|
           rate_value = rand(5)
           Rate.create(rateable_id: public_collection_n.id , rateable_type: "collection", user_id: m+1 , rate: rate_value)
-          Activity.create(activitable_id: public_collection_n.id, action: "rate", user_id: m+1,
-                          activitable_type: "collection", activitable_title: public_collection_n.title, value: rate_value)
           Comment.create(commentable_id: public_collection_n.id , commentable_type:"collection", user_id: m+1, number_of_marks: m, text: "good_collection_#{n}")
-          Activity.create(activitable_id: public_collection_n.id, action: "comment", user_id: m+1,
-                          activitable_type: "collection", activitable_title: public_collection_n.title, value: "good_collection_#{n}")
         end
         public_collection_n.update_attributes(rate: Rate.where(rateable_id: public_collection_n.id, rateable_type: "collection").average('rate').to_f)        
       end      

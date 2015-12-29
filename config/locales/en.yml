@@ -173,10 +173,20 @@ en:
       create: Created
       rate: Rated
       comment: Commented on
+      reply: Replied to
     types:
       collection: a collection
       book: a book
-      comment: a comment     
+      comment: a comment
+      volume: a volume
+    sidelinks:
+      read: Read
+      detail: Details
+      add_collection: Add to Collection
+      views:
+        one: "1 view"
+        other: "%{count} views"
+     
     
   warn:
     empty_search_query_warn: "Search statement shouldn't be empty"

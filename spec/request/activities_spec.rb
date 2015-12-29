@@ -6,8 +6,6 @@ require 'rails_helper'
       Rails.cache.clear
       @user = FactoryGirl.create(:user, active: true, username: "user_activity", email: "user_activity@example.com", guid: "activity")
       @collection = FactoryGirl.create(:collection, user: @user, title: "new_collection", is_public: true)
-      @collection_create_activity = FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
-                                    action: "create", user_id: @user.id, created_at: Time.now)
     end
    
    describe "index" do
@@ -32,7 +30,7 @@ require 'rails_helper'
         
         it "display a link for activity owner" do
            expect(page).to have_selector("div[class='media']") do |div|
-            expect(div).to have_selector("a[href='/#{I18n.locale}/users/#{@user.id}?tab=profile']", text: @user.real_name)
+           expect(div).to have_selector("a[href='/#{I18n.locale}/users/#{@user.id}?tab=profile']", text: @user.real_name)
           end
         end
         
