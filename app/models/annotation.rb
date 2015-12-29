@@ -5,4 +5,7 @@ class Annotation < ActiveRecord::Base
   validates :user_id, presence: true
   validates :volume_id, presence: true
   validates :anntype, presence: true
+
+  scope :highlights, ->{ where(anntype: "Highlight") }
+  scope :notes, ->{ where(anntype: "Note") }
 end
