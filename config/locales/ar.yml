@@ -247,3 +247,19 @@ ar:
     user_recover_account:
       subject: "استعد حساب BHL الخاص بك"
       message: "لقد استلمنا طلبا لاستعادة حسابك. إذا لم تكن قد قمت بهذا الطلب, يرجى تجاهل هذا البريد الإلكترونى. يسمح الرابط التالى بالدخول مرة واحدة لتغيير اسم المرور الخاص بك."
+
+  geographics:
+    blue_pin: 'دبوس أزرق'
+    green_pin: 'دبوس أخضر'
+    yellow_pin: 'دبوس أصفر'
+    orange_pin: 'دبوس برتقالي'
+    red_pin: 'دبوس أحمر'
+    geo_titles: 'عنوان'
+    geo_titles_first_ten: 'عناوين'
+    geo_titles_more: 'عنوان او اكثر'
+    geo_show_all: 'اعرض الكل'
+    map_pin_blue: "map_pin_blue.png"
+    map_pin_green: "map_pin_green.png"
+    map_pin_orange: "map_pin_orange.png"
+    map_pin_red: "map_pin_red.png"
+    map_pin_yellow: "map_pin_yellow.png"
