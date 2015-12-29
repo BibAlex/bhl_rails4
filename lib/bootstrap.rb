@@ -24,14 +24,14 @@ module SAMPLDATA
       end
       
       5.times do |n|
-        User.create(username: "#{n}#{Faker::Internet.user_name(4..15)}",
+        User.create(username: "user_#{n}",
                     password: User.hash_password('password'), email: "#{n}#{Faker::Internet.email}",
-                    guid: "#{n}#{Faker::Lorem.characters(15)}", real_name: "#{n}#{Faker::Name.first_name}", active: true)
+                    guid: "#{n}#{Faker::Lorem.characters(15)}", real_name: "user_real_name_#{n}", active: true)
       end
       
       5.times do |n|
         rand(3).times do |m|
-          UserVolumeHistory.create(user_id: n+1, volume_id: m+1)
+          UserVolumeHistory.create(user_id: n+1, volume_id: Volume.find(m+1).job_id, total_number_of_views: rand(5))
         end        
       end
       

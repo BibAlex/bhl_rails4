@@ -3,7 +3,7 @@ class GeographicsController < ApplicationController
 
   def index
 
-    @page_title = I18n.t('header.pages.geographics_link')
+    @page_title = I18n.t('common.geographics')
     @map = Cartographer::Gmap.new('map' , zoom: 2)
     @header = Cartographer::Header.new.to_s
     @range = params[:range] ? params[:range] : "10,20,30,40,50"

@@ -3,6 +3,8 @@ class UsersController < ApplicationController
   include UsersHelper
   include BHL::Login
   
+  before_filter :redirect_to_user_show_if_logged_in, only: [:login]
+  
   def login
     session[:login_attempts] ||= 0
     @verify_captcha = true if (session[:login_attempts].to_i  >= LOGIN_ATTEMPTS)
@@ -66,7 +68,7 @@ class UsersController < ApplicationController
     # POST /users/validate
   def validate
     if (session[:login_attempts].to_i >= LOGIN_ATTEMPTS) && !(verify_recaptcha)
-      redirect_to controller: 'users', action: 'login', flash: { error: I18n.t('msgs.recaptcha_error') }
+      redirect_to({ controller: 'users', action: 'login'} , flash: { error: I18n.t('msgs.recaptcha_error') })
     else
       @user = User.authenticate(params[:user][:username], params[:user][:password])
       if @user.nil?

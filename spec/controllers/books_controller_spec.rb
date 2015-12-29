@@ -309,6 +309,7 @@ RSpec.describe BooksController, type: :controller do
         user = User.first
         log_out
         log_in(user)
+        UserVolumeHistory.where(user_id: user.id, volume_id: @volume.id).destroy_all unless UserVolumeHistory.where(user_id: user.id, volume_id: @volume.id).nil?
         user_history_count = UserVolumeHistory.where(user_id: user.id).count
         get :show, { id: @volume.id, tab: "read" }
         expect(UserVolumeHistory.where(user_id: user.id).count).to eq(user_history_count + 1)

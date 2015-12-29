@@ -8,6 +8,9 @@ module SOLR
       Volume.find_each do |volume|
         doc  = {}
         doc[:job_id] = volume.job_id
+        volume.update_attributes(rate: rand(5))
+        doc[:rate] = volume.rate
+        doc[:views] = UserVolumeHistory.where(volume_id: volume.job_id).sum('total_number_of_views')
         book = Book.find(volume.book_id)
         doc[:bib_id] = book.bib_id
         doc[:title_sort] = book.title.split(",")[0]
@@ -26,7 +29,7 @@ module SOLR
             doc["subject_#{language.code[0..1]}"] << subject.name
           end
         end
-        doc[:language_facet] = doc_languages
+        doc[:language_facet] = doc_languages        
         solr_books_core.add(doc)
         solr_books_core.commit
         solr_books_core.optimize
