@@ -173,10 +173,82 @@ RSpec.describe UsersController, type: :controller do
       end
     end
     
-  end
-  
-  
-  
+    describe "annotations tab" do
+      before do
+        @owner_user = FactoryGirl.create(:user, active: true, username: "owneruser",
+         password: User.hash_password("owner_user_password"))
+        @other_user = FactoryGirl.create(:user, active: true, 
+          username: "otheruser", password: User.hash_password("other_user_password"))
+      end
+      context "successful" do 
+        before do
+          book = FactoryGirl.create(:book)
+          job_ids = [9,20]
+          solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
+          solr_books_core.delete_by_query('*:*')
+          solr_books_core.commit
+          job_ids.each_with_index do |job_id, i|
+          solr_books_core.add({ job_id: job_id, language_facet: 'eng',
+             bib_id: 'bib_id_#{i}', title_en: book.title, author_en: "author_#{i}"})
+           end
+          solr_books_core.commit
+          2.times do
+            job_ids.each do |job_id|
+              FactoryGirl.create(:annotation, user_id: @owner_user.id,
+               anntype: "Note", volume_id: job_id)
+            end
+          end
+          3.times do
+            job_ids.each do |job_id|
+              FactoryGirl.create(:annotation, user_id: @owner_user.id,
+               anntype: "Highlight", volume_id: job_id)
+            end
+          end
+         
+        end
+        context "with user has annotations" do
+          before do
+            session[:user_id] = @owner_user.id
+            get :show, id: @owner_user.id, tab: "annotations"
+          end
+           it "loads successfully" do 
+            expect(response).to have_http_status(:ok)
+          end
+          it "loads the rights tab" do
+            expect(assigns[:tab]).to eq("annotations")
+          end
+          it 'displays the right number for total annotations' do
+            expect(assigns[:total_number]).to eq(10)
+          end
+        end
+        context "user with no annotations" do
+          before do
+            session[:user_id] = @other_user.id
+            get :show, id: @other_user.id, tab: "annotations"
+          end
+           it "loads successfully" do 
+            expect(response).to have_http_status(:ok)
+          end
+          it 'assigns zero annotations for the user' do
+            expect(assigns[:total_number]).to eq(0)
+          end
+        end
+      end
+      context "failure" do
+        before do
+          session[:user_id] = @other_user.id
+          get :show, id: @owner_user.id, tab: "annotations"
+        end
+        it "doesn't show the annotations tab" do
+          expect(response).to redirect_to( user_path(id: @owner_user.id) )
+        end
+        it 'displays an access denied error' do
+          expect(flash[:error]).to eq(I18n.t 'msgs.access_denied_error')
+        end
+      end
+    end
+ end
+
   describe "#logout" do     
       
    let!(:user) { FactoryGirl.create(:user, active: true, username: "user_logout", password: User.hash_password("user_logout_password")) }
