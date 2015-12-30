@@ -5,31 +5,15 @@ module ApplicationHelper
   end
   
   def get_class_for_sort_option(sort_param, sort_type)
-    if(sort_param && (sort_param.include?sort_type))
-      ""
-    else
-      "display:none"
-    end
+    sort_param && sort_param.include?(sort_type) ? "" : "display:none"
   end
   
   def get_class_for_active_sort_option(sort_param, sort_type)
-    if(sort_param && (sort_param.include?sort_type))
-      "display:none"
-    else
-      ""
-    end
+    sort_param && sort_param.include?(sort_type) ? "display:none" : ""
   end
   
-  def toggle_sort_option(sort_param, sort_type)
-    sort_option = ''
-    if(sort_param && (sort_param.include?sort_type))
-      sort_parts = sort_param.split(" ")
-      sort_option = "ASC" if sort_parts[1] == "DESC"
-      sort_option = "DESC" if sort_parts[1] == "ASC"
-    else
-      sort_option = "DESC"
-    end
-    sort_option
+  def toggle_sort_option(sort_direction)
+    sort_direction && sort_direction == "desc" ? "asc" : "desc"
   end
   
 end
