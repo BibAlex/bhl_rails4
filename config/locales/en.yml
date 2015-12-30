@@ -152,6 +152,8 @@ en:
     forget_password_page_header: "Enter the email address associated with your BHL account:"
     volume_history_page_header: "Recently viewed books"
     volume_history_viewed_on: "On:"
+    rates: "Rates"
+    title: "Title"
     book_count:
       one: "one Book"
       other: "%{count} books"       
@@ -318,6 +320,18 @@ en:
     sidelinks_add_collection: "Add to Collection"
     collection_volume_deleted: "Book is successfuly removed from your collection."
     show_collection_detail: "Collection Detail"
+    collection_title: "Collections"
+    empty_search_query_warn: "Search statement shouldn't be empty"
+    invalid_input: "Invalid input!"
+    collections_books_number_tip: "Number of books inside"
+    collection_by: "By:"
+    no_collections_found: "No Collections Found..."
+    collection_creation_date: "Created at:"
+    collections_found:
+      zero:  ""
+      one:   "Found in one collection"
+      other: "Found in %{count} collections"
+    collections_found_all: "Found %{count} collections"
   notifier:
       user_verification:
         subject: "Please verify your request for BHL Egypt"
