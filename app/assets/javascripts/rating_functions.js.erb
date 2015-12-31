@@ -2,19 +2,19 @@ function updatedetailedrate(rateable_id, rateable_type)
 {
 	$.ajax({
 	    url: "/rating/detailed_rate/" + rateable_id + "/" + rateable_type,
-	    type: "GET",        
-	    success: function (data) { 
+	    type: "GET",
+	    success: function (data) {
 	      $("#detailedrate").html(data);
 	    }
 	  });
 }
 
 
-function rate_volume(user_id, rateable_id, rateable_type, count)
+function rate_object(user_id, rateable_id, rateable_type, count)
 {
  // value == 0 then it is static star
   if(parseInt($(this).attr("value")) != 0){
-    
+
     // if off then user want to reset his rating to 0
     var off = false;
     if(count == 1 && (($("#star1").attr("class")).split(' ')).length == 3 &&  ($("#star2").attr("class")).localeCompare("starrating") == 0){
@@ -35,14 +35,13 @@ function rate_volume(user_id, rateable_id, rateable_type, count)
           off = false;
           count = 0;
         }
-        $.ajax({type: "GET", 
-                url: "/rating/rate/" + count + "/" + rateable_type + "/" + user_id + "/" + rateable_id, 
-                success: function(data){
-                			  update_avg_rate(data);
-                              updatedetailedrate(rateable_id, rateable_type);
-                              
-                              
-                         }
+        $.ajax({type: "GET",
+                url: "/rating/rate/" + count + "/" + rateable_type + "/" + user_id + "/" + rateable_id,
+                success: function(data)
+                {
+                  update_avg_rate(data);
+                  updatedetailedrate(rateable_id, rateable_type);
+                 }
                });
       }
 }
@@ -72,7 +71,7 @@ $(function () {
         }
       }
     });
-    
+
 $('#star1, #star2, #star3, #star4, #star5').mouseout(function(){
   for(i=1; i <= 5; i++){
       $("#star"+ i).removeClass("shine");

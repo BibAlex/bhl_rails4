@@ -1,11 +1,11 @@
 %link{ "type" => "text/css", "rel" => "stylesheet", "href" => "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" }
-= javascript_include_tag 'rating_functions.js'
+= javascript_include_tag 'rating_functions'
 
 :javascript
   $(document).ready(function() {
    load_user_rating("#{user_rate}");
    $('#star1, #star2, #star3, #star4, #star5').click(function () {
-    rate_volume(#{session[:user_id]}, "#{rateable_id}", "#{rateable_type}",  parseInt($(this).attr("value")));
+    rate_object(#{session[:user_id]}, "#{rateable_id}", "#{rateable_type}",  parseInt($(this).attr("value")));
    });
   });
   
