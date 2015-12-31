@@ -105,14 +105,14 @@ en:
     subject_facet: "GENRE"
     publisher_facet: "PUBLISHER"
     tools: Tools
-    avg_rate: Average Rate
-    your_rate: Your Rate
+    avg_rating: Average Rating
+    your_rating: Your Rating
     choose_collection: "Choose a collection"
     mods: MODs
     bibtex: BibTeX
     endnote: EndNote
     replies: Replies
-    abuse: Report    
+    abuse: Report
     delete: Delete
     write_review: Write a review
     reviews: Reviews
@@ -154,7 +154,7 @@ en:
     volume_history_viewed_on: "On:"
     book_count:
       one: "one Book"
-      other: "%{count} books"       
+      other: "%{count} books"
     author_count:
       one: "one Author"
       other: "%{count} Authors"
@@ -167,7 +167,7 @@ en:
     book_collections_count:
       one:   "Collection"
       other: "Collections"
-    rate_details: 
+    rate_details:
       zero: ""
       one: '%{count} star'
       other: '%{count} stars'
@@ -179,13 +179,13 @@ en:
       collection: a collection
       book: a book
       comment: a comment
-    hidden_comment_msg: This comment was hidden as it may contains inappropriate content  
-     
+    hidden_comment_msg: This comment was hidden as it may contains inappropriate content
+
   warn:
     empty_search_query_warn: "Search statement shouldn't be empty"
     invalid_input: Invalid Input
     max_photo_size: Max size for photo
-    
+
   msgs:
     no_suggestion: "No Suggestion"
     registration_welcome_message: "Welcome %{real_name}. Your account is not activated yet. An email was sent to you containing activation instructions."
@@ -211,32 +211,32 @@ en:
     comment_deleted: "Comment deleted"
     can_not_delete_comment: "You can't delete comment that has a reply"
     access_denied_error: "Access denied."
-    
+
   header:
     search:
-      option_tagged_species: Tagged Species      
-    pages:      
+      option_tagged_species: Tagged Species
+    pages:
       names_link: Species
 
   footer:
     copyright_statement: Copyright © Bibliotheca Alexandrina
-    
+
   about_us:
     paragraph_1: "The New %{ba_link} is dedicated to recapture the spirit of openness and scholarship of the original Bibliotheca Alexandrina. Hence, it was keen to take part in the Global Biodiversity Heritage Library (BHL) project, as the project is regarded as a substantial enrichment to the BA's collection and simultaneously an optimum channel for sharing and propagating the Library's Arabic and non-Arabic biodiversity collection. This mutual collaboration comes in accordance with the BA's mission in availing knowledge to all, and furthers the inclusion and input of the Arabic-speaking countries."
     paragraph_2: "Accordingly, the BA has been pursuing the mirroring and replication of BHL since early 2011. Its participation in BHL project emerged inevitably in its course of being one of the main players in the internationalization, localization and mirroring of the Encyclopedia of Life, creating the EOL in Arabic. In this context, the scope of the BA's contribution in BHL project generally includes: setting the infrastructure for the mirroring and replication of the original BHL book collection, development of Local-BHL system, and adding biodiversity material from the BA's collection to comprise material from the Arab world in Arabic as well as other languages."
-  
+
   home:
     statistics:
       book_count:
         one: "one Book"
-        other: "%{count} books"       
+        other: "%{count} books"
       author_count:
         one: "one Author"
         other: "%{count} Authors"
       species:
         one: "one Tagged Specie"
         other: "%{count} Tagged Species"
-    
+
     most_viewed: Most Viewed
     top_rated: Top Rated
     top_collections: Top Collections
@@ -250,7 +250,7 @@ en:
     remove_book_from_history: "Are you sure you want to remove this book ?"
     access_denied_error: Access denied.
     user_not_found: "User not found."
-    
+
   activerecord:
       attributes:
         user:
@@ -306,7 +306,6 @@ en:
     delete_collection_photo_confirm: "Are you sure you want to delete collection photo?"
     delete_photo_flash: "Photo has been deleted."
     edit_collection: "Edit"
-    collection_your_rate: "Your Rate"
     remove_book_from_collection_confirm: "Are you sure you want to delete this book?"
     col_book_added_on: "Added On: "
     col_book_order: "Book Order: "
@@ -322,7 +321,7 @@ en:
       user_verification:
         subject: "Please verify your request for BHL Egypt"
         message_1: "Thanks for registering for BHL Egypt."
-        message_2: "The following link will verify that you wish to complete your registration and activate your account"   
+        message_2: "The following link will verify that you wish to complete your registration and activate your account"
       user_activated:
         subject: "Your BHL account has been activated"
         message: "Welcome to the BHL Egypt and thank you for registering!"
