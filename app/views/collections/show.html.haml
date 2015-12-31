@@ -41,9 +41,8 @@
         = @collection.created_at
         %br
         .center-block
-          - if is_logged_in?
-            %span.text-muted
-              = I18n.t('common.your_rating')
+          %span.text-muted
+            = I18n.t('common.your_rating')
           .usercollectionrate
             = render partial: "rating/rating", locals: { rateable_id: @collection.id, rateable_type: "collection", user_rate: @user_rate }
     .clearfix
