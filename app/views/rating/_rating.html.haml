@@ -5,12 +5,12 @@
   $(document).ready(function() {
    load_user_rating("#{user_rate}");
    $('#star1, #star2, #star3, #star4, #star5').click(function () {
-    rate_object(#{session[:user_id]}, "#{rateable_id}", "#{rateable_type}",  parseInt($(this).attr("value")));
+    rate_object(#{session[:user_id] || "null"}, "#{rateable_id}", "#{rateable_type}",  parseInt($(this).attr("value")));
    });
   });
-  
-  
-  
+
+
+
 %li#star1.starrating{ value: '1' }
 %li#star2.starrating{ value: '2' }
 %li#star3.starrating{ value: '3' }

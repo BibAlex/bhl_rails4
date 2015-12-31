@@ -1,6 +1,7 @@
 class CollectionsController < ApplicationController
   include CollectionsHelper
   include BooksHelper
+  before_filter :store_location, only: [:show]
   def index
 
   end

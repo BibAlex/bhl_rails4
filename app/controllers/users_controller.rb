@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  
+
   include UsersHelper
   include BHL::Login
   before_filter :load_user, only: [:show]
@@ -8,18 +8,18 @@ class UsersController < ApplicationController
     session[:login_attempts] ||= 0
     @verify_captcha = true if (session[:login_attempts].to_i  >= LOGIN_ATTEMPTS)
   end
-  
+
   def logout
     log_out
     redirect_to root_path
   end
-  
+
   #GET /users/forgot_password
   def forgot_password
     redirect_to user_path(id: session[:user_id]) if is_logged_in?
     @page_title = I18n.t('common.forgot_password')
   end
-  
+
   # POST /users/recover_password
   def recover_password
     return redirect_to user_path(id: session[:user_id]) if is_logged_in?
@@ -36,7 +36,7 @@ class UsersController < ApplicationController
       redirect_to forgot_password_users_path, flash: { error: I18n.t('msgs.recaptcha_error') }
     end
   end
-  
+
   def reset_password
     return redirect_to user_path(id: session[:user_id]) if is_logged_in?
     @user = User.find_by_guid_and_verification_code(params[:guid], params[:activation_code])
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
       redirect_to root_path, flash: { error: I18n.t('msgs.reset_password_failed') }
     end
   end
-  
+
   def reset_password_action
     return redirect_to user_path(id: session[:user_id]) if is_logged_in?
     @user = User.find_by_guid_and_verification_code(params[:user][:guid], params[:user][:activation_code])
@@ -63,7 +63,7 @@ class UsersController < ApplicationController
       redirect_to root_path, flash: { error: I18n.t('msgs.reset_password_failed') }
     end
   end
-  
+
     # POST /users/validate
   def validate
     if (session[:login_attempts].to_i >= LOGIN_ATTEMPTS) && !(verify_recaptcha)
@@ -78,7 +78,7 @@ class UsersController < ApplicationController
     end
   end
 
-  
+
   def new
     if session[:failed_user]
       @user = User.new(User.user_params(session[:failed_user]))
@@ -89,7 +89,7 @@ class UsersController < ApplicationController
     end
     @verify_captcha = true
   end
-  
+
   def create
     params[:user][:photo_name] = User.process_user_photo_name(params[:user][:photo_name])
     @user = User.new(User.user_params(params[:user]))
@@ -99,7 +99,7 @@ class UsersController < ApplicationController
       handle_failed_registration
     end
   end
-  
+
   # GET /users/activate/:guid/:activation_code
   def activate
     @user = User.find_by_guid_and_verification_code(params[:guid], params[:activation_code])
@@ -110,11 +110,11 @@ class UsersController < ApplicationController
       activate_user
     end
   end
-  
+
   def show
     send("load_#{@tab}_tab") unless @tab == "profile"
   end
-  
+
   def get_user_profile_photo
      @user = User.find(params[:id])
      if (User.can_edit?(@user.id, session[:user_id]) && params[:is_delete].to_i == 1)
@@ -125,31 +125,31 @@ class UsersController < ApplicationController
      end
   end
 
-  
+
   private
-  
+
   def handle_successful_registration
     @user.save
     send_registration_confirmation_email
     redirect_to root_path, flash: { notice: I18n.t('msgs.registration_welcome_message', real_name: @user.real_name) }
   end
-  
+
   def handle_failed_registration
     @user.errors.add('recaptcha', I18n.t('msgs.form_validation_errors_for_attribute_assistive')) unless verify_recaptcha
     session[:failed_user] = params[:user]
     redirect_to controller: "users", action: "new"
   end
-  
+
   def send_registration_confirmation_email
     url = "#{request.host}/users/activate/#{@user.guid}/#{@user.verification_code}"
     # Notifier.user_verification(@user, url).deliver_now
   end
-  
+
   def send_reset_password_email
     url = "#{request.host}/users/reset_password/#{@user.guid}/#{@user.verification_code}"
     #Notifier.user_verification(@user, url).deliver_now
   end
-  
+
   def activate_user
     @user.activate
     # Notifier.user_activated(@user).deliver_now
@@ -159,41 +159,41 @@ class UsersController < ApplicationController
     end
     redirect_to root_path, flash: { notice: I18n.t('msgs.account_activated', real_name: @user.real_name) }
   end
-  
+
   def failed_validation
     session[:login_attempts] = session[:login_attempts].to_i + 1
     return redirect_to({ controller: 'users', action: 'login' }, flash: { error: I18n.t('msgs.sign_in_unsuccessful_error') })
   end
-  
+
   def successful_validation
     log_in(@user)
-    if params[:return_to].blank?
+    if session[:return_to].blank?
       return redirect_to({ controller: 'users', action: 'show', id: @user.id }, flash: { notice: I18n.t('msgs.sign_in_successful_notice') })
     else
-      return redirect_to params[:return_to], flash: { notice: I18n.t('msgs.sign_in_successful_notice') }
+      return redirect_to(session.delete(:return_to)), flash: { notice: I18n.t('msgs.sign_in_successful_notice') }
     end
   end
-  
+
   def load_user
     @user = User.find_by_id(params[:id])
     return redirect_to root_path , flash: {error: I18n.t('msgs.user_not_found')} unless @user
     @tab = params[:tab].nil? ? "profile" : params[:tab]
   end
-  
+
   def load_history_tab
     if authenticate_user(params[:id])
       @total_number = UserVolumeHistory.history(@user).count
-      @page = params[:page] ? params[:page].to_i : 1 
+      @page = params[:page] ? params[:page].to_i : 1
       @history = UserVolumeHistory.history(@user).paginate(page: @page, per_page: PAGE_SIZE)
 
       if @history.length > 0
         @recently_viewed_volume = Volume.find_by_id((@history.first).volume)
       end
-      
+
       if @history.blank? and @page > 1
         redirect_to user_path(id: session[:user_id], tab: "history", page: params[:page].to_i - 1)
       end
-      
+
       @url_params = params.clone
     end
   end
