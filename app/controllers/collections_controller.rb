@@ -12,8 +12,7 @@ class CollectionsController < ApplicationController
       @collection_id = params[:id]
       # @volume_id = nil
       # @comment = Comment.new
-      @user_rate = Rate.load_user_rate(session[:user_id], @collection_id, "collection")
-      @user_rate ||= 0.0
+      @user_rate = Rate.load_user_rate(session[:user_id], @collection_id, "collection") || 0.0
       @view = params[:view] ? params[:view] : 'list'
       @page = params[:page] ? params[:page].to_i : 1
       @collection_volumes = @collection.collection_volumes.paginate(page: @page, per_page: PAGE_SIZE).order('position ASC')
