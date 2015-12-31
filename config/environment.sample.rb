@@ -22,7 +22,7 @@ FACET_COUNT = 4
 LIMIT_CAROUSEL = 4
 MAX_NO_ABUSE = 1
 LIMIT_BOOK_COMMENTS = 4
-
+TAB_GALLERY_PAGE_SIZE = 9
 
 DAR_JAR_API_URL = 'http://viewer.beta.bhl.bibalex.org/book_viewer/?locale=en&LocaleButtons=disabled&book_id=DAF-Job:[JOBID]'
 DAR_JAR_API_URL_STRING = '[JOBID]'
