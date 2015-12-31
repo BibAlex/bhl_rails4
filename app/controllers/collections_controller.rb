@@ -1,23 +1,19 @@
 class CollectionsController < ApplicationController
   include CollectionsHelper
   include BooksHelper
+  before_filter :store_location, only: [:show]
   def index
-    
+
   end
-  
+
   def show
     @page_title = I18n.t('collection.show_collection_detail')
-    @collection = Collection.find(params[:id])    
+    @collection = Collection.find(params[:id])
     if @collection.is_public || authenticate_user(@collection.user_id)
-      # @collection_id = params[:id]
+      @collection_id = params[:id]
       # @volume_id = nil
       # @comment = Comment.new
-      # rate_list = CollectionRating.where(:user_id => session[:user_id], :collection_id => @collection.id)
-      # if rate_list.count > 0
-        # @user_rate = rate_list[0].rate
-      # else
-        # @user_rate = 0.0
-      # end      
+      @user_rate = Rate.load_user_rate(session[:user_id], @collection_id, "collection") || 0.0
       @view = params[:view] ? params[:view] : 'list'
       @page = params[:page] ? params[:page].to_i : 1
       @collection_volumes = @collection.collection_volumes.paginate(page: @page, per_page: PAGE_SIZE).order('position ASC')
@@ -26,7 +22,7 @@ class CollectionsController < ApplicationController
       @url_params = params.clone
     end
   end
-  
+
   def move_up
     move_or_delete_book("up")
   end
@@ -34,11 +30,11 @@ class CollectionsController < ApplicationController
   def move_down
     move_or_delete_book("down")
   end
-  
+
   def delete_book
     move_or_delete_book("delete")
   end
-  
+
   def get_or_delete_collection_photo
     @collection = Collection.find(params[:id])
     if (is_logged_in_user?(@collection.user_id) && params[:is_delete].to_i == 1)
@@ -49,7 +45,7 @@ class CollectionsController < ApplicationController
       format.html {render :partial => "collections/get_collection_photo"}
     end
   end
-  
+
   def add_book
     if params[:title]
       col_id = Collection.create(title: params[:title], description: params[:description], is_public: params[:is_public], user_id: session[:user_id]).id
@@ -58,11 +54,11 @@ class CollectionsController < ApplicationController
     end
     CollectionVolume.create(volume_id: params[:job_id], collection_id: col_id)
     flash[:notice] = I18n.t('msgs.book_added_to_collection')
-    respond_to do |format|  
+    respond_to do |format|
       format.html { render partial: 'layouts/flash' }
     end
   end
-  
+
   def load
     collections = Collection.where(user_id: session[:user_id])
     disabled = []
@@ -74,16 +70,16 @@ class CollectionsController < ApplicationController
         disabled << 0
       end
     end
-    respond_to do |format|  
+    respond_to do |format|
       format.html { render partial: "books/add_book_to_collection", locals: { job_id: params[:job_id], collections: collections, disabled: disabled } }
     end
   end
-  
+
   private
   def delete_collection_photo(collection)
     FileUtils.rm_rf "collections/#{collection.id}" if File.directory? "collections/#{collection.id}"
   end
-  
+
   def move_or_delete_book(decision)
     collection_volume = CollectionVolume.find(params[:collection_volume_id])
     collection = Collection.find(collection_volume.collection_id)
