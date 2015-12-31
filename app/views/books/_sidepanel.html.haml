@@ -1,10 +1,10 @@
 :javascript
   $(document).ready(function(){
     updatedetailedrate("#{params[:id]}", "volume");
-    $('.tooltiplogin').tooltipster({ interactive: true, fixedWidth: 280});    
+    $('.tooltiplogin').tooltipster({ interactive: true, fixedWidth: 280});
     prepare_avg_rate();
-  });  
-  
+  });
+
 .col-md-4.pull-right.sidebar-offcanvas
   .spacing-left.list-group
     .list-group-item.default
@@ -27,21 +27,21 @@
       #rating_part
         = render partial: "rating/avg_rate", locals: { rate: @volume[:rate] }
       #detailedrate
-      
-      
+
+
       .ratenotcolored{ style: "height: 23px;float: right;" }
-        = render partial: "books/rating", locals: { rateable_id: params[:id], rateable_type: "volume", user_rate: @user_rate }
+        = render partial: "rating/rating", locals: { rateable_id: params[:id], rateable_type: "volume", user_rate: @user_rate }
       %span.text-muted
         - if is_logged_in?
-          = I18n.t('common.your_rate')
-      
+          = I18n.t('common.your_rating')
+
         %br
     .list-group-item
-      %span.badge.badge-success 
+      %span.badge.badge-success
         = @collections_count
       %a{ href: "#collectionsfound" }
         =I18n.t('common.book_collections_count', count: @collections_count)
-    
+
     - unless get_format(params[:id], 'mods').blank?
       %a.list-group-item{ "data-toggle" => "modal", "href" => "#modal-container", "role" => "button",  "onclick" => "loadformats('#{I18n.t('common.mods')}');" }
         %i.fa.fa-angle-double-right
@@ -54,7 +54,7 @@
       %a.list-group-item{ "data-toggle" => "modal", "href" => "#modal-container", "role" => "button", "onclick" => "loadformats('#{I18n.t('common.endnote')}');" }
         %i.fa.fa-angle-double-right
         = I18n.t('common.endnote')
-  
+
   #mods_hidden{ style: 'display: none;' }= get_format(params[:id], 'mods')
   #bibtex_hidden{ style: 'display: none;' }= get_format(params[:id], 'bibtex')
   #endnote_hidden{ style: 'display: none;' }= get_format(params[:id], 'endnote')
@@ -62,7 +62,7 @@
     .modal-dialog
       .modal-content
         .modal-header
-          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} 
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"}
             ×
           %h4#modallabel.modal-title
         #modalcontent.modal-body
