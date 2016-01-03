@@ -6,6 +6,8 @@ class UserVolumeHistory < ActiveRecord::Base
   validates :user_id, presence: true
   validates :volume_id, presence: true
   
+  scope :history, ->(user) {where(user: user)}
+  
   def self.save_user_history(volume_id, user_id)
     result = UserVolumeHistory.where(user_id: user_id, volume_id: volume_id)
     if result.blank?

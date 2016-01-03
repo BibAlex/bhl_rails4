@@ -3,8 +3,9 @@ class UsersController < ApplicationController
   include UsersHelper
   include BHL::Login
   
-  before_filter :redirect_to_user_show_if_logged_in, only: [:login]
-  
+  before_filter :redirect_to_user_show_if_logged_in, only: [:login]  
+  before_filter :load_user, only: [:show]
+
   def login
     session[:login_attempts] ||= 0
     @verify_captcha = true if (session[:login_attempts].to_i  >= LOGIN_ATTEMPTS)
@@ -92,7 +93,7 @@ class UsersController < ApplicationController
   end
   
   def create
-    params[:user][:photo_name] = User.process_user_photo_name(params[:user][:photo_name])    
+    params[:user][:photo_name] = User.process_user_photo_name(params[:user][:photo_name])
     @user = User.new(User.user_params(params[:user]))
     if @user.valid? && verify_recaptcha
       handle_successful_registration
@@ -113,7 +114,6 @@ class UsersController < ApplicationController
   end
   
   def show
-    load_user
     send("load_#{@tab}_tab") unless @tab == "profile"
   end
   
@@ -178,7 +178,7 @@ class UsersController < ApplicationController
   
   def load_user
     @user = User.find_by_id(params[:id])
-    return redirect_to root_path unless @user
+    return redirect_to root_path , flash: {error: I18n.t('msgs.user_not_found')} unless @user
     @tab = params[:tab].nil? ? "profile" : params[:tab]
   end
   
@@ -189,5 +189,41 @@ class UsersController < ApplicationController
      @offset = (@page > 1) ? (@page - 1) * limit : 0
      @activities = Activity.where(user_id: params[:id]).order("created_at DESC").limit(limit).offset(@offset).
                    paginate(page: @page, per_page:  PAGE_SIZE)
+  end
+  def load_history_tab
+    if authenticate_user(params[:id])
+      @total_number = UserVolumeHistory.history(@user).count
+      @page = params[:page] ? params[:page].to_i : 1 
+      @history = UserVolumeHistory.history(@user).paginate(page: @page, per_page: PAGE_SIZE)
+
+      if @history.length > 0
+        @recently_viewed_volume = Volume.find_by_id((@history.first).volume)
+      end
+      
+      if @history.blank? and @page > 1
+        redirect_to user_path(id: session[:user_id], tab: "history", page: params[:page].to_i - 1)
+      end
+      
+      @url_params = params.clone
+    end
+  end
+
+  def load_annotations_tab
+    if authenticate_user(params[:id])
+      @page = params[:page] ? params[:page].to_i : 1
+      @total_number = Annotation.where("user_id = #{@user.id}").count
+      @annotations = Annotation.where(user_id: @user).select(:volume_id).
+       group(:volume_id).paginate(page: @page, per_page: TAB_GALLERY_PAGE_SIZE)
+      @collected_annotations = []
+      @annotations.each do |annotation|
+        job_id = annotation.volume_id
+        @collected_annotations << {
+          job_id: job_id,
+          book_title:  BooksHelper.find_field_in_document(job_id, :title).first,
+          notes: Annotation.notes.where(user_id: @user.id, volume_id: job_id),
+          highlights: Annotation.highlights.where(user_id: @user.id, volume_id: job_id)
+        }
+      end
+    end
   end
 end

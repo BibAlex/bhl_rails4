@@ -19,7 +19,7 @@ class DarviewerController < ApplicationController
   def book
     pid = params[:PID]
     jobid = pid.gsub("DAF-Job:", "")    
-    jsonArray = load_volume_from_solr(jobid)
+    jsonArray = load_volume_with_names_from_solr(jobid)
     jsonArray["Language"] = jsonArray.delete(:language)
     jsonArray["Subjects"] = jsonArray.delete(:subject)
     jsonArray["Authors"] = jsonArray.delete(:author)

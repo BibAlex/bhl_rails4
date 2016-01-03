@@ -63,6 +63,8 @@ Things you need:
   3.  copy config/environment.sample.rb to config/environment.rb and fix some constants
   4.  rake db:create:all # to create all databases if not exist 
   5.  rake db:migrate; rake db:migrate RAILS_ENV=test
+  7.  rake db:populate RAILS_ENV=development 
+  8.  rake bhl_statistics:load_bhl_statistics_from_solr
   6.  rake spec # to make sure all tests are green  
   
 == Common issues

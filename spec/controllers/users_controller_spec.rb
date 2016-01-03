@@ -87,35 +87,172 @@ RSpec.describe UsersController, type: :controller do
   
   describe "#show" do 
     
-    let!(:owner_user) { User.first }
-    
-    before do
-      session[:user_id] = owner_user.id
-      get :show, { id: owner_user.id }
+    before :all do
+      @owner_user = User.first
     end
     
-    it "returns a 200 ok status" do      
-      expect(response).to have_http_status(:ok)
+    context "profile tab" do
+      before do
+        session[:user_id] = @owner_user.id
+        get :show, { id: @owner_user.id }
+      end
+      
+      it "returns a 200 ok status" do      
+        expect(response).to have_http_status(:ok)
+      end
+      
+      it "renders the show template" do
+        expect(response).to render_template(:show)
+      end
+      
+      it "loads user info" do
+        expect(assigns(:user)).to eq(@owner_user)
+      end
+      
+      it "loads tab info" do
+        expect(assigns(:tab)).to eq("profile")
+      end
     end
     
-    it "renders the show template" do
-      expect(response).to render_template(:show)
+    context "history tab" do
+      
+      context "owner user" do
+
+        before :all do
+          book_metadata_1 = {job_id: "123", bib_id: "456", title_en: "Book 1", author_en: "Author1", publisher_en: "publisher1",
+            subject_en: "subject1"}
+          book_metadata_2 = {job_id: "234", bib_id: "567", title_en: "Book 2", author_en: "Author2", publisher_en: "publisher2",
+            subject_en: "subject2"}
+  
+          solr = RSolr.connect :url => SOLR_BOOKS_METADATA
+      
+          solr.delete_by_query("*:*")
+          # solr.delete_by_query("job_id: 234")
+          solr.commit
+          solr.add book_metadata_1
+          solr.add book_metadata_2
+          solr.commit
+          
+          UserVolumeHistory.where(user_id: @owner_user.id).destroy_all
+          @vol_first = Volume.create(book: Book.create(title: 'Book 1', bib_id: '456'), job_id: "123")
+          @vol_second = Volume.create(book: Book.create(title: 'Book 2', bib_id: '567'), job_id: "234")
+          UserVolumeHistory.create(volume_id: @vol_first.id, user_id: @owner_user.id, :updated_at => Time.now)
+          UserVolumeHistory.create(volume_id: @vol_second.id, user_id: @owner_user.id, :updated_at => Time.now)
+        end
+        
+        it 'should have 2 total books' do
+          session[:user_id] = @owner_user.id
+          get :show, { id: @owner_user.id, tab: "history" }
+          expect(assigns[:total_number]).to eq(2)
+        end
+        
+        it 'should have 1 recently viewed volume' do
+          session[:user_id] = @owner_user.id
+          get :show, { id: @owner_user.id, tab: "history" }
+          expect(assigns[:recently_viewed_volume]).to eq(@vol_first)
+        end
+        
+      end
+      
+      context "not owner user" do
+        
+        let!(:another_user) { FactoryGirl.create(:user, active: true, email: "another_user_email@bibalex.org", 
+          username: "another_user", password: User.hash_password("another_password")) }
+        
+        it "should redirect to login if not logged in" do
+          get :show, { id: @owner_user.id, tab: 'history' }
+          expect(response).to redirect_to(login_users_path)
+        end
+        
+        it "should deny access for wrong user" do
+          session[:user_id] = @owner_user.id
+          get :show, { id: another_user.id, tab: 'history' }
+          expect(response).to redirect_to(user_path(id: another_user.id))
+        end
+      end
     end
     
-    it "loads user info" do
-      expect(assigns(:user)).to eq(owner_user)
-    end
-    
-    it "loads tab info" do
-      expect(assigns(:tab)).to eq("profile")
+    describe "annotations tab" do
+      before do
+        @owner_user = FactoryGirl.create(:user, active: true, username: "owneruser",
+         password: User.hash_password("owner_user_password"))
+        @other_user = FactoryGirl.create(:user, active: true, 
+          username: "otheruser", password: User.hash_password("other_user_password"))
+      end
+      context "successful" do 
+        before do
+          book = FactoryGirl.create(:book)
+          job_ids = [9,20]
+          solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
+          solr_books_core.delete_by_query('*:*')
+          solr_books_core.commit
+          job_ids.each_with_index do |job_id, i|
+          solr_books_core.add({ job_id: job_id, language_facet: 'eng',
+             bib_id: 'bib_id_#{i}', title_en: book.title, author_en: "author_#{i}"})
+           end
+          solr_books_core.commit
+          2.times do
+            job_ids.each do |job_id|
+              FactoryGirl.create(:annotation, user_id: @owner_user.id,
+               anntype: "Note", volume_id: job_id)
+            end
+          end
+          3.times do
+            job_ids.each do |job_id|
+              FactoryGirl.create(:annotation, user_id: @owner_user.id,
+               anntype: "Highlight", volume_id: job_id)
+            end
+          end
+         
+        end
+        context "with user has annotations" do
+          before do
+            session[:user_id] = @owner_user.id
+            get :show, id: @owner_user.id, tab: "annotations"
+          end
+           it "loads successfully" do 
+            expect(response).to have_http_status(:ok)
+          end
+          it "loads the rights tab" do
+            expect(assigns[:tab]).to eq("annotations")
+          end
+          it 'displays the right number for total annotations' do
+            expect(assigns[:total_number]).to eq(10)
+          end
+        end
+        context "user with no annotations" do
+          before do
+            session[:user_id] = @other_user.id
+            get :show, id: @other_user.id, tab: "annotations"
+          end
+           it "loads successfully" do 
+            expect(response).to have_http_status(:ok)
+          end
+          it 'assigns zero annotations for the user' do
+            expect(assigns[:total_number]).to eq(0)
+          end
+        end
+      end
+      context "failure" do
+        before do
+          session[:user_id] = @other_user.id
+          get :show, id: @owner_user.id, tab: "annotations"
+        end
+        it "doesn't show the annotations tab" do
+          expect(response).to redirect_to( user_path(id: @owner_user.id) )
+        end
+        it 'displays an access denied error' do
+          expect(flash[:error]).to eq(I18n.t 'msgs.access_denied_error')
+        end
+      end
     end
     
     describe "activity_log" do
-      let!(:owner_user) { FactoryGirl.create(:user, active: true, username: "owner_user", password: User.hash_password("owner_user_password")) }
+      let!(:owner_user) { User.first }
     
     before do
       session[:user_id] = owner_user.id
-      get :show, { id: owner_user.id , tab: "activity" }
+      get :show, { id: @owner_user.id , tab: "activity" }
     end
     
     it "returns a 200 ok status" do      
@@ -134,6 +271,7 @@ RSpec.describe UsersController, type: :controller do
 end  
   
   
+
   describe "#logout" do     
       
    let!(:user) { User.first }

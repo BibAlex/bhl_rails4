@@ -45,7 +45,7 @@ class BooksController < ApplicationController
   private
   
   def load_volume_details
-    @volume = load_volume_from_solr(params[:id])
+    @volume = load_volume_with_names_from_solr(params[:id])
   end
   
   def load_details_page    

@@ -52,8 +52,8 @@ module SAMPLDATA
       5.times do |n|
         public_collection_n = Collection.create(title: "title_public_#{n}", description: "description_#{n}", is_public: true, user_id: User.find(n+1).id)
         private_collection_n = Collection.create(title: "title_private_#{n}", description: "description_#{n}", is_public: false, user_id: User.find(n+1).id)
-        CollectionVolume.create(collection_id: public_collection_n.id, volume_id: rand(1..Volume.count))
-        CollectionVolume.create(collection_id: private_collection_n.id, volume_id: rand(1..Volume.count))
+        CollectionVolume.create(collection_id: public_collection_n.id, volume_id: Volume.find(rand(1..Volume.count)).job_id)
+        CollectionVolume.create(collection_id: private_collection_n.id, volume_id: Volume.find(rand(1..Volume.count)).job_id)
         rand(User.count).times do |m|
           rate_value = rand(5)
           Rate.create(rateable_id: public_collection_n.id , rateable_type: "collection", user_id: m+1 , rate: rate_value)
