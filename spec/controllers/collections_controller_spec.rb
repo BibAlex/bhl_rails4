@@ -115,7 +115,7 @@ RSpec.describe CollectionsController, type: :controller do
           
           it "should display the date of addition of the book to the collection" do
             get :show, id: @public_collection.id
-            expect(response.body).to have_selector 'small', text: "#{@vol_1.created_at}", 
+            expect(response.body).to have_selector 'small', text: "#{@c2_v1.created_at}", 
               exact: false
           end
           

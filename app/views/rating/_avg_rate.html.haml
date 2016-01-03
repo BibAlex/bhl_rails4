@@ -1,3 +1,6 @@
-.averagerate.rate{ style: "float: right", data: "#{rate}" }
-%span.text-muted
-  = I18n.t('common.avg_rate')
+- type ||= nil
+- float = (type != "collection") ? "right" : "left"
+.averagerate{ style: "float: #{float}", data: "#{rate}" }
+-unless type == "collection"
+  %span.text-muted
+    = I18n.t('common.avg_rating')
