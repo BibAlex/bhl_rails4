@@ -126,11 +126,11 @@ RSpec.describe Activity, type: :model do
     end
     
     it "adds record for reply to comment" do
-       reply_comment = FactoryGirl.create(:comment, commentable_id: comment.id,
-                                         commentable_type: "comment", user_id: user.id, text: "Reply")                                  
-      expect(Activity.find_by_activitable_id_and_action(reply_comment.commentable_id, "comment")).to have_attributes(activitable_id: reply_comment.commentable_id, 
+       reply_comment = Comment.create(commentable_id: comment.id,
+                                         commentable_type: "comment", user_id: user.id, text: "Reply")
+      expect(Activity.where(activitable_id: reply_comment.commentable_id, action: "comment", activitable_type: "comment").first).to have_attributes(activitable_id: reply_comment.commentable_id, 
                                          action: "comment",user_id: reply_comment.user_id, activitable_type: reply_comment.commentable_type, 
-                                         activitable_title: (Comment.find_by_id(reply_comment.commentable_id).text), value: reply_comment.text)   
+                                         activitable_title: comment.text, value: reply_comment.text)   
     end
  
  end
