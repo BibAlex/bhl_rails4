@@ -1,0 +1,18 @@
+.modal.fade{id:"#{type}_#{job_id}", tabindex: "-1", role: :dialog,
+ "area-labelledby" => "#{type}modallabel", "area-hidden" => :true}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{type: :button, "data-dismiss" => :modal, "area-hidden" => :true}
+          &times;
+        %h4.modal-title{id: "#{type}modallabel"}
+          = I18n.t("annotations.#{type}")
+          %span.badge
+            = annotations.count
+      .modal-body
+        - annotations.each do |item|
+          .text-dimmed
+            = item.created_at
+          %p.small
+            = item.text
+          %hr

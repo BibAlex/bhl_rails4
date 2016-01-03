@@ -109,7 +109,7 @@ RSpec.describe Activity, type: :model do
     it "adds record for volume rate" do
       volume_rate = FactoryGirl.create(:rate, user_id: user.id , rateable_id: volume.job_id ,rateable_type: "volume",
                                          rate: 5 )                                  
-      expect(Activity.find_by_activitable_id_and_action(volume_rate.rateable_id , "rate")).to have_attributes(activitable_id: volume_rate.rateable_id, action: "rate",
+      expect(Activity.where(activitable_id: volume_rate.rateable_id , action: "rate", activitable_type: "volume").first).to have_attributes(activitable_id: volume_rate.rateable_id, action: "rate",
                                          user_id: volume_rate.user_id, activitable_type: volume_rate.rateable_type, 
                                          activitable_title: (Book.find_by_id(Volume.find_by_job_id(volume_rate.rateable_id).book_id).title),
                                          value: volume_rate.rate.to_s)
@@ -118,7 +118,7 @@ RSpec.describe Activity, type: :model do
     it "adds record for volume comment" do
       volume_comment = FactoryGirl.create(:comment, commentable_id: volume.job_id,  commentable_type: "volume", user_id: user.id, 
                                          text: "Good_volume")                                  
-      expect(Activity.find_by_activitable_id_and_action(volume_comment.commentable_id , "comment")).to have_attributes(activitable_id: volume_comment.commentable_id, 
+      expect(Activity.where(activitable_id: volume_comment.commentable_id , action: "comment", activitable_type: "volume").first).to have_attributes(activitable_id: volume_comment.commentable_id, 
                                          action: "comment", user_id: volume_comment.user_id, activitable_type: volume_comment.commentable_type, 
                                          activitable_title: (Book.find_by_id((Volume.find_by_job_id(volume_comment.commentable_id).book_id)).title),
                                          value: volume_comment.text)

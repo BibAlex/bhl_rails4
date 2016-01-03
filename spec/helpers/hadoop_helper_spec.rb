@@ -37,11 +37,11 @@ RSpec.describe HadoopHelper, type: :helper do
   describe "Test metadata ingestion details" do
     before :each do
       load_book_statuses
+      @book = Book.find_by_bib_id("indianmedicinalp01kirt")
       xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "metadata_single_sample.xml"))
       mods_xml = Nokogiri::XML(xml_file_path)
       xml_file_path.close
-      ingest_metadata_from_xml_string(mods_xml.to_s)
-      @book = Book.find_by_bib_id("indianmedicinalp01kirt")
+      ingest_metadata_from_xml_string(mods_xml.to_s)      
     end
 
     it "should add a book with bib_id=indianmedicinalp01kirt" do
@@ -57,8 +57,7 @@ RSpec.describe HadoopHelper, type: :helper do
     end
 
     it "should create a volume with job_id=361720 and associate it with the book" do
-      expect(@book.volumes.count).to eq(1)
-      expect(@book.volumes.first.job_id).to eq(361720)
+      expect(@book.volumes).to include(Volume.find_by_job_id(361720))
     end
   end
 end
