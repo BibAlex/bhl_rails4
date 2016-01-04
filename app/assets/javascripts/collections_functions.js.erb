@@ -36,3 +36,39 @@ function get_or_delete_photo(id, is_delete){
     xmlhttp.open("GET","/get_or_delete_collection_photo?id="+ id +"&is_delete="+ is_delete,true);
     xmlhttp.send();
   }
+
+function auto_complete(){
+	var cache;
+    cache = {};
+    return $("#search_coll_field").autocomplete({
+      minLength: 2,
+      source: function(request, response) {
+        var term;
+        term = request.term;
+        if (term in cache) {
+          response(cache[term]);
+          return;
+        }
+        searchfield = $("#search_coll_field").val();
+        return $.getJSON("/collectionautocomplete?term=" + term, request, function(data, status, xhr) {
+          return response(data);
+        });
+      }
+    });
+}
+
+function search_collection(){
+    field = $("#search_coll_field").val();
+    if (field == ''){
+      alert("#{I18n.t('collection.empty_search_query_warn')}");
+      return;
+    }
+    if ([' ',  '!', '@', '#', '$' , '^', '&', '*', '(',  ',',  ')', '_',  '+', '-', '=' , '&'].indexOf(field) >= 0 || field.indexOf("%") >= 0) {
+      alert("#{I18n.t('collection.invalid_input')}");
+      return;
+    }
+    else{
+      window.location=window.location.href.split('?')[0] + "?search=" + field;
+    }
+  }
+  

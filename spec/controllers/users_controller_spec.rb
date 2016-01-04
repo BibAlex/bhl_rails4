@@ -88,7 +88,7 @@ RSpec.describe UsersController, type: :controller do
   describe "#show" do 
     
     before :all do
-      @owner_user = User.first
+      @owner_user = FactoryGirl.create(:user)
     end
     
     context "profile tab" do
@@ -248,7 +248,7 @@ RSpec.describe UsersController, type: :controller do
     end
     
     describe "activity_log" do
-      let!(:owner_user) { User.first }
+      let!(:owner_user) { FactoryGirl.create(:user) }
     
     before do
       session[:user_id] = owner_user.id
@@ -274,7 +274,7 @@ end
 
   describe "#logout" do     
       
-   let!(:user) { User.first }
+   let!(:user) { FactoryGirl.create(:user) }
     
     before do
       post :validate, { user: { username: "user_logout", password: "user_logout_password" } }
@@ -420,7 +420,7 @@ end
     
     context "valid user" do      
       
-      let!(:user) { User.first }
+      let!(:user) { FactoryGirl.create(:user, active: true, username: "valid_user_login", password: User.hash_password("password")) } 
       
       it "sets session of user_id" do
          post :validate, { user: { username: user.username, password: "password" } }

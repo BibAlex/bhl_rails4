@@ -88,7 +88,7 @@ RSpec.describe "Users", type: :request do
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                         filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-          @owner_user = User.first
+          @owner_user = FactoryGirl.create(:user)
           page.set_rack_session(user_id: @owner_user.id)
           visit user_path(locale: I18n.locale, id: @owner_user.id)        
         end
@@ -127,8 +127,8 @@ RSpec.describe "Users", type: :request do
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                         filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))          
-          @owner_user = User.first
-          @other_user = User.find(2)
+          @owner_user = FactoryGirl.create(:user)
+          @other_user = FactoryGirl.create(:user)
           page.set_rack_session(user_id: @owner_user.id)
           visit user_path(locale: I18n.locale, id: @other_user.id)        
         end
@@ -162,7 +162,7 @@ RSpec.describe "Users", type: :request do
            comment = FactoryGirl.create(:comment, text: "main_comment")
            file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                         filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-           @owner_user = User.first
+           @owner_user = FactoryGirl.create(:user)
            @collection_create = FactoryGirl.create(:collection, user_id: @owner_user.id, title: "new_collection", is_public: true)
            @collection_rate = FactoryGirl.create(:rate, user_id: @owner_user.id , rateable_id: @collection_create.id , rateable_type: "collection",
                                                   rate: 5 )
@@ -205,7 +205,7 @@ RSpec.describe "Users", type: :request do
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                         filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-          @owner_user = User.first
+          @owner_user = FactoryGirl.create(:user)
           #adjust solr
           book_metadata_1 = {job_id: "123", bib_id: "456", title_en: "Book 1", author_en: "Author1", publisher_en: "publisher1",
             subject_en: "subject1", language_facet: "eng" }
@@ -272,8 +272,8 @@ RSpec.describe "Users", type: :request do
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                         filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-          @owner_user = User.first
-          @other_user = User.find(2)
+          @owner_user = FactoryGirl.create(:user)
+          @other_user = FactoryGirl.create(:user)
           page.set_rack_session(user_id: @owner_user.id)
           visit user_path(locale: I18n.locale, id: @other_user.id)        
         end
@@ -302,8 +302,8 @@ RSpec.describe "Users", type: :request do
 
     describe "annotations tab" do
       before do
-        @owner_user = User.first
-        @other_user = User.find(2) 
+        @owner_user = FactoryGirl.create(:user)
+        @other_user = FactoryGirl.create(:user)
         @books = [FactoryGirl.create(:book), FactoryGirl.create(:book)]
         solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
         solr_books_core.delete_by_query('*:*')

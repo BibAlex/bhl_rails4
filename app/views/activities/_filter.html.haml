@@ -1,30 +1,30 @@
 = javascript_include_tag 'activities.js'
 %small
   = I18n.t('common.filter_by')
-  %i.fa.fa-check-square{ style: "#{get_class_for_sort_option(@sort_filter,'all')}; cursor:pointer;", onclick: "filter_activities('all', 'DESC');" }
-  %i.fa.fa-square-o{ style: "#{get_class_for_active_sort_option(@sort_filter,'all')}; cursor:pointer;", onclick: "filter_activities('all', 'DESC');" }
-  %a{ style: "color:#777777; cursor:pointer;", onclick: "filter_activities('all', '#{toggle_sort_option(@sort_filter,'all')}');" } 
+  %i.fa.fa-check-square{ style: "#{get_class_for_sort_option(@sort_filter,'all')}; cursor:pointer;", onclick: "filter_activities('all', 'desc');" }
+  %i.fa.fa-square-o{ style: "#{get_class_for_active_sort_option(@sort_filter,'all')}; cursor:pointer;", onclick: "filter_activities('all', 'desc');" }
+  %a{ style: "color:#777777; cursor:pointer;", onclick: "filter_activities('all', '#{toggle_sort_option(@sort_filter)}');" } 
     = I18n.t('common.all')
-  %i.fa.fa-arrow-down{ style: "#{get_class_for_sort_option(@sort_filter,'all DESC')}; cursor:pointer;", onclick: "filter_activities('all', 'ASC');" }
-  %i.fa.fa-arrow-up{ style: "#{get_class_for_sort_option(@sort_filter,'all ASC')}; cursor:pointer;", onclick: "filter_activities('all', 'DESC');" }
+  %i.fa.fa-arrow-down{ style: "#{get_class_for_sort_option(@sort_filter,'all desc')}; cursor:pointer;", onclick: "filter_activities('all', 'asc');" }
+  %i.fa.fa-arrow-up{ style: "#{get_class_for_sort_option(@sort_filter,'all asc')}; cursor:pointer;", onclick: "filter_activities('all', 'desc');" }
   %span |
-  %i.fa.fa-check-square{ style: "#{get_class_for_sort_option(@sort_filter,'rate')}; cursor:pointer;", onclick: "filter_activities('all', 'DESC');" }
-  %i.fa.fa-square-o{ style: "#{get_class_for_active_sort_option(@sort_filter,'rate')}; cursor:pointer;", onclick: "filter_activities('rate', 'DESC');" }
-  %a{ style: "color:#777777; cursor:pointer;", onclick: "filter_activities('rate', '#{toggle_sort_option(@sort_filter,'rate')}');"}
+  %i.fa.fa-check-square{ style: "#{get_class_for_sort_option(@sort_filter,'rate')}; cursor:pointer;", onclick: "filter_activities('all', 'desc');" }
+  %i.fa.fa-square-o{ style: "#{get_class_for_active_sort_option(@sort_filter,'rate')}; cursor:pointer;", onclick: "filter_activities('rate', 'desc');" }
+  %a{ style: "color:#777777; cursor:pointer;", onclick: "filter_activities('rate', '#{toggle_sort_option(@sort_filter)}');"}
     = I18n.t('common.rate')
-  %i.fa.fa-arrow-down{ style: "#{get_class_for_sort_option(@sort_filter,'rate DESC')}; cursor:pointer;", onclick: "filter_activities('rate', 'ASC');" }
-  %i.fa.fa-arrow-up{ style: "#{get_class_for_sort_option(@sort_filter,'rate ASC')}; cursor:pointer;", onclick: "filter_activities('rate', 'DESC');" }
+  %i.fa.fa-arrow-down{ style: "#{get_class_for_sort_option(@sort_filter,'rate desc')}; cursor:pointer;", onclick: "filter_activities('rate', 'asc');" }
+  %i.fa.fa-arrow-up{ style: "#{get_class_for_sort_option(@sort_filter,'rate asc')}; cursor:pointer;", onclick: "filter_activities('rate', 'desc');" }
   %span |
-  %i.fa.fa-check-square{ style: "#{get_class_for_sort_option(@sort_filter,'comments')}; cursor:pointer;", onclick: "filter_activities('all', 'DESC');" }
-  %i.fa.fa-square-o{ style: "#{get_class_for_active_sort_option(@sort_filter,'comments')}; cursor:pointer;", onclick: "filter_activities('comments', 'DESC');" }
-  %a{ style: "color:#777777; cursor:pointer;", onclick: "filter_activities('comments', '#{toggle_sort_option(@sort_filter,'comments')}');" } 
+  %i.fa.fa-check-square{ style: "#{get_class_for_sort_option(@sort_filter,'comments')}; cursor:pointer;", onclick: "filter_activities('all', 'desc');" }
+  %i.fa.fa-square-o{ style: "#{get_class_for_active_sort_option(@sort_filter,'comments')}; cursor:pointer;", onclick: "filter_activities('comments', 'desc');" }
+  %a{ style: "color:#777777; cursor:pointer;", onclick: "filter_activities('comments', '#{toggle_sort_option(@sort_filter)}');" } 
     = I18n.t('common.comments')
-  %i.fa.fa-arrow-down{ style: "#{get_class_for_sort_option(@sort_filter,'comments DESC')}; cursor:pointer;", onclick: "filter_activities('comments', 'ASC');" }
-  %i.fa.fa-arrow-up{ style: "#{get_class_for_sort_option(@sort_filter,'comments ASC')}; cursor:pointer;", onclick: "filter_activities('comments', 'DESC');" }
+  %i.fa.fa-arrow-down{ style: "#{get_class_for_sort_option(@sort_filter,'comments desc')}; cursor:pointer;", onclick: "filter_activities('comments', 'asc');" }
+  %i.fa.fa-arrow-up{ style: "#{get_class_for_sort_option(@sort_filter,'comments asc')}; cursor:pointer;", onclick: "filter_activities('comments', 'desc');" }
   %span |
-  %i.fa.fa-check-square{ style: "#{get_class_for_sort_option(@sort_filter,'collections')}; cursor:pointer;", onclick: "filter_activities('all', 'DESC');" }
-  %i.fa.fa-square-o{ style: "#{get_class_for_active_sort_option(@sort_filter,'collections')}; cursor:pointer;", onclick: "filter_activities('collections', 'DESC');" }
-  %a{ style: "color:#777777; cursor:pointer;", onclick: "filter_activities('collections', '#{toggle_sort_option(@sort_filter,'collections')}');" }
+  %i.fa.fa-check-square{ style: "#{get_class_for_sort_option(@sort_filter,'collections')}; cursor:pointer;", onclick: "filter_activities('all', 'desc');" }
+  %i.fa.fa-square-o{ style: "#{get_class_for_active_sort_option(@sort_filter,'collections')}; cursor:pointer;", onclick: "filter_activities('collections', 'desc');" }
+  %a{ style: "color:#777777; cursor:pointer;", onclick: "filter_activities('collections', '#{toggle_sort_option(@sort_filter)}');" }
     = I18n.t('common.collections')
-  %i.fa.fa-arrow-down{ style: "#{get_class_for_sort_option(@sort_filter,'collections DESC')}; cursor:pointer;", onclick: "filter_activities('collections', 'ASC');" }
-  %i.fa.fa-arrow-up{ style: "#{get_class_for_sort_option(@sort_filter,'collections ASC')}; cursor:pointer;", onclick: "filter_activities('collections', 'DESC');" }
+  %i.fa.fa-arrow-down{ style: "#{get_class_for_sort_option(@sort_filter,'collections desc')}; cursor:pointer;", onclick: "filter_activities('collections', 'asc');" }
+  %i.fa.fa-arrow-up{ style: "#{get_class_for_sort_option(@sort_filter,'collections asc')}; cursor:pointer;", onclick: "filter_activities('collections', 'desc');" }

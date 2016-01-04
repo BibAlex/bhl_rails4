@@ -24,7 +24,7 @@ MAX_NO_ABUSE = 1
 LIMIT_BOOK_COMMENTS = 4
 TAB_GALLERY_PAGE_SIZE = 9
 
-DAR_JAR_API_URL = ''
+DAR_JAR_API_URL = 'http://viewer.beta.bhl.bibalex.org/book_viewer/?locale=en&LocaleButtons=disabled&book_id=DAF-Job:[JOBID]'
 DAR_JAR_API_URL_STRING = '[JOBID]'
 DAR_JAR_API_URL_LANGUAGE = "[LANGUAGE]"
 DAR_API_METADATA = ''
