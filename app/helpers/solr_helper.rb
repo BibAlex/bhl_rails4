@@ -91,7 +91,7 @@ module SolrHelper
   end
   
   def update_volume_rate_in_solr(job_id, avg_rate)
-    doc = solr_find_document("job_id:#{job_id}")
+    doc = SolrHelper.solr_find_document("job_id:#{job_id}")
     doc[:rate] = avg_rate
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
     solr.update data: solr.xml.add(doc)

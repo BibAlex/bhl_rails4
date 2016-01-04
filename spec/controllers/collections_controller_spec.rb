@@ -55,7 +55,7 @@ RSpec.describe CollectionsController, type: :controller do
         it "should display edit collection link for collection owned by current user" do
           log_in(@logged_in_user)
           get :show, id: @private_collection.id
-          expect(response).to have_link "/en/collections/#{@private_collection.id}/edit"
+          expect(response.body).to have_selector("a[href='/#{I18n.locale}/collections/#{@private_collection.id}/edit']")
         end
       end
       
@@ -115,7 +115,7 @@ RSpec.describe CollectionsController, type: :controller do
           
           it "should display the date of addition of the book to the collection" do
             get :show, id: @public_collection.id
-            expect(response.body).to have_selector 'small', text: "#{@vol_1.created_at}", 
+            expect(response.body).to have_selector 'small', text: "#{@c2_v1.created_at}", 
               exact: false
           end
           
@@ -142,7 +142,7 @@ RSpec.describe CollectionsController, type: :controller do
             it "should change book order to lower order" do
               request.env["HTTP_REFERER"] = "/en/collections/show/#{@private_collection.id}"
               get :move_down, collection_volume_id: @c2_v1.id, id: @private_collection.id
-              response.should redirect_to("/en/collections/show/#{@private_collection.id}")
+              expect(response).to redirect_to("/en/collections/show/#{@private_collection.id}")
               expect(@c2_v2.reload.position).to equal(1)
               expect(@c2_v1.reload.position).to equal(2)
               @c2_v1.update_attributes(position: 1)
@@ -151,11 +151,11 @@ RSpec.describe CollectionsController, type: :controller do
             
             it "should delete book from collection" do
               request.env["HTTP_REFERER"] = "/collections/show/#{@private_collection.id}"
-              lambda do
+              expect(lambda do
                 get :delete_book, collection_volume_id: @c2_v1.id, id: @private_collection.id
                 expect(response).to redirect_to("/collections/show/#{@private_collection.id}")
                 expect(@c2_v2.reload.position).to equal(1)
-              end.should change(CollectionVolume, :count).by(-1)    
+              end).to change(CollectionVolume, :count).by(-1)    
             end            
           end
           

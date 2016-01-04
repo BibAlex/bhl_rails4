@@ -7,7 +7,7 @@
         = @total_number
     %hr
     - @history.each_with_index do |doc, index|
-      - @book = load_volume_from_solr(doc.volume_id)
+      - @book = load_volume_without_names_from_solr(doc.volume_id)
       = render partial: "books/covers", locals: { coverno: index + 1, covertitle: @book[:title].try(:first).to_s, coverauthor: @book[:author].try(:first).to_s }
       .col-md-7
         %h4
