@@ -11,7 +11,7 @@ $(document).ready ->
           node_id = NODE.id
           if (node_id)
             $.ajax 
-              url: 'get_content/'+node_id
+              url: '/names/get_content/'+node_id
               type: 'GET'
               dataType: 'html'
               error: (jqXHR, textStatus, errorThrown) ->

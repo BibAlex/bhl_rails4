@@ -15,7 +15,6 @@ module BooksHelper
     list
   end
 
-
   # not updated: will be updated after finishing books search function
   def add_facet_search(params, type, field)
       tmp_params = params.clone
@@ -81,8 +80,8 @@ module BooksHelper
   end
   
   def fill_query_array(params)
-    search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_ALL"].include?(key) }
-    query_array = { 'ALL' => [], 'title'=> [], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> [],
+    search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_all"].include?(key) }
+    query_array = { 'all' => [], 'title'=> [], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> [],
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query_array.each do  |key, value|
       query_array[key] = search_params["_#{key}".to_sym] ? search_params["_#{key}".to_sym].split(' _AND ') : []
@@ -98,7 +97,7 @@ module BooksHelper
     else
       multilingual_attributes = get_multilingual_attributes(query_array)
       normal_attributes = get_normal_attributes(query_array, name_query_join_operator)      
-      if(!(query_array['ALL'].empty?))
+      if(!(query_array['all'].empty?))
         query = prepare_search_query(multilingual_attributes, normal_attributes, "OR")
       else
         query = prepare_search_query(multilingual_attributes, normal_attributes, "AND")      
@@ -160,19 +159,19 @@ module BooksHelper
   
   def get_multilingual_attributes(query_array)
     multilingual_attributes = { }
-    multilingual_attributes[:title] = query_array['title'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['title']
-    multilingual_attributes[:author] = query_array['author'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['author']
-    multilingual_attributes[:subject] = query_array['subject'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['subject']
-    multilingual_attributes[:publisher] = query_array['publisher'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['publisher']
-    multilingual_attributes[:content] = query_array['content'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['content']   
+    multilingual_attributes[:title] = query_array['title'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['title']
+    multilingual_attributes[:author] = query_array['author'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['author']
+    multilingual_attributes[:subject] = query_array['subject'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['subject']
+    multilingual_attributes[:publisher] = query_array['publisher'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['publisher']
+    multilingual_attributes[:content] = query_array['content'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['content']   
     multilingual_attributes.delete_if { |key, value| value.blank? }
   end
   
   def get_normal_attributes(query_array, name_query_join_operator)
     normal_attributes = { }
-    normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['location']
-    normal_attributes[:language_facet] = query_array['language'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['language']
-    sci_names = query_array['name'].empty? ? (query_array['ALL'].empty? ? nil : query_array['ALL']) : query_array['name']
+    normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['location']
+    normal_attributes[:language_facet] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
+    sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
     unless sci_names.nil?
       job_ids = get_volumes_contain_sci_name(sci_names, name_query_join_operator)
       normal_attributes[:job_id] = job_ids.empty? ? nil : job_ids
@@ -212,6 +211,60 @@ module BooksHelper
    !(Query.where("user_id = ? and string = ?", user_id, user_query).empty?)
  end
 
+ def item_count_format(type, item)
+    format = item
+    unless item_count(type, item).nil?
+      format += ' (' + item_count(type, item).to_s + ')'      
+    end
+    format
+  end
+  
+  def get_format(id, format)    
+    if format == 'mods'
+      handle_mods_format(id)
+    else
+      handle_other_formats(id, format)
+    end
+  end
+  
+  def self.find_field_in_document(job_id, field)
+    doc = SolrHelper.solr_find_document("job_id:#{job_id}")
+    lang = doc["language_facet"][0][0..1]
+    doc["#{field}_#{lang}"]
+  end
+  
+  def get_related_books(params)    
+    volume = load_volume_with_names_from_solr(params[:job_id])
+    query_array = { 'all' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
+                    'subject'=> [], 'content' => [], 'publisher' => [] }
+    query = set_query_string(query_array, " OR ")
+    query.gsub!(" AND ", " OR ")
+    search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "")  
+  end  
+  
+  def load_volume_with_names_from_solr(job_id)
+    volume = load_volume_without_names_from_solr(job_id)
+    if !volume.blank?
+      all_sci_names_with_facets = get_sci_names_of_volumes("#{job_id}")
+      tmp = all_sci_names_with_facets[:sci_names]["#{job_id}"]
+      sci_names = tmp.nil? ? [] : tmp
+      volume[:sci_names] = sci_names  
+    end
+    volume
+  end 
+  
+  def load_volume_without_names_from_solr(job_id)
+    solr_response = load_volume(job_id)
+    volume = {}
+    unless solr_response["response"]["numFound"] == 0
+      doc = solr_response["response"]["docs"][0]
+      lang = doc["language_facet"][0][0..1]
+      volume = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
+                 rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
+                 language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"] }
+    end
+    volume
+  end 
   
   private
   
@@ -245,42 +298,10 @@ module BooksHelper
         end
          facet_fields["#{field.name}"] = items      
       end
-      facet_fields[:name] = all_sci_names_with_facets[:facets]
+      facet_fields["name_facet"] = all_sci_names_with_facets[:facets]
     end
     { volumes: volumes, total_number_of_volumes: solr_response["response"]["numFound"], facets: facet_fields }
-  end
-  
-  def load_volume_from_solr(job_id)
-    solr_response = load_volume(job_id)
-    volume = {}
-    unless solr_response["response"]["numFound"] == 0
-      doc = solr_response["response"]["docs"][0]
-      all_sci_names_with_facets = get_sci_names_of_volumes("#{job_id}")
-      tmp = all_sci_names_with_facets[:sci_names]["#{doc[:job_id]}"]
-      sci_names = tmp.nil? ? [] : tmp
-      lang = doc["language_facet"][0][0..1]
-      volume = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
-                 rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
-                 language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
-    end
-    volume
-  end 
-  
-  def item_count_format (type, item)
-    format = item
-    unless item_count(type, item).nil?
-      format += ' (' + item_count(type, item).to_s + ')'      
-    end
-    format
-  end
-  
-  def get_format(id, format)    
-    if format == 'mods'
-      handle_mods_format(id)
-    else
-      handle_other_formats(id, format)
-   end
-  end
+  end  
   
   def handle_mods_format(id)
     format = ""
@@ -312,32 +333,4 @@ module BooksHelper
     format
   end
   
-  def load_volume_collections(job_id)
-    collections = Collection.where(user_id: session[:user_id])
-    disabled = []
-    collections.each do |col|
-      found = CollectionVolume.where(volume_id: job_id, collection_id: col.id)
-      if found.count > 0
-        disabled << 1
-      else
-        disabled << 0
-      end
-    end
-    {collections: collections,  disabled: disabled }
-  end
-  
-  def find_field_in_document(job_id, field)
-    doc = solr_find_document("job_id:#{session[:book_id]}")
-    lang = doc["language_facet"][0][0..1]
-    doc["#{field}_#{lang}"]
-  end
-  
-  def get_related_books(params)    
-    volume = load_volume_from_solr(params[:job_id])
-    query_array = { 'ALL' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
-                    'subject'=> [], 'content' => [], 'publisher' => [] }
-    query = set_query_string(query_array, " OR ")
-    query.gsub!(" AND ", " OR ")
-    search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "")  
-  end  
 end

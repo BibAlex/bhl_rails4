@@ -43,7 +43,7 @@
                 = I18n.t('common.terminator')
       - unless @volume[:sci_names].blank?
         %dt
-          = I18n.t('header.search.option_tagged_species') + ':'
+          = I18n.t('common.tagged_species') + ':'
         %dd
           - names = fill_response_array(@volume[:sci_names])
           = render partial: "books/book_names", locals: { sci_names: @volume[:sci_names], id: @volume[:job_id], 

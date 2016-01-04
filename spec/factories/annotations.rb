@@ -3,7 +3,7 @@ FactoryGirl.define do
     volume_id Faker::Number.digit
     user_id Faker::Number.digit
     page Faker::Number.digit
-    anntype "note"
+    anntype "Note"
     text "content"
   end
 

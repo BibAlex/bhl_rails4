@@ -3,63 +3,63 @@
   - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
 - else
   - thumb = owner_of_comment.photo_name_url(:thumb)
-.col-md-3.column
-  .media
-    %div.text-dimmed{ style: get_class_for_abuse(comment.number_of_marks), id: "abuse#{comment.id}" }
-      %small
-        %p #{I18n.t(:hidden_comment_msg)}
-      %a.btn.btn-link.btn-xs{ onclick: "open_comment('#{comment.id}')" } 
-        = I18n.t('common.show') 
-  %div.media{ style: get_class_for_comment(comment.number_of_marks), id: "comment#{comment.id}" }
-    = link_to user_path(id: owner_of_comment.id) do
-      %img.media-object.img-circle{ src: "#{thumb}", width: 60, class: "pull-left" }
-    .media-body
-      %h4.media-heading
-        = link_to owner_of_comment.real_name.html_safe, user_path(id: owner_of_comment.id)
-      %p
-        = comment.text
-    .well-sm
-      .div.pull-left{ id: "open_replies#{comment.id}" }
-        %a.btn.btn-link.btn-xs{ onclick: "show_replies('#{comment.id}')" }
-          = "#{I18n.t('common.replies')} (#{get_comment_replies_count(comment.id)})"
+
+.media
+  %div.text-dimmed{ style: get_class_for_abuse(comment.number_of_marks), id: "abuse#{comment.id}" }
+    %small
+      %p #{I18n.t('common.hidden_comment_msg')}
+    %a.btn.btn-link.btn-xs{ onclick: "open_comment('#{comment.id}')" } 
+      = I18n.t('common.show') 
+%div.media{ style: get_class_for_comment(comment.number_of_marks), id: "comment#{comment.id}" }
+  = link_to user_path(id: owner_of_comment.id) do
+    %img.media-object.img-circle{ src: "#{thumb}", width: 60, class: "pull-left" }
+  .media-body
+    %h4.media-heading
+      = link_to owner_of_comment.real_name.html_safe, user_path(id: owner_of_comment.id)
+    %p
+      = comment.text
+  .well-sm
+    .div.pull-left{ id: "open_replies#{comment.id}" }
+      %a.btn.btn-link.btn-xs{ onclick: "show_replies('#{comment.id}')" }
+        = "#{I18n.t('common.replies')} (#{get_comment_replies_count(comment.id)})"
+    %span.text-muted.small.btn-xs
+      %a{ style: "cursor:pointer;", onclick: "mark_comment('#{comment.id}')" }
+        %i.fa.fa-flag 
+        = I18n.t('common.abuse')
+    - if ((owner_of_comment.id == session[:user_id]) && !(is_comment_has_replies?(comment.id)))
       %span.text-muted.small.btn-xs
-        %a{ style: "cursor:pointer;", onclick: "mark_comment('#{comment.id}')" }
-          %i.fa.fa-flag 
-          = I18n.t('common.abuse')
-      - if ((owner_of_comment.id == session[:user_id]) && !(is_comment_has_replies?(comment.id)))
-        %span.text-muted.small.btn-xs
-          = link_to "/comments/delete?id=#{comment.id}" , :onclick => "return confirmDelete()" do
-            %i.fa.fa-trash-o 
-            = I18n.t('common.delete')
-      .clearfix
-      .div{ id: "replies#{comment.id}", style: "display:none" }
-        - replies = Comment.where(commentable_type: "comment", commentable_id: comment.id)
-        - replies.each do |reply|
-          - owner_of_reply = User.find(reply.user_id)
-          .well-sm.small
-            %div.text-dimmed{ style: get_class_for_abuse(reply.number_of_marks), id: "abuse#{reply.id}" }
-              %small
-                %p #{I18n.t(:hidden_comment_msg)}
-              %a.btn.btn-link.btn-xs{ onclick: "open_comment('#{reply.id}')" }
-                = I18n.t('common.show') 
-            %div{ style: get_class_for_comment(reply.number_of_marks), id: "comment#{reply.id}" }
-              %i 
-                = link_to owner_of_reply.real_name, user_path(id: owner_of_reply.id)
-              %p
-                = reply.text
+        = link_to "/comments/delete?id=#{comment.id}" , :onclick => "return confirmDelete()" do
+          %i.fa.fa-trash-o 
+          = I18n.t('common.delete')
+    .clearfix
+    .div{ id: "replies#{comment.id}", style: "display:none" }
+      - replies = Comment.where(commentable_type: "comment", commentable_id: comment.id)
+      - replies.each do |reply|
+        - owner_of_reply = User.find(reply.user_id)
+        .well-sm.small
+          %div.text-dimmed{ style: get_class_for_abuse(reply.number_of_marks), id: "abuse#{reply.id}" }
+            %small
+              %p #{I18n.t('common.hidden_comment_msg')}
+            %a.btn.btn-link.btn-xs{ onclick: "open_comment('#{reply.id}')" }
+              = I18n.t('common.show') 
+          %div{ style: get_class_for_comment(reply.number_of_marks), id: "comment#{reply.id}" }
+            %i 
+              = link_to owner_of_reply.real_name, user_path(id: owner_of_reply.id)
+            %p
+              = reply.text
+            %span.text-muted.small.btn-xs
+              %a{ style: "cursor:pointer;", onclick: "mark_comment('#{reply.id}')" }
+                %i.fa.fa-flag
+                = I18n.t('common.abuse')
+            - if ((owner_of_reply.id == session[:user_id]) )
               %span.text-muted.small.btn-xs
-                %a{ style: "cursor:pointer;", onclick: "mark_comment('#{reply.id}')" }
-                  %i.fa.fa-flag
-                  = I18n.t('common.abuse')
-              - if ((owner_of_reply.id == session[:user_id]) )
-                %span.text-muted.small.btn-xs
-                  = link_to "/comments/delete?id=#{reply.id}", onclick: "return confirmDelete()" do
-                    %i.fa.fa-trash-o
-                    = I18n.t('common.delete')
-      .div{ id: "open_reply#{comment.id}", style: "display:none" }
-        - if is_logged_in?
-          = render partial: "comments/new_comment", locals: { commentable_id: comment.id, commentable_type: "comment" }
-        - if !(is_logged_in?)
-          = link_to I18n.t('msgs.please_login'), login_users_path(locale: I18n.locale)
-      .div{ id: "reply#{comment.id}" }
-        %button.btn.btn-sm.pull-right.btn-default{ onclick: "show_reply('#{comment.id}')" } #{I18n.t('common.reply')}
+                = link_to "/comments/delete?id=#{reply.id}", onclick: "return confirmDelete()" do
+                  %i.fa.fa-trash-o
+                  = I18n.t('common.delete')
+    .div{ id: "open_reply#{comment.id}", style: "display:none" }
+      - if is_logged_in?
+        = render partial: "comments/new_comment", locals: { commentable_id: comment.id, commentable_type: "comment" }
+      - if !(is_logged_in?)
+        = link_to I18n.t('msgs.please_login'), login_users_path(locale: I18n.locale)
+    .div{ id: "reply#{comment.id}" }
+      %button.btn.btn-sm.pull-right.btn-default{ onclick: "show_reply('#{comment.id}')" } #{I18n.t('common.reply')}

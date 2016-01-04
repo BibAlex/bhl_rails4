@@ -63,11 +63,11 @@ group :development, :test do
   gem 'carrierwave'
   gem "mini_magick"
   gem 'uuidtools'
+  gem 'database_cleaner'
 end
 
 group :test do
-  gem 'guard-rspec'
-  gem 'database_cleaner'
+  gem 'guard-rspec'  
   gem 'rack_session_access'
 end
 
