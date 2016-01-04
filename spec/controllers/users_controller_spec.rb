@@ -1,5 +1,5 @@
 require 'rails_helper'
-
+ include BHL::Login
 RSpec.describe UsersController, type: :controller do
   
 
@@ -116,6 +116,48 @@ RSpec.describe UsersController, type: :controller do
       end
     end
     
+    context "queries tab" do
+       let(:other_user) {FactoryGirl.create(:user, active: true, email: "other_user@bibalex.org", 
+                          username: "other_user", password: User.hash_password("other_user_password"))}
+      context "owner user" do
+        before do
+          2.times {FactoryGirl.create(:query, user_id: @owner_user.id , string: "_genre=science")}
+          session[:user_id] = @owner_user.id
+          get :show, id: @owner_user.id, tab: "queries"
+        end
+        context "user has queries" do
+          it "loads successfully" do      
+            expect(response).to have_http_status(:ok)
+          end
+          it "renders the show template" do
+            expect(response).to render_template(:show)
+          end   
+          it "displays the right number of queries" do
+            expect(@owner_user.queries.count).to eq(2)
+          end
+        end
+        context "user has no queries" do
+          it 'loads successfully' do
+            expect(response).to have_http_status(:ok)
+          end
+          it 'assigns zero queries for user' do
+            expect(other_user.queries.count).to eq(0)
+          end 
+        end
+      end
+      context "other user" do
+        before do
+          session[:user_id] = other_user.id
+          get :show , {id: @owner_user.id , tab: "queries"} 
+        end                  
+        it "redirects to owner user profile" do
+         expect(response).to redirect_to(user_path)
+        end
+        it "displays access denied msg" do
+         expect(flash[:error]).to eq(I18n.t 'msgs.access_denied_error')
+        end
+      end
+    end
     context "history tab" do
       
       context "owner user" do
@@ -434,4 +476,4 @@ RSpec.describe UsersController, type: :controller do
       end            
     end    
   end
-end
+end  
