@@ -2,8 +2,13 @@ require 'rails_helper'
 
 RSpec.describe Rate, type: :model do
   describe Rate, 'FactoryGirl' do
+    let(:rate) {FactoryGirl.build(:rate)}
     it 'has a valid factory' do
-      expect(build(:rate)).to be_valid
+      expect(rate).to be_valid
+    end
+    it "triggers update_activity on save" do
+      expect(rate).to receive(:update_activity)
+      rate.save
     end
   end  
   

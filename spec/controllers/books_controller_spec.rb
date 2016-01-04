@@ -93,9 +93,7 @@ RSpec.describe BooksController, type: :controller do
   describe "index" do
     
     
-    before(:all) do
-      
-      Language.create(code: 'eng', name: "english")
+    before(:all) do      
       
       Rails.cache.clear
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
@@ -250,29 +248,8 @@ RSpec.describe BooksController, type: :controller do
   
   describe "show" do
     before(:all) do
-      @volume = FactoryGirl.create(:volume)
-      Language.create(code: 'eng', name: "english")
-      
+      @volume = Volume.first
       Rails.cache.clear
-      solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
-      solr_books_core.delete_by_query('*:*')
-      solr_books_core.commit
-      solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
-                            publisher_en: "publisher_1", location_search: "location_1", rate: 5, views: 2  })
-      solr_books_core.commit
-      
-      solr_books_core = RSolr::Ext.connect url: SOLR_SCI_NAMES
-      solr_books_core.delete_by_query('*:*')
-      solr_books_core.commit    
-      solr_books_core.add({ sci_name: 'sci_name_1' })
-      solr_books_core.add({ sci_name: 'sci_name_2' })
-      solr_books_core.commit
-      
-      solr_names_found_core = RSolr::Ext.connect url: SOLR_NAMES_FOUND
-      solr_names_found_core.delete_by_query('*:*')
-      solr_names_found_core.commit    
-      solr_names_found_core.add({ job_id: 1, sci_name: 'sci_name_1', page: 1, name_found: 'name_1' })
-      solr_names_found_core.commit      
     end
     it "returns a 200 ok status" do
       get :show, { id: @volume.id }
@@ -332,6 +309,7 @@ RSpec.describe BooksController, type: :controller do
         user = User.first
         log_out
         log_in(user)
+        UserVolumeHistory.where(user_id: user.id, volume_id: @volume.id).destroy_all unless UserVolumeHistory.where(user_id: user.id, volume_id: @volume.id).nil?
         user_history_count = UserVolumeHistory.where(user_id: user.id).count
         get :show, { id: @volume.id, tab: "read" }
         expect(UserVolumeHistory.where(user_id: user.id).count).to eq(user_history_count + 1)

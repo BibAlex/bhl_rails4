@@ -136,10 +136,8 @@ RSpec.describe "Homepages", type: :feature do
       
       BhlStatistic.create(books_count: 2, authors_count: 2, species_count: 2)
       
-      @user = FactoryGirl.create(:user, active: true, username: "user_home", email: "user_home@example.com", guid: "home")
+      @user = User.first
       @collection = FactoryGirl.create(:collection, user: @user, title: "new_collection", is_public: true, rate: 5)
-      FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
-                                    action: "create", user_id: @user.id, created_at: Time.now)
       FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
                                     action: "rate", user_id: @user.id, value: 5, created_at: Time.now + 2)
       FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
@@ -171,7 +169,7 @@ RSpec.describe "Homepages", type: :feature do
       end
       
       it "displays total number of activities" do          
-        expect(page).to have_selector("span[class='badge']", text: 3)
+        expect(page).to have_selector("span[class='badge']", text: Activity.count)
       end
       
       # this part uses ajax call so we can't test it using rspec

@@ -1,7 +1,6 @@
 require 'rails_helper'
-
+include BHL::Login
 RSpec.describe UsersController, type: :controller do
-  
 
   describe "#new" do
     
@@ -89,8 +88,7 @@ RSpec.describe UsersController, type: :controller do
   describe "#show" do 
     
     before :all do
-      @owner_user = FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org", 
-        username: "owner_user", password: User.hash_password("owner_user_password"))
+      @owner_user = User.first
     end
     
     context "profile tab" do
@@ -134,7 +132,8 @@ RSpec.describe UsersController, type: :controller do
           solr.add book_metadata_1
           solr.add book_metadata_2
           solr.commit
-  
+          
+          UserVolumeHistory.where(user_id: @owner_user.id).destroy_all
           @vol_first = Volume.create(book: Book.create(title: 'Book 1', bib_id: '456'), job_id: "123")
           @vol_second = Volume.create(book: Book.create(title: 'Book 2', bib_id: '567'), job_id: "234")
           UserVolumeHistory.create(volume_id: @vol_first.id, user_id: @owner_user.id, :updated_at => Time.now)
@@ -247,11 +246,35 @@ RSpec.describe UsersController, type: :controller do
         end
       end
     end
- end
+    
+    describe "activity_log" do
+      let!(:owner_user) { User.first }
+    
+    before do
+      session[:user_id] = owner_user.id
+      get :show, { id: @owner_user.id , tab: "activity" }
+    end
+    
+    it "returns a 200 ok status" do      
+      expect(response).to have_http_status(:ok)
+    end
+    
+    it "renders the show template" do
+      expect(response).to render_template(partial: 'users/_activity')
+    end
+    
+    it "loads tab info" do
+      expect(assigns(:tab)).to eq("activity")
+    end
+      
+  end
+end  
+  
+  
 
   describe "#logout" do     
       
-   let!(:user) { FactoryGirl.create(:user, active: true, username: "user_logout", password: User.hash_password("user_logout_password")) }
+   let!(:user) { User.first }
     
     before do
       post :validate, { user: { username: "user_logout", password: "user_logout_password" } }
@@ -397,20 +420,20 @@ RSpec.describe UsersController, type: :controller do
     
     context "valid user" do      
       
-      let!(:user) { FactoryGirl.create(:user, active: true, username: "valid_user_login", password: User.hash_password("valid_user_login_password")) }
+      let!(:user) { User.first }
       
       it "sets session of user_id" do
-         post :validate, { user: { username: "valid_user_login", password: "valid_user_login_password" } }
+         post :validate, { user: { username: user.username, password: "password" } }
          expect(session[:user_id]).to eq(user.id)
       end
       
       it "redirects to the profile page of the user" do
-        post :validate, { user: { username: "valid_user_login", password: "valid_user_login_password" } }
+        post :validate, { user: { username: user.username, password: "password" } }
         expect(response).to redirect_to(user_path(id: user.id))
       end
       
       it "displays a flash message for successful login" do
-        post :validate, { user: { username: "valid_user_login", password: "valid_user_login_password" } }
+        post :validate, { user: { username: user.username, password: "password" } }
         expect(flash[:notice]).to eq(I18n.t('msgs.sign_in_successful_notice'))
       end     
     end
@@ -434,4 +457,4 @@ RSpec.describe UsersController, type: :controller do
       end            
     end    
   end
-end
+ end

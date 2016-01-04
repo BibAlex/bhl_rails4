@@ -12,13 +12,13 @@
         -# });
       -# });
     .browse
-      .row.clearfix  
+      .row.clearfix
         .col-md-2.column
           = render partial: "books/covers", locals: { coverno: @number, covertitle: @book[:title][0],
           coverauthor: !@book[:author].blank? ? @book[:author][0] : ""}
         .col-md-6.column
-          %h4          
-            = link_to @book[:title][0] , {controller: :books, action: :show, id: ubh_vol.volume_id}            
+          %h4
+            = link_to @book[:title][0] , {controller: :books, action: :show, id: ubh_vol.volume_id}
           .date.text-muted
             %small
               %b
@@ -28,7 +28,7 @@
             %small
               %b
                 = I18n.t('collection.col_book_order')
-              = ubh_vol.position  
+              = ubh_vol.position
         .col-md-4.column.controls
           %ul.fa-ul.tools
             - if is_logged_in_user?(ubh_vol.collection.user_id)
@@ -36,22 +36,22 @@
                 - if ubh_vol.position > 1
                   %i.fa.fa-li.fa-arrow-up
                   %small
-                    = link_to "#{I18n.t('collection.col_book_move_up')} ", 
-                    {controller: :collections, action: :move_up, collection_volume_id: ubh_vol.id}  
+                    = link_to "#{I18n.t('collection.col_book_move_up')} ",
+                    {controller: :collections, action: :move_up, collection_volume_id: ubh_vol.id}
                 - if ubh_vol.position < @collection_volumes.count
                   - if ubh_vol.position == 1
                     %i.fa.fa-li.fa-arrow-down
                   - else
-                    %i.fa.fa-arrow-down 
+                    %i.fa.fa-arrow-down
                   %small
-                    = link_to " #{I18n.t('collection.col_book_move_down')}", 
+                    = link_to " #{I18n.t('collection.col_book_move_down')}",
                       {controller: :collections, action: :move_down, collection_volume_id: ubh_vol.id}
               %li
                 %i.fa.fa-li.fa-trash-o
                 %small
-                  = link_to "#{I18n.t('collection.col_book_trash')}" , 
-                  {controller: :collections, action: :delete_book, collection_volume_id: ubh_vol.id}, 
-                  :onclick => "return confirmBookDeleteFromCollection()" 
+                  = link_to "#{I18n.t('collection.col_book_trash')}" ,
+                  {controller: :collections, action: :delete_book, collection_volume_id: ubh_vol.id},
+                  :onclick => "return confirmBookDeleteFromCollection()"
             %li
               %i.fa.fa-li.fa-book
               %small
@@ -60,7 +60,7 @@
             %li
               %i.fa.fa-li.fa-info
               %small
-                = link_to "#{I18n.t('collection.book_details_details')}" , 
+                = link_to "#{I18n.t('collection.book_details_details')}" ,
                   {controller: :books, action: :show, id: ubh_vol.volume_id}
             - if is_logged_in? && !is_logged_in_user?(ubh_vol.collection.user_id)
               %li
@@ -75,7 +75,7 @@
               -# %small
                 -# = "#{I18n.t(:sidelinks_views, :count => @book[:views])} "
           -# - if @book[:rate] != 0.0
-            -# .starsidelink{:id => "starsidelink_#{ubh_vol.volume_id}", :data => "#{@book[:rate]}"}      
+            -# .starsidelink{:id => "starsidelink_#{ubh_vol.volume_id}", :data => "#{@book[:rate]}"}
     .clearfix
 - else
   %h4
