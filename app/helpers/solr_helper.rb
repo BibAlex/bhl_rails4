@@ -49,16 +49,16 @@ module SolrHelper
   end
   
   def get_volumes_contain_sci_name(sci_names, query_join_operator)
-    exact_sci_names = get_exact_sci_names(sci_names)
-    # values = "\"" + exact_sci_names.join(query_join_operator) + "\""
-    values = "(" + exact_sci_names.map { |s| "\"#{s}\"" }.join(query_join_operator) + ")"
-    # values = exact_sci_names.join(query_join_operator)
-    rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => "sci_name:#{values}", 'fl' => "job_id"
     job_ids = []
-    unless response["response"]["numFound"] == 0
-      response["response"]["docs"].each do |doc|
-        job_ids << doc[:job_id]
+    exact_sci_names = get_exact_sci_names(sci_names)
+    unless exact_sci_names.blank?
+      values = "(" + exact_sci_names.map { |s| "\"#{s}\"" }.join(query_join_operator) + ")"
+      rsolr = RSolr.connect url: SOLR_NAMES_FOUND
+      response = rsolr.find 'q' => "sci_name:#{values}", 'fl' => "job_id"      
+      unless response["response"]["numFound"] == 0
+        response["response"]["docs"].each do |doc|
+          job_ids << doc[:job_id]
+        end
       end
     end
     job_ids
@@ -66,9 +66,7 @@ module SolrHelper
   
   def get_exact_sci_names(sci_names)
     exact_sci_names = []
-    # values = "\"" + sci_names.join(" OR ") + "\""
     values = "(" + sci_names.map { |s| "\"#{s}\"" }.join(" OR ") + ")"
-    # values = sci_names.join(" OR ")
     rsolr = RSolr.connect url: SOLR_SCI_NAMES
     response = rsolr.find 'q' => "sci_name_search:#{values}", 'fl' => "sci_name"
     unless response["response"]["numFound"] == 0
@@ -93,7 +91,7 @@ module SolrHelper
   end
   
   def update_volume_rate_in_solr(job_id, avg_rate)
-    doc = solr_find_document("job_id:#{job_id}")
+    doc = SolrHelper.solr_find_document("job_id:#{job_id}")
     doc[:rate] = avg_rate
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
     solr.update data: solr.xml.add(doc)
@@ -101,10 +99,19 @@ module SolrHelper
     solr.optimize
   end
   
-  def solr_find_document(query)
+  def self.solr_find_document(query)
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
     response = solr.find q: query, start: 0, limit: 1
     response['response']['docs'][0]
+  end
+  
+  def self.update_volume_views_in_solr(job_id)
+    # doc = solr_find_document("job_id:#{job_id}")
+    # doc[:views] = doc[:views] + 1
+    # solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
+    # solr.update data: solr.xml.add(doc)
+    # solr.commit
+    # solr.optimize
   end
  end 
   

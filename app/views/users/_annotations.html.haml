@@ -1,0 +1,41 @@
+- if @total_number > 0
+  .col-md-9.column
+    %h4
+      = I18n.t('annotations.title')
+      %span.badge{id: 'total_number'}
+        = @total_number
+  .row.col-md-9
+    - @collected_annotations.each do |annotation|
+      .col-md-3
+        .annotation.clearfix
+          %h4
+            = annotation[:book_title]
+          %div
+            %small
+              = link_to book_path(id: annotation[:job_id], tab: "read") do
+                %i.fa.fa-book{id: "read"}
+                = I18n.t('common.read')
+              = link_to book_path(id: annotation[:job_id]) do
+                %i.fa.fa-info{id: "details"}
+                = I18n.t('common.details')  
+          .notediv
+            %a{href:"#", "data-toggle" => :modal, "data-target"=> "#note_#{annotation[:job_id]}"}
+              = I18n.t('annotations.note')
+            %span.badge{id: 'notes'}
+              = annotation[:notes].count
+          %br
+          .highlightdiv
+            %a{href: "#", "data-toggle" => :modal, "data-target"=> "#highlight_#{annotation[:job_id]}"}
+              = I18n.t('annotations.highlight')
+            %span.badge{id: 'highlights'}
+              = annotation[:highlights].count
+        = render "list_annotations", annotations: annotation[:notes],
+         type: "note", job_id: annotation[:job_id]
+        = render "list_annotations", annotations: annotation[:highlights],
+         type: "highlight", job_id: annotation[:job_id]
+    %div
+      .pagination-centered
+        = will_paginate @annotations
+- else
+  %h4
+    = I18n.t('annotations.no_annotations_found')

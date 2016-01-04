@@ -7,8 +7,8 @@
         = I18n.t('common.login')
       .form-horizontal
         = form_for :user, url: validate_users_path, builder: FormHelper::BHLFormBuilder, html: { onsubmit: "return check_login_paramters();" } do |f|
-          - unless params[:return_to].blank?
-            = f.hidden_field :return_to, value: params[:return_to]
+          - unless session[:return_to].blank?
+            = f.hidden_field :return_to, value: session[:return_to]
           .form-group
             = f.label I18n.t('common.username'), class: 'col-sm-2 control-label'
             .col-sm-10
@@ -34,6 +34,6 @@
               = f.submit I18n.t('common.login'), class: "btn btn-default", id: "submit"
         %hr
           %div
-            = link_to I18n.t('common.forgot_password'), forgot_password_users_path
+            = link_to I18n.t('common.forgot_password_link'), forgot_password_users_path
             \/ #{I18n.t('common.not_member')}
             = link_to I18n.t('common.signup'), new_user_path

@@ -1,6 +1,11 @@
 require 'rails_helper'
+require_relative '../../lib/bhl/login'
+
 
 RSpec.describe BooksController, type: :controller do
+  
+  include BHL::Login
+
   
   describe "books autocomplete" do
     before(:all) do
@@ -11,7 +16,7 @@ RSpec.describe BooksController, type: :controller do
       solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1"  })
       solr_books_core.add({ job_id: 2, language_facet: 'eng', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2" })
       solr_books_core.commit
-      
+
       solr_books_core = RSolr::Ext.connect url: SOLR_SCI_NAMES
       solr_books_core.delete_by_query('*:*')
       solr_books_core.commit    
@@ -88,9 +93,7 @@ RSpec.describe BooksController, type: :controller do
   describe "index" do
     
     
-    before(:all) do
-      
-      Language.create(code: 'eng', name: "english")
+    before(:all) do      
       
       Rails.cache.clear
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
@@ -245,29 +248,8 @@ RSpec.describe BooksController, type: :controller do
   
   describe "show" do
     before(:all) do
-      @volume = FactoryGirl.create(:volume)
-      Language.create(code: 'eng', name: "english")
-      
+      @volume = Volume.first
       Rails.cache.clear
-      solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
-      solr_books_core.delete_by_query('*:*')
-      solr_books_core.commit
-      solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
-                            publisher_en: "publisher_1", location_search: "location_1", rate: 5, views: 2  })
-      solr_books_core.commit
-      
-      solr_books_core = RSolr::Ext.connect url: SOLR_SCI_NAMES
-      solr_books_core.delete_by_query('*:*')
-      solr_books_core.commit    
-      solr_books_core.add({ sci_name: 'sci_name_1' })
-      solr_books_core.add({ sci_name: 'sci_name_2' })
-      solr_books_core.commit
-      
-      solr_names_found_core = RSolr::Ext.connect url: SOLR_NAMES_FOUND
-      solr_names_found_core.delete_by_query('*:*')
-      solr_names_found_core.commit    
-      solr_names_found_core.add({ job_id: 1, sci_name: 'sci_name_1', page: 1, name_found: 'name_1' })
-      solr_names_found_core.commit      
     end
     it "returns a 200 ok status" do
       get :show, { id: @volume.id }
@@ -277,6 +259,61 @@ RSpec.describe BooksController, type: :controller do
     it "renders the index template partial" do
       get :show, { id: @volume.id }
       expect(response).to render_template(:show)
+    end
+    
+    describe "add_book_to_collection" do
+      context "when user is logged in" do
+        it "displays a link for add book to collection" do
+          FactoryGirl.create(:user, password: User.hash_password('add_book_to_password'), active: true) unless User.first
+          user = User.first
+          log_out
+          log_in(user)
+          get :show, { id: @volume.id }
+          expect(response.body).to have_selector("a", text: I18n.t('common.add_collection'))
+          log_out
+        end
+      end
+      
+      context "when user is not logged in" do
+        it "displays a link for add book to collection" do
+          get :show, { id: @volume.id }
+          expect(response.body).not_to have_selector("a", text: I18n.t('common.add_collection'))
+        end
+      end
+    end
+    
+    describe "read tab" do
+      describe "add_book_to_collection" do
+        context "when user is logged in" do
+          it "displays a link for add book to collection" do
+            FactoryGirl.create(:user, password: User.hash_password('add_book_to_password'), active: true) unless User.first
+            user = User.first
+            log_out
+            log_in(user)
+            get :show, { id: @volume.id, tab: "read" }
+            expect(response.body).to have_selector("a", text: I18n.t('common.add_collection'))
+            log_out
+          end
+        end
+        
+        context "when user is not logged in" do
+          it "displays a link for add book to collection" do
+            get :show, { id: @volume.id, tab: "read" }
+            expect(response.body).not_to have_selector("a", text: I18n.t('common.add_collection'))
+          end
+        end
+      end
+      
+      it "adds record in history table when visit read tab" do
+        FactoryGirl.create(:user, password: User.hash_password('add_book_to_password'), active: true) unless User.first
+        user = User.first
+        log_out
+        log_in(user)
+        UserVolumeHistory.where(user_id: user.id, volume_id: @volume.id).destroy_all unless UserVolumeHistory.where(user_id: user.id, volume_id: @volume.id).nil?
+        user_history_count = UserVolumeHistory.where(user_id: user.id).count
+        get :show, { id: @volume.id, tab: "read" }
+        expect(UserVolumeHistory.where(user_id: user.id).count).to eq(user_history_count + 1)
+      end
     end
   end 
 end

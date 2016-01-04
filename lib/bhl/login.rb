@@ -8,16 +8,7 @@ module BHL
 
       user.last_login = Time.now
       user.save
-      #cookies[:SSid] = user.guid
-
-      cookies[:SSid] = {
-        :value => user.guid,
-        :domain => 'bhl.bibalex.org'
-      }
-    end
-
-    def is_loggged_in?
-      session[:user_id].nil? ? false : true
+      cookies[:SSid] = user.guid
     end
 
     def log_out

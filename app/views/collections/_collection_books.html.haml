@@ -1,0 +1,82 @@
+= javascript_include_tag 'book_collection.js'
+- if !@collection_volumes.blank? && @collection_volumes.count > 0
+  - @number = 0
+  - @collection_volumes.each do |ubh_vol|
+    - @book = load_volume_without_names_from_solr(ubh_vol.volume_id)
+    - @number += 1
+    -# :javascript
+      -# $(document).ready(function(){
+        -# $("#starsidelink_#{ubh_vol.volume_id}").jRating({
+          -# isDisabled : true,
+          -# bigStarsPath: "/images_#{I18n.locale}/#{I18n.t(:stars_grey)}"
+        -# });
+      -# });
+    .browse
+      .row.clearfix
+        .col-md-2.column
+          = render partial: "books/covers", locals: { coverno: @number, covertitle: @book[:title][0],
+          coverauthor: !@book[:author].blank? ? @book[:author][0] : ""}
+        .col-md-6.column
+          %h4
+            = link_to @book[:title][0] , {controller: :books, action: :show, id: ubh_vol.volume_id}
+          .date.text-muted
+            %small
+              %b
+                =I18n.t('collection.col_book_added_on')
+              = ubh_vol.created_at
+          .date.text-muted
+            %small
+              %b
+                = I18n.t('collection.col_book_order')
+              = ubh_vol.position
+        .col-md-4.column.controls
+          %ul.fa-ul.tools
+            - if is_logged_in_user?(ubh_vol.collection.user_id)
+              %li
+                - if ubh_vol.position > 1
+                  %i.fa.fa-li.fa-arrow-up
+                  %small
+                    = link_to "#{I18n.t('collection.col_book_move_up')} ",
+                    {controller: :collections, action: :move_up, collection_volume_id: ubh_vol.id}
+                - if ubh_vol.position < @collection_volumes.count
+                  - if ubh_vol.position == 1
+                    %i.fa.fa-li.fa-arrow-down
+                  - else
+                    %i.fa.fa-arrow-down
+                  %small
+                    = link_to " #{I18n.t('collection.col_book_move_down')}",
+                      {controller: :collections, action: :move_down, collection_volume_id: ubh_vol.id}
+              %li
+                %i.fa.fa-li.fa-trash-o
+                %small
+                  = link_to "#{I18n.t('collection.col_book_trash')}" ,
+                  {controller: :collections, action: :delete_book, collection_volume_id: ubh_vol.id},
+                  :onclick => "return confirmBookDeleteFromCollection()"
+            %li
+              %i.fa.fa-li.fa-book
+              %small
+                = link_to "#{I18n.t('collection.book_details_read')}" ,
+                  {controller: :books, action: :show, id: ubh_vol.volume_id, tab: "read"}
+            %li
+              %i.fa.fa-li.fa-info
+              %small
+                = link_to "#{I18n.t('collection.book_details_details')}" ,
+                  {controller: :books, action: :show, id: ubh_vol.volume_id}
+            - if is_logged_in? && !is_logged_in_user?(ubh_vol.collection.user_id)
+              %li
+                %i.fa.fa-li.fa-plus-square
+                %small
+                  %a{ onclick: "load_collections(#{ubh_vol.volume_id})", style: "cursor:pointer;" }
+                    = I18n.t('common.add_collection')
+                  .modal.fade{ "aria-hidden" => "true", "aria-labelledby" => "approvalModalLabel",
+                  "role" => "dialog", "tabindex" => "-1", id: "collection_modal_#{ubh_vol.volume_id}" }
+          -# .rate
+            -# %span.text-muted.pull-right
+              -# %small
+                -# = "#{I18n.t(:sidelinks_views, :count => @book[:views])} "
+          -# - if @book[:rate] != 0.0
+            -# .starsidelink{:id => "starsidelink_#{ubh_vol.volume_id}", :data => "#{@book[:rate]}"}
+    .clearfix
+- else
+  %h4
+    = I18n.t('common.no_books_found')

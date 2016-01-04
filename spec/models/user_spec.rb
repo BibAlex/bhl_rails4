@@ -49,11 +49,6 @@ RSpec.describe User, type: :model do
     it "is invalid without real_name" do
       expect(FactoryGirl.build(:user, real_name: nil)).to_not be_valid
     end    
-    
-    it "is invalid with duplicated guid" do
-      FactoryGirl.create(:user, guid: 'guid')
-      expect(FactoryGirl.build(:user, guid: 'guid')).to_not be_valid
-    end    
   end
   
   describe '.authenticate' do

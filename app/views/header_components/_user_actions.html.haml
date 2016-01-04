@@ -8,7 +8,7 @@
       - else
         = link_to logout_user_path(locale: I18n.locale, id: session["user_id"]), class: "fa fa-sign-out" do
           %div
-            = I18n.t('header.user.signout')
+            = I18n.t('common.signout')
     .col-sm-6.no-padding.text-center
       - if !is_logged_in?
         = link_to login_users_path(locale: I18n.locale), class: "fa fa-user" do

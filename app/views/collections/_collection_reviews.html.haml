@@ -1,0 +1,20 @@
+= javascript_include_tag 'comments_functions.js'
+
+:javascript
+  $(document).ready(function() {
+    load_comments("#{params[:id]}", "collection");
+  });
+
+#modal-container-4.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog"}
+  = render partial: "comments/reviews_body", locals: { commentable_type: "collection" }
+
+%a#modal-4.btn.pull-right.btn-default{:style => "margin-top: 2px; margin-right: 2px;","data-toggle" => "modal", :href => "#modal-container-4", :role => "button"} 
+  = I18n.t('common.write_review')
+  
+.panel-heading
+  %h3.panel-title
+    %i.fa.fa-users
+    = I18n.t('common.reviews')
+.panel-body
+  #reviews
+  

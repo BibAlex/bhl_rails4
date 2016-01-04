@@ -45,7 +45,7 @@ Things you need:
       mkdir solr_test
       git clone https://github.com/BibAlex/bhl_rails_4_solr_test.git solr_test
       cd solr_test/example
-      java -jar start;jar
+      java -jar start.jar
       make sure localhost:8989/solr is up and running  
 
   10.  Prepare the environment
@@ -63,6 +63,8 @@ Things you need:
   3.  copy config/environment.sample.rb to config/environment.rb and fix some constants
   4.  rake db:create:all # to create all databases if not exist 
   5.  rake db:migrate; rake db:migrate RAILS_ENV=test
+  7.  rake db:populate RAILS_ENV=development 
+  8.  rake bhl_statistics:load_bhl_statistics_from_solr
   6.  rake spec # to make sure all tests are green  
   
 == Common issues

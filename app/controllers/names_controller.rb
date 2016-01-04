@@ -1,5 +1,7 @@
 class NamesController < ApplicationController
   
+  include SolrHelper
+  
   def index
     @page_title = I18n.t(:tree_of_life_title)
     @entries = Hierarchy.where(browsable: 1).order("label")
@@ -34,10 +36,11 @@ class NamesController < ApplicationController
     end
     
     unless @name.blank?
-      @name.gsub('"', '\"')      
-      rsolr = RSolr.connect :url => SOLR_BOOKS_METADATA      
-      search = rsolr.select :params => { :q => "name:\"#{@name}\""}
-      @books_count = search['response']['numFound']
+      @name.gsub('"', '\"')
+      @books_count = get_volumes_contain_sci_name([@name], " AND ").count
+      # rsolr = RSolr.connect :url => SOLR_BOOKS_METADATA      
+      # search = rsolr.select :params => { :q => "name:\"#{@name}\""}
+      # @books_count = search['response']['numFound']
     else
       @books_count = 0
     end

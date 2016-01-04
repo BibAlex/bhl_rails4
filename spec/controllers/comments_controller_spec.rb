@@ -8,8 +8,8 @@ include BHL::Login
 RSpec.describe CommentsController, type: :controller do
   
   before(:each) do
-    @user = FactoryGirl.create(:user, active: true)
-    @volume = FactoryGirl.create(:volume, job_id: 1)
+    @user = User.first
+    @volume = Volume.first
   end
   
   

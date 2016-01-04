@@ -7,17 +7,7 @@
   
 
 #new_comment_modal.modal.fade{ "aria-hidden" => "true", "aria-labelledby" => "myModalLabel", "role" => "dialog" }
-  .modal-dialog
-    .modal-content
-      .modal-header
-        %button.close{ "aria-hidden" => "true", "data-dismiss" => "modal", "type" => "button" } ×
-        %h4#myModalLabel.modal-title 
-        = I18n.t('common.write_review')
-      .modal-body
-        - if is_logged_in?
-          = render partial: "comments/new_comment", locals: { commentable_id: params[:id], commentable_type: "volume" }
-        - if !(is_logged_in?)
-          = link_to I18n.t('msgs.please_login'), login_users_path(locale: I18n.locale)
+  = render partial: "comments/reviews_body", locals: { commentable_type: "volume" }
 
 
 .reviews

@@ -62,7 +62,7 @@ function autocomplete()
           return;
         }
         search_by = $("#headersearchby").val();
-        if(search_by != "content" && search_by != "ALL")
+        if(search_by != "content" && search_by != "all")
         {
         	searchfield = $("#headersearchfield").val();
             return $.getJSON("/<%= I18n.locale %>/books/autocomplete?type=" + search_by, request, function(data, status, xhr) {
