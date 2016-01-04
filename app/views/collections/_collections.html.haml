@@ -1,3 +1,10 @@
+= stylesheet_link_tag 'jquery/rating/jRating.jquery'
+= javascript_include_tag 'jquery/rating/jRating.jquery'
+= javascript_include_tag 'rating_functions'
+:javascript
+  $(document).ready(function(){
+    prepare_avg_rate();
+   });
 - if !@collections.blank?
   - counter = 0
   - @collections.each do |coll|
@@ -15,13 +22,15 @@
               = "#{coll.collection_volumes.count}"
           %i.fa.fa-user
           %small
-            = link_to "#{I18n.t('collection.collection_by')} #{User.find(coll.user_id).real_name}", 
+            = link_to "#{I18n.t('collection.collection_by')} #{User.find(coll.user_id).real_name}",
               {controller: :users, action: :show, id: coll.user_id}
           %p
             %small
-              = coll.description    
-          %i.fa.fa-calendar-o 
+              = coll.description
+          %i.fa.fa-calendar-o
           = I18n.t('collection.collection_creation_date')
           %p
             %small
               = coll.created_at
+          .rate
+            .averagerate{id: "collection_#{coll.id}", data: "#{coll.rate}"}
