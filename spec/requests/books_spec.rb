@@ -178,8 +178,7 @@ RSpec.describe "Books", type: :request do
     describe "add_book_to_collection" do
       context "when user is logged in" do
         it "displays a link for add book to collection", :js => true do
-          FactoryGirl.create(:user, password: User.hash_password('password'), active: true) unless User.first
-          user = User.first
+          user = FactoryGirl.create(:user, password: User.hash_password('password'), active: true)
           visit("/users/login")
           fill_in "username", :with => "#{user.username}"
           fill_in "password", :with => "password"
