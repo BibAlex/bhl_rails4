@@ -180,6 +180,13 @@ class UsersController < ApplicationController
     @tab = params[:tab].nil? ? "profile" : params[:tab]
   end
   
+  def load_queries_tab
+    if authenticate_user(params[:id])
+      @page = params[:page] ? params[:page].to_i : 1
+      @queries = @user.queries.order("created_at DESC").paginate(page: @page, per_page:  PAGE_SIZE)           
+    end
+  end
+  
   def load_history_tab
     if authenticate_user(params[:id])
       @total_number = UserVolumeHistory.history(@user).count

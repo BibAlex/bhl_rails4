@@ -40,6 +40,7 @@ en:
     no_activities: No activities found..
     no_books_found: No Books found..
     no_comments_found: No Reviews found...
+    no_queries_found: No Queries found...
     default_collection: "default_collection.png"
     default_user_small: "default_user_small.png"
     default_user: "default_user.png"
@@ -92,8 +93,10 @@ en:
     book: Book
     number_of_viewes: Number of views
     entity_saved: "%{entity} Saved"
+    entity_deleted: "%{entity} Deleted"
+    delete_saved_query_confirm: "Are you sure you want to delete this query ?"
     search_query: Search Query
-    subject: Subject
+    subject: Genre
     language: Language
     location: Location
     author: Author
@@ -154,7 +157,7 @@ en:
     volume_history_page_header: "Recently viewed books"
     volume_history_viewed_on: "On:"
     book_count:
-      one: "one Book"
+      one: "one book"
       other: "%{count} books"       
     author_count:
       one: "one Author"
@@ -309,4 +312,3 @@ en:
     title: Annotations
     note: Notes
     highlight: Highlights
-

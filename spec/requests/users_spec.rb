@@ -1,5 +1,4 @@
 require 'rails_helper'
-
 RSpec.describe "Users", type: :request do
   
   describe "signup" do
@@ -157,6 +156,60 @@ RSpec.describe "Users", type: :request do
         end        
       end      
     end 
+    
+     describe "queries tab" do
+      before do 
+          @user = FactoryGirl.create(:user, active: true, username: "@ouser", password: User.hash_password("@user_password"),
+                                     real_name: "@user_real", email: "user@example.com")
+          @other_user = FactoryGirl.create(:user, active: true, username: "@other_user", password: User.hash_password("@other_user_password"),
+                                     real_name: "@other_user_real", email: "other_user@example.com")
+          @query_first = Query.create(user_id: @user.id, string: "_title=popular")
+          @query_second = Query.create(user_id: @user.id, string: "_content=smith")
+          FactoryGirl.create(:language)
+      end
+      context "user with queries"do
+          before do
+            page.set_rack_session(user_id: @user.id)
+            visit user_path(locale: I18n.locale, id: @user.id, tab: "queries") 
+          end
+          it "displays total number of saved queries" do
+            expect(page).to have_selector("span[class='badge']", text: 2)
+          end
+            
+          it "contains query content body" do
+            expect(page).to have_selector("b", text: "Title")
+          end
+    
+          it "contains show result link for query" do
+            expect(page).to have_selector("a[href= '/books?_title=popular']", text: "#{I18n.t('common.book_count', count:get_number_of_returned_books(@query_first.string).to_i)}")
+            expect(page).to have_selector("a[href='/books?_content=smith']",  text: "#{I18n.t('common.book_count', count:get_number_of_returned_books(@query_second.string).to_i)}")
+          end
+    
+          it " contains delete link for each query" do
+            expect(page).to have_selector("a[href='/en/user_search_history/delete_query?id=#{@query_first.id}&user_id=#{@user.id}']")
+            expect(page).to have_selector("a[href='/en/user_search_history/delete_query?id=#{@query_second.id}&user_id=#{@user.id}']")
+          end
+    
+          it "should have pagination bar" do
+            20.times {Query.create( user_id: @user.id, string: "_title=popular")}
+            visit user_path(locale: I18n.locale, id: @user.id, tab: "queries") 
+            expect(page).to have_selector("div[class='pagination']")
+          end
+      end
+      
+      context "user with no queries" do
+          before do
+            page.set_rack_session(user_id: @other_user.id)
+            visit user_path(id: @other_user, tab: "queries")
+          end
+          it "displays a msg of no queries found" do
+            expect(page).to have_selector("h4", text:  I18n.t('common.no_queries_found'))
+          end
+          it "doesn't display any queries" do
+            expect(page).not_to have_selector("div[class='col-md-8 column']")
+          end
+      end  
+   end
     
     describe "history tab" do
       
