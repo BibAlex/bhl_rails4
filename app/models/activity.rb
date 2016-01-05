@@ -18,4 +18,8 @@ class Activity < ActiveRecord::Base
     end
     Activity.where(filter_stmt).order("created_at #{sort}").paginate(page: page, per_page: PAGE_SIZE)
   end
+ 
+  def self.add_activity(options)
+    Activity.create(options)
+  end
 end

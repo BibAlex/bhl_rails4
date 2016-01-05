@@ -1,6 +1,7 @@
 module ActivitiesHelper
   
   def activity_action_and_object(activity)
+    activity.action = "reply" if activity.activitable_type == "comment"
     action = I18n.t("common.actions.#{activity.action}")
     object = I18n.t("common.types.#{activity.activitable_type}")
     "#{action} #{object}"

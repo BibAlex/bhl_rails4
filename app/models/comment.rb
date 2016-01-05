@@ -1,3 +1,5 @@
+include ActionView::Helpers::SanitizeHelper
+
 class Comment < ActiveRecord::Base
   belongs_to :user
   
@@ -10,9 +12,25 @@ class Comment < ActiveRecord::Base
   validates :text, presence: true
   validates :commentable_id, presence: true
   before_save :sanitize_html
+  after_save :update_activity
   
   def sanitize_html
     self.text = sanitize(text, :tags=>[])
+  end
+  
+  def update_activity
+    volume = Volume.find_by_job_id(self.commentable_id)
+    collect = Collection.find_by_id(self.commentable_id)
+    comment = Comment.find_by_id(self.commentable_id)
+    if volume
+       title =  (Book.find_by_id(volume.book_id)).title
+    elsif collect
+       title = collect.title
+    elsif comment
+       title = comment.text    
+    end
+    Activity.add_activity({ activitable_id: self.commentable_id, action: "comment", user_id: self.user_id, 
+                            activitable_type: self.commentable_type, value: self.text, activitable_title: title })
   end
   
   def self.comment_params(params)

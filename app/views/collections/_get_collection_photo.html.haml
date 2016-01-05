@@ -1,0 +1,9 @@
+.col-md-2.column.pull-right
+  - if 
+    - thumb = @collection.photo_name.blank? "/images_#{I18n.locale}/#{I18n.t('common.default_collection')}" : 
+      @collection.photo_name_url(:thumb)
+    = image_tag("#{thumb}", class: "img-thumbnail")  
+    - if is_logged_in_user?(@collection.user_id)
+      %div
+        = check_box_tag("delete_photo", "delete_photo", false, onclick: "confirmDelete_photo(#{@collection.id})")
+        = I18n.t('common.delete_photo')

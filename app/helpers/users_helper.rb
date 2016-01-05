@@ -5,6 +5,10 @@ module UsersHelper
     session[:user_id].nil? ? false : true
   end
   
+  def is_logged_in_user?(user_id)
+    session["user_id"].to_i == user_id
+  end
+  
   def get_user_form_params(user)
     if user.new_record?
       { page_title: I18n.t('common.signup'), verify_captcha: true }

@@ -11,4 +11,9 @@ RSpec.describe Hierarchy, type: :model do
   describe Hierarchy, 'association' do
     it { should have_many(:hierarchy_entries) }
   end
+  
+  it 'Should get browsable hierarchies' do
+    hierarchies = Hierarchy.where(browsable: 1)
+    expect(hierarchies.count).to be > 0
+  end
 end
