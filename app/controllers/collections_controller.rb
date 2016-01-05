@@ -2,6 +2,8 @@ class CollectionsController < ApplicationController
   include CollectionsHelper
   include BooksHelper
   before_filter :store_location, only: [:show]
+  before_filter :check_authentication, only: [:add_book]
+  
   def index
     @page_title = I18n.t('collection.collection_title')
     @page = params[:page] ? params[:page].to_i : 1
@@ -60,15 +62,20 @@ class CollectionsController < ApplicationController
 
   def add_book
     if params[:title]
-      col_id = Collection.create(title: params[:title], description: params[:description], is_public: params[:is_public], user_id: session[:user_id]).id
+      col = Collection.new(title: params[:title], description: params[:description], is_public: params[:is_public], user_id: session[:user_id])
+      if col.valid?
+        col.save
+        col_id = col.id
+      else        
+        flash[:notice] = col.errors.full_messages
+        respond_to do |format|
+          format.html { render partial: 'layouts/flash' }
+        end
+      end
     else
       col_id = params[:col_id]
     end
-    CollectionVolume.create(volume_id: params[:job_id], collection_id: col_id)
-    flash[:notice] = I18n.t('msgs.book_added_to_collection')
-    respond_to do |format|
-      format.html { render partial: 'layouts/flash' }
-    end
+    add_book_to_collection(params[:job_id], col_id) if col_id
   end
 
   def load
@@ -111,6 +118,14 @@ class CollectionsController < ApplicationController
       else
         redirect_to controller: :collections, action: :index
       end
+    end
+  end
+  
+  def add_book_to_collection(job_id, col_id)    
+    CollectionVolume.create(volume_id: job_id, collection_id: col_id)
+    flash[:notice] = I18n.t('msgs.book_added_to_collection')
+    respond_to do |format|
+      format.html { render partial: 'layouts/flash' }
     end
   end
 end
