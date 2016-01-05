@@ -1,16 +1,11 @@
-= javascript_include_tag 'book_collection.js'
+= javascript_include_tag 'book_collection'
+= javascript_include_tag 'white_stars'
+
 - if !@collection_volumes.blank? && @collection_volumes.count > 0
   - @number = 0
   - @collection_volumes.each do |ubh_vol|
     - @book = load_volume_without_names_from_solr(ubh_vol.volume_id)
     - @number += 1
-    -# :javascript
-      -# $(document).ready(function(){
-        -# $("#starsidelink_#{ubh_vol.volume_id}").jRating({
-          -# isDisabled : true,
-          -# bigStarsPath: "/images_#{I18n.locale}/#{I18n.t(:stars_grey)}"
-        -# });
-      -# });
     .browse
       .row.clearfix
         .col-md-2.column
@@ -70,13 +65,8 @@
                     = I18n.t('common.add_collection')
                   .modal.fade{ "aria-hidden" => "true", "aria-labelledby" => "approvalModalLabel",
                   "role" => "dialog", "tabindex" => "-1", id: "collection_modal_#{ubh_vol.volume_id}" }
-          -# .rate
-            -# %span.text-muted.pull-right
-              -# %small
-                -# = "#{I18n.t(:sidelinks_views, :count => @book[:views])} "
-          -# - if @book[:rate] != 0.0
-            -# .starsidelink{:id => "starsidelink_#{ubh_vol.volume_id}", :data => "#{@book[:rate]}"}
-    .clearfix
+            .rate
+              .starsidelink_white{ id: "starsidelink_#{ubh_vol.volume_id}", data: "#{@book[:rate]}" }
 - else
   %h4
     = I18n.t('common.no_books_found')
