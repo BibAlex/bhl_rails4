@@ -63,6 +63,7 @@ BhlRails4::Application.routes.draw do
     get "rating/rate/:value/:rateable_type/:user_id/:rateable_id" => "rating#rate"
     get "rating/detailed_rate/:rateable_id/:rateable_type" => "rating#detailed_rate"
     get "user_search_history/save_query"
+    get "user_search_history/delete_query"
     get "user_search_history/remove_book_history"
     get "carousel/index"
     get "carousel/get_carousel"

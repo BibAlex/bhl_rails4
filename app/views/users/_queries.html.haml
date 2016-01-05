@@ -1,0 +1,25 @@
+- if @queries.count> 0
+  .col-md-8.column
+    %h4
+      = I18n.t('common.queries')
+      %span.badge
+        = @queries.count
+  %hr
+  .col-md-8
+    %ul.list-group
+      - @queries.each do |query|
+        %li.list-group-item
+          = "#{parse_query(query.string)}".html_safe
+          %span.pull-right        
+            %span.badge
+              %a{ href: "/books?#{query.string}" }
+                = I18n.t('common.book_count', count:get_number_of_returned_books(query.string).to_i)   
+            %i.fa.fa-times-circle
+              = link_to I18n.t('common.delete'), user_search_history_delete_query_path(user_id: query.user_id, id: query.id),
+                  onclick: "return confirmDelete(\"#{I18n.t('common.delete_saved_query_confirm')}\");" 
+    %div
+      .pagination-centered
+        = will_paginate @queries
+- else
+  %h4
+    = I18n.t('common.no_queries_found')  
