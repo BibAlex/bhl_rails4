@@ -15,15 +15,15 @@ require 'rails_helper'
      end
       
       it "displays a link for filter activities by rate" do
-        expect(page).to have_selector("a[onclick=\"filter_activities('rate', 'DESC');\"]", text: I18n.t('common.rate'))
+        expect(page).to have_selector("a[onclick=\"filter_activities('rate', 'desc');\"]", text: I18n.t('common.rate'))
       end
       
       it "displays a link for filter activities by comments" do
-        expect(page).to have_selector("a[onclick=\"filter_activities('comments', 'DESC');\"]", text: I18n.t('common.comments'))
+        expect(page).to have_selector("a[onclick=\"filter_activities('comments', 'desc');\"]", text: I18n.t('common.comments'))
       end
       
       it "displays a link for filter activities by collections" do        
-        expect(page).to have_selector("a[onclick=\"filter_activities('collections', 'DESC');\"]", text: I18n.t('common.collections'))
+        expect(page).to have_selector("a[onclick=\"filter_activities('collections', 'desc');\"]", text: I18n.t('common.collections'))
       end      
       
       describe "activity entry" do

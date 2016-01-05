@@ -76,7 +76,7 @@ BhlRails4::Application.routes.draw do
     get "collections/move_up/:collection_volume_id" => "collections#move_up"
     get "collections/move_down/:collection_volume_id" => "collections#move_down"
     get "collections/delete_book/:collection_volume_id" => "collections#delete_book"
-    
+    get "/collectionautocomplete" => "collections#autocomplete"
     resources :books do
       collection do
         get 'autocomplete'

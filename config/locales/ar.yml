@@ -126,6 +126,8 @@ ar:
     top_collections: "المجموعات الأهم"
     select_species_for_details: اختر الأنواع الموجودة إلى اليمين لمشاهدة التفاصيل 
     species_details: تفاصيل الأنواع 
+    rates: "معدل"
+    eol_pages_link: "http://www.eol.org/pages/"
     name_found_in_books:
       zero:  "لا توجد كتب تحتوى على هذا الاسم"
       one:   "موجود في كتاب واحد"

@@ -14,31 +14,97 @@ RSpec.describe CollectionsController, type: :controller do
     solr_books_core.add({ job_id: 2, language_facet: 'eng', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2" })
     solr_books_core.commit
   end
-  
+
   before(:all) do 
+    fill_solr
+    
     @logged_in_user = FactoryGirl.create(:user)
     @user = FactoryGirl.create(:user)  
+    
+    @vol_1 = FactoryGirl.create(:volume, book_id: 1, job_id: 1)
+    @vol_2 = FactoryGirl.create(:volume, book_id: 1, job_id: 2)
+    
+    @private_collection = FactoryGirl.create(:collection, user_id: @logged_in_user.id, is_public: false)
+    @public_collection = FactoryGirl.create(:collection, user_id: @user.id, is_public: true, title: "aaaa", rate: 1.0)
+    @empty_collection = FactoryGirl.create(:collection, user_id: @user.id, is_public: true, title: "zzzz", rate: 5.0)
+    
+    # volumes in private collection
+    @c1_v1 = FactoryGirl.create(:collection_volume, collection_id: @private_collection.id, volume_id: @vol_1.job_id, position: 1)
+    @c1_v2 = FactoryGirl.create(:collection_volume, collection_id: @private_collection.id, volume_id: @vol_2.job_id, position: 2)
+    
+    # volumes in public collection
+    @c2_v1 = FactoryGirl.create(:collection_volume, collection_id: @public_collection.id, volume_id: @vol_1.job_id, position: 1)
+    @c2_v2 = FactoryGirl.create(:collection_volume, collection_id: @public_collection.id, volume_id: @vol_2.job_id, position: 2)
+  end
+  
+  describe "index collections" do
+ 
+    describe "list collections" do
+      it "should list only public collections" do
+        log_out
+        get :index
+        expect(response.body).to have_selector 'h4', text: "2", exact: false
+      end
+      it "should have an open link for each collection" do
+        get :index
+        expect(response.body).to have_selector 'a', text: @public_collection.title, exact: false
+        expect(response.body).to have_selector 'a', text: @empty_collection.title, exact: false
+      end
+      it "should have description for each collection" do
+        get :index
+        expect(response.body).to have_selector 'p', text: @public_collection.description
+        expect(response.body).to have_selector 'p', text: @empty_collection.description
+      end
+      it "should have owner for each collection" do
+        get :index
+        expect(response.body).to have_selector 'a', text: @user.real_name
+      end
+      it "should display creation date of each collection" do
+        get :index
+        expect(response.body).to have_selector 'p', text: @public_collection.created_at
+        expect(response.body).to have_selector 'p', text: @empty_collection.created_at
+      end
+      it "should display number of books of each collection" do
+        get :index
+        expect(response.body).to have_selector 'span', text: @public_collection.collection_volumes.count
+        expect(response.body).to have_selector 'span', text: @empty_collection.collection_volumes.count
+      end
+    end
+    
+    describe "search for a collection" do
+      it "should search for collections by title" do
+        log_out
+        get :index, params: {search: @public_collection.title}
+        expect(response.body).to have_selector 'a', text: @public_collection.title, exact: false
+      end
+    end
+    
+    describe "sort collections" do
+      it "should sort by rate desc" do
+      get :index, :sort_type => "rate desc"
+      expect(response.body).to have_selector "div#collection_1>div>h4>a", text: @empty_collection.title
+      expect(response.body).to have_selector "div#collection_2>div>h4>a", text: @public_collection.title
+      end
+      it "should sort by rate asc" do
+      get :index, :sort_type => "rate asc"
+      expect(response.body).to have_selector "div#collection_1>div>h4>a", text: @public_collection.title
+      expect(response.body).to have_selector "div#collection_2>div>h4>a", text: @empty_collection.title
+      end
+      it "should sort by title desc" do
+      get :index, :sort_type => "title desc"
+      expect(response.body).to have_selector "div#collection_1>div>h4>a", text: @empty_collection.title
+      expect(response.body).to have_selector "div#collection_2>div>h4>a", text: @public_collection.title
+      end
+      it "should sort by title asc" do
+      get :index, :sort_type => "title asc"
+      expect(response.body).to have_selector "div#collection_1>div>h4>a", text: @public_collection.title
+      expect(response.body).to have_selector "div#collection_2>div>h4>a", text: @empty_collection.title
+      end
+    end
   end
   
   describe "show collection" do
-    before(:all) do 
-      fill_solr
-      @vol_1 = FactoryGirl.create(:volume, book_id: 1, job_id: 1)
-      @vol_2 = FactoryGirl.create(:volume, book_id: 1, job_id: 2)
-      
-      @private_collection = FactoryGirl.create(:collection, user_id: @logged_in_user.id, is_public: false)
-      @public_collection = FactoryGirl.create(:collection, user_id: @user.id, is_public: true)
-      @empty_collection = FactoryGirl.create(:collection, user_id: @user.id, is_public: true)
-      
-      # volumes in private collection
-      @c1_v1 = FactoryGirl.create(:collection_volume, collection_id: @private_collection.id, volume_id: @vol_1.job_id, position: 1)
-      @c1_v2 = FactoryGirl.create(:collection_volume, collection_id: @private_collection.id, volume_id: @vol_2.job_id, position: 2)
-      
-      # volumes in public collection
-      @c2_v1 = FactoryGirl.create(:collection_volume, collection_id: @public_collection.id, volume_id: @vol_1.job_id, position: 1)
-      @c2_v2 = FactoryGirl.create(:collection_volume, collection_id: @public_collection.id, volume_id: @vol_2.job_id, position: 2)
-    end
-
+    
     describe "show collection's info" do
       
       context "private collection" do
@@ -142,7 +208,7 @@ RSpec.describe CollectionsController, type: :controller do
             it "should change book order to lower order" do
               request.env["HTTP_REFERER"] = "/en/collections/show/#{@private_collection.id}"
               get :move_down, collection_volume_id: @c2_v1.id, id: @private_collection.id
-              expect(response).to redirect_to("/en/collections/show/#{@private_collection.id}")
+              expect(response.body).to redirect_to("/en/collections/show/#{@private_collection.id}")
               expect(@c2_v2.reload.position).to equal(1)
               expect(@c2_v1.reload.position).to equal(2)
               @c2_v1.update_attributes(position: 1)

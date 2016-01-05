@@ -1,5 +1,5 @@
 class TaxonConcept < EOLBase
-  establish_connection("eol")
+  establish_connection(:eol)
   
   # attr_accessible :id, :name, :image
   

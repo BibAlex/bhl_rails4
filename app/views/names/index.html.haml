@@ -14,7 +14,7 @@
       %td
         %select{ name: 'hierarchy_id', style: "width: 100%", class: "hierarchy_id" }          
           - @entries.each do |entry|
-            %option{ value: entry.id, selected: entry.id==DEFAULT_HIERARCHY_ID }= entry.label
+            %option{ value: entry.id, selected: entry.id == DEFAULT_HIERARCHY_ID }= entry.label
     %tr
       %td
         #h_container{ style: "height: 250px; width: 100%; overflow: auto", class: "tree" }

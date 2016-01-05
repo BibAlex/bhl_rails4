@@ -3,7 +3,19 @@ class CollectionsController < ApplicationController
   include BooksHelper
   before_filter :store_location, only: [:show]
   def index
-
+    @page_title = I18n.t('collection.collection_title')
+    @page = params[:page] ? params[:page].to_i : 1
+    
+    sql_query = "is_public = true"
+    sql_query += " AND title LIKE '%#{params[:search]}%'" if !params[:search].blank?
+    @collections = Collection.where(sql_query).paginate(page: @page, per_page: PAGE_SIZE).order(params[:sort_type])
+    @collections_total_number = Collection.count(:all, conditions: sql_query)
+  end
+  
+  
+  def autocomplete
+    @results = Collection.where("title LIKE :title", { title: "#{params[:term]}%" }).group(:title).limit(10).map(&:title) # TODO put it in config
+    render json: @results
   end
 
   def show
