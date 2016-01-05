@@ -46,6 +46,24 @@ class CollectionsController < ApplicationController
     end
   end
 
+  def remove_collection
+    collection = Collection.find(params[:id])
+    if authenticate_user(collection.user_id)
+      collection.delete#destroy
+      # debugger
+      Rate.user_collection_rates(collection.user_id).delete_all
+      # debugger
+      Comment.collection_comments.delete_all
+      flash[:notice]=I18n.t('collection.collection_removed')
+      flash.keep
+      if request.env["HTTP_REFERER"].present? and request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
+        redirect_to :back
+      else
+        redirect_to users_path(id: session[:user_id], tab: "collections")
+      end
+    end
+  end
+
   def add_book
     if params[:title]
       col_id = Collection.create(title: params[:title], description: params[:description], is_public: params[:is_public], user_id: session[:user_id]).id

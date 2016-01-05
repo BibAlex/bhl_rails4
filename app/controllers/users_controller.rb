@@ -190,6 +190,7 @@ class UsersController < ApplicationController
      @activities = Activity.where(user_id: params[:id]).order("created_at DESC").limit(limit).offset(@offset).
                    paginate(page: @page, per_page:  PAGE_SIZE)
   end
+  
   def load_history_tab
     if authenticate_user(params[:id])
       @total_number = UserVolumeHistory.history(@user).count
@@ -206,6 +207,24 @@ class UsersController < ApplicationController
 
       @url_params = params.clone
     end
+  end
+  
+  def load_collections_tab
+    @page = params[:page] ? params[:page].to_i : 1
+    if session[:user_id].to_i == params[:id].to_i
+      # debugger
+      user_collections = Collection.user_collections(session[:user_id])
+      @total_number = user_collections.count
+      @collections = user_collections.paginate(page: @page, per_page: PAGE_SIZE)
+    else
+      user_collections = Collection.public_user_collections(session[:user_id])
+      @total_number = user_collections.count
+      @collections = user_collections.paginate(page: @page, per_page: PAGE_SIZE)
+    end
+     if @collections.blank? and @page > 1
+       redirect_to user_path(id: session[:user_id], tab: "collections", page: params[:page].to_i - 1)
+      end
+    @url_params = params.clone
   end
 
   def load_annotations_tab

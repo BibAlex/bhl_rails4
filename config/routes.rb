@@ -122,6 +122,7 @@ BhlRails4::Application.routes.draw do
       collection do
         get 'add_book'
         get 'load'
+        get 'remove_collection'
       end
     end
     
