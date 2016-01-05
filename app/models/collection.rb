@@ -3,8 +3,9 @@ include ActionView::Helpers::SanitizeHelper
 class Collection < ActiveRecord::Base
   has_many :collection_volumes, dependent: :destroy
   has_many :volumes, through: :collection_volumes #TODO I think this is wrong!! please check it!!
-  has_many :collection_ratings, dependent: :destroy
-  has_many :comments, as: :commentable, dependent: :destroy
+  #has_many :collection_ratings, dependent: :destroy
+  # has_many :rates, dependent: :destroy
+  # has_many :comments, as: :commentable, dependent: :destroy
   has_many :activities, class_name: "Activity", as: :activitable, dependent: :destroy
   
   belongs_to :user
@@ -15,6 +16,8 @@ class Collection < ActiveRecord::Base
   before_save :sanitize_html
   after_save :update_activity
   scope :top, -> { where("is_public = true").order("rate desc").limit(TOP_COLLECTIONS_COUNT).offset(0) }
+  scope :user_collections, ->(id) {where(user_id: id)}
+  scope :public_user_collections, ->(id) {where(user_id: id, is_public: true)}
   
   def sanitize_html
     self.title = sanitize(title, :tags=>[])

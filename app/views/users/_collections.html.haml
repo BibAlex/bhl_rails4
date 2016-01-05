@@ -1,0 +1,47 @@
+= javascript_include_tag 'grey_stars.js'
+- if @total_number > 0
+  .col-md-8.column  
+    %h4
+      = I18n.t('common.collections')
+      %span.badge
+        = @total_number
+    %hr
+    -@collections.each do |item|
+      - if(item.photo_name.blank?)
+        - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_collection')}"
+      - else
+        - thumb = item.photo_name_url(:small)
+      .row
+        .col-md-2
+          = link_to image_tag("#{thumb}") , collection_path(id: item.id)
+        .col-md-7
+          %h4
+            = link_to "#{item.title}", collection_path(id: item.id)
+          .date.text-muted
+            %small
+              %b
+                = I18n.t('collection.col_book_added_on')
+              = item.created_at
+        .col-md-3.controls
+          
+          %ul.fa-ul.tools
+            - if (item.user_id == session[:user_id])
+              %li
+                %i.fa.fa-li.fa-trash-o
+                %small
+                  = link_to I18n.t('common.delete'), remove_collection_collections_path(id: item.id, user_id: item[:user_id], page: @page),
+                    onclick: "return confirmDelete(\"#{I18n.t('collection.remove_collection')}\")"
+            %li
+              %i.fa.fa-li.fa-info
+              %small
+                = link_to I18n.t('common.details'), collection_path(id: item.id)
+          - if item.rate != 0.0
+            .starsidelink{id: "starsidelink_#{item.id}", data: "#{item.rate}"}
+        .clearfix
+        %hr
+    %div
+      .pagination-centered
+        = will_paginate @collections
+- else
+  %h4
+    = I18n.t('msgs.no_collections_found')
