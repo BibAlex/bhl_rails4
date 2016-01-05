@@ -3,8 +3,14 @@ require 'rails_helper'
 RSpec.describe Comment, type: :model do
   
   describe Comment, 'FactoryGirl' do
+    let(:comment) {FactoryGirl.build(:comment)}
+    
     it 'has a valid factory' do
-      expect(build(:comment)).to be_valid
+      expect(comment).to be_valid
+    end
+    it "triggers update_activity on save" do
+      expect(comment).to receive(:update_activity)
+      comment.save
     end
   end  
   

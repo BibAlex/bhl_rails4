@@ -87,8 +87,7 @@ RSpec.describe "Users", type: :request do
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                         filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-          @owner_user = FactoryGirl.create(:user, active: true, username: "@owner_user", password: User.hash_password("@owner_user_password"),
-                                                  photo_name: file, real_name: "@owner_user_real", email: "owner@example.com")
+          @owner_user = FactoryGirl.create(:user)
           page.set_rack_session(user_id: @owner_user.id)
           visit user_path(locale: I18n.locale, id: @owner_user.id)        
         end
@@ -100,7 +99,7 @@ RSpec.describe "Users", type: :request do
         
         it "displays user name of user" do
           expect(page).to have_selector("strong", text: I18n.t('common.username'))
-          expect(page).to have_selector("span", text: "owner_user")
+          expect(page).to have_selector("span", text: @owner_user.username)
         end
         
         it "displays registeration date of user" do
@@ -126,11 +125,9 @@ RSpec.describe "Users", type: :request do
         
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
-                                                        filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-          @owner_user = FactoryGirl.create(:user, active: true, username: "@owner_user", password: User.hash_password("@owner_user_password"),
-                                                  photo_name: file, real_name: "@owner_user_real", email: "owner@example.com")
-          @other_user = FactoryGirl.create(:user, active: true, username: "other_user", password: User.hash_password("other_user_password"),
-                                                   email: "other@example.com") 
+                                                        filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))          
+          @owner_user = FactoryGirl.create(:user)
+          @other_user = FactoryGirl.create(:user)
           page.set_rack_session(user_id: @owner_user.id)
           visit user_path(locale: I18n.locale, id: @other_user.id)        
         end
@@ -142,7 +139,7 @@ RSpec.describe "Users", type: :request do
         
         it "displays user name of user" do
           expect(page).to have_selector("strong", text: I18n.t('common.username'))
-          expect(page).to have_selector("span", text: "other_user")
+          expect(page).to have_selector("span", text: @other_user.username)
         end
         
         it "displays registeration date of user" do
@@ -155,6 +152,49 @@ RSpec.describe "Users", type: :request do
           expect(page).to have_selector("span", text: @other_user.last_login)
         end        
       end      
+    end
+    
+    describe "activity_tab" do
+        before do
+           book = FactoryGirl.create(:book, title: "new_book")
+           @volume = FactoryGirl.create(:volume, book_id: book.id)
+           comment = FactoryGirl.create(:comment, text: "main_comment")
+           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
+                                                        filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
+           @owner_user = FactoryGirl.create(:user)
+           @collection_create = FactoryGirl.create(:collection, user_id: @owner_user.id, title: "new_collection", is_public: true)
+           @collection_rate = FactoryGirl.create(:rate, user_id: @owner_user.id , rateable_id: @collection_create.id , rateable_type: "collection",
+                                                  rate: 5 )
+           @collection_comment = FactoryGirl.create(:comment, commentable_id: @collection_create.id,commentable_type: "collection", 
+                                                  user_id: @owner_user.id, text: "Good_Collection")
+           @volume_comment = FactoryGirl.create(:comment, commentable_id: @volume.job_id,  commentable_type: "volume", user_id: @owner_user.id, 
+                                                  text: "Good_volume")
+           @volume_rate = FactoryGirl.create(:rate, user_id: @owner_user.id , rateable_id: @volume.job_id ,rateable_type: "volume",
+                                                  rate: 5 )
+           @reply_comment = FactoryGirl.create(:comment, commentable_id: comment.id,
+                                                  commentable_type: "comment", user_id: @owner_user.id, text: "Reply")
+           page.set_rack_session(user_id: @owner_user.id)
+           visit user_path(locale: I18n.locale, id: @owner_user.id, tab: "activity")        
+        end
+        
+        it "should display total number of activities" do
+           expect(page).to have_selector("span[class='badge']", text: Activity.where(user_id: @owner_user.id).count  )
+        end
+        
+        it "should display name of owner of activity" do
+           expect(page).to have_selector("a[href='/#{I18n.locale}/users/#{@owner_user.id}?tab=profile']", text: "#{@owner_user.real_name}")
+        end 
+        
+         it "should display  open link of activity component" do
+           expect(page).to have_selector("a[href= '/collections/#{@collection_create.id}']", text: "#{@collection_create.title}")
+           expect(page).to have_selector("a[href= '/books/#{@volume.job_id}']")
+         end
+    
+        it "should have pagination bar" do
+           20.times {Collection.create(:user_id => @owner_user.id, :title => "other collection",:description => "description", :is_public => true)}
+           visit user_path(locale: I18n.locale, id: @owner_user.id, tab: "activity") 
+           expect(page).to have_selector("div[class='pagination']")
+       end  
     end 
     
      describe "queries tab" do
@@ -218,25 +258,22 @@ RSpec.describe "Users", type: :request do
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                         filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-          @owner_user = FactoryGirl.create(:user, active: true, username: "@owner_user", password: User.hash_password("@owner_user_password"),
-                                                  photo_name: file, real_name: "@owner_user_real", email: "owner@example.com")
+          @owner_user = FactoryGirl.create(:user)
           #adjust solr
           book_metadata_1 = {job_id: "123", bib_id: "456", title_en: "Book 1", author_en: "Author1", publisher_en: "publisher1",
-            subject_en: "subject1"}
+            subject_en: "subject1", language_facet: "eng" }
           book_metadata_2 = {job_id: "234", bib_id: "567", title_en: "Book 2", author_en: "Author2", publisher_en: "publisher2",
-            subject_en: "subject2"}
+            subject_en: "subject2", language_facet: "eng" }
           solr = RSolr.connect url: SOLR_BOOKS_METADATA
-          solr.delete_by_query("job_id: 123")
-          solr.delete_by_query("job_id: 234")
-          solr.commit
           solr.add book_metadata_1
           solr.add book_metadata_2
           solr.commit
-  
+          
+          UserVolumeHistory.where(user_id: @owner_user.id).destroy_all
           @vol_first = Volume.create(book: Book.create(title: 'Book 1', bib_id: '456'), job_id: "123")
           @vol_second = Volume.create(book: Book.create(title: 'Book 2', bib_id: '567'), job_id: "234")
-          UserVolumeHistory.create(volume_id: @vol_first.id, user_id: @owner_user.id, updated_at: Time.now)
-          UserVolumeHistory.create(volume_id: @vol_second.id, user_id: @owner_user.id, updated_at: Time.now)
+          @user_volume_history = UserVolumeHistory.create(volume_id: @vol_first.job_id, user_id: @owner_user.id, updated_at: Time.now)
+          UserVolumeHistory.create(volume_id: @vol_second.job_id, user_id: @owner_user.id, updated_at: Time.now)
         end
         
         context "logged in user" do
@@ -246,26 +283,26 @@ RSpec.describe "Users", type: :request do
           end
           
           it "should display last visited date" do
-            expect(page).to have_selector("small", text: "#{(UserVolumeHistory.first).updated_at}")
+            expect(page).to have_selector("small", text: "#{(@user_volume_history).updated_at}")
           end
           
           it "should have item count equal to the total number of books" do
-            expect(page).to have_selector("span[class='badge']", text: 2.to_s)
+            expect(page).to have_selector("span[class='badge']", text: UserVolumeHistory.where(user_id: @owner_user.id).count)
           end
         
           it "should have book title that links for details" do
-            expect(page).to have_selector("a[href= \"/en/books/#{@vol_first.book_id}\"]")
-            expect(page).to have_selector("a[href= \"/en/books/#{@vol_second.book_id}\"]")
+            expect(page).to have_selector("a[href= '/#{I18n.locale}/books/#{@vol_first.job_id}']")
+            expect(page).to have_selector("a[href= '/#{I18n.locale}/books/#{@vol_second.job_id}']")
           end
           
           it "should have details link for each book" do
-            expect(page).to have_selector("a[href= \"/en/books/#{@vol_first.book_id}\"]", text: I18n.t('common.details'))
-            expect(page).to have_selector("a[href= \"/en/books/#{@vol_second.book_id}\"]", text: I18n.t('common.details'))
+            expect(page).to have_selector("a[href= '/#{I18n.locale}/books/#{@vol_first.job_id}']", text: I18n.t('common.details'))
+            expect(page).to have_selector("a[href= '/#{I18n.locale}/books/#{@vol_second.job_id}']", text: I18n.t('common.details'))
           end
         
           it "should have read link for each book" do
-            expect(page).to have_selector("a[href= \"/en/books/#{@vol_first.book_id}?tab=read\"]")
-            expect(page).to have_selector("a[href= \"/en/books/#{@vol_second.book_id}?tab=read\"]")
+            expect(page).to have_selector("a[href= '/#{I18n.locale}/books/#{@vol_first.job_id}?tab=read']")
+            expect(page).to have_selector("a[href= '/#{I18n.locale}/books/#{@vol_second.job_id}?tab=read']")
           end
         
         end
@@ -288,10 +325,8 @@ RSpec.describe "Users", type: :request do
         before do
           file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                         filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-          @owner_user = FactoryGirl.create(:user, active: true, username: "@owner_user", password: User.hash_password("@owner_user_password"),
-                                                  photo_name: file, real_name: "@owner_user_real", email: "owner@example.com")
-          @other_user = FactoryGirl.create(:user, active: true, username: "other_user", password: User.hash_password("other_user_password"),
-                                                   email: "other@example.com") 
+          @owner_user = FactoryGirl.create(:user)
+          @other_user = FactoryGirl.create(:user)
           page.set_rack_session(user_id: @owner_user.id)
           visit user_path(locale: I18n.locale, id: @other_user.id)        
         end
@@ -303,7 +338,7 @@ RSpec.describe "Users", type: :request do
         
         it "displays user name of user" do
           expect(page).to have_selector("strong", text: I18n.t('common.username'))
-          expect(page).to have_selector("span", text: "other_user")
+          expect(page).to have_selector("span", text: "#{@other_user.username}")
         end
         
         it "displays registeration date of user" do
@@ -320,10 +355,8 @@ RSpec.describe "Users", type: :request do
 
     describe "annotations tab" do
       before do
-        @owner_user = FactoryGirl.create(:user, active: true, username: "owner_user",
-                        password: User.hash_password("owner_user_password"), real_name: "owner_user_real")
-        @other_user = FactoryGirl.create(:user, active: true, username: "other_user", 
-                      password: User.hash_password("other_user_password"),email: "other@example.com") 
+        @owner_user = FactoryGirl.create(:user)
+        @other_user = FactoryGirl.create(:user)
         @books = [FactoryGirl.create(:book), FactoryGirl.create(:book)]
         solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
         solr_books_core.delete_by_query('*:*')
@@ -396,3 +429,4 @@ RSpec.describe "Users", type: :request do
     end
   end 
 end
+

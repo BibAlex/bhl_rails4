@@ -21,6 +21,6 @@
             %li
               = link_to I18n.t('common.activity_log'), user_path(id: @user.id, tab: "activity"), { id: "tab_activity", class: get_tab_class("activity", @tab) }
             %li
-              = link_to I18n.t('common.collections'), user_path(id: @user.id, tab: "activity"), { id: "tab_collections", class: get_tab_class("collections", @tab) }
+              = link_to I18n.t('common.collections'), user_path(id: @user.id, tab: "collections"), { id: "tab_collections", class: get_tab_class("collections", @tab) }
         
         = render partial: "users/#{@tab}"

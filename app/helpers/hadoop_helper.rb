@@ -20,42 +20,59 @@ module HadoopHelper
 
     mods_xml.xpath("//BHLMeta//BIBID").each do |book_xml|
       bib_id = book_xml.attr("value").gsub("DAF-BHL:","")
-
-      book = Book.find_or_create_by(bib_id: bib_id)
-
-      if book_xml.xpath(".//mods").count == 0
-        # this means that this book has failed
-        book.book_status_id = BookStatus.pending_metadata.id
-        book.save
-      else
-        book.bibtex = book_xml.xpath(".//BIBTex").text
-        book.endnote = book_xml.xpath(".//EndNote").text
-        book.mods = book_xml.xpath(".//mods").text
-
-        metadata_hash = process_mods(book_xml.xpath(".//mods").text)
-
-        if metadata_hash[:title_alternative].nil? &&  metadata_hash[:title].nil?
+      
+      
+     metadata_hash = process_mods(book_xml.xpath(".//mods").text)
+     valid_book = false
+     metadata_hash[:languages].each do |language|
+        if ["eng", "fre", "ara", "ger", "ita"].include?(language.code) 
+          valid_book = true
+        end
+      end
+      
+      
+      if valid_book
+              
+        book = Book.find_or_create_by(bib_id: bib_id)
+  
+        if book_xml.xpath(".//mods").count == 0
           # this means that this book has failed
           book.book_status_id = BookStatus.pending_metadata.id
           book.save
         else
-          book.title = metadata_hash[:title]
-          book.title_alternative = metadata_hash[:title_alternative]
-          book.published_at = metadata_hash[:published_at]
-          book.publisher = metadata_hash[:publisher]
-          book.contributor = metadata_hash[:contributor]
-          book.book_status_id = BookStatus.pending_content.id
+          book.bibtex = book_xml.xpath(".//BIBTex").text
+          book.endnote = book_xml.xpath(".//EndNote").text
+          book.mods = book_xml.xpath(".//mods").text               
+  
+          if metadata_hash[:title_alternative].nil? &&  metadata_hash[:title].nil?
+            # this means that this book has failed
+            book.book_status_id = BookStatus.pending_metadata.id
+            book.save
+          else
+            book.title = metadata_hash[:title]
+            book.title_alternative = metadata_hash[:title_alternative]
+            book.published_at = metadata_hash[:published_at]
+            book.publisher = metadata_hash[:publisher]
+            book.contributor = metadata_hash[:contributor]
+            book.book_status_id = BookStatus.pending_content.id
+            book.save
+          end
+          book.authors << metadata_hash[:authors]
+          book.locations << metadata_hash[:locations]
+          # book.languages << metadata_hash[:languages]
+          metadata_hash[:languages].each do |language|
+            if ["eng", "fre", "ara", "ger", "ita"].include?(language.code) 
+              book.languages << language    
+            end
+          end
+          
+          book.subjects << metadata_hash[:subjects]
+  
+          book_xml.xpath(".//JobIDs//JobID").each do |job_id|
+            book.volumes << Volume.find_or_create_by(job_id: job_id.text.gsub("DAF-Job:",""))
+          end
           book.save
         end
-        book.authors << metadata_hash[:authors]
-        book.locations << metadata_hash[:locations]
-        book.languages << metadata_hash[:languages]
-        book.subjects << metadata_hash[:subjects]
-
-        book_xml.xpath(".//JobIDs//JobID").each do |job_id|
-          book.volumes << Volume.find_or_create_by(job_id: job_id.text.gsub("DAF-Job:",""))
-        end
-        book.save
       end
     end
     return true
@@ -146,7 +163,9 @@ private
   def get_languages(language_xml)
     languages = []
     language_xml.xpath('.//xmlns:languageTerm').each do |lang|
-      languages << Language.find_or_create_by(code: lang.text) unless lang.text.empty?
+      if ["eng", "fre", "ara", "ger", "ita"].include?(lang.text)
+        languages << Language.find_or_create_by(code: lang.text) unless lang.text.empty?
+      end      
     end
     languages
   end

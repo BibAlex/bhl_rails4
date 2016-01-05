@@ -7,7 +7,7 @@
         = @total_number
     %hr
     - @history.each_with_index do |doc, index|
-      - @book = load_volume_from_solr(doc.volume_id)
+      - @book = load_volume_without_names_from_solr(doc.volume_id)
       = render partial: "books/covers", locals: { coverno: index + 1, covertitle: @book[:title].try(:first).to_s, coverauthor: @book[:author].try(:first).to_s }
       .col-md-7
         %h4
@@ -17,39 +17,38 @@
             %b
               = I18n.t('common.volume_history_viewed_on')
             = doc.updated_at
-            
+
       .col-md-3.controls
         %ul.fa-ul.tools
           - if (doc.user_id == session[:user_id])
             %li
               %i.fa.fa-li.fa-trash-o
               %small
-                = link_to I18n.t('common.delete'), user_search_history_remove_book_history_path(user_id: doc.user_id, 
+                = link_to I18n.t('common.delete'), user_search_history_remove_book_history_path(user_id: doc.user_id,
                   user_volume_history_id: doc.id, page: @page),
                   onclick: "return confirmDelete(\"#{I18n.t('msgs.remove_book_from_history')}\")"
           %li
             %i.fa.fa-li.fa-book
             %small
               = link_to I18n.t('common.read'), book_path(id: doc.volume_id, tab: "read")
-              
+
           %li
             %i.fa.fa-li.fa-info
             %small
               = link_to I18n.t('common.details'), book_path(id: doc.volume_id, tab: nil)
-              
+
         .rate
-          - if @book['rate'] != 0.0
-            .starsidelink{id: "starsidelink_#{doc.volume_id}", data: "#{@book[:rate]}"}
-            
+          .starsidelink_gray{id: "starsidelink_#{doc.volume_id}", data: "#{@book[:rate]}"}
+
         %span.text-muted.pull-right
           %small
           = I18n.t('common.views', count: @book[:views])
-     
+
       .clearfix
     %hr
   %div
     .pagination-centered
-      = will_paginate @history 
+      = will_paginate @history
 - else
   %h4
-    = I18n.t('msgs.no_volume_history_found')   
+    = I18n.t('msgs.no_volume_history_found')

@@ -3,8 +3,13 @@ require 'rails_helper'
 RSpec.describe Collection, type: :model do
   
   describe Collection, 'FactoryGirl' do
+    let(:collection) {FactoryGirl.build(:collection)}
     it 'has a valid factory' do
-      expect(build(:collection)).to be_valid
+      expect(collection).to be_valid
+    end
+    it "triggers update_activity on save" do
+      expect(collection).to receive(:update_activity)
+      collection.save
     end
   end  
   
@@ -38,7 +43,8 @@ RSpec.describe Collection, type: :model do
   describe "top_collections" do
     
     before do
-      user = FactoryGirl.create(:user, active: true, username: "user_collection", email: "user_collection@example.com", guid: "collection")
+      user = User.first
+      Collection.delete_all
       @first_collection = FactoryGirl.create(:collection, title: "first collection", user_id: user.id, is_public: true, rate: 2)
       @second_collection = FactoryGirl.create(:collection, title: "second collection", user_id: user.id, is_public: true, rate: 4)
       @non_public_collection = FactoryGirl.create(:collection, title: "non public collection", user_id: user.id, is_public: false, rate: 5)

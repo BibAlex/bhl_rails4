@@ -60,7 +60,7 @@ BhlRails4::Application.routes.draw do
     root :to => 'pages#home'
     get "users/activate/:guid/:activation_code" => "users#activate"
     get "users/reset_password/:guid/:activation_code" => "users#reset_password"
-    get "rating/rate//:value/:rateable_type/:user_id/:rateable_id" => "rating#rate"
+    get "rating/rate/:value/:rateable_type/:user_id/:rateable_id" => "rating#rate"
     get "rating/detailed_rate/:rateable_id/:rateable_type" => "rating#detailed_rate"
     get "user_search_history/save_query"
     get "user_search_history/delete_query"
@@ -71,7 +71,13 @@ BhlRails4::Application.routes.draw do
     get "comments/get_comments"
     get "comments/mark"
     get "comments/delete"
-
+    get "names/show"
+    get "names/get_content/:id" => "names#get_content"
+    get "get_or_delete_collection_photo" => "collections#get_or_delete_collection_photo"
+    get "collections/move_up/:collection_volume_id" => "collections#move_up"
+    get "collections/move_down/:collection_volume_id" => "collections#move_down"
+    get "collections/delete_book/:collection_volume_id" => "collections#delete_book"
+    get "/collectionautocomplete" => "collections#autocomplete"
     resources :books do
       collection do
         get 'autocomplete'
@@ -109,9 +115,9 @@ BhlRails4::Application.routes.draw do
       end
     end    
 
-    resources :names
+    resources :names, only: [:index]
 
-    resources :geographics 
+    resources :geographics
     get "/geographics/show/:id" => "geographics#show"
     get "/geographics/index/:range" => "geographics#index"
 

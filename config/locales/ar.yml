@@ -1,5 +1,5 @@
 ar:
-  
+
   common:
     all: الكل
     all_categories: كل التصنيفات
@@ -84,8 +84,8 @@ ar:
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     tools: الأدوات
-    avg_rate: المعدل المتوسط
-    your_rate: المعدل الخاص بك
+    avg_rating: المعدل المتوسط
+    your_rating: المعدل الخاص بك
     choose_collection: "اختر مجموعة"
     mods: MODs
     bibtex: BibTeX
@@ -99,7 +99,7 @@ ar:
     older: أقدم
     newer: أحدث
     user_viewed: قام المستخدم أيضًا بمشاهدة
-    related_books: كتب ذات صلة 
+    related_books: كتب ذات صلة
     post: نشر
     show: "اعرض"
     read: "اقرأ"
@@ -108,7 +108,7 @@ ar:
     bhl_site_name: "مكتبة تراث التنوع الحيوي- مصر"
     bhl_short_title: "مصر BHL"
     regional_affiliation: التبعية الإقليمية
-    content: المحتوى 
+    content: المحتوى
     about_us: من نحن
     contact_us: اتصل بنا
     browse_all: تصفح الكل
@@ -124,9 +124,17 @@ ar:
     most_viewed: "الأكثر مشاهدة"
     top_rated: "الأعلى تقديرًا"
     top_collections: "المجموعات الأهم"
+    select_species_for_details: اختر الأنواع الموجودة إلى اليمين لمشاهدة التفاصيل 
+    species_details: تفاصيل الأنواع 
+    rates: "معدل"
+    eol_pages_link: "http://www.eol.org/pages/"
+    name_found_in_books:
+      zero:  "لا توجد كتب تحتوى على هذا الاسم"
+      one:   "موجود في كتاب واحد"
+      other: "كتب %{count}في  موجود"
     book_count:
       one: "كتاب واحد"
-      other: "%{count} كتب"       
+      other: "%{count} كتب"
     author_count:
       one: "مؤلف واحد"
       other: " %{count} مؤلفين"
@@ -141,7 +149,7 @@ ar:
       one:   "مجموعة"
       two: "مجموعتين"
       other: "مجموعات"
-    rate_details: 
+    rate_details:
       zero: ""
       one: "نجمة واحدة"
       two: "نجمتين"
@@ -154,26 +162,26 @@ ar:
       collection: "المجموعة"
       book: "الكتاب"
       comment: "التعليق"
- 
+
   warn:
     empty_search_query_warn: "يجب عليك إدخال جملة البحث"
     invalid_input: "جملة غير صالحة للبحث"
     max_photo_size: "أقصى حجم للصور"
-    
+
   msgs:
     no_suggestion: "لا توجد إقتراحات"
     registration_welcome_message: "مرحبًا %{real_name}. لم يتم تفعيل الحساب الخاص بك بعد. سوف يتم إرسال بريد إلكتروني يتضمن التعليمات الخاصة بالتفعيل."
     form_validation_errors_for_attribute_assistive: "يوجد خطأ في التحقق من الصحة في هذه العنصر"
-    upload_photo_max_size_error:  لا يمكن تحميل ملف أكبر من 
+    upload_photo_max_size_error:  لا يمكن تحميل ملف أكبر من
     activation_failed: "لقد فشلت عملية التفعيل"
     account_already_active: تم تفعيل هذا الحساب من قبل
     account_activated: "تم تفعيل (%{real_name}). شكرًا لانضمامك لـ BHL مصر."
-    upload_photo_ext_error: (jpg, jpeg, png, gif, bmp)امتدادات الملفات المسموح بها 
+    upload_photo_ext_error: (jpg, jpeg, png, gif, bmp)امتدادات الملفات المسموح بها
     empty_user_name_error: لا يمكن ترك اسم المستخدم خاليًا
     empty_password_error: لا يمكن ترك كلمة المرور خالية
     empty_verfication_error: يرجى ملء هذا الحقل
-    recaptcha_error: "يوجد خطأ تحقق من الصحة في عنصر التأكد من تسجيل الدخول" 
-    sign_in_unsuccessful_error: "فشل تسجيل الدخول. اسم مستخدم غير سليم أو كلمة مرور غير سليمة" 
+    recaptcha_error: "يوجد خطأ تحقق من الصحة في عنصر التأكد من تسجيل الدخول"
+    sign_in_unsuccessful_error: "فشل تسجيل الدخول. اسم مستخدم غير سليم أو كلمة مرور غير سليمة"
     sign_in_successful_notice: "تسجيل دخول ناجح"
     delete_profile_photo_confirm: هل تريد فعلاً حذف صورة البروفيل؟
     book_added_to_collection: "تمت إضافة الكتاب بنجاح إلى مجموعتك"
@@ -184,7 +192,7 @@ ar:
     can_not_delete_comment: "لا يمكنك حذف التعليق الذي له رد"
     contact_us_successful_feedback: "نشكرك على رسالتك"
     contact_us_unsuccessful_feedback: "لقد حدث خطأ اثناء إرسال رسالتك من فضلك حاول مرة اخرى"
-    
+
   activerecord:
     attributes:
       user:
@@ -196,7 +204,7 @@ ar:
       collection:
         title: "اسم المجموعة"
         description: "وصف المجموعة"
-    errors:      
+    errors:
       format: "%{attribute} %{message}"
       template:
         header:
@@ -235,12 +243,12 @@ ar:
         wrong_type: "يوجد خطأ في النوع"
       full_messages:
         format: "%{خاصية} %{رسالة}"
-                  
+
   notifier:
     user_verification:
       subject: " برجاء التحقق من طلبك ل BHLمصر "
       message_1: "شكرا للتسجيل مع BHLمصر  "
-      message_2: "يؤكد الرابط التالي رغبتك في استكمال التسجيل وتفعيل حسابك"   
+      message_2: "يؤكد الرابط التالي رغبتك في استكمال التسجيل وتفعيل حسابك"
     user_activated:
       subject: " تم تفعيل حساب BHL الخاص بك "
       message: " مصر وشكرًا للتسجيل! BHL مرحبًا بك في "

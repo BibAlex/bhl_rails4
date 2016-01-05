@@ -13,7 +13,7 @@
             - if(user.photo_name.blank?)
               - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
             - else
-              - thumb = user.photo_name_url(:thumb)
+              - thumb = user.photo_name_url(:small)
             .media
               = link_to image_tag("#{thumb}", class: "media-object img-circle"), { controller: 'users', action: 'show', id: user.id }, class: "pull-left"
               .media-body.activity-log
@@ -22,6 +22,7 @@
                     = link_to user.real_name, user_path(id: user.id, tab: "profile"), class: "book_author"
                   %strong
                     = activity_action_and_object(activity)
+                    - activity.activitable_type = "book" if activity.activitable_type == "volume"
                   %a.book_title{ href: "/#{activity.activitable_type.pluralize(2)}/#{activity.activitable_id}" } 
                     = activity.activitable_title
                   %strong

@@ -6,8 +6,6 @@ require 'rails_helper'
       Rails.cache.clear
       @user = FactoryGirl.create(:user, active: true, username: "user_activity", email: "user_activity@example.com", guid: "activity")
       @collection = FactoryGirl.create(:collection, user: @user, title: "new_collection", is_public: true)
-      @collection_create_activity = FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
-                                    action: "create", user_id: @user.id, created_at: Time.now)
     end
    
    describe "index" do
@@ -17,22 +15,22 @@ require 'rails_helper'
      end
       
       it "displays a link for filter activities by rate" do
-        expect(page).to have_selector("a[onclick=\"filter_activities('rate', 'DESC');\"]", text: I18n.t('common.rate'))
+        expect(page).to have_selector("a[onclick=\"filter_activities('rate', 'desc');\"]", text: I18n.t('common.rate'))
       end
       
       it "displays a link for filter activities by comments" do
-        expect(page).to have_selector("a[onclick=\"filter_activities('comments', 'DESC');\"]", text: I18n.t('common.comments'))
+        expect(page).to have_selector("a[onclick=\"filter_activities('comments', 'desc');\"]", text: I18n.t('common.comments'))
       end
       
       it "displays a link for filter activities by collections" do        
-        expect(page).to have_selector("a[onclick=\"filter_activities('collections', 'DESC');\"]", text: I18n.t('common.collections'))
+        expect(page).to have_selector("a[onclick=\"filter_activities('collections', 'desc');\"]", text: I18n.t('common.collections'))
       end      
       
       describe "activity entry" do
         
         it "display a link for activity owner" do
            expect(page).to have_selector("div[class='media']") do |div|
-            expect(div).to have_selector("a[href='/#{I18n.locale}/users/#{@user.id}?tab=profile']", text: @user.real_name)
+           expect(div).to have_selector("a[href='/#{I18n.locale}/users/#{@user.id}?tab=profile']", text: @user.real_name)
           end
         end
         
