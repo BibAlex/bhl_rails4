@@ -38,9 +38,6 @@ class NamesController < ApplicationController
     unless @name.blank?
       @name.gsub('"', '\"')
       @books_count = get_volumes_contain_sci_name([@name], " AND ").count
-      # rsolr = RSolr.connect :url => SOLR_BOOKS_METADATA      
-      # search = rsolr.select :params => { :q => "name:\"#{@name}\""}
-      # @books_count = search['response']['numFound']
     else
       @books_count = 0
     end

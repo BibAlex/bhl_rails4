@@ -2,8 +2,6 @@ class HierarchyEntry < EOLBase
   establish_connection(:eol)
   
   belongs_to :hierarchy
-  
-  # attr_accessible :id, :siblings_count, :taxon_concept, :taxon_concept_id, :parent_id, :hierarchy
 
   def self.find_siblings(hierarchy_id, parent_id)
     self.find_by_sql("select string as taxon_concept, h1.id, h1.parent_id, 

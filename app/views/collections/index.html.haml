@@ -1,0 +1,25 @@
+= javascript_include_tag 'collections_functions.js'
+:javascript  
+  $(document).ready(function() { auto_complete(); });
+  
+  
+.row.clearfix
+  .col-md-12.column
+    .col-md-12
+      %h2
+        = @page_title
+      .col-md-8
+        = render partial: "collections/breadcrumb"
+      .input-group.col-md-4.pull-right
+        %input.form-control{id: "search_coll_field", type: "text", onkeypress: "if(event.keyCode == 13){search_collection(); return false;}"}
+        %span.input-group-btn
+          %a.go.pull-left.rotate{style: "cursor:pointer;"}
+            %i.fa.fa-arrow-circle-right.fa-2x{onclick: "search_collection();"}
+    .clearfix
+    %hr      
+  .row
+    = render partial: "collections/collections"
+  - if !@collections.blank?
+    %div
+      .pagination-centered
+        = will_paginate @collections 
