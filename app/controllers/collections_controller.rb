@@ -49,10 +49,8 @@ class CollectionsController < ApplicationController
   def remove_collection
     collection = Collection.find(params[:id])
     if authenticate_user(collection.user_id)
-      collection.delete#destroy
-      # debugger
+      collection.delete
       Rate.user_collection_rates(collection.user_id).delete_all
-      # debugger
       Comment.collection_comments.delete_all
       flash[:notice]=I18n.t('collection.collection_removed')
       flash.keep
