@@ -84,7 +84,7 @@ module BooksHelper
     query_array = { 'all' => [], 'title'=> [], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> [],
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query_array.each do  |key, value|
-      query_array[key] = search_params["_#{key}".to_sym] ? search_params["_#{key}".to_sym].split(' _AND ') : []
+      query_array[key] = search_params["_#{key}"] ? search_params["_#{key}"].split(' _AND ') : []
     end
     query_array
   end
@@ -128,7 +128,7 @@ module BooksHelper
         field_query = '('
         values = "\"" + value_arr.join(" AND ") + "\""
         languages.each do |language|
-          field_query += field_query == '(' ? "#{key}_#{language.code[0..1]}:#{values}" : " OR #{key}_#{language.code[0..1]}:#{values}"
+          field_query += field_query == '(' ? "#{key}_#{languages.first.code[0..1]}:#{values}" : " OR #{key}_#{languages.first.code[0..1]}:#{values}"
         end
         field_query += ")"
         multilingual_query += multilingual_query == '' ? field_query : " #{query_join_operator} #{field_query}"
