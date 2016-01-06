@@ -1,9 +1,5 @@
 require 'rails_helper'
-<<<<<<< HEAD
- include BHL::Login
-=======
 include BHL::Login
->>>>>>> 1eadfe426ffce28e366d8b23f23e19bf31a57689
 RSpec.describe UsersController, type: :controller do
 
   describe "#new" do
