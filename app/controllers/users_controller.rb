@@ -219,12 +219,11 @@ class UsersController < ApplicationController
   def load_collections_tab
     @page = params[:page] ? params[:page].to_i : 1
     if session[:user_id].to_i == params[:id].to_i
-      # debugger
       user_collections = Collection.user_collections(session[:user_id])
       @total_number = user_collections.count
       @collections = user_collections.paginate(page: @page, per_page: PAGE_SIZE)
     else
-      user_collections = Collection.public_user_collections(session[:user_id])
+      user_collections = Collection.public_user_collections(params[:id])
       @total_number = user_collections.count
       @collections = user_collections.paginate(page: @page, per_page: PAGE_SIZE)
     end
