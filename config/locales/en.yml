@@ -64,7 +64,7 @@ en:
     signup: Sign up
     modify_profile: Modify profile
     reset: Reset
-    mb: megabytes
+    mb: megabyte
     dear_msg: "Dear %{name},"
     email_signature_1: "Regards,"
     email_signature_2: "BHL Team"
@@ -328,6 +328,12 @@ en:
     sidelinks_add_collection: "Add to Collection"
     collection_volume_deleted: "Book is successfuly removed from your collection."
     show_collection_detail: "Collection Detail"
+    edit_collection_page_title: "Edit Collection"
+    upload_collection_photo: "Upload Photo" 
+    public_collection_description: "Public collections can be viewed by other users"
+    title_collection: "Collection Title"
+    collection_updated: "Collection Updated"
+    collection_not_updated: "Error Occured While Updating Collection"
   notifier:
       user_verification:
         subject: "Please verify your request for BHL Egypt"
