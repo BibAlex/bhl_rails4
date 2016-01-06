@@ -4,7 +4,8 @@ class Collection < ActiveRecord::Base
   has_many :collection_volumes, dependent: :destroy
   has_many :volumes, through: :collection_volumes #TODO I think this is wrong!! please check it!!
   has_many :activities, class_name: "Activity", as: :activitable, dependent: :destroy
-  
+  has_many :rates
+  has_many :comments, as: :commentable
   belongs_to :user
   
   validates :title, presence: true, length: { within: 4..25 }
