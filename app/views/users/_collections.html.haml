@@ -7,6 +7,7 @@
         = @total_number
     %hr
     -@collections.each do |item|
+      
       - if(item.photo_name.blank?)
         - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_collection')}"
       - else
@@ -36,7 +37,7 @@
               %small
                 = link_to I18n.t('common.details'), collection_path(id: item.id)
           - if item.rate != 0.0
-            .starsidelink{id: "starsidelink_#{item.id}", data: "#{item.rate}"}
+            .starsidelink_gray{id: "starsidelink_#{item.id}", data: "#{item.rate}"}
         .clearfix
         %hr
     %div
