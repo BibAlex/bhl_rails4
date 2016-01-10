@@ -235,7 +235,10 @@ en:
     comment_deleted: "Comment deleted"
     can_not_delete_comment: "You can't delete comment that has a reply"
     access_denied_error: "Access denied."
-
+    changes_saved: "Changes saved."
+    old_password_required: Please enter your old password
+    invalid_old_password: Invalid Old Password
+    
   header:
     search:
       option_tagged_species: Tagged Species

@@ -126,6 +126,36 @@ class UsersController < ApplicationController
        format.html { render partial: "users/get_user_profile_photo" }
      end
   end
+  
+  def edit
+    if authenticate_user(params[:id])
+      @page_title = I18n.t(:modify_profile)
+      @action = "modify"
+      @verify_captcha = false
+      @user = User.find_by_id(params[:id])
+      @user.email_confirmation = @user.email
+    end
+  end
+  
+  def update
+    
+  end
+  
+  def update
+    if authenticate_user(params[:id])
+      @user = User.find(params[:id])
+      user_attr = params[:user]
+      params[:user][:photo_name] = User.process_user_photo_name(user_attr[:photo_name])
+      
+      handle_change_password(user_attr)
+
+      if @user.update_attributes(User.user_params(user_attr))
+        handle_successful_update
+      else
+        handle_unsuccessful_update        
+      end
+    end
+  end
 
 
   private
@@ -234,4 +264,52 @@ class UsersController < ApplicationController
       end
     end
   end
+  
+  def handle_successful_update
+    log_out
+    log_in(@user) # to make sure everything is loaded properly
+    flash.now[:notice] = I18n.t("msgs.changes_saved")
+    flash.keep
+    return redirect_to controller: "users", action: "show", id: params[:id]
+  end
+  
+  def handle_unsuccessful_update    
+    flash.keep
+    params[:entered_password] = nil
+    params[:password_confirmation] = nil
+    @user.email_confirmation = @user.email
+    @action = "modify"
+    render action: "edit"
+    return
+  end
+  
+  def handle_change_password(user_attr)
+    if(!(user_attr[:entered_password].blank?) || !(user_attr[:password_confirmation].blank?))
+      if((user_attr[:old_password].nil?) || (user_attr[:old_password].blank?))
+        old_password_required
+      end
+    end
+
+    if(!(user_attr[:old_password].blank?))
+      if(!(User.authenticate(user_attr[:username],user_attr[:old_password])))
+        invalid_old_password
+        
+      end
+    end
+  end
+  
+  def old_password_required
+    flash.now[:error] = I18n.t("msgs.old_password_required")    
+  end
+  
+  def invalid_old_password
+    flash.now[:error] = I18n.t("msgs.invalid_old_password")
+    flash.keep
+    @action = "modify"
+    @user.email_confirmation = @user.email
+    params[:entered_password] = nil
+    params[:password_confirmation] = nil
+    render :action => :edit
+  end
+  
 end
