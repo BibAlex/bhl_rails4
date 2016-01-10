@@ -17,8 +17,8 @@ class Volume < ActiveRecord::Base
   
   def volume_views(page)
     offset = (page.to_i - 1)* LIMIT_CAROUSEL
-    Volume.find_by_sql("SELECT result.id, result.title FROM ((SELECT dest_book_id as id, dest_book_title as title FROM book_views WHERE source_book_id = #{self.job_id}) UNION 
-                        (SELECT source_book_id as id, source_book_title as title FROM book_views WHERE dest_book_id = #{self.job_id})) result LIMIT #{LIMIT_CAROUSEL} OFFSET #{offset}")
+    Volume.find_by_sql("SELECT result.id, result.title FROM ((SELECT book_views.dest_book_id as id, books.title as title FROM book_views,volumes,books WHERE book_views.dest_book_id = volumes.job_id and books.id = volumes.book_id and  book_views.source_book_id = #{self.job_id}) UNION 
+                        (SELECT book_views.source_book_id as id, books.title as title FROM book_views,volumes,books WHERE book_views.source_book_id = volumes.job_id and books.id = volumes.book_id and  book_views.dest_book_id = #{self.job_id})) result LIMIT #{LIMIT_CAROUSEL} OFFSET #{offset}")
   end
   
   def volume_views_count
