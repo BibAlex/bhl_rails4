@@ -4,7 +4,7 @@
   %li
     %i.fa.fa-li.fa-book
     %small
-      = link_to I18n.t('common.read'), { controller: 'books', id: id, tab: 'read' }
+      = link_to I18n.t('common.read'), book_path(id: id, tab: 'read')
   %li
     %i.fa.fa-li.fa-info
     %small
