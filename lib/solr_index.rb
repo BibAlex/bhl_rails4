@@ -15,7 +15,7 @@ module SOLR
           doc[:views] = UserVolumeHistory.where(volume_id: volume.job_id).sum('total_number_of_views')
           
           doc[:bib_id] = book.bib_id
-          doc[:title_sort] = book.title.split(",")[0]
+          doc[:title_sort] = book.title
           languages = []
           book.languages.select(:code).each do |language|
             if ["eng", "fre", "ara", "ger", "ita"].include?(language.code) 
@@ -26,8 +26,11 @@ module SOLR
           doc_languages = []
           languages.each do |language|
             doc_languages << language
-            doc["title_#{language[0..1]}"] = book.title.split(",") unless book.title.nil?
-            doc["publisher_#{language[0..1]}"] = book.publisher.split(",") unless book.publisher.nil?
+            book_titles = []
+            book_titles << book.title unless book.title.nil?
+            book_titles << book.title_alternative unless book.title_alternative.nil?
+            doc["title_#{language[0..1]}"] = book_titles
+            doc["publisher_#{language[0..1]}"] = [book.publisher] unless book.publisher.nil?
             doc["author_#{language[0..1]}"] = []
             book.authors.select(:name).each do |author|
               doc["author_#{language[0..1]}"] << author.name
