@@ -2,8 +2,8 @@ class UsersController < ApplicationController
 
   include UsersHelper
   include BHL::Login
-  
-  before_filter :redirect_to_user_show_if_logged_in, only: [:login]  
+
+  before_filter :redirect_to_user_show_if_logged_in, only: [:login]
   before_filter :load_user, only: [:show]
 
   def login
@@ -72,7 +72,7 @@ class UsersController < ApplicationController
       redirect_to({ controller: 'users', action: 'login'} , flash: { error: I18n.t('msgs.recaptcha_error') })
     else
       @user = User.authenticate(params[:user][:username], params[:user][:password])
-      if @user.nil?
+      if @user.nil? || !@user.active
         failed_validation
       else
        successful_validation
@@ -164,7 +164,13 @@ class UsersController < ApplicationController
 
   def failed_validation
     session[:login_attempts] = session[:login_attempts].to_i + 1
-    return redirect_to({ controller: 'users', action: 'login' }, flash: { error: I18n.t('msgs.sign_in_unsuccessful_error') })
+    error_msg = nil
+    unless @user.active
+      error_msg =  I18n.t('msgs.sign_in_inactive_user')
+    else
+      error_msg = I18n.t('msgs.sign_in_unsuccessful_error')
+    end
+    return redirect_to({ controller: 'users', action: 'login' }, flash: { error: error_msg })
   end
 
   def successful_validation
@@ -181,14 +187,14 @@ class UsersController < ApplicationController
     return redirect_to root_path , flash: {error: I18n.t('msgs.user_not_found')} unless @user
     @tab = params[:tab].nil? ? "profile" : params[:tab]
   end
-  
+
   def load_queries_tab
     if authenticate_user(params[:id])
       @page = params[:page] ? params[:page].to_i : 1
-      @queries = @user.queries.order("created_at DESC").paginate(page: @page, per_page:  PAGE_SIZE)           
+      @queries = @user.queries.order("created_at DESC").paginate(page: @page, per_page:  PAGE_SIZE)
     end
   end
-  
+
   def load_activity_tab
      @total_activities = Activity.where(user_id: params[:id]).count
      @page = params[:page] ? params[:page].to_i : 1
