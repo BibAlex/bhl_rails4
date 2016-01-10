@@ -106,12 +106,12 @@ module SolrHelper
   end
   
   def self.update_volume_views_in_solr(job_id)
-    # doc = solr_find_document("job_id:#{job_id}")
-    # doc[:views] = doc[:views] + 1
-    # solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
-    # solr.update data: solr.xml.add(doc)
-    # solr.commit
-    # solr.optimize
+    doc = solr_find_document("job_id:#{job_id}")
+    doc[:views] = doc[:views] + 1
+    solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
+    solr.update data: solr.xml.add(doc)
+    solr.commit
+    solr.optimize
   end
  end 
   
