@@ -245,8 +245,8 @@ en:
     no_volume_history_found: No history found...
     remove_book_from_history: "Are you sure you want to remove this book ?"
     access_denied_error: Access denied.
-    user_not_found: "User not found."
-
+    user_not_found: User not found.
+    sign_in_inactive_user: The user is not activated yet. Check your mail for activation instructions.
   header:
     search:
       option_tagged_species: Tagged Species
