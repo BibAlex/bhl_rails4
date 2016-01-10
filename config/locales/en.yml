@@ -21,7 +21,7 @@
 
 en:
   common:
-    entity_found_all: 
+    entity_found_all:
     all: All
     all_categories: All Categories
     login: Login
@@ -167,7 +167,7 @@ en:
     eol_pages_link: "http://www.eol.org/pages/"
     book_count:
       one: "one book"
-      other: "%{count} books"       
+      other: "%{count} books"
     author_count:
       one: "one Author"
       other: "%{count} Authors"
@@ -185,10 +185,10 @@ en:
       one: '%{count} star'
       other: '%{count} stars'
     actions:
-      create: Created
-      rate: Rated
-      comment: Commented on
-      reply: Replied to
+      create: created
+      rate: rated
+      comment: commented on
+      reply: replied to
     types:
       collection: a collection
       book: a book
@@ -201,10 +201,11 @@ en:
       views:
         one: "1 view"
         other: "%{count} views"
-     
-    
-    hidden_comment_msg: This comment was hidden as it may contains inappropriate content  
-     
+    most_viewed: Most Viewed
+    top_rated: Top Rated
+    top_collections: Top Collections
+    hidden_comment_msg: This comment was hidden as it may contains inappropriate content
+
   warn:
     empty_search_query_warn: "Search statement shouldn't be empty"
     invalid_input: Invalid Input
@@ -235,6 +236,16 @@ en:
     comment_deleted: "Comment deleted"
     can_not_delete_comment: "You can't delete comment that has a reply"
     access_denied_error: "Access denied."
+    contact_us_successful_feedback: Thank you for your message
+    contact_us_unsuccessful_feedback: An error occured while sending your message, please check try again
+    reset_password_failed: "Reset password failed"
+    reset_password_success: "Your password has been reset successfully"
+    recover_password_success: "Account recovery email has been sent with further instructions"
+    email_not_found: "A BHL account with that email address %{email} could not be found"
+    no_volume_history_found: No history found...
+    remove_book_from_history: "Are you sure you want to remove this book ?"
+    access_denied_error: Access denied.
+    user_not_found: "User not found."
 
   header:
     search:
@@ -260,20 +271,6 @@ en:
       species:
         one: "one Tagged Specie"
         other: "%{count} Tagged Species"
-
-    most_viewed: Most Viewed
-    top_rated: Top Rated
-    top_collections: Top Collections
-    contact_us_successful_feedback: Thank you for your message
-    contact_us_unsuccessful_feedback: An error occured while sending your message, please check try again
-    reset_password_failed: "Reset password failed"
-    reset_password_success: "Your password has been reset successfully"
-    recover_password_success: "Account recovery email has been sent with further instructions"
-    email_not_found: "A BHL account with that email address %{email} could not be found"
-    no_volume_history_found: No history found...
-    remove_book_from_history: "Are you sure you want to remove this book ?"
-    access_denied_error: Access denied.
-    user_not_found: "User not found."
 
   activerecord:
       attributes:
