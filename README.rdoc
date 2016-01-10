@@ -51,6 +51,7 @@ Things you need:
   10.  Prepare the environment
       sudo apt-get install libxslt-dev libxml2-dev
       apt-get install libmysqlclient-dev nodejs
+      sudo apt-get install imagemagick
 
   11. Download the code
       git clone https://github.com/BibAlex/bhl_rails4.git bhl_rails
