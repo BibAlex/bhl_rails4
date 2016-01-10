@@ -23,7 +23,6 @@ module SOLR
             end
           end
           languages << "ud" if languages.blank?
-          # languages = book.languages.select(:code)
           doc_languages = []
           languages.each do |language|
             doc_languages << language

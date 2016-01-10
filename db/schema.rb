@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151231085904) do
+ActiveRecord::Schema.define(version: 20160110075128) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -97,12 +97,10 @@ ActiveRecord::Schema.define(version: 20151231085904) do
   end
 
   create_table "book_views", force: :cascade do |t|
-    t.integer  "source_book_id",    limit: 4,    null: false
-    t.integer  "dest_book_id",      limit: 4,    null: false
-    t.string   "source_book_title", limit: 2000
-    t.string   "dest_book_title",   limit: 2000
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.integer  "source_book_id", limit: 4, null: false
+    t.integer  "dest_book_id",   limit: 4, null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "books", force: :cascade do |t|
