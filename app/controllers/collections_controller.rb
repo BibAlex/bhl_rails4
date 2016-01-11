@@ -36,6 +36,31 @@ class CollectionsController < ApplicationController
       @url_params = params.clone
     end
   end
+  
+  def edit
+    @page_title = I18n.t('collection.edit_collection_page_title')
+    @collection = Collection.find(params[:id])
+    authenticate_user(@collection.user_id)
+  end
+
+  def update
+    @collection = Collection.find(params[:id])
+    if authenticate_user(@collection.user_id) && request.env["HTTP_REFERER"].present? &&
+      request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
+      params[:collection][:photo_name] = Collection.process_collection_photo_name(params[:collection][:photo_name]) if !params[:collection][:photo_name].blank?
+      if @collection.update_attributes(Collection.collection_params(params[:collection]))
+        flash.now[:notice]=I18n.t('collection.collection_updated')
+        flash.keep
+        redirect_to controller: :collections, action: :show
+        return
+      else
+        flash.now[:error] = I18n.t('collection.collection_not_updated')
+        flash.keep
+        render action: :edit
+        return
+      end
+    end
+  end
 
   def move_up
     move_or_delete_book("up")
@@ -48,12 +73,13 @@ class CollectionsController < ApplicationController
   def delete_book
     move_or_delete_book("delete")
   end
-
+  
   def get_or_delete_collection_photo
     @collection = Collection.find(params[:id])
     if (is_logged_in_user?(@collection.user_id) && params[:is_delete].to_i == 1)
       @collection.update_attributes(photo_name: '')
-      delete_collection_photo(@collection)
+      @collection.delete_photo
+      @collection.reload
     end
     respond_to do |format|
       format.html {render :partial => "collections/get_collection_photo"}
@@ -95,10 +121,7 @@ class CollectionsController < ApplicationController
   end
 
   private
-  def delete_collection_photo(collection)
-    FileUtils.rm_rf "collections/#{collection.id}" if File.directory? "collections/#{collection.id}"
-  end
-
+ 
   def move_or_delete_book(decision)
     collection_volume = CollectionVolume.find(params[:collection_volume_id])
     collection = Collection.find(collection_volume.collection_id)

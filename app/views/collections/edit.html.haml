@@ -1,0 +1,43 @@
+= javascript_include_tag 'collections_functions.js'
+.row.clearfix
+  .col-md-9.column.col-xs-offset-1
+    %fieldset
+      %legend
+        = @page_title
+      .form-horizontal
+        = validation_errors_for(@collection)
+        = form_for @collection, url: collection_path, builder: FormHelper::BHLFormBuilder, html: {onsubmit: "return check_image_size();" } do |f|
+          .form-group
+            = f.label :title, raw(t('collection.title_collection')), class: 'col-sm-2 control-label'
+            .col-sm-10
+              = f.text_field :title, class: 'form-control'
+          .form-group
+            = f.label :description, raw(t('common.description')), class: 'col-sm-2 control-label'
+            .col-sm-10
+              = f.text_area :description, class: 'form-control', cols: "", rows: ""
+          .form-group
+            %label{class: 'col-sm-2 control-label'}
+              = I18n.t('collection.upload_collection_photo')
+            .col-sm-10
+              .invisible_error_msg#photo_size_error_message
+                = "#{I18n.t('msgs.upload_photo_max_size_error')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
+              .invisible_error_msg#photo_ext_error_message
+                = "#{I18n.t('msgs.upload_photo_ext_error')}"
+              = f.file_field :photo_name, {id: "photo_name", type: "file", class: "btn btn-default"}
+              %p.help-block #{I18n.t('warn.max_photo_size')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}
+          .form-group
+            .col-sm-offset-2.col-sm-10
+              %div
+                %span.checkbox.pull-left
+                  %label
+                    = f.check_box :is_public
+                    = I18n.t('common.public')
+                    %i.fa.fa-unlock
+                    %p.help-block #{I18n.t('collection.public_collection_description')}
+          .form-group
+            .col-sm-2
+            .col-sm-10
+              = f.submit I18n.t('collection.edit_collection'), class: "btn btn-default", id: "submit"
+              = f.submit I18n.t('common.clear'), class: "btn btn-default", type: "reset"
+
+     

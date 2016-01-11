@@ -74,9 +74,6 @@ BhlRails4::Application.routes.draw do
     get "names/show"
     get "names/get_content/:id" => "names#get_content"
     get "get_or_delete_collection_photo" => "collections#get_or_delete_collection_photo"
-    get "collections/move_up/:collection_volume_id" => "collections#move_up"
-    get "collections/move_down/:collection_volume_id" => "collections#move_down"
-    get "collections/delete_book/:collection_volume_id" => "collections#delete_book"
     get "/collectionautocomplete" => "collections#autocomplete"
     resources :books do
       collection do
@@ -125,6 +122,10 @@ BhlRails4::Application.routes.draw do
       collection do
         get 'add_book'
         get 'load'
+        get "/collections/:id/edit" => "collections#edit"
+        get "/collections/move_up/:collection_volume_id" => "collections#move_up"
+        get "/collections/move_down/:collection_volume_id" => "collections#move_down"
+        get "/collections/delete_book/:collection_volume_id" => "collections#delete_book"
       end
     end
     
