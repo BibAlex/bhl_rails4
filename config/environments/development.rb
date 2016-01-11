@@ -34,6 +34,7 @@ BhlRails4::Application.configure do
   SOLR_NAMES_FOUND = "http://localhost:8983/solr/names_found"
 
   config.action_mailer.delivery_method = :smtp
+  ActionMailer::Base.smtp_settings = { address: "172.16.0.6", port: 25, openssl_verify_mode: 'none' }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
 end
