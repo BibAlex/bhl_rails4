@@ -18,15 +18,19 @@ module BooksHelper
   # not updated: will be updated after finishing books search function
   def add_facet_search(params, type, field)
       tmp_params = params.clone
-      if tmp_params.has_key?("_#{type}".to_sym)
-        tmp_params["_#{type}".to_sym] = field + " _AND " + tmp_params["_#{type}".to_sym]
+      unless type =="sort_type"
+        if tmp_params.has_key?("_#{type}".to_sym)
+          tmp_params["_#{type}".to_sym] = field + " _AND " + tmp_params["_#{type}".to_sym]
+        else
+          tmp_params["_#{type}".to_sym] = field
+        end
+         tmp_params[:sort_type] = nil
       else
-        tmp_params["_#{type}".to_sym] = field
+        tmp_params[:sort_type] = field
       end
       tmp_params[:controller] = nil
       tmp_params[:action] = nil
       tmp_params[:page] = nil
-      tmp_params[:sort_type] = field if type =="sort_type"
       tmp_params[:locale] = nil
       tmp_params
   end
