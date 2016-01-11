@@ -23,8 +23,9 @@ LIMIT_CAROUSEL = 4
 MAX_NO_ABUSE = 1
 LIMIT_BOOK_COMMENTS = 4
 TAB_GALLERY_PAGE_SIZE = 9
+DEFAULT_HIERARCHY_ID = 3
 
-DAR_JAR_API_URL = ''
+DAR_JAR_API_URL = 'http://viewer.beta.bhl.bibalex.org/book_viewer/?locale=en&LocaleButtons=disabled&book_id=DAF-Job:[JOBID]'
 DAR_JAR_API_URL_STRING = '[JOBID]'
 DAR_JAR_API_URL_LANGUAGE = "[LANGUAGE]"
 DAR_API_METADATA = ''
@@ -37,8 +38,10 @@ DAR_API_THUMBNAIL_JOBID_STRING = '[JOBID]'
 DAR_API_CONTENT = ''
 DAR_API_CONTENT_JOBID_STRING = '[JOBID]'
 
+EOL_CONTENT_PATH = "http://content60.eol.org/content/"
+
 Recaptcha.configure do |config|
-  config.public_key  = ''
-  config.private_key = ''
+  config.public_key  = '6LdJKQYTAAAAAHCk2TryY75ghOVyMtTIYpmhkREq'
+  config.private_key = '6LdJKQYTAAAAADunqil2L2r1Gr4FEm1LtuZ_dlwb'
   #config.proxy = ''
 end

@@ -31,7 +31,7 @@ module HadoopHelper
       end
       
       
-      if valid_book
+      # if valid_book
               
         book = Book.find_or_create_by(bib_id: bib_id)
   
@@ -44,7 +44,7 @@ module HadoopHelper
           book.endnote = book_xml.xpath(".//EndNote").text
           book.mods = book_xml.xpath(".//mods").text               
   
-          if metadata_hash[:title_alternative].nil? &&  metadata_hash[:title].nil?
+          if metadata_hash[:title_alternative].blank? &&  metadata_hash[:title].blank?
             # this means that this book has failed
             book.book_status_id = BookStatus.pending_metadata.id
             book.save
@@ -59,12 +59,12 @@ module HadoopHelper
           end
           book.authors << metadata_hash[:authors]
           book.locations << metadata_hash[:locations]
-          # book.languages << metadata_hash[:languages]
-          metadata_hash[:languages].each do |language|
-            if ["eng", "fre", "ara", "ger", "ita"].include?(language.code) 
-              book.languages << language    
-            end
-          end
+          book.languages << metadata_hash[:languages]
+          # # metadata_hash[:languages].each do |language|
+            # # if ["eng", "fre", "ara", "ger", "ita"].include?(language.code) 
+              # # book.languages << language    
+            # # end
+          # end
           
           book.subjects << metadata_hash[:subjects]
   
@@ -73,7 +73,7 @@ module HadoopHelper
           end
           book.save
         end
-      end
+      # end
     end
     return true
   end

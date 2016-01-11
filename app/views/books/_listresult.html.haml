@@ -15,4 +15,4 @@
         = render partial: "books/book_names", locals: { sci_names: doc[:sci_names], id: doc[:job_id], 
                                                         sci_names_info: get_names_info(names), names: names, display_title: true }
   .col-xs-4.controls
-    =render partial: "books/sidelinks", locals: { id: doc[:job_id], rate: doc[:rate], views: doc[:views] }
+    = render partial: "books/sidelinks", locals: { id: doc[:job_id], rate: doc[:rate], views: doc[:views] }
