@@ -9,7 +9,7 @@
   </head>
   <body>    
     <p><%= @message.html_safe %></p>   
-    <p> <%= "#{I18n.t(:sent_by)}: #{@name}" %></p>
+    <p> <%= "#{I18n.t('common.sent')} #{I18n.t('common.by')}: #{@name}" %></p>
     <p> <%= @email %></p>    
   </body>
 </html>
