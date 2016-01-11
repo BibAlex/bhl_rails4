@@ -73,7 +73,7 @@ class UsersController < ApplicationController
     else
       @user = User.authenticate(params[:user][:username], params[:user][:password])
       if @user.nil? || !@user.active
-        failed_validation
+        failed_validation(@user.try(:active))
       else
        successful_validation
       end
@@ -162,10 +162,10 @@ class UsersController < ApplicationController
     redirect_to root_path, flash: { notice: I18n.t('msgs.account_activated', real_name: @user.real_name) }
   end
 
-  def failed_validation
+  def failed_validation(active_user)
     session[:login_attempts] = session[:login_attempts].to_i + 1
     error_msg = nil
-    unless @user.active
+    unless active_user
       error_msg =  I18n.t('msgs.sign_in_inactive_user')
     else
       error_msg = I18n.t('msgs.sign_in_unsuccessful_error')
