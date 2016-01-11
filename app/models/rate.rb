@@ -8,6 +8,8 @@ class Rate < ActiveRecord::Base
   validates :rateable_id, presence: true
   validates :rateable_type, presence: true
   
+  scope :user_collection_rates, ->(id) {where(rateable_type: "collection", user_id: id)}
+  
   def update_activity
     volume = Volume.find_by_job_id(self.rateable_id)
     collect = Collection.find_by_id(self.rateable_id)

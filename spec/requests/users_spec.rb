@@ -154,6 +154,89 @@ RSpec.describe "Users", type: :request do
       end      
     end
     
+    describe "collection tab" do
+      
+      before do
+        @owner_user = FactoryGirl.create(:user, active: true, username: "owneruser",
+         password: User.hash_password("owner_user_password"))
+        @other_user = FactoryGirl.create(:user, active: true, username: "otheruser",
+         password: User.hash_password("other_user_password"))
+        @owner_private_collection = FactoryGirl.create(:collection, user_id: @owner_user.id, is_public: false)
+        @owner_public_collection = FactoryGirl.create(:collection, user_id: @owner_user.id, is_public: true)
+        @other_private_collection = FactoryGirl.create(:collection, user_id: @other_user.id, is_public: false)
+        @other_public_collection = FactoryGirl.create(:collection, user_id: @other_user.id, is_public: true)
+        page.set_rack_session(user_id: @owner_user.id)
+      end
+      
+      it "should list current user's collections " do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("span[class='badge']", text: Collection.user_collections(@owner_user).size)
+      end
+
+      it "should list public collections of other user" do
+        visit user_path(id: @other_user.id, tab: "collections")
+        expect(page).to have_selector("span[class='badge']", text: Collection.public_user_collections(@other_user).size)
+      end
+
+      it "should have an open link for public collections of other user" do
+        visit user_path(id: @other_user.id, tab: "collections")
+        expect(page).to have_selector("a[href= '/en/collections/#{@other_public_collection.id}']", text: @other_public_collection.title)
+      end
+
+      it "should have an open link for each collection of my collections" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("a[href = '/en/collections/#{@owner_private_collection.id}']", text: @owner_private_collection.title)
+        expect(page).to have_selector("a[href = '/en/collections/#{@owner_public_collection.id}']", text: @owner_public_collection.title)
+      end
+      
+      it "should have an image for each collection" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("img[src = '/images_#{I18n.locale}/#{I18n.t('common.default_collection')}']")
+      end
+      
+      it "should have added on date in my collections" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector('small', text: @owner_private_collection.created_at)
+        expect(page).to have_selector('small', text: @owner_public_collection.created_at)
+      end
+      
+      it "should have delete link for the collections owned by the current user" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("a[href = '/en/collections/remove_collection?id=#{@owner_private_collection.id}&page=1&user_id=#{@owner_user.id}']")
+        expect(page).to have_selector("a[href = '/en/collections/remove_collection?id=#{@owner_public_collection.id}&page=1&user_id=#{@owner_user.id}']")
+      end
+      
+      it "should have added on date in other user collections" do
+        visit user_path(id: @other_user.id, tab: "collections")
+        expect(page).to have_selector('small', text: @other_public_collection.created_at)
+      end
+      
+      it "should detail link for each collection in my collections" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("a[href = '/en/collections/#{@owner_private_collection.id}']")
+        expect(page).to have_selector("a[href = '/en/collections/#{@owner_public_collection.id}']")
+      end
+       
+      it "should detail link for each collection in other user collections" do
+        visit user_path(id: @other_user.id, tab: "collections")
+        expect(page).to have_selector("a[href = '/en/collections/#{@other_public_collection.id}']")
+      end
+      
+      context "many collections" do
+        before do
+          20.times do
+            FactoryGirl.create(:collection, user_id: @other_user.id, is_public: true)
+          end
+        end
+        
+        it "should have pagination bar" do
+          visit user_path(id: @other_user.id, tab: "collections")
+          expect(page).to have_selector("div[class='pagination']")
+        end
+      end
+    end
+    
+    
     describe "activity_tab" do
         before do
            book = FactoryGirl.create(:book, title: "new_book")

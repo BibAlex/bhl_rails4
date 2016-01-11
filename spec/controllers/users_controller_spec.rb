@@ -1,5 +1,9 @@
 require 'rails_helper'
 include BHL::Login
+<<<<<<< HEAD
+=======
+
+>>>>>>> 74034c07c365af66aff84d974ba01582802f88b7
 RSpec.describe UsersController, type: :controller do
 
   describe "#new" do
@@ -212,6 +216,46 @@ RSpec.describe UsersController, type: :controller do
           expect(response).to redirect_to(user_path(id: another_user.id))
         end
       end
+    end
+    
+    context "collection tab" do
+      before do
+        @other_user = FactoryGirl.create(:user, active: true, username: "otheruser",
+         password: User.hash_password("other_user_password"))
+        @owner_private_collection = FactoryGirl.create(:collection, user_id: @owner_user.id, is_public: false)
+        @owner_public_collection = FactoryGirl.create(:collection, user_id: @owner_user.id, is_public: true)
+        @other_private_collection = FactoryGirl.create(:collection, user_id: @other_user.id, is_public: false)
+        @other_public_collection = FactoryGirl.create(:collection, user_id: @other_user.id, is_public: true)
+        log_in(@owner_user)
+      end
+      
+      context 'owner user' do
+        before do
+          get :show, { id: @owner_user.id, tab: "collections" }
+        end
+        
+        it 'loads successfully' do
+          expect(response).to have_http_status(:ok)
+        end
+        
+        it 'should have 2 collections' do
+          expect(assigns[:total_number]).to eq(2)
+        end
+      end
+     
+     context 'other user' do
+       before do
+         get :show, { id: @other_user.id, tab: "collections" }
+       end
+       
+       it 'loads successfully' do
+         expect(response).to have_http_status(:ok)
+       end
+       
+       it 'should have only 1 collection' do
+         expect(assigns[:total_number]).to eq(1)
+       end
+     end
     end
     
     describe "annotations tab" do
