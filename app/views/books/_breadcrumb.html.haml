@@ -14,36 +14,36 @@
   .savequery.pull-right
     - if(!(already_saved?(session[:user_id], query)))
       = button_tag I18n.t('common.save_query'), onclick: "save_query(\"#{query}\")", class: "btn btn-success btn-sm", id: "save_query"
-    = link_to I18n.t('common.clear') , { controller: 'books', action: 'index' }, class: "btn btn-warning btn-sm" 
+    = link_to I18n.t('common.clear') , { controller: 'books', action: 'index' }, class: "btn btn-warning btn-sm"
 
 .clearfix
 .col-md-7.sort.text-muted.pull-right
   .text-right
     %small
       = I18n.t('common.sort_by')
-      
-      = link_to "", books_path(sort_type: nil), class: "fa fa-check-square", style: "#{get_class_for_sort_option(params[:sort_type],'views')}"
-      = link_to "", books_path(sort_type: "views desc"), class: "fa fa-square-o", style: "#{get_class_for_active_sort_option(params[:sort_type],'views')};"
-      = link_to I18n.t('common.number_of_viewes'), books_path(sort_type: "views #{toggle_sort_option(params[:sort_type])}"), style: "color:#777777;"
-      = link_to "", books_path(sort_type: "views asc"), class: "fa fa-arrow-down", style: "#{get_class_for_sort_option(params[:sort_type],'views desc')};"
-      = link_to "", books_path(sort_type: "views desc"), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'views asc')};"
-      
+      -#debugger
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", nil)), class: "fa fa-check-square", style: "#{get_class_for_sort_option(params[:sort_type],'views')}"
+      = link_to "", books_path(params: add_facet_search(params,  "sort_type", "views desc")), class: "fa fa-square-o", style: "#{get_class_for_active_sort_option(params[:sort_type],'views')};"
+      = link_to I18n.t('common.number_of_viewes'), books_path(params: add_facet_search(params,  "sort_type", "views #{toggle_sort_option(params[:sort_type])}")), style: "color:#777777;"
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", "views asc")), class: "fa fa-arrow-down", style: "#{get_class_for_sort_option(params[:sort_type],'views desc')};"
+      = link_to "", books_path(params: add_facet_search(params, "sort_type",  "views desc")), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'views asc')};"
+
       %span |
-      
-      = link_to "", books_path(sort_type: nil), class: "fa fa-check-square", style: "#{get_class_for_sort_option(params[:sort_type],'rate')};"
-      = link_to "", books_path(sort_type: "rate desc"), class: "fa fa-square-o", style: "#{get_class_for_active_sort_option(params[:sort_type],'rate')};"
-      = link_to I18n.t('common.rate'), books_path(sort_type: "rate #{toggle_sort_option(params[:sort_type])}"), style: "color:#777777;"
-      = link_to "", books_path(sort_type: "rate asc"), class: "fa fa-arrow-down", style: "#{get_class_for_sort_option(params[:sort_type],'rate desc')};"
-      = link_to "", books_path(sort_type: "rate desc"), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'rate asc')};"      
-      
+
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", nil)), class: "fa fa-check-square", style: "#{get_class_for_sort_option(params[:sort_type],'rate')};"
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", "rate desc")), class: "fa fa-square-o", style: "#{get_class_for_active_sort_option(params[:sort_type],'rate')};"
+      = link_to I18n.t('common.rate'), books_path(params: add_facet_search(params, "sort_type", "rate #{toggle_sort_option(params[:sort_type])}")), style: "color:#777777;"
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", "rate asc")), class: "fa fa-arrow-down", style: "#{get_class_for_sort_option(params[:sort_type],'rate desc')};"
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", "rate desc")), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'rate asc')};"
+
       %span |
-      
-      = link_to "", books_path(sort_type: nil), class: "fa fa-check-square", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort')};"
-      = link_to "", books_path(sort_type: "title_sort desc"), class: "fa fa-square-o", style: "#{get_class_for_active_sort_option(params[:sort_type],'title_sort')};"
-      = link_to I18n.t('common.title'), books_path(sort_type: "title_sort #{toggle_sort_option(params[:sort_type])}"), style: "color:#777777;"
-      = link_to "", books_path(sort_type: "title_sort asc"), class: "fa fa-arrow-down", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort desc')};"
-      = link_to "", books_path(sort_type: "title_sort desc"), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort asc')};"
-      
+
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", nil)), class: "fa fa-check-square", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort')};"
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", "title_sort desc")), class: "fa fa-square-o", style: "#{get_class_for_active_sort_option(params[:sort_type],'title_sort')};"
+      = link_to I18n.t('common.title'), books_path(params: add_facet_search(params, "sort_type", "title_sort #{toggle_sort_option(params[:sort_type])}")), style: "color:#777777;"
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", "title_sort asc")), class: "fa fa-arrow-down", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort desc')};"
+      = link_to "", books_path(params: add_facet_search(params, "sort_type", "title_sort desc")), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'title_sort asc')};"
+
 %h4.text-muted.clearfix
   = "#{I18n.t('common.found')} #{I18n.t('common.book_count', count: @response[:total_number_of_volumes])}"
 %hr
