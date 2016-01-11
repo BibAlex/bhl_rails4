@@ -63,6 +63,7 @@ BhlRails4::Application.routes.draw do
     get "rating/rate/:value/:rateable_type/:user_id/:rateable_id" => "rating#rate"
     get "rating/detailed_rate/:rateable_id/:rateable_type" => "rating#detailed_rate"
     get "user_search_history/save_query"
+    get "user_search_history/delete_query"
     get "user_search_history/remove_book_history"
     get "carousel/index"
     get "carousel/get_carousel"
@@ -70,8 +71,10 @@ BhlRails4::Application.routes.draw do
     get "comments/get_comments"
     get "comments/mark"
     get "comments/delete"
+    get "names/show"
+    get "names/get_content/:id" => "names#get_content"
     get "get_or_delete_collection_photo" => "collections#get_or_delete_collection_photo"
-    
+    get "/collectionautocomplete" => "collections#autocomplete"
     resources :books do
       collection do
         get 'autocomplete'
@@ -109,9 +112,9 @@ BhlRails4::Application.routes.draw do
       end
     end    
 
-    resources :names
+    resources :names, only: [:index]
 
-    resources :geographics 
+    resources :geographics
     get "/geographics/show/:id" => "geographics#show"
     get "/geographics/index/:range" => "geographics#index"
 

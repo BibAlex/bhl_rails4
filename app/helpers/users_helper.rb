@@ -1,6 +1,6 @@
 module UsersHelper
   include ApplicationHelper
-  
+  include BooksHelper
   def is_logged_in?
     session[:user_id].nil? ? false : true
   end
@@ -25,5 +25,36 @@ module UsersHelper
     redirect_to login_users_path and return false unless is_logged_in?
     redirect_to user_path(id: params[:id]), flash: {error: I18n.t('msgs.access_denied_error')} and return false unless session[:user_id].to_i == user_id.to_i
     return true
+  end
+  
+   def parse_query(query_string)
+    parsed_query=''
+    sub_queries = query_string.split("&")
+    if sub_queries.nil?
+      parsed_query
+    else
+      sub_queries.each do |sub_query|
+        terms = sub_query.split("=")
+        if terms[1] != nil
+          parsed_query += "<b>#{I18n.t('common.'+ terms[0].tr("_",""))}</b>: #{terms[1]}<br/>"
+        end
+      end
+      parsed_query = parsed_query[0,parsed_query.length-5]
+    end
+   end
+   
+   def get_number_of_returned_books(query_string)
+    url_params = {}
+    sub_queries = query_string.split("&")
+    if sub_queries.any?
+      sub_queries.each do |sub_query|
+        terms = sub_query.split("=")
+        url_params [terms[0]] = terms[1]
+      end
+    end
+    query_array = fill_query_array(url_params)
+    query = set_query_string(query_array, "AND")
+    response = search_volumes(query, 1, PAGE_SIZE, '')
+    response[:total_number_of_volumes]
   end
 end

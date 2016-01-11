@@ -43,4 +43,11 @@ class Collection < ActiveRecord::Base
   def self.collection_params(params)
     params.permit(:title, :description, :is_public, :photo_name)
   end
+  
+   def delete_photo
+    photo_path = "public#{File.dirname(self.photo_name_url)}"
+    FileUtils.rm_rf photo_path if File.directory? photo_path
+    
+    # FileUtils.rm_rf "collections/#{collection.id}" if File.directory? "collections/#{collection.id}"
+  end
 end

@@ -1,14 +1,13 @@
+= javascript_include_tag 'collections_functions.js'
 = stylesheet_link_tag 'jquery/rating/jRating.jquery'
 = javascript_include_tag 'jquery/rating/jRating.jquery'
 = javascript_include_tag 'rating_functions'
 = javascript_include_tag 'jquery/jquery.tooltipster.min'
-= javascript_include_tag 'collections_functions.js'
 
 :javascript
   $(document).ready(function(){
     prepare_avg_rate();
   });
-:javascript
   get_or_delete_photo("#{@collection.id}", 0);
 
 .row.clearfix

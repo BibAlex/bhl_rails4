@@ -19,8 +19,10 @@ module SAMPLDATA
       10.times do |n|
         source_volume = Volume.includes(:book).find(n+1)
         dest_volume = Volume.includes(:book).find(rand(n+2..Volume.count))
-        BookView.create(source_book_id: source_volume.job_id, dest_book_id: dest_volume.job_id,
-                        source_book_title: source_volume.book.title.split(",")[0], dest_book_title: dest_volume.book.title.split(",")[0])
+        unless source_volume.book.title.nil? || dest_volume.book.title.nil?
+          BookView.create(source_book_id: source_volume.job_id, dest_book_id: dest_volume.job_id,
+                          source_book_title: source_volume.book.title.split(",")[0], dest_book_title: dest_volume.book.title.split(",")[0])
+        end
       end
       
       5.times do |n|

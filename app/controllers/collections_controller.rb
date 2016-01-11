@@ -2,8 +2,22 @@ class CollectionsController < ApplicationController
   include CollectionsHelper
   include BooksHelper
   before_filter :store_location, only: [:show]
+  before_filter :check_authentication, only: [:add_book]
+  
   def index
-
+    @page_title = I18n.t('collection.collection_title')
+    @page = params[:page] ? params[:page].to_i : 1
+    
+    sql_query = "is_public = true"
+    sql_query += " AND title LIKE '%#{params[:search]}%'" if !params[:search].blank?
+    @collections = Collection.where(sql_query).paginate(page: @page, per_page: PAGE_SIZE).order(params[:sort_type])
+    @collections_total_number = Collection.count(:all, conditions: sql_query)
+  end
+  
+  
+  def autocomplete
+    @results = Collection.where("title LIKE :title", { title: "#{params[:term]}%" }).group(:title).limit(10).map(&:title) # TODO put it in config
+    render json: @results
   end
 
   def show
@@ -38,10 +52,12 @@ class CollectionsController < ApplicationController
         flash.now[:notice]=I18n.t('collection.collection_updated')
         flash.keep
         redirect_to controller: :collections, action: :show
+        return
       else
         flash.now[:error] = I18n.t('collection.collection_not_updated')
         flash.keep
         render action: :edit
+        return
       end
     end
   end
@@ -62,7 +78,8 @@ class CollectionsController < ApplicationController
     @collection = Collection.find(params[:id])
     if (is_logged_in_user?(@collection.user_id) && params[:is_delete].to_i == 1)
       @collection.update_attributes(photo_name: '')
-      delete_collection_photo(@collection)
+      @collection.delete_photo
+      @collection.reload
     end
     respond_to do |format|
       format.html {render :partial => "collections/get_collection_photo"}
@@ -71,15 +88,20 @@ class CollectionsController < ApplicationController
 
   def add_book
     if params[:title]
-      col_id = Collection.create(title: params[:title], description: params[:description], is_public: params[:is_public], user_id: session[:user_id]).id
+      col = Collection.new(title: params[:title], description: params[:description], is_public: params[:is_public], user_id: session[:user_id])
+      if col.valid?
+        col.save
+        col_id = col.id
+      else        
+        flash[:notice] = col.errors.full_messages
+        respond_to do |format|
+          format.html { render partial: 'layouts/flash' }
+        end
+      end
     else
       col_id = params[:col_id]
     end
-    CollectionVolume.create(volume_id: params[:job_id], collection_id: col_id)
-    flash[:notice] = I18n.t('msgs.book_added_to_collection')
-    respond_to do |format|
-      format.html { render partial: 'layouts/flash' }
-    end
+    add_book_to_collection(params[:job_id], col_id) if col_id
   end
 
   def load
@@ -99,10 +121,7 @@ class CollectionsController < ApplicationController
   end
 
   private
-  def delete_collection_photo(collection)
-    FileUtils.rm_rf "collections/#{collection.id}" if File.directory? "collections/#{collection.id}"
-  end
-
+ 
   def move_or_delete_book(decision)
     collection_volume = CollectionVolume.find(params[:collection_volume_id])
     collection = Collection.find(collection_volume.collection_id)
@@ -122,6 +141,14 @@ class CollectionsController < ApplicationController
       else
         redirect_to controller: :collections, action: :index
       end
+    end
+  end
+  
+  def add_book_to_collection(job_id, col_id)    
+    CollectionVolume.create(volume_id: job_id, collection_id: col_id)
+    flash[:notice] = I18n.t('msgs.book_added_to_collection')
+    respond_to do |format|
+      format.html { render partial: 'layouts/flash' }
     end
   end
 end

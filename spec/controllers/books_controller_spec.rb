@@ -95,6 +95,8 @@ RSpec.describe BooksController, type: :controller do
     
     before(:all) do      
       
+      Language.create(code: 'eng', name: "english")
+      
       Rails.cache.clear
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
@@ -248,7 +250,7 @@ RSpec.describe BooksController, type: :controller do
   
   describe "show" do
     before(:all) do
-      @volume = Volume.first
+      @volume = FactoryGirl.create(:volume)
       Rails.cache.clear
     end
     it "returns a 200 ok status" do
@@ -264,8 +266,7 @@ RSpec.describe BooksController, type: :controller do
     describe "add_book_to_collection" do
       context "when user is logged in" do
         it "displays a link for add book to collection" do
-          FactoryGirl.create(:user, password: User.hash_password('add_book_to_password'), active: true) unless User.first
-          user = User.first
+          user = FactoryGirl.create(:user, password: User.hash_password('add_book_to_password'), active: true)
           log_out
           log_in(user)
           get :show, { id: @volume.id }
