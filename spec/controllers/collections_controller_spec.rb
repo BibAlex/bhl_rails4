@@ -103,6 +103,57 @@ RSpec.describe CollectionsController, type: :controller do
     end
   end
   
+   describe "remove collection" do
+     before do
+       @user_private_collection = FactoryGirl.create(:collection, user_id: @logged_in_user.id, is_public: false)
+       @user_public_collection = FactoryGirl.create(:collection, user_id: @logged_in_user.id, is_public: true)
+       @collection_with_comments = FactoryGirl.create(:collection, user_id: @logged_in_user.id, is_public: false)
+     end
+     
+     context "collection owner user" do
+       before do
+         log_in(@logged_in_user)
+       end
+       
+       it "should remove my private collection" do
+        request.env["HTTP_REFERER"] = "/users/#{@logged_in_user.id}/collections"
+        expect(lambda do
+          get :remove_collection, id: @user_private_collection
+          expect(response).to redirect_to("/users/#{@logged_in_user.id}/collections")
+        end).to change(Collection, :count).by(-1)
+      end
+
+      it "should remove my public collection" do
+        request.env["HTTP_REFERER"] = "/users/#{@logged_in_user.id}/collections"
+        expect(lambda do
+          get :remove_collection, id: @user_public_collection
+          expect(response).to redirect_to("/users/#{@logged_in_user.id}/collections")
+        end).to change(Collection, :count).by(-1)
+      end
+     end
+     
+     context "not collection owner user" do
+       
+      it "should not destroy a collection if the user not signed in" do
+        request.env["HTTP_REFERER"] = "/users/#{@logged_in_user.id}/collections"
+        expect(lambda do
+          get :remove_collection, id: @private_collection
+          expect(response).to redirect_to("/users/login")
+        end).not_to change(Collection, :count)
+      end
+      
+       it "should not destroy a collection owned by another user" do
+        log_in(@user)
+        request.env["HTTP_REFERER"] = "/collections"
+        expect(lambda do
+          get :remove_collection, id: @private_collection
+          expect(response).to redirect_to("/en/collections")
+        end).not_to change(Collection, :count)
+      end
+      
+     end
+    end
+  
   describe "show collection" do
     
     describe "show collection's info" do
