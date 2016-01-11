@@ -128,6 +128,7 @@ ar:
     species_details: تفاصيل الأنواع 
     rates: "معدل"
     eol_pages_link: "http://www.eol.org/pages/"
+    sent: "مرسل"
     name_found_in_books:
       zero:  "لا توجد كتب تحتوى على هذا الاسم"
       one:   "موجود في كتاب واحد"
