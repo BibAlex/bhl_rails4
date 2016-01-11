@@ -38,7 +38,8 @@ DAR_API_THUMBNAIL_JOBID_STRING = '[JOBID]'
 DAR_API_CONTENT = ''
 DAR_API_CONTENT_JOBID_STRING = '[JOBID]'
 
-EOL_CONTENT_PATH = "http://content60.eol.org/content/"
+# old path: content60.eol.org/content
+EOL_CONTENT_PATH = "http://media.eol.org/content/"
 
 Recaptcha.configure do |config|
   config.public_key  = '6LdJKQYTAAAAAHCk2TryY75ghOVyMtTIYpmhkREq'
