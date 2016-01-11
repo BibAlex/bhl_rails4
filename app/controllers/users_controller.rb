@@ -129,7 +129,7 @@ class UsersController < ApplicationController
   
   def edit
     if authenticate_user(params[:id])
-      @page_title = I18n.t(:modify_profile)
+      @page_title = I18n.t('common.modify_profile')
       @action = "modify"
       @verify_captcha = false
       @user = User.find_by_id(params[:id])
@@ -138,21 +138,17 @@ class UsersController < ApplicationController
   end
   
   def update
-    
-  end
-  
-  def update
     if authenticate_user(params[:id])
       @user = User.find(params[:id])
       user_attr = params[:user]
       params[:user][:photo_name] = User.process_user_photo_name(user_attr[:photo_name])
       
-      handle_change_password(user_attr)
-
-      if @user.update_attributes(User.user_params(user_attr))
-        handle_successful_update
-      else
-        handle_unsuccessful_update        
+      if handle_change_password(user_attr)
+        if @user.update_attributes(User.user_params(user_attr))
+          handle_successful_update
+        else
+          handle_unsuccessful_update        
+        end
       end
     end
   end
@@ -273,7 +269,7 @@ class UsersController < ApplicationController
     return redirect_to controller: "users", action: "show", id: params[:id]
   end
   
-  def handle_unsuccessful_update    
+  def handle_unsuccessful_update  
     flash.keep
     params[:entered_password] = nil
     params[:password_confirmation] = nil
@@ -285,21 +281,19 @@ class UsersController < ApplicationController
   
   def handle_change_password(user_attr)
     if(!(user_attr[:entered_password].blank?) || !(user_attr[:password_confirmation].blank?))
-      if((user_attr[:old_password].nil?) || (user_attr[:old_password].blank?))
-        old_password_required
-      end
+        return old_password_required if user_attr[:old_password].blank?
     end
 
     if(!(user_attr[:old_password].blank?))
-      if(!(User.authenticate(user_attr[:username],user_attr[:old_password])))
-        invalid_old_password
-        
-      end
+      return invalid_old_password if(!User.authenticate(user_attr[:username],user_attr[:old_password]))
     end
+    return true
   end
   
   def old_password_required
-    flash.now[:error] = I18n.t("msgs.old_password_required")    
+    flash.now[:error] = I18n.t("msgs.old_password_required")
+    render action: "edit"
+    return false   
   end
   
   def invalid_old_password
@@ -309,7 +303,8 @@ class UsersController < ApplicationController
     @user.email_confirmation = @user.email
     params[:entered_password] = nil
     params[:password_confirmation] = nil
-    render :action => :edit
+    render action: "edit"
+    return false
   end
   
 end
