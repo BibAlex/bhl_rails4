@@ -73,7 +73,7 @@ class UsersController < ApplicationController
     else
       @user = User.authenticate(params[:user][:username], params[:user][:password])
       if @user.nil? || !@user.active
-        failed_validation
+        failed_validation(@user.try(:active))
       else
        successful_validation
       end
@@ -143,18 +143,18 @@ class UsersController < ApplicationController
   end
 
   def send_registration_confirmation_email
-    url = "#{request.host}/users/activate/#{@user.guid}/#{@user.verification_code}"
-    # Notifier.user_verification(@user, url).deliver_now
+    url = "#{request.host}:#{request.port}/users/activate/#{@user.guid}/#{@user.verification_code}"
+    Notifier.user_verification(@user, url).deliver_now
   end
 
   def send_reset_password_email
-    url = "#{request.host}/users/reset_password/#{@user.guid}/#{@user.verification_code}"
-    #Notifier.user_verification(@user, url).deliver_now
+    url = "#{request.host}:#{request.port}/users/reset_password/#{@user.guid}/#{@user.verification_code}"
+    Notifier.user_reset_password_verification(@user, url).deliver_now
   end
 
   def activate_user
     @user.activate
-    # Notifier.user_activated(@user).deliver_now
+    Notifier.user_activated(@user).deliver_now
     if is_logged_in?
       log_out
       log_in(@user) # to make sure everything is loaded properly
@@ -162,10 +162,10 @@ class UsersController < ApplicationController
     redirect_to root_path, flash: { notice: I18n.t('msgs.account_activated', real_name: @user.real_name) }
   end
 
-  def failed_validation
+  def failed_validation(active_user)
     session[:login_attempts] = session[:login_attempts].to_i + 1
     error_msg = nil
-    unless @user.active
+    unless active_user
       error_msg =  I18n.t('msgs.sign_in_inactive_user')
     else
       error_msg = I18n.t('msgs.sign_in_unsuccessful_error')

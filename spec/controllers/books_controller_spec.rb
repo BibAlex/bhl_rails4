@@ -251,6 +251,11 @@ RSpec.describe BooksController, type: :controller do
   describe "show" do
     before(:all) do
       @volume = FactoryGirl.create(:volume)
+      solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
+      solr_books_core.delete_by_query('*:*')
+      solr_books_core.commit
+      solr_books_core.add({ job_id: @volume.id, views: 0, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1" })
+      solr_books_core.commit
       Rails.cache.clear
     end
     it "returns a 200 ok status" do
