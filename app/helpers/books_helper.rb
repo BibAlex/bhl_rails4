@@ -19,7 +19,7 @@ module BooksHelper
   def add_facet_search(params, type, field)
       tmp_params = params.clone
       if tmp_params.has_key?("_#{type}".to_sym)
-        tmp_params["_#{type}".to_sym] = field + " _AND " + tmp_params["_#{type}".to_sym]
+        tmp_params["_#{type}".to_sym] = field + " _OR " + tmp_params["_#{type}".to_sym]
       else
         tmp_params["_#{type}".to_sym] = field
       end
@@ -84,7 +84,7 @@ module BooksHelper
     query_array = { 'all' => [], 'title'=> [], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> [],
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query_array.each do  |key, value|
-      query_array[key] = search_params["_#{key}"] ? search_params["_#{key}"].split(' _AND ') : []
+      query_array[key] = search_params["_#{key}"] ? search_params["_#{key}"].split(' _OR ') : []
     end
     query_array
   end
@@ -126,7 +126,11 @@ module BooksHelper
     unless multilingual_attributes_and_values.empty?
       multilingual_attributes_and_values.each do |key, value_arr|
         field_query = '('
-        values = "\"" + value_arr.join(" AND ") + "\""
+        tmp_array = []
+        value_arr.each do |item|
+          tmp_array << "\"" + item + "\""
+        end
+        values = "(" + tmp_array.join(" OR ") + ")"
         languages.each do |language|
           field_query += field_query == '(' ? "#{key}_#{languages.first.code[0..1]}:#{values}" : " OR #{key}_#{languages.first.code[0..1]}:#{values}"
         end
@@ -137,11 +141,11 @@ module BooksHelper
 
     normal_attributes_and_values.each do |key, value_arr|
        field_query = '('
-       if key == "job_id"
-         values = "\"" + value_arr.join(" OR ") + "\""
-       else
-         values = "\"" + value_arr.join(" AND ") + "\""
+       tmp_array = []
+       value_arr.each do |item|
+         tmp_array << "\"" + item + "\""
        end
+       values = "(" + tmp_array.join(" OR ") + ")"
        field_query = "(" + "#{key}:#{values}" + ")"
        normal_query += normal_query == '' ? field_query : " #{query_join_operator} #{field_query}"
     end
