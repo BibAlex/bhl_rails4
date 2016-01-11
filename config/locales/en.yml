@@ -158,6 +158,9 @@ en:
     volume_history_viewed_on: "On:"
     select_species_for_details: Select species on the left to view the details
     species_details: Species Details
+    most_viewed: Most Viewed
+    top_rated: Top Rated
+    top_collections: Top Collections
     name_found_in_books:
       zero:  "No Books Found"
       one:   "Found in one book"
@@ -249,6 +252,15 @@ en:
     sign_in_inactive_user: The user is not activated yet. Check your mail for activation instructions.
     no_collections_found: No collections found...
     no_volume_history_found: No history found...
+    contact_us_successful_feedback: Thank you for your message
+    contact_us_unsuccessful_feedback: An error occured while sending your message, please check try again
+    reset_password_failed: "Reset password failed"
+    reset_password_success: "Your password has been reset successfully"
+    recover_password_success: "Account recovery email has been sent with further instructions"
+    email_not_found: "A BHL account with that email address %{email} could not be found"
+    remove_book_from_history: "Are you sure you want to remove this book ?"
+    access_denied_error: Access denied.
+    user_not_found: "User not found."
 
   header:
     search:
@@ -275,22 +287,6 @@ en:
         one: "one Tagged Specie"
         other: "%{count} Tagged Species"
 
-<<<<<<< HEAD
-=======
-    most_viewed: Most Viewed
-    top_rated: Top Rated
-    top_collections: Top Collections
-    contact_us_successful_feedback: Thank you for your message
-    contact_us_unsuccessful_feedback: An error occured while sending your message, please check try again
-    reset_password_failed: "Reset password failed"
-    reset_password_success: "Your password has been reset successfully"
-    recover_password_success: "Account recovery email has been sent with further instructions"
-    email_not_found: "A BHL account with that email address %{email} could not be found"
-    remove_book_from_history: "Are you sure you want to remove this book ?"
-    access_denied_error: Access denied.
-    user_not_found: "User not found."
-
->>>>>>> 74034c07c365af66aff84d974ba01582802f88b7
   activerecord:
       attributes:
         user:
