@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   
   @email_format_re = /\A(?:[_\+a-z0-9-]+)(\.[_\+a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})\z/i
   
-  attr_accessor :entered_password, :entered_password_confirmation, :email_confirmation
+  attr_accessor :entered_password, :entered_password_confirmation, :email_confirmation, :old_password
   
   validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 4, maximum: 16 }
   validates :entered_password, presence: true, confirmation: true, length: { minimum: 4, maximum: 16 }, if: :password_validation_required?
