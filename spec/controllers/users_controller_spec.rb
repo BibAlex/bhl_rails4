@@ -536,7 +536,7 @@ end
       
       it "displays a flash message for unsuccessful login" do
         post :validate, { user: { username: "invalid_username", password: "invalid_password" } }
-        expect(flash[:error]).to eq(I18n.t('msgs.sign_in_unsuccessful_error'))
+        expect(flash[:error]).to eq(I18n.t('msgs.sign_in_inactive_user'))
       end            
     end    
   end
