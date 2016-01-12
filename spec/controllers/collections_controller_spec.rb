@@ -103,6 +103,57 @@ RSpec.describe CollectionsController, type: :controller do
     end
   end
   
+   describe "remove collection" do
+     before do
+       @user_private_collection = FactoryGirl.create(:collection, user_id: @logged_in_user.id, is_public: false)
+       @user_public_collection = FactoryGirl.create(:collection, user_id: @logged_in_user.id, is_public: true)
+       @collection_with_comments = FactoryGirl.create(:collection, user_id: @logged_in_user.id, is_public: false)
+     end
+     
+     context "collection owner user" do
+       before do
+         log_in(@logged_in_user)
+       end
+       
+       it "should remove my private collection" do
+        request.env["HTTP_REFERER"] = "/users/#{@logged_in_user.id}/collections"
+        expect(lambda do
+          get :remove_collection, id: @user_private_collection
+          expect(response).to redirect_to("/users/#{@logged_in_user.id}/collections")
+        end).to change(Collection, :count).by(-1)
+      end
+
+      it "should remove my public collection" do
+        request.env["HTTP_REFERER"] = "/users/#{@logged_in_user.id}/collections"
+        expect(lambda do
+          get :remove_collection, id: @user_public_collection
+          expect(response).to redirect_to("/users/#{@logged_in_user.id}/collections")
+        end).to change(Collection, :count).by(-1)
+      end
+     end
+     
+     context "not collection owner user" do
+       
+      it "should not destroy a collection if the user not signed in" do
+        request.env["HTTP_REFERER"] = "/users/#{@logged_in_user.id}/collections"
+        expect(lambda do
+          get :remove_collection, id: @private_collection
+          expect(response).to redirect_to("/users/login")
+        end).not_to change(Collection, :count)
+      end
+      
+       it "should not destroy a collection owned by another user" do
+        log_in(@user)
+        request.env["HTTP_REFERER"] = "/collections"
+        expect(lambda do
+          get :remove_collection, id: @private_collection
+          expect(response).to redirect_to("/en/collections")
+        end).not_to change(Collection, :count)
+      end
+      
+     end
+    end
+  
   describe "show collection" do
     
     describe "show collection's info" do
@@ -121,7 +172,7 @@ RSpec.describe CollectionsController, type: :controller do
         it "should display edit collection link for collection owned by current user" do
           log_in(@logged_in_user)
           get :show, id: @private_collection.id
-          expect(response.body).to have_selector("a[href='/#{I18n.locale}/collections/#{@private_collection.id}/edit']")
+          expect(response.body).to have_selector "a", text: I18n.t('collection.edit_collection')
         end
       end
       
@@ -249,6 +300,62 @@ RSpec.describe CollectionsController, type: :controller do
         get :show, id: @public_collection.id
         expect(response.body).to have_content "#{I18n.t('common.reviews')}"
       end
+    end
+  end
+
+  describe "edit collection" do
+
+    it "should have an option to edit collection title" do
+      log_in(@logged_in_user)
+      get :edit, id: @private_collection
+      expect(response.body).to have_selector 'label', text: I18n.t('collection.title_collection')
+    end
+
+    it "should have an option to edit collection description" do
+      log_in(@logged_in_user)
+      get :edit, id: @private_collection
+      expect(response.body).to have_selector 'label', text: I18n.t('common.description')
+    end
+
+    it "should have an option to edit collection visibility" do
+      log_in(@logged_in_user)
+      get :edit, id: @private_collection
+      expect(response.body).to have_content I18n.t('common.public')
+    end
+
+    it "should have an option to upload an image for a collection" do
+      log_in(@logged_in_user)
+      get :edit, id: @private_collection
+      expect(response.body).to have_content I18n.t('collection.upload_collection_photo')
+    end
+    
+    it "should not edit collection with invalid parameters" do
+      attr = {user_id: @user.id, title: "", description: "", is_public: false}
+      log_in(@logged_in_user)
+      request.env["HTTP_REFERER"] = "/collections/#{@private_collection.id}/edit"
+      post :update, id: @private_collection, collection: attr
+      expect(response.body).to render_template('edit')
+    end
+    
+    it "should edit collection with valid parameters" do
+      attr = {user_id: @user.id, title: "my private collection", description: "description", is_public: false}
+      log_in(@logged_in_user)
+      request.env["HTTP_REFERER"] = "/collections/#{@private_collection.id}/edit"
+      post :update, id: @private_collection, collection: attr
+      expect(response.body).to redirect_to("/en/collections/#{@private_collection.id}")
+    end
+    
+    it "uploads custom user photo" do
+      log_in(@logged_in_user)
+      request.env["HTTP_REFERER"] = "/collections/#{@private_collection.id}/edit"
+      file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
+        filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
+      attr = {user_id: @logged_in_user.id, title: "collection", description: "description",
+        is_public: false, photo_name: file}
+      post :update, id: @private_collection.id, collection: attr
+      expect(File.exist?("#{Rails.root}/public/avatar_#{Rails.env}/collections/#{@private_collection.id}")).to eq(true)
+      file_path = "#{Rails.root}/public/avatar_#{Rails.env}/collections/#{@private_collection.id}"
+      FileUtils.rm_rf(file_path) if File.exist?(file_path)
     end
   end
 end

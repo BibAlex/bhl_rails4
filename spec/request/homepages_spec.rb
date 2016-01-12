@@ -136,7 +136,10 @@ RSpec.describe "Homepages", type: :feature do
       
       BhlStatistic.create(books_count: 2, authors_count: 2, species_count: 2)
       
-      @user = User.first
+      # User.create(name: "kokoelsayed", )
+      @user = User.create(username: "kokowawa",
+                    password: 'password', email: "koko_wawa@lolo.com",
+                    real_name: "koko wawa toto", active: true)#User.first
       @collection = FactoryGirl.create(:collection, user: @user, title: "new_collection", is_public: true, rate: 5)
       FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
                                     action: "rate", user_id: @user.id, value: 5, created_at: Time.now + 2)
@@ -149,8 +152,9 @@ RSpec.describe "Homepages", type: :feature do
     end
     
     describe "statistics" do
-      it "displays a link for books page with total number of books in BHL" do          
-        expect(page).to have_selector("a[href='/#{I18n.locale}/books']", text: I18n.t('common.book_count', count: 2))
+      it "displays a link for books page with total number of books in BHL" do
+        # debugger     
+        expect(page).to have_selector("h4[class='alert alert-success']", text: I18n.t('common.book_count', count: 2))
       end
       
       it "displays the total number of authors in BHL" do          
@@ -158,7 +162,7 @@ RSpec.describe "Homepages", type: :feature do
       end
       
       it "displays a link for species page with total number of species in BHL" do          
-        expect(page).to have_selector("a[href='/#{I18n.locale}/names']", text: I18n.t('common.tagged_species', count: 2))
+        expect(page).to have_selector("h4[class='alert alert-info']", text: I18n.t('common.tagged_species', count: 2))
       end
     end
     
@@ -210,7 +214,7 @@ RSpec.describe "Homepages", type: :feature do
         end
         
         it "display a link for volume read page" do
-          expect(page).to have_selector("a[href='/#{I18n.locale}/books?id=2&tab=read']", text: I18n.t('common.read'))
+          expect(page).to have_selector("a[href='/#{I18n.locale}/books/2?tab=read']", text: I18n.t('common.read'))
         end
         
         it "display a link for volume details page" do

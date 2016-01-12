@@ -154,6 +154,89 @@ RSpec.describe "Users", type: :request do
       end      
     end
     
+    describe "collection tab" do
+      
+      before do
+        @owner_user = FactoryGirl.create(:user, active: true, username: "owneruser",
+         password: User.hash_password("owner_user_password"))
+        @other_user = FactoryGirl.create(:user, active: true, username: "otheruser",
+         password: User.hash_password("other_user_password"))
+        @owner_private_collection = FactoryGirl.create(:collection, user_id: @owner_user.id, is_public: false)
+        @owner_public_collection = FactoryGirl.create(:collection, user_id: @owner_user.id, is_public: true)
+        @other_private_collection = FactoryGirl.create(:collection, user_id: @other_user.id, is_public: false)
+        @other_public_collection = FactoryGirl.create(:collection, user_id: @other_user.id, is_public: true)
+        page.set_rack_session(user_id: @owner_user.id)
+      end
+      
+      it "should list current user's collections " do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("span[class='badge']", text: Collection.user_collections(@owner_user).size)
+      end
+
+      it "should list public collections of other user" do
+        visit user_path(id: @other_user.id, tab: "collections")
+        expect(page).to have_selector("span[class='badge']", text: Collection.public_user_collections(@other_user).size)
+      end
+
+      it "should have an open link for public collections of other user" do
+        visit user_path(id: @other_user.id, tab: "collections")
+        expect(page).to have_selector("a[href= '/en/collections/#{@other_public_collection.id}']", text: @other_public_collection.title)
+      end
+
+      it "should have an open link for each collection of my collections" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("a[href = '/en/collections/#{@owner_private_collection.id}']", text: @owner_private_collection.title)
+        expect(page).to have_selector("a[href = '/en/collections/#{@owner_public_collection.id}']", text: @owner_public_collection.title)
+      end
+      
+      it "should have an image for each collection" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("img[src = '/images_#{I18n.locale}/#{I18n.t('common.default_collection')}']")
+      end
+      
+      it "should have added on date in my collections" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector('small', text: @owner_private_collection.created_at)
+        expect(page).to have_selector('small', text: @owner_public_collection.created_at)
+      end
+      
+      it "should have delete link for the collections owned by the current user" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("a[href = '/en/collections/remove_collection?id=#{@owner_private_collection.id}&page=1&user_id=#{@owner_user.id}']")
+        expect(page).to have_selector("a[href = '/en/collections/remove_collection?id=#{@owner_public_collection.id}&page=1&user_id=#{@owner_user.id}']")
+      end
+      
+      it "should have added on date in other user collections" do
+        visit user_path(id: @other_user.id, tab: "collections")
+        expect(page).to have_selector('small', text: @other_public_collection.created_at)
+      end
+      
+      it "should detail link for each collection in my collections" do
+        visit user_path(id: @owner_user.id, tab: "collections")
+        expect(page).to have_selector("a[href = '/en/collections/#{@owner_private_collection.id}']")
+        expect(page).to have_selector("a[href = '/en/collections/#{@owner_public_collection.id}']")
+      end
+       
+      it "should detail link for each collection in other user collections" do
+        visit user_path(id: @other_user.id, tab: "collections")
+        expect(page).to have_selector("a[href = '/en/collections/#{@other_public_collection.id}']")
+      end
+      
+      context "many collections" do
+        before do
+          20.times do
+            FactoryGirl.create(:collection, user_id: @other_user.id, is_public: true)
+          end
+        end
+        
+        it "should have pagination bar" do
+          visit user_path(id: @other_user.id, tab: "collections")
+          expect(page).to have_selector("div[class='pagination']")
+        end
+      end
+    end
+    
+    
     describe "activity_tab" do
         before do
            book = FactoryGirl.create(:book, title: "new_book")
@@ -428,5 +511,63 @@ RSpec.describe "Users", type: :request do
       end
     end
   end 
+
+  describe "edit" do
+    let(:user) {FactoryGirl.create(:user)}
+    
+    before do
+       page.set_rack_session(user_id: user.id)
+      visit edit_user_path(locale: I18n.locale, id: user.id) 
+    end
+    
+    describe "edit user form" do
+      
+      it "displays username field" do
+        expect(page).to have_selector("label", text: I18n.t('common.username'))
+        expect(page).to have_field("username")
+      end
+      it "displays change password link" do
+         expect(page).to have_selector("a[id='change_password']")
+      end
+      
+      it "displays email field" do
+        expect(page).to have_selector("label", text: I18n.t('common.email'))
+        expect(page).to have_field("user_email")
+      end
+      
+      it "displays email confirmation field" do
+        expect(page).to have_selector("label", text: I18n.t('common.email_confirmation'))
+        expect(page).to have_field("user_email_confirmation")
+      end
+      
+      it "displays real name field" do
+        expect(page).to have_selector("label", text: I18n.t('common.real_name'))
+        expect(page).to have_field("user_real_name")
+      end
+      
+      it "displays upload photo field" do
+        expect(page).to have_selector("label", text: I18n.t('common.upload_photo'))
+        expect(page).to have_field("photo_name")
+      end
+      
+      describe "change password link" do
+          before do
+            find("#change_password").click
+          end
+          it "displays old password field", js: true do
+            expect(page).to have_selector("label", text: I18n.t('common.old_password'))
+            expect(page).to have_field("user_old_password")
+          end
+          it "displays new password field" , js: true do
+            expect(page).to have_selector("label", text: I18n.t('common.new_password'))
+            expect(page).to have_field("user_entered_password")
+          end
+          it "displays new password confirmation field", js: true do
+            expect(page).to have_selector("label", text: I18n.t('common.new_password_confirmation'))
+            expect(page).to have_field("user_entered_password_confirmation")
+          end
+      end
+    end  
+  end
 end
 

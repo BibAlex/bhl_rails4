@@ -26,6 +26,7 @@ en:
     all_categories: All Categories
     login: Login
     profile: Profile
+    modify_profile: Modify profile
     by: By
     filter_by: "Filter By:"
     separator: "/"
@@ -66,7 +67,7 @@ en:
     signup: Sign up
     modify_profile: Modify profile
     reset: Reset
-    mb: megabytes
+    mb: megabyte
     dear_msg: "Dear %{name},"
     email_signature_1: "Regards,"
     email_signature_2: "BHL Team"
@@ -77,6 +78,9 @@ en:
     email_confirmation: Email confirmation
     upload_photo: Upload photo
     forgot_password_link: Forgot your password?
+    old_password: Old password
+    new_password: New password
+    new_password_confirmation: New password confirmation
     not_member: Not a member?
     annotations: Annotations
     queries: Queries
@@ -158,6 +162,9 @@ en:
     volume_history_viewed_on: "On:"
     select_species_for_details: Select species on the left to view the details
     species_details: Species Details
+    most_viewed: Most Viewed
+    top_rated: Top Rated
+    top_collections: Top Collections
     sent: Sent
     name_found_in_books:
       zero:  "No Books Found"
@@ -248,6 +255,21 @@ en:
     access_denied_error: Access denied.
     user_not_found: User not found.
     sign_in_inactive_user: The user is not activated yet. Check your mail for activation instructions.
+    no_collections_found: No collections found...
+    no_volume_history_found: No history found...
+    contact_us_successful_feedback: Thank you for your message
+    contact_us_unsuccessful_feedback: An error occured while sending your message, please check try again
+    reset_password_failed: "Reset password failed"
+    reset_password_success: "Your password has been reset successfully"
+    recover_password_success: "Account recovery email has been sent with further instructions"
+    email_not_found: "A BHL account with that email address %{email} could not be found"
+    remove_book_from_history: "Are you sure you want to remove this book ?"
+    access_denied_error: Access denied.
+    user_not_found: "User not found."
+    changes_saved: "Changes saved."
+    old_password_required: Please enter your old password
+    invalid_old_password: Invalid Old Password
+    
   header:
     search:
       option_tagged_species: Tagged Species
@@ -339,6 +361,14 @@ en:
     sidelinks_add_collection: "Add to Collection"
     collection_volume_deleted: "Book is successfuly removed from your collection."
     show_collection_detail: "Collection Detail"
+    remove_collection: "Are you sure you want to delete this collection?"
+    collection_removed: Collection has been removed
+    edit_collection_page_title: "Edit Collection"
+    upload_collection_photo: "Upload Photo" 
+    public_collection_description: "Public collections can be viewed by other users"
+    title_collection: "Collection Title"
+    collection_updated: "Collection Updated"
+    collection_not_updated: "Error Occured While Updating Collection"
     collection_title: "Collections"
     empty_search_query_warn: "Search statement shouldn't be empty"
     invalid_input: "Invalid input!"
@@ -351,6 +381,7 @@ en:
       one:   "Found in one collection"
       other: "Found in %{count} collections"
     collections_found_all: "Found %{count} collections"
+
   notifier:
       user_verification:
         subject: "Please verify your request for BHL Egypt"
