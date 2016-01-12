@@ -511,5 +511,63 @@ RSpec.describe "Users", type: :request do
       end
     end
   end 
+
+  describe "edit" do
+    let(:user) {FactoryGirl.create(:user)}
+    
+    before do
+       page.set_rack_session(user_id: user.id)
+      visit edit_user_path(locale: I18n.locale, id: user.id) 
+    end
+    
+    describe "edit user form" do
+      
+      it "displays username field" do
+        expect(page).to have_selector("label", text: I18n.t('common.username'))
+        expect(page).to have_field("username")
+      end
+      it "displays change password link" do
+         expect(page).to have_selector("a[id='change_password']")
+      end
+      
+      it "displays email field" do
+        expect(page).to have_selector("label", text: I18n.t('common.email'))
+        expect(page).to have_field("user_email")
+      end
+      
+      it "displays email confirmation field" do
+        expect(page).to have_selector("label", text: I18n.t('common.email_confirmation'))
+        expect(page).to have_field("user_email_confirmation")
+      end
+      
+      it "displays real name field" do
+        expect(page).to have_selector("label", text: I18n.t('common.real_name'))
+        expect(page).to have_field("user_real_name")
+      end
+      
+      it "displays upload photo field" do
+        expect(page).to have_selector("label", text: I18n.t('common.upload_photo'))
+        expect(page).to have_field("photo_name")
+      end
+      
+      describe "change password link" do
+          before do
+            find("#change_password").click
+          end
+          it "displays old password field", js: true do
+            expect(page).to have_selector("label", text: I18n.t('common.old_password'))
+            expect(page).to have_field("user_old_password")
+          end
+          it "displays new password field" , js: true do
+            expect(page).to have_selector("label", text: I18n.t('common.new_password'))
+            expect(page).to have_field("user_entered_password")
+          end
+          it "displays new password confirmation field", js: true do
+            expect(page).to have_selector("label", text: I18n.t('common.new_password_confirmation'))
+            expect(page).to have_field("user_entered_password_confirmation")
+          end
+      end
+    end  
+  end
 end
 

@@ -194,6 +194,9 @@ ar:
     contact_us_successful_feedback: "نشكرك على رسالتك"
     contact_us_unsuccessful_feedback: "لقد حدث خطأ اثناء إرسال رسالتك من فضلك حاول مرة اخرى"
     no_collections_found: "لا توجد مجموعات"
+    changes_saved: "تم تخزين التغيرات"
+    old_password_required: يرجى إعادة إدخال كلمة المرور القديمة
+    invalid_old_password: اسم مرور قديم غير صحيح
 
   activerecord:
     attributes:
