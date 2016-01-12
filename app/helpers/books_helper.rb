@@ -190,10 +190,10 @@ module BooksHelper
 
   def remove_bread_crumb(params, type, field)
     tmp_params = params.clone
-    if (tmp_params["_#{type}".to_sym].include?("#{field} _AND "))
-      tmp_params["_#{type}".to_sym] = tmp_params["_#{type}".to_sym].gsub("#{field} _AND ", '')
-    elsif (tmp_params["_#{type}".to_sym].include?(" _AND #{field}"))
-      tmp_params["_#{type}".to_sym] = tmp_params["_#{type}".to_sym].gsub(" _AND #{field}", '')
+    if (tmp_params["_#{type}".to_sym].include?("#{field} _OR "))
+      tmp_params["_#{type}".to_sym] = tmp_params["_#{type}".to_sym].gsub("#{field} _OR ", '')
+    elsif (tmp_params["_#{type}".to_sym].include?(" _OR #{field}"))
+      tmp_params["_#{type}".to_sym] = tmp_params["_#{type}".to_sym].gsub(" _OR #{field}", '')
     elsif (tmp_params["_#{type}".to_sym] == field)
       tmp_params.delete("_#{type}".to_sym)
     end
