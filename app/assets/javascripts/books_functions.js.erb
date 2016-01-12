@@ -16,7 +16,6 @@ function searchfnc(search_select, field){
     var url_parts = window.location.href.split('?');
     var path = url_parts[0];
     var type = search_select.options[search_select.selectedIndex].value;
-    if(path == window.location.protocol + "//" + window.location.host + "/books"){
       if(typeof url_parts[1] === 'undefined')
        {
          searchquery = "_" + type + "=" + field;
@@ -30,22 +29,17 @@ function searchfnc(search_select, field){
       		var search_tokens = params[i].split('=');
       		if(search_tokens[0] === "_" + type)
       		{
-      			params[i] = search_tokens[0] + "=" + search_tokens[1] + " _AND " + field;
+      			params[i] = search_tokens[0] + "=" + search_tokens[1] + " _OR " + field;
       			field_found = true;  			
       		}
-      		searchquery += params[i] + "&_";
-      		i++;      			
+      		searchquery += params[i] + "&";
+      		 			
       	}
-      	searchquery = searchquery.substring(0, searchquery.length - 2);
+      	searchquery = searchquery.substring(0, searchquery.length - 1);
       	if(field_found === false)
       		searchquery += "&_" + type + "=" + field;      	 
       }
-      window.location = path + "?" + searchquery;
-    }
-    else{
-      searchquery = "_" + type + "=" + field;
       window.location = window.location.protocol + "//" + window.location.host + "/books" + "?" + searchquery;
-    }
   }
   
 function autocomplete()
