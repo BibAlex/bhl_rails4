@@ -9,6 +9,7 @@ class Comment < ActiveRecord::Base
   
   has_many :activities, class_name: "Activity", as: :activitable, dependent: :destroy
   
+  scope :collection_comments, ->{where(commentable_type: "collection")}
   validates :text, presence: true
   validates :commentable_id, presence: true
   before_save :sanitize_html

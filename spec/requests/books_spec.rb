@@ -86,7 +86,7 @@ RSpec.describe "Books", type: :request do
       
       it "display a link for volume read page" do
         visit books_path(locale: I18n.locale)
-        expect(page).to have_selector("a[href='/#{I18n.locale}/books?id=2&tab=read']", text: I18n.t('common.sidelinks.read'))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/books/2?tab=read']", text: I18n.t('common.sidelinks.read'))
       end
       
       it "display a link for volume details page" do

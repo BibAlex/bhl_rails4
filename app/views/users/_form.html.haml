@@ -9,7 +9,7 @@
         = user_form_params[:page_title]
       .form-horizontal
         = validation_errors_for(user)
-        = form_for user, builder: FormHelper::BHLFormBuilder ,html: { onsubmit: "return check_image_size();" } do |f|
+        = form_for user, url: { action: action }, builder: FormHelper::BHLFormBuilder ,html: { onsubmit: "return check_image_size();" } do |f|
           .form-group
             = f.label I18n.t('common.username'), class: 'col-sm-2 control-label'
             .col-sm-10

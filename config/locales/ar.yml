@@ -193,6 +193,10 @@ ar:
     can_not_delete_comment: "لا يمكنك حذف التعليق الذي له رد"
     contact_us_successful_feedback: "نشكرك على رسالتك"
     contact_us_unsuccessful_feedback: "لقد حدث خطأ اثناء إرسال رسالتك من فضلك حاول مرة اخرى"
+    no_collections_found: "لا توجد مجموعات"
+    changes_saved: "تم تخزين التغيرات"
+    old_password_required: يرجى إعادة إدخال كلمة المرور القديمة
+    invalid_old_password: اسم مرور قديم غير صحيح
 
   activerecord:
     attributes:
@@ -244,7 +248,12 @@ ar:
         wrong_type: "يوجد خطأ في النوع"
       full_messages:
         format: "%{خاصية} %{رسالة}"
-
+        
+  collection:
+    col_book_added_on: "تمت الاضافة في"
+    remove_collection: "هل تريد فعلاً حذف هذه المجموعة؟"
+    collection_removed: تم حذف المجموعة
+    
   notifier:
     user_verification:
       subject: " برجاء التحقق من طلبك ل BHLمصر "
