@@ -353,7 +353,7 @@ RSpec.describe UsersController, type: :controller do
   end
 end  
   
-  
+ 
 
   describe "#logout" do     
       
@@ -539,6 +539,164 @@ end
         expect(flash[:error]).to eq(I18n.t('msgs.sign_in_inactive_user'))
       end            
     end    
+  end
+  
+  describe "#edit" do
+    let(:owner_user) {FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org", 
+                          username: "owner_user", password: User.hash_password("owner_user_password"))}
+    let(:other_user) {FactoryGirl.create(:user, active: true, email: "other_user@bibalex.org", 
+                          username: "other_user", password: User.hash_password("other_user_password"))}   
+       
+    it "redirects to login if user not logged in" do
+      get 'edit', id: owner_user.id
+      expect(response).to redirect_to(login_users_path)
+    end 
+    
+    context "other user" do
+      before do
+        session[:user_id] = owner_user.id
+        get 'edit', id: other_user.id
+      end
+      
+      it"redirects to other user profile page" do
+        expect(response).to redirect_to(user_path)
+      end
+      it "displays access denied msg" do
+        expect(flash[:error]).to eq(I18n.t 'msgs.access_denied_error')
+      end
+    end 
+    
+    context "owner user" do
+       before do
+        session[:user_id] = owner_user.id
+        get 'edit', id: owner_user.id
+       end
+       
+       it "renders edit form" do
+         expect(response).to render_template(:edit)
+       end 
+       
+       it "has no error msgs" do
+         expect(flash[:error]).to be_blank
+       end    
+    end                 
+  end
+
+  describe "#update" do
+    
+      context "owner user" do
+         let(:owner_user) {FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org", 
+                          username: "owner_user", password: User.hash_password("owner_user_password"))}
+          
+         it "can upload valid photo" do
+             user_before_update = owner_user
+             log_in(owner_user)
+             file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
+                                                      filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
+             put :update, id: owner_user.id, test: true, user: {id: owner_user.id, 
+                                                                  username: user_before_update.username,
+                                                                  email: user_before_update.email,
+                                                                  email_confirmation: user_before_update.email,
+                                                                  entered_password: nil,
+                                                                  entered_password_confirmation: nil,
+                                                                  real_name: user_before_update.real_name + "updated",
+                                                                  photo_name: file}
+            owner_user.reload
+            pic = owner_user.photo_name 
+            expect(File.exist?("#{Rails.root}/public/avatar_#{Rails.env}/users/#{owner_user.id}")).to eq(true)
+            file_path = "#{Rails.root}/public/avatar_#{Rails.env}/users/#{owner_user.id}"
+            FileUtils.rm_rf(file_path) if File.exist?(file_path)
+         end
+         it "does not upload pictures with invalid extensions " do
+            user_before_update = owner_user
+            log_in(owner_user)
+            file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/rails_helper.rb")),
+                                                      filename: File.basename(File.new(Rails.root.join("spec/rails_helper.rb"))))
+            put :update, id: owner_user.id, test: true, user: {id: owner_user.id, 
+                                                                  username: user_before_update.username,
+                                                                  email: user_before_update.email,
+                                                                  email_confirmation: user_before_update.email,
+                                                                  entered_password: nil,
+                                                                  entered_password_confirmation: nil,
+                                                                  real_name: user_before_update.real_name + "updated",
+                                                                  photo_name: file}
+            owner_user.reload
+            pic = owner_user.photo_name 
+            expect(File.exist?("#{Rails.root}/public/users/#{owner_user.id}/rails_helper")).to eq(false)
+            file_path = "#{Rails.root}/public/users/#{owner_user.id}/rails_helper"
+            FileUtils.rm_rf(file_path) if File.exist?(file_path)
+         end              
+         it 'accepts modifications even if the password is empty' do
+            user_before_update = owner_user
+           
+            log_in(owner_user)
+            put :update, id: owner_user.id , user: {id: owner_user.id, username: user_before_update.username,
+                                                    email: user_before_update.email,
+                                                    email_confirmation: user_before_update.email,
+                                                    entered_password: nil,
+                                                    entered_password_confirmation: nil,
+                                                    real_name: user_before_update.real_name + "updated"}
+            expect(response).to redirect_to user_path
+            expect(flash[:error]).to be_blank
+            expect(flash[:notice]).not_to be_blank
+           
+            owner_user.reload
+      
+            expect(owner_user.username).to eq(user_before_update.username)
+            expect(owner_user.password).to eq(user_before_update.password)
+            expect(owner_user.email).to eq(user_before_update.email)
+            expect(owner_user.real_name).to eq(user_before_update.real_name)
+            expect(session[:real_name]).to eq(owner_user.real_name)
+         end
+         it 'rejects modifications and renders edit for invalid old password' do
+            log_in(owner_user)
+            put :update, id: owner_user.id , user: {id: owner_user.id, username: owner_user.username,
+                                                    email: owner_user.email,
+                                                    email_confirmation: owner_user.email,
+                                                    old_password: "wrong_pass",
+                                                    entered_password: "123",
+                                                    entered_password_confirmation: "123",
+                                                    real_name: owner_user.real_name}
+            expect(response).to render_template(:edit)
+            expect(flash[:error]).to eq(I18n.t('msgs.invalid_old_password'))
+         end
+         it 'rejects modifications and renders edit without entering old password' do
+            log_in(owner_user)
+            put :update, id: owner_user.id , user: {id: owner_user.id, username: owner_user.username,
+                                                    email: owner_user.email,
+                                                    email_confirmation: owner_user.email,
+                                                    old_password: nil,
+                                                    entered_password: "123",
+                                                    entered_password_confirmation: "123",
+                                                    real_name: owner_user.real_name}
+            expect(response).to render_template(:edit)
+            expect(flash[:error]).to eq(I18n.t('msgs.old_password_required'))
+         end                    
+      end
+      
+      context "other user" do
+         let(:owner_user) {FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org", 
+                          username: "owner_user", password: User.hash_password("owner_user_password"))}
+         let(:other_user) {FactoryGirl.create(:user, active: true, email: "other_user@bibalex.org", 
+                          username: "other_user", password: User.hash_password("other_user_password"))}
+                          
+         it 'redirects to login page if user not logged in' do
+            put :update, id: owner_user.id 
+            expect(response).to redirect_to(login_users_path)
+         end
+         it 'redirects to other user profile page' do
+            log_in(owner_user)
+            put :update, id: other_user.id 
+            expect(response).to redirect_to(user_path)
+         end
+         it "displays access denied msg" do
+            log_in(owner_user)
+            put :update, id: other_user.id 
+            expect(flash[:error]).to eq(I18n.t 'msgs.access_denied_error')
+         end      
+      end
+      
+         
   end
 end  
 
