@@ -122,14 +122,11 @@ BhlRails4::Application.routes.draw do
       collection do
         get 'add_book'
         get 'load'
-<<<<<<< HEAD
         get 'remove_collection'
-=======
         get "/collections/:id/edit" => "collections#edit"
         get "/collections/move_up/:collection_volume_id" => "collections#move_up"
         get "/collections/move_down/:collection_volume_id" => "collections#move_down"
         get "/collections/delete_book/:collection_volume_id" => "collections#delete_book"
->>>>>>> ad3dc34ecacec941700ad7a7f07d0af389e5d85e
       end
     end
     
