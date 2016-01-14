@@ -19,6 +19,7 @@ ar:
     no_activities: "لا توجد أنشطة .."
     no_books_found: لا يوجد كتب...
     no_comments_found: لا توجد مراجعات ..
+    no_queries_found: لا توجد استعلامات ..
     default_collection: "default_collection.png"
     default_user_small: "default_user_small.png"
     default_user: "default_user.png"
@@ -39,7 +40,7 @@ ar:
     send: "إرسال"
     clear: "مسح"
     recaptcha: "السؤال الأمنى"
-    ba_home_page_link: "http://www.bibalex.org/Home/Default_EN.aspx"
+    ba_link: "http://www.bibalex.org/Home/Default_EN.aspx"
     ba_name: "مكتبة الإسكندرية"
     signup: "تسجيل"
     modify_profile: "تغيير بيانات الملف الشخصى"
@@ -54,7 +55,10 @@ ar:
     password_confirmation: "تأكيد اسم المرور"
     email_confirmation: "تأكيد بريد إلكتروني"
     upload_photo: "تحميل الصور"
-    forgot_password: "هل نسيت كلمة المرور؟"
+    forgot_password_link: "هل نسيت كلمة المرور؟"
+    old_password: اسم مرور قديم
+    new_password: اسم مرور جديد
+    new_password_confirmation: تأكيد بريد إلكتروني جديد
     not_member: لست عضوًا؟
     annotations: "الملاحظات"
     queries: "الاستعلامات التي تم حفظها"
@@ -68,6 +72,7 @@ ar:
     book: "كتاب"
     number_of_viewes: عدد المشاهدات
     entity_saved: "%{entity} تم حفظ"
+    entity_deleted: "%{entity} تم مسح"
     search_query: "جملة البحث"
     subject: "النوع"
     language: "لغة"
@@ -83,6 +88,7 @@ ar:
     publisher_facet: "الناشر"
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
+    found: موجود
     tools: الأدوات
     avg_rating: المعدل المتوسط
     your_rating: المعدل الخاص بك
@@ -124,6 +130,12 @@ ar:
     most_viewed: "الأكثر مشاهدة"
     top_rated: "الأعلى تقديرًا"
     top_collections: "المجموعات الأهم"
+    forgot_password: "هل نسيت كلمة المرور؟"
+    change_password: تغيير اسم المرور
+    reset_password: "إعادة تعيين كلمة المرور"
+    forget_password_page_header: "أدخل عنوان البريد الإلكتروني المرتبط بحساب BHL الخاص بك"
+    volume_history_page_header: "الكتب التى تم تصفحها مؤخرا"
+    volume_history_viewed_on: "في:"
     select_species_for_details: اختر الأنواع الموجودة إلى اليمين لمشاهدة التفاصيل 
     species_details: تفاصيل الأنواع 
     rates: "معدل"
@@ -146,7 +158,7 @@ ar:
       one: "مشاهدة واحدة"
       two: "مشاهدتين"
       other: " %{count} مشاهدات "
-    book_details_collection_count:
+    book_collections_count:
       one:   "مجموعة"
       two: "مجموعتين"
       other: "مجموعات"
@@ -180,7 +192,16 @@ ar:
     upload_photo_ext_error: (jpg, jpeg, png, gif, bmp)امتدادات الملفات المسموح بها
     empty_user_name_error: لا يمكن ترك اسم المستخدم خاليًا
     empty_password_error: لا يمكن ترك كلمة المرور خالية
+    empty_password_confirmation_error: يجب عليك تأكيد كلمة المرور
+    empty_email_error: يجب إدخال البريد الإلكترونى
+    access_denied_error: "غير مسموح بالدخول"
     empty_verfication_error: يرجى ملء هذا الحقل
+    reset_password_failed: "تعيين كلمة المرور فشلت عملية إعادة"
+    reset_password_success: "تمت إعادة تعيين كلمة المرور بنجاح"
+    recover_password_success: "لقد تم إرسال رسالة استعادة كلمة المرور على بريدك الإلكترونى "
+    email_not_found: لا يوجد حساب على BHL Egypt لهذا البريد الإلكترونى %{email}
+    no_volume_history_found:  لا يوجد تاريخ سابق ..
+    remove_book_from_history: "هل تريد فعلاً إزالة هذا الكتاب؟" 
     recaptcha_error: "يوجد خطأ تحقق من الصحة في عنصر التأكد من تسجيل الدخول"
     sign_in_unsuccessful_error: "فشل تسجيل الدخول. اسم مستخدم غير سليم أو كلمة مرور غير سليمة"
     sign_in_successful_notice: "تسجيل دخول ناجح"
@@ -193,11 +214,16 @@ ar:
     can_not_delete_comment: "لا يمكنك حذف التعليق الذي له رد"
     contact_us_successful_feedback: "نشكرك على رسالتك"
     contact_us_unsuccessful_feedback: "لقد حدث خطأ اثناء إرسال رسالتك من فضلك حاول مرة اخرى"
+    sign_in_inactive_user: "لم يتم تفعيل الحساب الخاص بك حتى الان من فضلك راجع بريدك الإلكترونى"
+    user_not_found:  هذا المستخدم غير موجود بالنظام
     no_collections_found: "لا توجد مجموعات"
     changes_saved: "تم تخزين التغيرات"
     old_password_required: يرجى إعادة إدخال كلمة المرور القديمة
     invalid_old_password: اسم مرور قديم غير صحيح
-
+    delete_saved_query_confirm: هل ترغب فعلاً في حذف هذا الاستعلام؟
+    book_removed: "تمت إزالة الكتاب"
+    hidden_comment_msg: تم إخفاء التعليق لأنه قد يحتوي على محتوى غير ملائم
+    
   activerecord:
     attributes:
       user:
@@ -281,3 +307,9 @@ ar:
     map_pin_orange: "map_pin_orange.png"
     map_pin_red: "map_pin_red.png"
     map_pin_yellow: "map_pin_yellow.png"
+    
+  annotations:
+    no_annotations_found: "لا توجد ملاحظات .."
+    title: الملاحظات
+    note: محتوى الملاحظة
+    highlight: العناوين الرئيسية

@@ -7,7 +7,7 @@
 .media
   %div.text-dimmed{ style: get_class_for_abuse(comment.number_of_marks), id: "abuse#{comment.id}" }
     %small
-      %p #{I18n.t('common.hidden_comment_msg')}
+      %p #{I18n.t('msgs.hidden_comment_msg')}
     %a.btn.btn-link.btn-xs{ onclick: "open_comment('#{comment.id}')" } 
       = I18n.t('common.show') 
 %div.media{ style: get_class_for_comment(comment.number_of_marks), id: "comment#{comment.id}" }
@@ -39,7 +39,7 @@
         .well-sm.small
           %div.text-dimmed{ style: get_class_for_abuse(reply.number_of_marks), id: "abuse#{reply.id}" }
             %small
-              %p #{I18n.t('common.hidden_comment_msg')}
+              %p #{I18n.t('msgs.hidden_comment_msg')}
             %a.btn.btn-link.btn-xs{ onclick: "open_comment('#{reply.id}')" }
               = I18n.t('common.show') 
           %div{ style: get_class_for_comment(reply.number_of_marks), id: "comment#{reply.id}" }

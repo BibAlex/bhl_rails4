@@ -23,7 +23,7 @@ class UserSearchHistoryController < ApplicationController
     user_id = params[:user_id].to_i
     if authenticate_user(user_id)
       UserVolumeHistory.destroy(params[:user_volume_history_id])
-      redirect_to user_path(id: user_id, tab: "history", page: params[:page]), flash: { notice: I18n.t('common.book_removed') }
+      redirect_to user_path(id: user_id, tab: "history", page: params[:page]), flash: { notice: I18n.t('msgs.book_removed') }
     end
   end 
   
