@@ -279,6 +279,37 @@ ar:
         format: "%{خاصية} %{رسالة}"
         
   collection:
+    delete_collection_photo_confirm: هل تريد فعلاً حذف صورة المجموعة؟ 
+    delete_photo_flash: تم حذف الصورة 
+    edit_collection: تعديل
+    remove_book_from_collection_confirm: هل تريد فعلاً حذف هذا الكتاب؟
+    col_book_order: "ترتيب الكتب"
+    col_book_move_up: تحرك إلى الأعلى
+    col_book_move_down: تحرك إلى الأسفل
+    col_book_trash: سلة المهملات
+    book_details_read: اقرأ
+    book_details_details: تفاصيل
+    sidelinks_add_collection: أضف إلى المجموعة
+    collection_volume_deleted: تم حذف الكتاب بنجاح
+    show_collection_detail: تفاصيل المجموعة
+    edit_collection_page_title: تعديل المجموعة
+    upload_collection_photo: تحميل الصور 
+    public_collection_description: مجموعة عامة متاحة للآخرين
+    title_collection: "اسم المجموعة"
+    collection_updated: تم تحديث المجموعة
+    collection_not_updated: حدث خطأ أثناء تحديث المجموعة
+    collection_title: مجموعات
+    empty_search_query_warn: "يجب عليك إدخال جملة البحث"
+    invalid_input: "جملة غير صالحة للبحث"
+    collections_books_number_tip: عدد الكتب في الداخل
+    collection_by: "بواسطة:"
+    no_collections_found: لا توجد مجموعات ..
+    collection_creation_date: "تم الإنشاء في:"
+    collections_found:
+      zero:  ""
+      one:   "موجود في مجموعة واحدة"
+      other: "من المجموعات %{count}في  موجود"
+    collections_found_all: "المجموعات الموجودة %{count}"
     col_book_added_on: "تمت الاضافة في"
     remove_collection: "هل تريد فعلاً حذف هذه المجموعة؟"
     collection_removed: تم حذف المجموعة
