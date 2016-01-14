@@ -163,6 +163,9 @@ en:
     top_rated: Top Rated
     top_collections: Top Collections
     sent: Sent
+    find_in_book: Find in the book
+    view_in_eol: View in EOL.org
+    books_with_name: Books with name
     name_found_in_books:
       zero:  "No Books Found"
       one:   "Found in one book"
