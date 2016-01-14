@@ -169,7 +169,7 @@ RSpec.describe "Books", type: :request do
     
     it "display species of volume" do
       visit book_path(id: 1)
-      expect(page).to have_selector("dt", text: I18n.t('header.search.option_tagged_species'))
+      expect(page).to have_selector("dt", text: I18n.t('common.tagged_species'))
       expect(page).to have_selector("dd") do |div|
         expect(page).to have_selector("a", text: "sci_name_1")
       end      

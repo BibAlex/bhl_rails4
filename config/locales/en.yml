@@ -21,7 +21,6 @@
 
 en:
   common:
-    entity_found_all:
     all: All
     all_categories: All Categories
     login: Login
@@ -97,8 +96,7 @@ en:
     book: Book
     number_of_viewes: Number of views
     entity_saved: "%{entity} Saved"
-    entity_deleted: "%{entity} Deleted"
-    delete_saved_query_confirm: "Are you sure you want to delete this query ?"
+    entity_deleted: "%{entity} Deleted"    
     search_query: Search Query
     subject: Genre
     language: Language
@@ -139,8 +137,7 @@ en:
     regional_affiliation: Regional Affiliation
     content: Content
     about_us: About Us
-    contact_us: Contact Us
-    book_removed: Book has been removed
+    contact_us: Contact Us    
     browse_all: Browse All
     geographics: Geographics
     signout: Sign Out
@@ -202,17 +199,10 @@ en:
       book: a book
       comment: a comment
       volume: a volume
-    sidelinks:
-      read: Read
-      detail: Details
-      add_collection: Add to Collection
-      views:
-        one: "1 view"
-        other: "%{count} views"
     most_viewed: Most Viewed
     top_rated: Top Rated
     top_collections: Top Collections
-    hidden_comment_msg: This comment was hidden as it may contains inappropriate content
+    
 
   warn:
     empty_search_query_warn: "Search statement shouldn't be empty"
@@ -252,11 +242,9 @@ en:
     email_not_found: "A BHL account with that email address %{email} could not be found"
     no_volume_history_found: No history found...
     remove_book_from_history: "Are you sure you want to remove this book ?"
-    access_denied_error: Access denied.
     user_not_found: User not found.
     sign_in_inactive_user: The user is not activated yet. Check your mail for activation instructions.
     no_collections_found: No collections found...
-    no_volume_history_found: No history found...
     contact_us_successful_feedback: Thank you for your message
     contact_us_unsuccessful_feedback: An error occured while sending your message, please check try again
     reset_password_failed: "Reset password failed"
@@ -264,36 +252,14 @@ en:
     recover_password_success: "Account recovery email has been sent with further instructions"
     email_not_found: "A BHL account with that email address %{email} could not be found"
     remove_book_from_history: "Are you sure you want to remove this book ?"
-    access_denied_error: Access denied.
     user_not_found: "User not found."
     changes_saved: "Changes saved."
     old_password_required: Please enter your old password
     invalid_old_password: Invalid Old Password
+    delete_saved_query_confirm: "Are you sure you want to delete this query ?"
+    book_removed: Book has been removed
+    hidden_comment_msg: This comment was hidden as it may contains inappropriate content
     
-  header:
-    search:
-      option_tagged_species: Tagged Species
-    pages:
-      names_link: Species
-
-  footer:
-    copyright_statement: Copyright © Bibliotheca Alexandrina
-
-  about_us:
-    paragraph_1: "The New %{ba_link} is dedicated to recapture the spirit of openness and scholarship of the original Bibliotheca Alexandrina. Hence, it was keen to take part in the Global Biodiversity Heritage Library (BHL) project, as the project is regarded as a substantial enrichment to the BA's collection and simultaneously an optimum channel for sharing and propagating the Library's Arabic and non-Arabic biodiversity collection. This mutual collaboration comes in accordance with the BA's mission in availing knowledge to all, and furthers the inclusion and input of the Arabic-speaking countries."
-    paragraph_2: "Accordingly, the BA has been pursuing the mirroring and replication of BHL since early 2011. Its participation in BHL project emerged inevitably in its course of being one of the main players in the internationalization, localization and mirroring of the Encyclopedia of Life, creating the EOL in Arabic. In this context, the scope of the BA's contribution in BHL project generally includes: setting the infrastructure for the mirroring and replication of the original BHL book collection, development of Local-BHL system, and adding biodiversity material from the BA's collection to comprise material from the Arab world in Arabic as well as other languages."
-
-  home:
-    statistics:
-      book_count:
-        one: "one Book"
-        other: "%{count} books"
-      author_count:
-        one: "one Author"
-        other: "%{count} Authors"
-      species:
-        one: "one Tagged Specie"
-        other: "%{count} Tagged Species"
 
   activerecord:
       attributes:
@@ -393,9 +359,6 @@ en:
       user_recover_account:
         subject: "Recover your BHL account"
         message: "The BHL received a request to recover your account. If you did not make this request, please ignore this email.The following link provides a one time log in to allow you to change your password"
-      user_reset_password:
-        subject: "Recover your BHL account"
-        message: "The BHL received a request to recover your account. If you did not make this request, please ignore this email. The following link provides a one time log in to allow you to change your password"
 
   geographics:
     blue_pin: 'Blue Pin'
