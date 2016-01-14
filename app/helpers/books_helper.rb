@@ -64,11 +64,11 @@ module BooksHelper
     title_tip += "<div style='float:left'>
                     <span >#{string}</span>
                     <ul>
-                      <li><a href='../books/#{job_id}/read'>#{I18n.t(:find_in_book)}</a>"
+                      <li><a href='../books/#{job_id}?tab=read'>#{I18n.t('common.find_in_book')}</a>"
     if eol_page_id != nil && eol_page_id > -1
-      title_tip += "<li><a href='http://eol.org/pages/#{eol_page_id}'>#{I18n.t(:view_in_eol)}</a>"
+      title_tip += "<li><a href='http://eol.org/pages/#{eol_page_id}'>#{I18n.t('common.view_in_eol')}</a>"
     end
-    title_tip += "<li><a href='../books?_name=#{string}'>#{I18n.t(:books_with_name)}</a>
+    title_tip += "<li><a href='../books?_name=#{string}'>#{I18n.t('common.books_with_name')}</a>
                     </ul>
                   </div>"
     title_tip

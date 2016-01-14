@@ -141,6 +141,9 @@ ar:
     rates: "معدل"
     eol_pages_link: "http://www.eol.org/pages/"
     sent: "مرسل"
+    find_in_book: ابحث في الكتاب
+    view_in_eol: EOL.orgانظر في 
+    books_with_name: كتب تحمل اسم
     name_found_in_books:
       zero:  "لا توجد كتب تحتوى على هذا الاسم"
       one:   "موجود في كتاب واحد"
