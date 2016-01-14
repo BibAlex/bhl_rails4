@@ -86,12 +86,12 @@ RSpec.describe "Books", type: :request do
       
       it "display a link for volume read page" do
         visit books_path(locale: I18n.locale)
-        expect(page).to have_selector("a[href='/#{I18n.locale}/books/2?tab=read']", text: I18n.t('common.sidelinks.read'))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/books/2?tab=read']", text: I18n.t('common.read'))
       end
       
       it "display a link for volume details page" do
         visit books_path(locale: I18n.locale)
-        expect(page).to have_selector("a[href='/#{I18n.locale}/books/2']", text: I18n.t('common.sidelinks.detail'))
+        expect(page).to have_selector("a[href='/#{I18n.locale}/books/2']", text: I18n.t('common.details'))
       end
       
       it "display a cover photo for the volume" do
@@ -184,7 +184,7 @@ RSpec.describe "Books", type: :request do
           fill_in "password", :with => "password"
           find("#submit").click          
           visit book_path(id: 1)
-          expect(page).to have_selector("a", text: I18n.t('common.sidelinks.add_collection'))
+          expect(page).to have_selector("a", text: I18n.t('common.add_collection'))
         end
       end
       

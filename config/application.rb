@@ -22,6 +22,7 @@ module BhlRails4
     config.autoload_paths += %W(#{config.root}/lib)
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
     config.i18n.default_locale = :en
+    config.i18n.fallbacks = [:en]
     config.i18n.enforce_available_locales = false
   end
 end
