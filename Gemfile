@@ -8,7 +8,7 @@ gem 'name-spotter'
 gem 'nokogiri'
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+#gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
