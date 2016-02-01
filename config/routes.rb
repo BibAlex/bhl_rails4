@@ -135,6 +135,12 @@ BhlRails4::Application.routes.draw do
     get "hadoop/pending_metadata"
     post "hadoop/ingest_metadata", to: 'hadoop#ingest_metadata'
     get "hadoop/pending_content"
+    get "hadoop/missing_locations"
+    get "hadoop/pending_indexing"
+    post "hadoop/ingest_locations", to: 'hadoop#ingest_locations'
+    post "hadoop/finished_indexing", to: 'hadoop#finished_indexing'
+    post "hadoop/mark_finished_content",  to: 'hadoop#mark_finished_content'
+    post "hadoop/ingest_content",  to: 'hadoop#ingest_content'
   end
   
   get "darviewer/user"

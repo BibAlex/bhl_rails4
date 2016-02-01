@@ -10,8 +10,12 @@ module SAMPLDATA
       
       DatabaseCleaner.clean_with :truncation
       
-      ["Pending metadata", "Pending content", "Pending indexing", "Indexed"].each do |status|
+      ["Pending metadata", "Finished metadata"].each do |status|
         BookStatus.create(status_code: status)
+      end
+      
+      ["Pending content", "Pending indexing", "Indexed"].each do |status|
+        VolumeStatus.create(status_code: status)
       end
       
       ingest_metadata_from_xml_string(File.open("lib/assets/BHL-Meta_sample2.xml"))

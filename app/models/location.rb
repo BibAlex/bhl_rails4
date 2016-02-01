@@ -9,5 +9,9 @@ class Location < ActiveRecord::Base
          "CAST(#{latitude} as decimal(10,4)) "\
          "AND CAST(latitude as decimal(10,4)) = "\
          "CAST(#{longitude} as decimal(10,4))")
-  end  
+  end
+  
+  def self.get_missing_locations
+    Location.where("formatted_address IS NOT NULL AND latitude IS NULL AND longitude IS NULL")
+  end
 end

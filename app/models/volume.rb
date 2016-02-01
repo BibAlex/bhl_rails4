@@ -24,4 +24,12 @@ class Volume < ActiveRecord::Base
   def volume_views_count
     source_book_views.count + dest_book_views.count
   end
+  
+  def self.get_pending_content_volumes
+    Volume.where(batch_id: nil)
+  end
+  
+  def self.get_pending_indexing_volumes
+    Volume.where(volume_status_id: VolumeStatus.pending_indexing.id)
+  end
 end
