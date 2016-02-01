@@ -64,6 +64,7 @@ group :development, :test do
   gem "mini_magick"
   gem 'uuidtools'
   gem 'database_cleaner'
+  gem 'rubocop', require: false
 end
 
 group :test do

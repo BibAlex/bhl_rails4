@@ -1,5 +1,5 @@
 require 'factory_girl'
-require "rack_session_access/capybara"
+require 'rack_session_access/capybara'
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
@@ -38,7 +38,7 @@ end
 def load_book_statuses
   # make sure that book_statuses table is populated
   BookStatus.delete_all
-  ["Pending metadata", "Pending content", "Pending indexing", "Indexed"].each do |status|
-    BookStatus.create(:status_code => status)
+  ['Pending metadata', 'Pending content', 'Pending indexing', 'Indexed'].each do |status|
+    BookStatus.create(status_code: status)
   end
 end
