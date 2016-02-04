@@ -38,7 +38,7 @@ module BooksHelper
   def search_volumes(query, page, limit, sort_type)
     response = search_facet_highlight(query, page, limit, sort_type)
     process_solr_volumes(response)
-  end
+  end  
 
   def fill_response_array(arr)
     arr.slice(0, MAX_NAMES_PER_BOOK)
@@ -123,7 +123,7 @@ module BooksHelper
 
   def prepare_search_query(multilingual_attributes_and_values, normal_attributes_and_values, query_join_operator)
     attributes = []
-    languages = Language.select(:code)
+    languages = ["en", "ge", "ar", "fr", "it", "ud"]
     multilingual_query = ''
     normal_query = ''
 
@@ -136,7 +136,7 @@ module BooksHelper
         end
         values = "(" + tmp_array.join(" OR ") + ")"
         languages.each do |language|
-          field_query += field_query == '(' ? "#{key}_#{languages.first.code[0..1]}:#{values}" : " OR #{key}_#{languages.first.code[0..1]}:#{values}"
+          field_query += field_query == '(' ? "#{key}_#{language}:#{values}" : " OR #{key}_#{language}:#{values}"
         end
         field_query += ")"
         multilingual_query += multilingual_query == '' ? field_query : " #{query_join_operator} #{field_query}"
@@ -246,8 +246,12 @@ module BooksHelper
     query_array = { 'all' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query = set_query_string(query_array, " OR ")
-    query.gsub!(" AND ", " OR ")
-    search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "")
+    query.gsub!("AND", " OR ")
+    result = search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "")
+    result[:volumes].each do |item|
+      result[:volumes].delete(item) if item[:job_id] == params[:job_id].to_i
+    end
+    result
   end
 
   def load_volume_with_names_from_solr(job_id)
@@ -306,7 +310,8 @@ module BooksHelper
         end
          facet_fields["#{field.name}"] = items
       end
-      facet_fields["name_facet"] = all_sci_names_with_facets[:facets]
+      # facet_fields["name_facet"] = all_sci_names_with_facets[:facets]
+      # facet_fields["name_facet"] = get_sci_names_of_volumes(get_facet_names(query))[:facets]
     end
     { volumes: volumes, total_number_of_volumes: solr_response["response"]["numFound"], facets: facet_fields }
   end
