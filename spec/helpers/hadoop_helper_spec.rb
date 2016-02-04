@@ -31,8 +31,8 @@ RSpec.describe HadoopHelper, type: :helper do
     end
 
     it "should create a location with the name of Bahadurganj, India" do
-      expect(Location.find_by_formatted_address("Bahadurganj, India")).not_to be_nil
-      expect(@mods_hash[:locations]).to include(Location.find_by_formatted_address("Bahadurganj, India"))
+      expect(Location.find_by_address("Bahadurganj, India")).not_to be_nil
+      expect(@mods_hash[:locations]).to include(Location.find_by_address("Bahadurganj, India"))
     end
   end
 
@@ -89,7 +89,7 @@ RSpec.describe HadoopHelper, type: :helper do
   describe "Test locations ingestion details" do
     before do
       Location.delete_all
-      @location = Location.create(address: "sample address")
+      @location = Location.create(address: "address")
       xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "locations_sample.xml"))
       mods_xml = Nokogiri::XML(xml_file_path)
       xml_file_path.close

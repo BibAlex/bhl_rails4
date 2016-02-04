@@ -1,6 +1,13 @@
 module SOLR
   class Indexer
     def self.fill_solr_with_sample_data
+      index_volumes
+      index_sci_names
+      index_names_found
+    end
+    
+    
+    def self.index_volumes
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
       solr_books_core.commit
@@ -47,5 +54,31 @@ module SOLR
         end
       end
     end
+    
+    def self.index_sci_names
+      solr_sci_names_core = RSolr::Ext.connect url: SOLR_SCI_NAMES
+      solr_sci_names_core.delete_by_query('*:*')
+      solr_sci_names_core.commit
+      
+      Name.find_each do |name|
+        doc = { sci_name: name.sci_name }
+        solr_sci_names_core.add(doc)
+        solr_sci_names_core.commit
+        solr_sci_names_core.optimize
+      end      
+    end
+    
+    def self.index_names_found
+      solr_names_found_core = RSolr::Ext.connect url: SOLR_NAMES_FOUND
+      solr_names_found_core.delete_by_query('*:*')
+      solr_names_found_core.commit
+      
+      VolumeName.find_each do |volume_name|
+        doc = { name_found: volume_name.name_found, job_id: volume_name.volume_id, page: volume_name.page_number, sci_name: Name.find(volume_name.name_id).sci_name }
+        solr_names_found_core.add(doc)
+        solr_names_found_core.commit
+        solr_names_found_core.optimize
+      end      
+    end    
   end
 end
