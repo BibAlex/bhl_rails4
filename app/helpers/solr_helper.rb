@@ -20,7 +20,7 @@ module SolrHelper
     response
   end
   
-  def get_sci_names_of_volumes(job_ids)    
+  def get_sci_names_of_volumes(job_ids)
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
     response = rsolr.find 'q' => "job_id:#{job_ids}", 'fl' => 'job_id,sci_name', 'facet' => true, 'facet.field' => "sci_name"
     sci_names = {}
@@ -54,7 +54,7 @@ module SolrHelper
     unless exact_sci_names.blank?
       values = "(" + exact_sci_names.map { |s| "\"#{s}\"" }.join(query_join_operator) + ")"
       rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-      response = rsolr.find 'q' => "sci_name:#{values}", 'fl' => "job_id"      
+      response = rsolr.find 'q' => "sci_name:#{values}", 'fl' => "job_id", 'rows' => 1000000
       unless response["response"]["numFound"] == 0
         response["response"]["docs"].each do |doc|
           job_ids << doc[:job_id]
@@ -75,8 +75,7 @@ module SolrHelper
       end
     end
     exact_sci_names
-  end
-  
+  end  
   
   def load_volume(job_id)
     rsolr = RSolr.connect url: SOLR_BOOKS_METADATA
