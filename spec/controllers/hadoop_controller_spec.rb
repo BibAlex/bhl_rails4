@@ -367,21 +367,7 @@ RSpec.describe HadoopController, type: :controller do
         get :pending_indexing
         json_response = ActiveSupport::JSON.decode(response.body)
         location_address = json_response["books"][0]["location_address"]
-        expect(location_address).to eq("123 detailed address")
-      end
-      
-      it 'returns correct metadata(longitude) of pending books' do
-        get :pending_indexing
-        json_response = ActiveSupport::JSON.decode(response.body)
-        long = json_response["books"][0]["long"]
-        expect(long).to eq("0.0")
-      end
-      
-      it 'returns correct metadata(latitude) of pending books' do
-        get :pending_indexing
-        json_response = ActiveSupport::JSON.decode(response.body)
-        lat = json_response["books"][0]["lat"]
-        expect(lat).to eq("2.5")
+        expect(location_address).to eq(["\"123 detailed address\""])
       end
       
       it 'returns correct metadata(authors) of pending books' do

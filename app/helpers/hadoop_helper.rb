@@ -36,10 +36,7 @@ module HadoopHelper
       languages = []
       authors = []
       subjects = []
-      location = book.locations.first
-      formatted_address = location.nil? ? "" : location.formatted_address
-      longitude = location.nil? ? "" : location.longitude
-      latitude = location.nil? ? "" : location.latitude
+      locations = []
       book.languages.select(:name).each do |lang|
         languages << "\"#{lang.name}\""
       end
@@ -49,6 +46,9 @@ module HadoopHelper
       book.subjects.select(:name).each do |subject|
         subjects << "\"#{subject.name}\""
       end
+      book.locations.select(:address).each do |location|
+        locations << "\"#{location.address}\""
+      end
       json_output << "{\"job_id\": \"#{volume.job_id}\","
       json_output << "\"bibID\": \"#{book.bib_id}\","
       json_output << "\"date\": \"#{book.published_at}\","
@@ -57,9 +57,7 @@ module HadoopHelper
       json_output << "\"authors\": #{authors},"
       json_output << "\"subjects\": #{subjects},"
       json_output << "\"publishers\": [\"#{book.publisher}\"],"
-      json_output << "\"location_address\": \"#{formatted_address}\","
-      json_output << "\"long\": \"#{longitude}\","
-      json_output << "\"lat\": \"#{latitude}\","
+      json_output << "\"location_address\": #{locations},"
       json_output << "\"main_title\": \"#{book.title}\"},"
     end
     json_output = json_output[0...json_output.length-1] if pending_volumes.count > 0
@@ -87,8 +85,8 @@ module HadoopHelper
     
     mods_xml.xpath("//Geolocations//Location").each do |location_xml|
       address = location_xml.xpath(".//address").text
-      location = Location.find_by(address: address)
-      country = Country.find_or_create_by(name: location_xml.xpath(".//country".text))
+      location = Location.find_or_create_by(address: address)
+      country = Country.find_or_create_by(name: location_xml.xpath(".//country").text)
       location.country_id = country.id
       location.latitude = location_xml.xpath(".//latitude").text.to_f
       location.longitude = location_xml.xpath(".//longitude").text.to_f

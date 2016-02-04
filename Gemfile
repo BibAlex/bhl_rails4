@@ -8,7 +8,7 @@ gem 'name-spotter'
 gem 'nokogiri'
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+#gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -64,6 +64,7 @@ group :development, :test do
   gem "mini_magick"
   gem 'uuidtools'
   gem 'database_cleaner'
+  gem 'rubocop', require: false
 end
 
 group :test do

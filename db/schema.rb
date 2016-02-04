@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204084622) do
+ActiveRecord::Schema.define(version: 20160204093418) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -209,7 +209,7 @@ ActiveRecord::Schema.define(version: 20160204084622) do
   end
 
   create_table "locations", force: :cascade do |t|
-    t.string   "formatted_address", limit: 255, null: false
+    t.string   "formatted_address", limit: 255
     t.float    "latitude",          limit: 24
     t.float    "longitude",         limit: 24
     t.integer  "country_id",        limit: 4
