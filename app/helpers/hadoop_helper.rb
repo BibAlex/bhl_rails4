@@ -71,7 +71,7 @@ module HadoopHelper
   def generate_json_location_listing(locations_list)
     json_output = "{\"Locations\":["
     locations_list.each do |location|
-      json_output << "\"#{location.formatted_address}\","
+      json_output << "\"#{location.address}\","
     end
     json_output = json_output[0...json_output.length-1] if locations_list.count > 0
     json_output << "]}"
@@ -85,11 +85,14 @@ module HadoopHelper
       return false
     end
     
-    mods_xml.xpath("//geographics//loc").each do |location_xml|
-      formatted_address = location_xml.xpath(".//place").text
-      location = Location.find_by(formatted_address: formatted_address)
-      location.latitude = location_xml.xpath(".//lat").text.to_f
-      location.longitude = location_xml.xpath(".//lng").text.to_f
+    mods_xml.xpath("//Geolocations//Location").each do |location_xml|
+      address = location_xml.xpath(".//address").text
+      location = Location.find_by(address: address)
+      country = Country.find_or_create_by(name: location_xml.xpath(".//country".text))
+      location.country_id = country.id
+      location.latitude = location_xml.xpath(".//latitude").text.to_f
+      location.longitude = location_xml.xpath(".//longitude").text.to_f
+      location.formatted_address = location_xml.xpath(".//formattedAddress").text.to_f      
       location.save
     end
     
@@ -265,7 +268,7 @@ private
     locations_xml.each do |place|
       if place.xpath('.//xmlns:placeTerm').attr('type').to_s == 'text'
         loc = place.xpath('.//xmlns:placeTerm').text
-        locations << Location.find_or_create_by(formatted_address: loc) unless loc.empty?
+        locations << Location.find_or_create_by(address: loc) unless loc.empty?
       end
     end
     locations

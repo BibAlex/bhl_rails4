@@ -224,8 +224,8 @@ RSpec.describe HadoopController, type: :controller do
     context "when there are some missing locations" do
       before do
         Location.delete_all
-        @location_without_coordinates = Location.create(formatted_address: "address without coordinates")
-        Location.create(formatted_address: "address with coordinates", latitude: 4.5, longitude: 5.5)
+        @location_without_coordinates = Location.create(address: "address without coordinates")
+        Location.create(address: "address with coordinates", latitude: 4.5, longitude: 5.5)
       end
       
       it 'returns correct count of locations without coordinates' do
@@ -237,8 +237,8 @@ RSpec.describe HadoopController, type: :controller do
       it 'returns correct locations without coordinates' do
         get :missing_locations
         json_response = ActiveSupport::JSON.decode(response.body)
-        formatted_address = json_response["Locations"][0]
-        expect(formatted_address).to eq(@location_without_coordinates.formatted_address)
+        address = json_response["Locations"][0]
+        expect(address).to eq(@location_without_coordinates.address)
       end
     end
     
@@ -257,8 +257,8 @@ RSpec.describe HadoopController, type: :controller do
       it 'returns correct locations without coordinates' do
         get :missing_locations
         json_response = ActiveSupport::JSON.decode(response.body)
-        formatted_address = json_response["Locations"][0]
-        expect(formatted_address).to be_blank
+        address = json_response["Locations"][0]
+        expect(address).to be_blank
       end
     end
     
@@ -276,8 +276,8 @@ RSpec.describe HadoopController, type: :controller do
       it 'returns correct locations without coordinates' do
         get :missing_locations
         json_response = ActiveSupport::JSON.decode(response.body)
-        formatted_address = json_response["Locations"][0]
-        expect(formatted_address).to be_blank
+        address = json_response["Locations"][0]
+        expect(address).to be_blank
       end
     end
   end
@@ -295,7 +295,7 @@ RSpec.describe HadoopController, type: :controller do
         @book = Book.create(book_status_id: BookStatus.finished_metadata.id, bib_id: Faker::Base.numerify('#####-#####'), title: "title",
                             title_alternative: "title alternative", publisher: "publisher", published_at: "published_at")
         @book.languages << Language.create(code: 'eng', name: "english")
-        @book.locations << Location.create(formatted_address: "123 detailed address", longitude: 0.0, latitude: 2.5)
+        @book.locations << Location.create(address: "123 detailed address", longitude: 0.0, latitude: 2.5)
         @book.authors << Author.create(name: "author")
         @book.subjects << Subject.create(name: "subject")
         @book.save

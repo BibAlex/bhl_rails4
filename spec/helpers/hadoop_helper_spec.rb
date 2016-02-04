@@ -89,7 +89,7 @@ RSpec.describe HadoopHelper, type: :helper do
   describe "Test locations ingestion details" do
     before do
       Location.delete_all
-      @location = Location.create(formatted_address: "sample address")
+      @location = Location.create(address: "sample address")
       xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "locations_sample.xml"))
       mods_xml = Nokogiri::XML(xml_file_path)
       xml_file_path.close

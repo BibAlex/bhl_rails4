@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<BHLMeta>
-<FormattedAddress value = "sample address">
-<latitude>5.5</latitude>
-<longitude>6.7</longitude>
-</FormattedAddress>
-</BHLMeta>
+<geographics>
+<loc>
+<place>sample address</place>
+<lat>5.5</lat>
+<lng>6.7</lng>
+</loc>
+</geographics>

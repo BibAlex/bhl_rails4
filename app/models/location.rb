@@ -12,6 +12,6 @@ class Location < ActiveRecord::Base
   end
   
   def self.get_missing_locations
-    Location.where("formatted_address IS NOT NULL AND latitude IS NULL AND longitude IS NULL")
+    Location.where("address IS NOT NULL AND latitude IS NULL AND longitude IS NULL")
   end
 end
