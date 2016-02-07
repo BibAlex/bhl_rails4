@@ -67,10 +67,10 @@ module SAMPLDATA
         public_collection_n.update_attributes(rate: Rate.where(rateable_id: public_collection_n.id, rateable_type: "collection").average('rate').to_f)        
       end
       
+      location = Location.find(3)
+      location.update_attributes(longitude: 80.2707,latitude: 13.0827, formatted_address: "Chennai, Tamil Nadu, India")      
       
-      insert_sample_names
-      
-            
+      insert_sample_names           
     end
     
     def self.insert_sample_names

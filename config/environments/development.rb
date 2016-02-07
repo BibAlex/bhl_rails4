@@ -32,6 +32,7 @@ BhlRails4::Application.configure do
   SOLR_BOOKS_METADATA = "http://localhost:8983/solr/books_metadata"
   SOLR_SCI_NAMES = "http://localhost:8983/solr/sci_names"
   SOLR_NAMES_FOUND = "http://localhost:8983/solr/names_found"
+  SOLR_GEOLOCATIONS = "http://localhost:8983/solr/geolocations"
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true

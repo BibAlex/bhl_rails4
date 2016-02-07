@@ -1,4 +1,6 @@
 class GeographicsController < ApplicationController
+  include SolrHelper
+  
   before_filter :initialize_rsolr
 
   def index
@@ -45,21 +47,23 @@ class GeographicsController < ApplicationController
 
         values= item.value.split(",") #"city, longitude, latitude"
         #inverted the indecies in the solr query ("to match the fake data in the solr core")
-        location= Location.get_by_lattitude_and_longitude(values[-2].to_f, values[-1].to_f ).first
+        
+        location = load_geolocations_from_solr(item.value)
 
-        @map.markers << Cartographer::Gmarker.new( marker_type: "Building",
-                          position: [location.latitude,location.longitude],
-                          info_window_url: "/geographics/show/#{location.id}",
-                          icon: gicons[icon_in]) unless location.nil?
+         unless location.nil?
+          @map.markers << Cartographer::Gmarker.new( marker_type: "Building",
+                            position: [location[:latitude],location[:longitude]],
+                            info_window_url: "/geographics/show/#{location[:address]}",
+                            icon: gicons[icon_in])
+         end
       end
     end
   end
   
   def show
-
-    location = Location.find_by_id(params[:id])
-    @location_name = location.formatted_address unless location.nil?
-    response = @rsolr.find q: "location_search:\"#{location.try(:formatted_address)}\""
+    location = load_geolocations_from_solr(params[:address])
+    @location_name = location[:formatted_address] unless location.nil?
+    response = @rsolr.find q: "location_facet:\"#{params[:address]}\""
     @books = {}
     @books_count = response.total
     response.docs.each do |doc|

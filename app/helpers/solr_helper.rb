@@ -112,5 +112,11 @@ module SolrHelper
     solr.commit
     solr.optimize
   end
+  
+  def load_geolocations_from_solr(item)
+    solr = RSolr.connect url: SOLR_GEOLOCATIONS
+    response = solr.find q: "address:\"#{item}\"", start: 0, limit: 1
+    response["response"]["docs"][0]    
+  end
  end 
   
