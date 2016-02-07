@@ -20,7 +20,6 @@ module CarouselHelper
   end
 
   def load_related_books_carousel(params)
-    byebug
     result = get_related_books(params)
     items = WillPaginate::Collection.create(params[:page], LIMIT_CAROUSEL, result[:total_number_of_volumes]) do |pager|
       pager.replace result[:volumes]

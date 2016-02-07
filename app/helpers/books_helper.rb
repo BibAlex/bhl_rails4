@@ -1,13 +1,10 @@
 module BooksHelper
-
   def facet_list(response, field)
     list = []
     response.facets.each do |facet|
       if facet.name == field
         facet.items.each do |item|
-          if (item.hits) > 0
-            list << {:name => item.value, :count => item.hits}
-          end
+          list << { :name => item.value, :count => item.hits } if (item.hits) > 0
         end
         break
       end
@@ -28,20 +25,17 @@ module BooksHelper
     else
       tmp_params[:sort_type] = field
     end
-    tmp_params[:controller] = nil
-    tmp_params[:action] = nil
-    tmp_params[:page] = nil
-    tmp_params[:locale] = nil
+    tmp_params[:controller] = tmp_params[:action] = tmp_params[:page] = tmp_params[:locale] = nil
     tmp_params
   end
 
   def search_volumes(query, page, limit, sort_type)
     response = search_facet_highlight(query, page, limit, sort_type)
-    process_solr_volumes(response)
+    process_solr_volumes response
   end
 
   def fill_response_array(arr)
-    arr.slice(0, MAX_NAMES_PER_BOOK)
+    arr.slice 0, MAX_NAMES_PER_BOOK
   end
 
   def get_names_info(sci_names)
@@ -64,11 +58,17 @@ module BooksHelper
     title_tip += "<div style='float:left'>
                     <span >#{string}</span>
                     <ul>
-                      <li><a href='../books/#{job_id}?tab=read'>#{I18n.t('common.find_in_book')}</a>"
+                      <li><a href='../books/#{job_id}?tab=read'>
+                        #{I18n.t('common.find_in_book')}
+                      </a></li>"
     if eol_page_id != nil && eol_page_id > -1
-      title_tip += "<li><a href='http://eol.org/pages/#{eol_page_id}'>#{I18n.t('common.view_in_eol')}</a>"
+      title_tip += "<li><a href='http://eol.org/pages/#{eol_page_id}'>
+                          #{I18n.t('common.view_in_eol')}
+                        </a></li>"
     end
-    title_tip += "<li><a href='../books?_name=#{string}'>#{I18n.t('common.books_with_name')}</a>
+    title_tip += "<li><a href='../books?_name=#{string}'>
+                        #{I18n.t('common.books_with_name')}
+                      </a></li>
                     </ul>
                   </div>"
     title_tip
@@ -85,7 +85,8 @@ module BooksHelper
 
   def fill_query_array(params)
     search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_all"].include?(key) }
-    query_array = { 'all' => [], 'title'=> [], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> [],
+    query_array = { 'all' => [], 'title'=> [], 'language'=> [],
+                    'location'=> [], 'author'=> [], 'name'=> [],
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query_array.each do  |key, value|
       query_array[key] = search_params["_#{key}"] ? search_params["_#{key}"].split(' _OR ') : []
@@ -248,11 +249,6 @@ module BooksHelper
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query = set_query_string(query_array, " OR ")
     query = "(#{query}) NOT job_id:#{params[:job_id]}"
-
-    puts query_array
-    puts volume[:sci_names]
-    puts volume[:title]
-    puts query
 
     search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "")
   end
