@@ -15,24 +15,24 @@ module BooksHelper
     list
   end
 
-  # not updated: will be updated after finishing books search function
+  # TODO: not updated: will be updated after finishing books search function
   def add_facet_search(params, type, field)
-      tmp_params = params.clone
-      unless type =="sort_type"
-        if tmp_params.has_key?("_#{type}".to_sym)
-          tmp_params["_#{type}".to_sym] = field + " _OR " + tmp_params["_#{type}".to_sym]
-        else
-          tmp_params["_#{type}".to_sym] = field
-        end
-         tmp_params[:sort_type] = nil
+    tmp_params = params.clone
+    unless type =="sort_type"
+      if tmp_params.has_key?("_#{type}".to_sym)
+        tmp_params["_#{type}".to_sym] = field + " _OR " + tmp_params["_#{type}".to_sym]
       else
-        tmp_params[:sort_type] = field
+        tmp_params["_#{type}".to_sym] = field
       end
-      tmp_params[:controller] = nil
-      tmp_params[:action] = nil
-      tmp_params[:page] = nil
-      tmp_params[:locale] = nil
-      tmp_params
+       tmp_params[:sort_type] = nil
+    else
+      tmp_params[:sort_type] = field
+    end
+    tmp_params[:controller] = nil
+    tmp_params[:action] = nil
+    tmp_params[:page] = nil
+    tmp_params[:locale] = nil
+    tmp_params
   end
 
   def search_volumes(query, page, limit, sort_type)
@@ -243,10 +243,17 @@ module BooksHelper
 
   def get_related_books(params)
     volume = load_volume_with_names_from_solr(params[:job_id])
+
     query_array = { 'all' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
                     'subject'=> [], 'content' => [], 'publisher' => [] }
     query = set_query_string(query_array, " OR ")
-    query.gsub!(" AND ", " OR ")
+    query = "(#{query}) NOT job_id:#{params[:job_id]}"
+
+    puts query_array
+    puts volume[:sci_names]
+    puts volume[:title]
+    puts query
+
     search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "")
   end
 
@@ -297,7 +304,6 @@ module BooksHelper
                     language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
         volumes << options
       end
-
 
       solr_response.facets.each do |field|
         items  = []

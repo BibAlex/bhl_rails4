@@ -1,14 +1,11 @@
 = javascript_include_tag 'carousel_functions.js'
-  
+
 :javascript
   $(document).ready(function() {
     load_carousel("#{params[:id]}", "collections");
     load_carousel("#{params[:id]}", "alsoviewed");
     load_carousel("#{params[:id]}", "related");
   });
-
-
-
 
 .col-md-12
   %a{:id=>"collectionsfound"}
