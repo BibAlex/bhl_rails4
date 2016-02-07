@@ -4,6 +4,7 @@ module SOLR
       index_volumes
       index_sci_names
       index_names_found
+      index_locations
     end
     
     
@@ -46,6 +47,10 @@ module SOLR
             book.subjects.select(:name).each do |subject|
               doc["subject_#{language[0..1]}"] << subject.name
             end
+            doc["location_facet"] = []
+            book.locations.select(:address).each do |location|
+              doc["location_facet"] << location.address
+            end
           end
           doc[:language_facet] = doc_languages        
           solr_books_core.add(doc)
@@ -79,6 +84,20 @@ module SOLR
         solr_names_found_core.commit
         solr_names_found_core.optimize
       end      
-    end    
+    end
+    
+    
+    def self.index_locations
+      solr_locations_core = RSolr::Ext.connect url: SOLR_GEOLOCATIONS
+      solr_locations_core.delete_by_query('*:*')
+      solr_locations_core.commit
+      
+      location = Location.find(3)
+      doc = { address: location.address, formatted_address: location.formatted_address, longitude: location.longitude, latitude: location.latitude }
+      solr_locations_core.add(doc)
+      solr_locations_core.commit
+      solr_locations_core.optimize     
+    end
+        
   end
 end
