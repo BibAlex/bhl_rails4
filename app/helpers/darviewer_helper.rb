@@ -87,7 +87,6 @@ module DarviewerHelper
   end
   
   def remove_annotation(params)
-    debugger
     guid = params[:SSOToken]
     user = User.find_by_guid(guid)
     

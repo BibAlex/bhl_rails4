@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Geolocations>
+    <Location>
+        <address>address</address>
+        <longitude>5.5</longitude>
+        <latitude>6.5</latitude>
+        <country>country </country>
+        <formattedAddress>formatted address</formattedAddress>
+        <types>
+            <type>value</type>
+            <type>value</type>
+            <type>value</type>
+        </types>
+    </Location>
+</Geolocations>

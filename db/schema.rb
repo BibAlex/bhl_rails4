@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160110075128) do
+ActiveRecord::Schema.define(version: 20160204093418) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -52,6 +52,18 @@ ActiveRecord::Schema.define(version: 20160110075128) do
     t.string   "name",       limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "batch_statuses", force: :cascade do |t|
+    t.string   "status_code", limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  create_table "batches", force: :cascade do |t|
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "status_id",  limit: 4
   end
 
   create_table "bhl_statistics", force: :cascade do |t|
@@ -190,12 +202,13 @@ ActiveRecord::Schema.define(version: 20160110075128) do
   end
 
   create_table "locations", force: :cascade do |t|
-    t.string   "formatted_address", limit: 255, null: false
+    t.string   "formatted_address", limit: 255
     t.float    "latitude",          limit: 24
     t.float    "longitude",         limit: 24
     t.integer  "country_id",        limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "address",           limit: 255
   end
 
   create_table "names", force: :cascade do |t|
@@ -271,15 +284,16 @@ ActiveRecord::Schema.define(version: 20160110075128) do
   end
 
   create_table "volumes", force: :cascade do |t|
-    t.integer  "book_id",       limit: 4,                                         null: false
-    t.integer  "job_id",        limit: 4,                                         null: false
+    t.integer  "book_id",       limit: 4,                                       null: false
+    t.integer  "job_id",        limit: 4,                                       null: false
     t.integer  "volume_number", limit: 4
-    t.decimal  "rate",                      precision: 2, scale: 1, default: 0.0
-    t.string   "status_code",   limit: 255
+    t.decimal  "rate",                    precision: 2, scale: 1, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "batch_id",      limit: 4
   end
 
+  add_index "volumes", ["batch_id"], name: "index_volumes_on_batch_id", using: :btree
   add_index "volumes", ["book_id"], name: "index_volumes_on_book_id", using: :btree
   add_index "volumes", ["job_id"], name: "index_volumes_on_job_id", using: :btree
 

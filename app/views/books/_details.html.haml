@@ -11,14 +11,14 @@
           = I18n.t('common.language') + ':'
         %dd
           - @volume[:language].each do |item|
-            = item_count_format('language_facet', item)
+            = item
             
       - unless @volume[:location].nil?
         %dt
           = I18n.t('common.location') + ':'
         %dd
           - @volume[:location].each do |item|
-            = item_count_format('location_search', item)
+            = item
           
       - unless @volume[:date].nil?
         %dt
@@ -35,7 +35,7 @@
             %dd
               - @volume[type].each do |item|
                 - count = count + 1
-                = item_count_format("#{type}_#{@volume[:language][0][0..1]}", item)
+                = item
                 -if count != @volume[type].length
                   %b
                     = I18n.t('common.separator')      

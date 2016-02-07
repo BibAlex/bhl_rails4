@@ -16,7 +16,11 @@ module SAMPLDATA
         BookStatus.create(status_code: status)
       end
 
-      ingest_metadata_from_xml_string(File.open('lib/assets/BHL-Meta_sample2.xml'))
+      ["Pending content", "Pending indexing", "Indexed"].each do |status|
+        BatchStatus.create(status_code: status)
+      end
+
+      ingest_metadata_from_xml_string(File.open("lib/assets/BHL-Meta_sample2.xml"))
 
       10.times do |n|
         source_volume = Volume.includes(:book).find(n + 1)
@@ -89,7 +93,31 @@ module SAMPLDATA
                          user_id: m + 1,
                          number_of_marks: m, text: "good_collection_#{n}")
         end
-        public_collection_n.update_attributes(rate: Rate.where(rateable_id: public_collection_n.id, rateable_type: 'collection').average('rate').to_f)
+
+        public_collection_n.update_attributes(rate: Rate.where(rateable_id: public_collection_n.id, rateable_type: "collection").average('rate').to_f)
+      end
+
+      location = Location.find(3)
+      location.update_attributes(longitude: 80.2707,latitude: 13.0827, formatted_address: "Chennai, Tamil Nadu, India")
+
+      insert_sample_names
+    end
+
+    def self.insert_sample_names
+      File.open("lib/assets/namesSample", "r") do |f|
+        f.each_line do |line|
+          tokens = line.split("###")
+          volume_and_page = tokens[0].split("-")
+          job_id = volume_and_page[0]
+          page = volume_and_page[1]
+          tokens[1].split("#=#").each do |name_token|
+            temp = name_token.split("#\@#")
+            name_found = temp[0]
+            sci_name = temp[1]
+            name = Name.find_or_create_by(sci_name: sci_name)
+            VolumeName.create(volume_id: job_id, page_number: page, name_found: name_found, name_id: name.id)
+          end
+        end
       end
     end
   end
