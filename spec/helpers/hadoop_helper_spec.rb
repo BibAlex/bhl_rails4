@@ -4,7 +4,7 @@ RSpec.describe HadoopHelper, type: :helper do
   describe "Testing Process Mods" do
     before :all do
       clean_book_tables
-      load_book_statuses
+      load_book_statuses      
       xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "sample_mods.xml"))
       mods_xml = Nokogiri::XML(xml_file_path)
       xml_file_path.close
@@ -31,8 +31,8 @@ RSpec.describe HadoopHelper, type: :helper do
     end
 
     it "should create a location with the name of Bahadurganj, India" do
-      expect(Location.find_by_formatted_address("Bahadurganj, India")).not_to be_nil
-      expect(@mods_hash[:locations]).to include(Location.find_by_formatted_address("Bahadurganj, India"))
+      expect(Location.find_by_address("Bahadurganj, India")).not_to be_nil
+      expect(@mods_hash[:locations]).to include(Location.find_by_address("Bahadurganj, India"))
     end
   end
 
@@ -40,6 +40,7 @@ RSpec.describe HadoopHelper, type: :helper do
     before :each do
       clean_book_tables
       load_book_statuses
+      load_batch_statuses
       xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "metadata_single_sample.xml"))
       mods_xml = Nokogiri::XML(xml_file_path)
       xml_file_path.close
@@ -64,4 +65,62 @@ RSpec.describe HadoopHelper, type: :helper do
       expect(@book.volumes.first.job_id).to eq(361720)
     end
   end
+  
+  describe "Test mark finished content" do
+    before do
+      load_book_statuses
+      load_batch_statuses
+      Book.delete_all
+      Volume.delete_all
+      book = Book.create(book_status_id: BookStatus.finished_metadata.id, bib_id: Faker::Base.numerify('#####-#####'))
+      @volume = Volume.create(book_id: book.id, job_id: 1)
+      Batch.create(status_id: BatchStatus.pending_content.id, id: 1)
+      xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "mark_finished_content.xml"))
+      mods_xml = Nokogiri::XML(xml_file_path)
+      xml_file_path.close
+      mark_finished_content_volumes(mods_xml.to_s)
+    end
+
+    it "should associate finished volumes with batch" do
+      expect(@volume.reload.batch_id).to eq(Batch.first.id)
+    end
+  end  
+  
+  describe "Test locations ingestion details" do
+    before do
+      Location.delete_all
+      @location = Location.create(address: "address")
+      xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "locations_sample.xml"))
+      mods_xml = Nokogiri::XML(xml_file_path)
+      xml_file_path.close
+      ingest_locations_from_xml_string(mods_xml.to_s)
+    end
+
+    it "should add coordinates for locations without coordinates" do
+      @location.reload
+      expect(@location.latitude).not_to be_nil
+      expect(@location.longitude).not_to be_nil
+    end
+  end
+  
+  describe "Test mark indexed volumes" do
+    before do
+      load_book_statuses
+      load_batch_statuses
+      Book.delete_all
+      Volume.delete_all
+      Batch.delete_all
+      book = Book.create(book_status_id: BookStatus.finished_metadata.id, bib_id: Faker::Base.numerify('#####-#####'))
+      @batch = Batch.create(status_id: BatchStatus.pending_indexing.id, id: 1)
+      @volume = Volume.create(book_id: book.id, job_id: 1, batch_id: @batch.id)  
+      xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "sample_indexing.xml"))
+      mods_xml = Nokogiri::XML(xml_file_path)
+      xml_file_path.close
+      mark_finished_indexing(mods_xml.to_s)
+    end
+
+    it "should update batch status" do
+      expect(@batch.reload.status_id).to eq(BatchStatus.indexed.id)
+    end
+  end  
 end

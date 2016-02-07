@@ -1,3 +1,6 @@
+require 'json'
+require 'tempfile'
+
 module HadoopHelper
 
   def generate_json_book_listing(book_list)
@@ -9,6 +12,140 @@ module HadoopHelper
     json_output << "]}"
 
     json_output
+  end
+  
+  def generate_json_volume_pending_content_listing(volume_list)
+      batch_id = volume_list.blank? ? "" : Batch.create(status_id: BatchStatus.pending_content.id).id
+      json_output = "{ \"batch_id\": \"#{batch_id}\", \"Volumes\":["
+      volume_list.each do |volume|
+        json_output << "\"#{volume.job_id}\","
+      end
+    json_output = json_output[0...json_output.length-1] if volume_list.count > 0
+    json_output << "]}"
+
+    json_output
+  end
+  
+  def generate_json_volume_pending_indexing_listing
+    batch = Batch.where(status_id: BatchStatus.pending_indexing.id)
+    batch_id = batch.empty? ? "" : batch.first.id
+    pending_volumes  = Volume.where(batch_id: batch_id)
+    json_output = "{ \"batchID\": \"#{batch_id}\", \"books\":["
+    pending_volumes.each do |volume|
+      book = Book.find(volume.book_id)
+      languages = []
+      authors = []
+      subjects = []
+      locations = []
+      book.languages.select(:name).each do |lang|
+        languages << "\"#{lang.name}\""
+      end
+      book.authors.select(:name).each do |author|
+        authors << "\"#{author.name}\""
+      end
+      book.subjects.select(:name).each do |subject|
+        subjects << "\"#{subject.name}\""
+      end
+      book.locations.select(:address).each do |location|
+        locations << "\"#{location.address}\""
+      end
+      json_output << "{\"job_id\": \"#{volume.job_id}\","
+      json_output << "\"bibID\": \"#{book.bib_id}\","
+      json_output << "\"date\": \"#{book.published_at}\","
+      json_output << "\"languages\": #{languages},"
+      json_output << "\"titles\": [\"#{book.title}\",\"#{book.title_alternative}\"],"
+      json_output << "\"authors\": #{authors},"
+      json_output << "\"subjects\": #{subjects},"
+      json_output << "\"publishers\": [\"#{book.publisher}\"],"
+      json_output << "\"location_address\": #{locations},"
+      json_output << "\"main_title\": \"#{book.title}\"},"
+    end
+    json_output = json_output[0...json_output.length-1] if pending_volumes.count > 0
+    json_output << "]}"
+
+    json_output
+  end
+  
+  def generate_json_location_listing(locations_list)
+    json_output = "{\"Locations\":["
+    locations_list.each do |location|
+      json_output << "\"#{location.address}\","
+    end
+    json_output = json_output[0...json_output.length-1] if locations_list.count > 0
+    json_output << "]}"
+    json_output
+  end
+  
+  def ingest_locations_from_xml_string(xml_content)
+    begin
+      mods_xml = Nokogiri::XML(xml_content)
+    rescue
+      return false
+    end
+    
+    mods_xml.xpath("//Geolocations//Location").each do |location_xml|
+      address = location_xml.xpath(".//address").text
+      location = Location.find_or_create_by(address: address)
+      country = Country.find_or_create_by(name: location_xml.xpath(".//country").text)
+      location.country_id = country.id
+      location.latitude = location_xml.xpath(".//latitude").text.to_f
+      location.longitude = location_xml.xpath(".//longitude").text.to_f
+      location.formatted_address = location_xml.xpath(".//formattedAddress").text.to_f      
+      location.save
+    end
+    
+    return true
+  end
+  
+  def mark_finished_indexing(xml_content)
+    begin
+      data_xml = Nokogiri::XML(xml_content)
+    rescue
+      return false
+    end    
+    
+    data_xml.xpath("//BatchId").each do |batch|
+      batch_id = batch.attr("value").to_i
+      Batch.find(batch_id).update_attributes(status_id: BatchStatus.indexed.id)
+      data_xml.xpath("//BatchId//Volumes//JobId").each do |job_id|
+        volume  = Volume.find_by_job_id(job_id.attr("value").to_i)
+        volume.update_attributes(batch_id: nil) unless volume.nil?
+      end
+    end
+    return true
+  end
+  
+  
+  def mark_finished_content_volumes(xml_content)
+    begin
+      data_xml = Nokogiri::XML(xml_content)
+    rescue
+      return false
+    end
+    
+    data_xml.xpath("//ContentSuccessList").each do |batch|
+      batch_id = batch.attr("batchID").to_i
+    
+      data_xml.xpath("//ContentSuccessList//JobID").each do |job_id|
+        volume  = Volume.find_by_job_id(job_id.text.to_i)
+        volume.update_attributes(batch_id: batch_id) unless volume.nil?
+      end
+    end
+    return true
+  end
+  
+  def ingest_batch(batch_id, names_content)
+    batch = Batch.find(batch_id)
+    batch.update_attributes(status_id: BatchStatus.pending_indexing.id)
+    begin
+      file = File.new("#{Rails.root}/public/batches_#{Rails.env}/batch_#{batch_id}", 'wb+')
+      file.binmode
+      file.write(names_content)
+      file.flush
+    rescue
+      return false
+    end
+    return true
   end
 
   def ingest_metadata_from_xml_string(xml_content)
@@ -45,7 +182,7 @@ module HadoopHelper
           book.published_at = metadata_hash[:published_at]
           book.publisher = metadata_hash[:publisher]
           book.contributor = metadata_hash[:contributor]
-          book.book_status_id = BookStatus.pending_content.id
+          book.book_status_id = BookStatus.finished_metadata.id
           book.save
         end
         book.authors << metadata_hash[:authors]
@@ -54,13 +191,14 @@ module HadoopHelper
         book.subjects << metadata_hash[:subjects]
 
         book_xml.xpath(".//JobIDs//JobID").each do |job_id|
-          book.volumes << Volume.find_or_create_by(job_id: job_id.text.gsub("DAF-Job:",""))
+          volume = Volume.find_or_create_by(job_id: job_id.text.gsub("DAF-Job:",""))
+          book.volumes << volume
         end
         book.save
       end
     end
     return true
-  end
+  end 
 
   def process_mods(mods_string)
     # this function should return a hash with extracted metadata from mods
@@ -128,7 +266,7 @@ private
     locations_xml.each do |place|
       if place.xpath('.//xmlns:placeTerm').attr('type').to_s == 'text'
         loc = place.xpath('.//xmlns:placeTerm').text
-        locations << Location.find_or_create_by(formatted_address: loc) unless loc.empty?
+        locations << Location.find_or_create_by(address: loc) unless loc.empty?
       end
     end
     locations
