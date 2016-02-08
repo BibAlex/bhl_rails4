@@ -1,8 +1,8 @@
 namespace :I18n_difference do
   desc 'check_i18n_locales_differences'
   task :check_i18n_differences => :environment do
-    English_file = HashWithIndifferentAccess.new(YAML.load(File.read("/home/ba/work/bhl_rails4/config/locales/en.yml")))
-    Arabic_file = HashWithIndifferentAccess.new(YAML.load(File.read("/home/ba/work/bhl_rails4/config/locales/ar.yml")))
+    English_file = HashWithIndifferentAccess.new(YAML.load(File.read(File.join(Rails.root, "config", "locales", "en.yml"))))
+    Arabic_file = HashWithIndifferentAccess.new(YAML.load(File.read(File.join(Rails.root, "config", "locales", "ar.yml"))))
     diff_main_items = English_file["en"].keys - Arabic_file["ar"].keys
     print diff_main_items
     print "\n"
