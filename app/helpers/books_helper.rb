@@ -31,8 +31,8 @@ module BooksHelper
 
   def search_volumes(query, page, limit, sort_type)
     response = search_facet_highlight(query, page, limit, sort_type)
-    process_solr_volumes response
-    process_solr_volumes(response)
+    all_sci_names_with_facets = get_sci_names_with_facet(query, page, limit)
+    process_solr_volumes(response, all_sci_names_with_facets)
   end
 
   def fill_response_array(arr)
@@ -149,7 +149,7 @@ module BooksHelper
        field_query = '('
        tmp_array = []
        value_arr.each do |item|
-         tmp_array << "\"" + item + "\""
+         tmp_array << "\"" + item.to_s + "\""
        end
        values = "(" + tmp_array.join(" OR ") + ")"
        field_query = "(" + "#{key}:#{values}" + ")"
@@ -263,7 +263,7 @@ module BooksHelper
     volume = load_volume_without_names_from_solr(job_id)
     if !volume.blank?
       all_sci_names_with_facets = get_sci_names_of_volumes("#{job_id}")
-      tmp = all_sci_names_with_facets[:sci_names]["#{job_id}"]
+      tmp = all_sci_names_with_facets[:sci_names][job_id.to_i]
       sci_names = tmp.nil? ? [] : tmp
       volume[:sci_names] = sci_names
     end
@@ -285,20 +285,14 @@ module BooksHelper
 
   private
 
-  def process_solr_volumes(solr_response)
+  def process_solr_volumes(solr_response, all_sci_names_with_facets)
     volumes = []
     facet_fields = {}
 
     if solr_response["response"]["numFound"] > 0
-      job_ids = "("
-      solr_response["response"]["docs"].each do |doc|
-        job_ids += job_ids == "(" ? doc["job_id"].to_s : " OR  #{doc[:job_id]}"
-      end
-
-      all_sci_names_with_facets = get_sci_names_of_volumes("#{job_ids} )")
 
       solr_response["response"]["docs"].each do |doc|
-        tmp = all_sci_names_with_facets[:sci_names]["#{doc[:job_id]}"]
+        tmp = all_sci_names_with_facets[:sci_names][doc[:job_id]]
         sci_names = tmp.nil? ? [] : tmp
         lang = doc["language_facet"][0][0..1]
         options = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
@@ -314,8 +308,7 @@ module BooksHelper
         end
          facet_fields["#{field.name}"] = items
       end
-      # facet_fields["name_facet"] = all_sci_names_with_facets[:facets]
-      # facet_fields["name_facet"] = get_sci_names_of_volumes(get_facet_names(query))[:facets]
+      facet_fields["name_facet"] = all_sci_names_with_facets[:facets]
     end
     { volumes: volumes, total_number_of_volumes: solr_response["response"]["numFound"], facets: facet_fields }
   end
