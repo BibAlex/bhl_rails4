@@ -25,35 +25,31 @@ Things you need:
   4.  install rubygems
       rvm install rubygems 2.4.8
 
-  5.  install rails
-      rvm install rails 4.2.4
-  
-
-  6.  Install jre
+  5.  Install jre
       sudo apt-get install default-jre
 
-  7.  install git
+  6.  install git
       sudo apt-get install git
 
-  8.  download and run solr
+  7.  download and run solr
       git clone https://github.com/BibAlex/bhl_rails_4_solr.git solr
       cd solr/example
       java -jar start.jar
       make sure localhost:8983/solr is up and running
 
-  9.  download and run solr_test
+  8.  download and run solr_test
       mkdir solr_test
       git clone https://github.com/BibAlex/bhl_rails_4_solr_test.git solr_test
       cd solr_test/example
       java -jar start.jar
       make sure localhost:8989/solr is up and running  
 
-  10.  Prepare the environment
+  9.  Prepare the environment
       sudo apt-get install libxslt-dev libxml2-dev
       apt-get install libmysqlclient-dev nodejs
       sudo apt-get install imagemagick
 
-  11. Download the code
+  10. Download the code
       git clone https://github.com/BibAlex/bhl_rails4.git bhl_rails
 
 
