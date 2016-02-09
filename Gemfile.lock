@@ -106,6 +106,7 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
+    i18n_compare_yaml_files (1.0.1)
     jbuilder (1.5.3)
       activesupport (>= 3.0.0)
       multi_json (>= 1.2.0)
@@ -299,6 +300,7 @@ DEPENDENCIES
   guard-rspec
   haml
   i18n
+  i18n_compare_yaml_files
   jbuilder (~> 1.2)
   jquery-rails
   mini_magick

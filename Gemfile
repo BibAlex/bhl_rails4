@@ -65,10 +65,11 @@ group :development, :test do
   gem 'uuidtools'
   gem 'database_cleaner'
   gem 'rubocop', require: false
+  gem 'i18n_compare_yaml_files'
 end
 
 group :test do
-  gem 'guard-rspec'  
+  gem 'guard-rspec'
   gem 'rack_session_access'
 end
 

@@ -1,19 +1,27 @@
+require 'i18n_compare_yaml_files'
+
 namespace :I18n_difference do
   desc 'check_i18n_locales_differences'
   task :check_i18n_differences => :environment do
-    English_file = HashWithIndifferentAccess.new(YAML.load(File.read(File.join(Rails.root, "config", "locales", "en.yml"))))
-    Arabic_file = HashWithIndifferentAccess.new(YAML.load(File.read(File.join(Rails.root, "config", "locales", "ar.yml"))))
-    diff_main_items = English_file["en"].keys - Arabic_file["ar"].keys
-    print diff_main_items
-    print "\n"
-    English_file["en"].each do |key, value|
-      unless Arabic_file["ar"][key].nil?
-        diff = English_file["en"][key].keys - Arabic_file["ar"][key].keys
-        unless diff.blank?
-          print key
-          print "\n"
-          print diff
-          print "\n"
+    i18n_lang_files = []
+
+    Dir.glob(File.join(Rails.root, "config", "locales", "*.yml")).each do |lang_file|
+      # only add files with names more than 6 digits
+      # (anything looks like en.yml)
+      if lang_file.split("/")[-1].length == 6
+        i18n_lang_files << {file_name: lang_file.split("/")[-1], content: File.read(lang_file)}
+      end
+    end
+
+    i18n_lang_files.each do |main_lang_file|
+      puts "\n#{main_lang_file[:file_name]}"
+      puts "======"
+      i18n_lang_files.each do |compare_to_lang_file|
+        unless main_lang_file[:file_name] == compare_to_lang_file[:file_name]
+          compare_results = I18nCompareYamlFiles.compare(main_lang_file[:content], compare_to_lang_file[:content])
+          compare_results.each do |k,v|
+            puts "#{k}: #{v}"
+          end
         end
       end
     end
