@@ -9,13 +9,10 @@ module SAMPLDATA
     def self.fill_db_with_sample_data
       DatabaseCleaner.clean_with :truncation
 
-      ['Pending metadata',
-       'Pending content',
-       'Pending indexing',
-       'Indexed'].each do |status|
+      ["Pending metadata", "Finished metadata"].each do |status|
         BookStatus.create(status_code: status)
       end
-
+      
       ["Pending content", "Pending indexing", "Indexed"].each do |status|
         BatchStatus.create(status_code: status)
       end
