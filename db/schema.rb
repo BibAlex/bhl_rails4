@@ -60,13 +60,6 @@ ActiveRecord::Schema.define(version: 20160204093418) do
     t.datetime "updated_at",              null: false
   end
 
-  create_table "batch_volumes", force: :cascade do |t|
-    t.integer  "batch_id",   limit: 4, null: false
-    t.integer  "volume_id",  limit: 4, null: false
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-  end
-
   create_table "batches", force: :cascade do |t|
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
@@ -223,11 +216,6 @@ ActiveRecord::Schema.define(version: 20160204093418) do
     t.integer  "eol_page_link",  limit: 4
     t.string   "eol_thumb_link", limit: 255
     t.integer  "lookup_fail",    limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "notifiers", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
