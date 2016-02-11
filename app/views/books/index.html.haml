@@ -5,17 +5,17 @@
 = javascript_include_tag 'books_functions'
 
 .row
-  .col-md-4.sidebar-offcanvas.pull-right
-    = render partial: "books/right_column"
-  .col-md-8
-    = render partial: "books/breadcrumb"  
-    - if (@response.count > 0)
+  - if (@response[:volumes].count > 0)
+    .col-md-4.sidebar-offcanvas.pull-right
+      = render partial: "books/right_column"
+    .col-md-8
+      = render partial: "books/breadcrumb"  
       - @books.each_with_index  do |doc, index|
         = render partial: "books/listresult", locals: { index: index, doc: doc }
       %div
         .pagination-centered
           = will_paginate @books
-    - else
-      .well-sm.center-block
-        %h2
-          = I18n.t('common.no_books_found')
+  - else
+    .well-sm.center-block
+      %h2
+        = I18n.t('common.no_books_found')

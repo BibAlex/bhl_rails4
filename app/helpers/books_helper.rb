@@ -31,8 +31,8 @@ module BooksHelper
 
   def search_volumes(query, page, limit, sort_type)
     response = search_facet_highlight(query, page, limit, sort_type)
-    all_sci_names_with_facets = get_sci_names_with_facet(query, page, limit)
-    process_solr_volumes(response, all_sci_names_with_facets)
+    
+    process_solr_volumes(response, query, page, limit)
   end
 
   def fill_response_array(arr)
@@ -285,11 +285,13 @@ module BooksHelper
 
   private
 
-  def process_solr_volumes(solr_response, all_sci_names_with_facets)
+  def process_solr_volumes(solr_response, query, page, limit)
     volumes = []
     facet_fields = {}
 
     if solr_response["response"]["numFound"] > 0
+      
+      all_sci_names_with_facets = get_sci_names_with_facet(query, page, limit)
 
       solr_response["response"]["docs"].each do |doc|
         tmp = all_sci_names_with_facets[:sci_names][doc[:job_id]]
