@@ -15,7 +15,7 @@ module HadoopHelper
   end
   
   def generate_json_volume_pending_content_listing(volume_list)
-      batch_id = volume_list.blank? ? "" : Batch.create(status_id: BatchStatus.pending_content.id).id
+      batch_id = volume_list.blank? ? "" : Batch.find_or_create_by(status_id: BatchStatus.pending_content.id).id
       json_output = "{ \"batch_id\": \"#{batch_id}\", \"Volumes\":["
       volume_list.each do |volume|
         json_output << "\"#{volume.job_id}\","
