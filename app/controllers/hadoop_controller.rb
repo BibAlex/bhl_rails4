@@ -81,7 +81,7 @@ class HadoopController < ApplicationController
       return
     end
     
-    names_content = params[:body]
+    names_content = request.body.read
     if names_content.empty?
       render json: "Error invalid post"
       return
