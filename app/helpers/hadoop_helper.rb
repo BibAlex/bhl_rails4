@@ -138,7 +138,7 @@ module HadoopHelper
     batch = Batch.find(batch_id)
     batch.update_attributes(status_id: BatchStatus.pending_indexing.id)
     begin
-      file = File.new("#{Rails.root}/public/batches_#{Rails.env}/batch_#{batch_id}", 'wb+')
+      file = File.new("#{Rails.root}/public/batches_#{Rails.env}/batch_#{batch_id}.zip", 'wb+')
       file.binmode
       file.write(names_content)
       file.flush
