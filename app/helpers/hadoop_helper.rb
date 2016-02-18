@@ -108,7 +108,7 @@ module HadoopHelper
       batch_id = batch.attr("batchID").to_i
       Batch.find(batch_id).update_attributes(status_id: BatchStatus.indexed.id)
       data_xml.xpath("//IndexingFailureList//JobID").each do |job_id|
-        volume  = Volume.find_by_job_id(job_id.attr("value").to_i)
+        volume  = Volume.find_by_job_id(job_id.text.to_i)
         volume.update_attributes(batch_id: nil) unless volume.nil?
       end
     end
