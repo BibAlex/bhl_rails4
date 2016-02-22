@@ -26,7 +26,7 @@ class Volume < ActiveRecord::Base
   end
   
   def self.get_pending_content_volumes
-    Volume.where(batch_id: nil)
+    Volume.where(batch_id: nil).limit(BATCH_LIMIT)
   end
   
   def self.get_pending_indexing_volumes
