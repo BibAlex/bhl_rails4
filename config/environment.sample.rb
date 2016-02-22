@@ -38,6 +38,8 @@ DAR_API_THUMBNAIL_JOBID_STRING = '[JOBID]'
 DAR_API_CONTENT = ''
 DAR_API_CONTENT_JOBID_STRING = '[JOBID]'
 
+BATCH_LIMIT = 100
+
 # old path: content60.eol.org/content
 EOL_CONTENT_PATH = "http://media.eol.org/content/"
 
