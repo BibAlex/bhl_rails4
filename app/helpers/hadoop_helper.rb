@@ -172,7 +172,7 @@ module HadoopHelper
         book.endnote = book_xml.xpath(".//EndNote").text
         book.mods = book_xml.xpath(".//mods").text               
 
-        if metadata_hash[:title_alternative].empty? &&  metadata_hash[:title].empty?
+        if metadata_hash[:title_alternative].blank? &&  metadata_hash[:title].blank?
           # this means that this book has failed
           book.book_status_id = BookStatus.pending_metadata.id
           book.save
