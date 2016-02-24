@@ -245,7 +245,7 @@ private
   def get_author_name(name)
     name_string = []
     name.xpath('.//xmlns:namePart').each do |name_part|
-      name_string << name_part.text unless name_part.empty?
+      name_string << name_part.text unless name_part.text.empty?
     end
     return name_string.join(', ')
   end
