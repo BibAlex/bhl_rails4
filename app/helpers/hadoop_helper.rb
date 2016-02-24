@@ -172,7 +172,7 @@ module HadoopHelper
         book.endnote = book_xml.xpath(".//EndNote").text
         book.mods = book_xml.xpath(".//mods").text               
 
-        if metadata_hash[:title_alternative].blank? &&  metadata_hash[:title].blank?
+        if metadata_hash[:title_alternative].empty? &&  metadata_hash[:title].empty?
           # this means that this book has failed
           book.book_status_id = BookStatus.pending_metadata.id
           book.save
@@ -184,17 +184,19 @@ module HadoopHelper
           book.contributor = metadata_hash[:contributor]
           book.book_status_id = BookStatus.finished_metadata.id
           book.save
+          
+          book.authors << metadata_hash[:authors]
+          book.locations << metadata_hash[:locations]
+          book.languages << metadata_hash[:languages]          
+          book.subjects << metadata_hash[:subjects]
+  
+          book_xml.xpath(".//JobIDs//JobID").each do |job_id|
+            volume = Volume.find_or_create_by(job_id: job_id.text.gsub("DAF-Job:",""))
+            book.volumes << volume
+          end
+          book.save
         end
-        book.authors << metadata_hash[:authors]
-        book.locations << metadata_hash[:locations]
-        book.languages << metadata_hash[:languages]          
-        book.subjects << metadata_hash[:subjects]
-
-        book_xml.xpath(".//JobIDs//JobID").each do |job_id|
-          volume = Volume.find_or_create_by(job_id: job_id.text.gsub("DAF-Job:",""))
-          book.volumes << volume
-        end
-        book.save
+       
       end
     end
     return true
