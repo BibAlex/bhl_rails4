@@ -38,16 +38,16 @@ module HadoopHelper
       subjects = []
       locations = []
       book.languages.select(:name).each do |lang|
-        languages << "\"#{lang.name}\""
+        languages << "#{lang.name}"
       end
       book.authors.select(:name).each do |author|
-        authors << "\"#{author.name}\""
+        authors << "#{author.name}"
       end
       book.subjects.select(:name).each do |subject|
-        subjects << "\"#{subject.name}\""
+        subjects << "#{subject.name}"
       end
       book.locations.select(:address).each do |location|
-        locations << "\"#{location.address}\""
+        locations << "#{location.address}"
       end
       json_output << "{\"job_id\": \"#{volume.job_id}\","
       json_output << "\"bibID\": \"#{book.bib_id}\","
