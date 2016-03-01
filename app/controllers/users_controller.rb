@@ -25,7 +25,7 @@ class UsersController < ApplicationController
   # POST /users/recover_password
   def recover_password
     return redirect_to user_path(id: session[:user_id]) if is_logged_in?
-    if verify_recaptcha
+    if bhl_verify_recaptcha
       @user = User.find_by_email(params[:user][:email])# unless @email
       if @user
         @user.change_activation_code
@@ -68,7 +68,7 @@ class UsersController < ApplicationController
 
     # POST /users/validate
   def validate
-    if (session[:login_attempts].to_i >= LOGIN_ATTEMPTS) && !(verify_recaptcha)
+    if (session[:login_attempts].to_i >= LOGIN_ATTEMPTS) && !(bhl_verify_recaptcha)
       redirect_to({ controller: 'users', action: 'login'} , flash: { error: I18n.t('msgs.recaptcha_error') })
     else
       @user = User.authenticate(params[:user][:username], params[:user][:password])
@@ -95,7 +95,7 @@ class UsersController < ApplicationController
   def create
     params[:user][:photo_name] = User.process_user_photo_name(params[:user][:photo_name])
     @user = User.new(User.user_params(params[:user]))
-    if @user.valid? && verify_recaptcha
+    if @user.valid? && bhl_verify_recaptcha
       handle_successful_registration
     else
       handle_failed_registration
@@ -163,7 +163,7 @@ class UsersController < ApplicationController
   end
 
   def handle_failed_registration
-    @user.errors.add('recaptcha', I18n.t('msgs.form_validation_errors_for_attribute_assistive')) unless verify_recaptcha
+    @user.errors.add('recaptcha', I18n.t('msgs.form_validation_errors_for_attribute_assistive')) unless bhl_verify_recaptcha
     session[:failed_user] = params[:user]
     redirect_to controller: "users", action: "new"
   end

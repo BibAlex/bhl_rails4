@@ -76,7 +76,7 @@ class PagesController < ApplicationController
   
   def handle_invalid_email_message
     @verify_captcha = true
-    @email_message.errors.add('recaptcha', I18n.t("form_validation_errors_for_attribute_assistive")) unless verify_recaptcha
+    @email_message.errors.add('recaptcha', I18n.t("form_validation_errors_for_attribute_assistive")) unless bhl_verify_recaptcha
     render 'contact'
   end
 end
