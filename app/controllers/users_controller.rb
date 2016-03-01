@@ -85,6 +85,7 @@ class UsersController < ApplicationController
     if session[:failed_user]
       @user = User.new(User.user_params(session[:failed_user]))
       @user.valid?
+      @user.errors.add('recaptcha', I18n.t('msgs.form_validation_errors_for_attribute_assistive')) unless bhl_verify_recaptcha
       session[:failed_user] = nil
     else
        @user = User.new
@@ -164,7 +165,6 @@ class UsersController < ApplicationController
   end
 
   def handle_failed_registration
-    @user.errors.add('recaptcha', I18n.t('msgs.form_validation_errors_for_attribute_assistive')) unless bhl_verify_recaptcha
     session[:failed_user] = params[:user]
     redirect_to controller: "users", action: "new"
   end
