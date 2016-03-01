@@ -104,12 +104,13 @@ class UsersController < ApplicationController
 
   # GET /users/activate/:guid/:activation_code
   def activate
-    @user = User.find_by_guid_and_verification_code(params[:guid], params[:activation_code])
+    @user = User.find_by_guid(params[:guid])
     return redirect_to root_path, flash: { error: I18n.t('msgs.activation_failed') } if @user.nil?
-    if @user.active
-      redirect_to root_path, flash: { error: I18n.t('msgs.account_already_active') }
+    unless @user.active
+       return activate_user if @user.verification_code == params[:activation_code]
+       return redirect_to root_path, flash: { error: I18n.t('msgs.activation_failed') } 
     else
-      activate_user
+      redirect_to root_path, flash: { error: I18n.t('msgs.account_already_active') }
     end
   end
 
