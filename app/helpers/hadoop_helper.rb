@@ -136,7 +136,7 @@ module HadoopHelper
   
   def ingest_batch(batch_id, names_content)
     batch = Batch.find(batch_id)
-    batch.update_attributes(status_id: BatchStatus.pending_indexing.id)
+    batch.update_attributes(status_id: BatchStatus.pending_indexing.id) unless Volume.where(batch_id: batch.id).blank?
     begin
       file = File.new("#{Rails.root}/public/batches_#{Rails.env}/batch_#{batch_id}.zip", 'wb+')
       file.binmode
