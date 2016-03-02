@@ -46,8 +46,6 @@ class GeographicsController < ApplicationController
       if @range.include?(icon_in.to_s)
 
         values= item.value.split(",") #"city, longitude, latitude"
-        #inverted the indecies in the solr query ("to match the fake data in the solr core")
-        
         location = load_geolocations_from_solr(item.value)
 
          unless location.nil?
