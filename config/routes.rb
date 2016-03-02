@@ -144,9 +144,12 @@ BhlRails4::Application.routes.draw do
     post "hadoop/finished_indexing", to: 'hadoop#finished_indexing'
     post "hadoop/mark_finished_content",  to: 'hadoop#mark_finished_content'
     post "hadoop/ingest_content",  to: 'hadoop#ingest_content'
+    
+    get "darviewer/user"
+    get "darviewer/book"
+    get "darviewer/annotations"
+
+    
   end
   
-  get "darviewer/user"
-  get "darviewer/book"
-  get "darviewer/annotations"
 end
