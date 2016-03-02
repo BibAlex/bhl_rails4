@@ -6,7 +6,7 @@ function add_book_to_collection(job_id)
 	{
 		collection_title = document.getElementById("collection_title_"+ job_id).value;
 		collection_description = document.getElementById("collection_description_"+ job_id).value;
-		collection_is_public = document.getElementById("is_public_"+ job_id).value;
+		collection_is_public = document.getElementById("is_public_"+ job_id).checked;
 		add_book_url = "/collections/add_book?job_id=" + job_id + "&title=" + escape(collection_title) + "&description=" + escape(collection_description) + "&is_public=" + collection_is_public;
 	}
 	else
