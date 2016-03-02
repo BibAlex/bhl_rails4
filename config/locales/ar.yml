@@ -13,6 +13,7 @@ ar:
     genre: "النوع"
     tabs_more: "المزيد .."
     names: "الأسماء:"
+    names_header: "الأسماء"
     at: "عند"
     as: "بأنها"
     with: "بمقدار"
