@@ -85,6 +85,7 @@ class UsersController < ApplicationController
     if session[:failed_user]
       @user = User.new(User.user_params(session[:failed_user]))
       @user.valid?
+      @user.errors.add('recaptcha', I18n.t('msgs.form_validation_errors_for_attribute_assistive')) unless bhl_verify_recaptcha
       session[:failed_user] = nil
     else
        @user = User.new
@@ -104,12 +105,13 @@ class UsersController < ApplicationController
 
   # GET /users/activate/:guid/:activation_code
   def activate
-    @user = User.find_by_guid_and_verification_code(params[:guid], params[:activation_code])
+    @user = User.find_by_guid(params[:guid])
     return redirect_to root_path, flash: { error: I18n.t('msgs.activation_failed') } if @user.nil?
-    if @user.active
-      redirect_to root_path, flash: { error: I18n.t('msgs.account_already_active') }
+    unless @user.active
+       return activate_user if @user.verification_code == params[:activation_code]
+       return redirect_to root_path, flash: { error: I18n.t('msgs.activation_failed') } 
     else
-      activate_user
+      redirect_to root_path, flash: { error: I18n.t('msgs.account_already_active') }
     end
   end
 
@@ -163,7 +165,6 @@ class UsersController < ApplicationController
   end
 
   def handle_failed_registration
-    @user.errors.add('recaptcha', I18n.t('msgs.form_validation_errors_for_attribute_assistive')) unless bhl_verify_recaptcha
     session[:failed_user] = params[:user]
     redirect_to controller: "users", action: "new"
   end
