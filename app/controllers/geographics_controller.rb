@@ -61,9 +61,10 @@ class GeographicsController < ApplicationController
   end
   
   def show
-    location = load_geolocations_from_solr(params[:address])
+    @address = params[:address]
+    location = load_geolocations_from_solr(@address)
     @location_name = location[:formatted_address] unless location.nil?
-    response = @rsolr.find q: "location_facet:\"#{params[:address]}\""
+    response = @rsolr.find q: "location_facet:\"#{@address}\""
     @books = {}
     @books_count = response.total
     response.docs.each do |doc|
