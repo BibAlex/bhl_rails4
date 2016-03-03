@@ -44,6 +44,10 @@ GEM
       activerecord (>= 3.0)
     arel (6.0.3)
     ast (2.2.0)
+    better_errors (2.1.1)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
+      rack (>= 0.9.0)
     builder (3.2.2)
     byebug (6.0.2)
     capybara (2.5.0)
@@ -290,6 +294,7 @@ DEPENDENCIES
   actionpack-action_caching
   actionpack-page_caching
   acts_as_list
+  better_errors
   byebug
   capybara
   carrierwave
