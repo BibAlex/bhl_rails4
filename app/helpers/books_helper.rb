@@ -180,7 +180,7 @@ module BooksHelper
   def get_normal_attributes(query_array, name_query_join_operator)
     normal_attributes = { }
     normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['location']
-    normal_attributes[:language_facet] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
+    normal_attributes[:language_auto] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
     sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
     unless sci_names.nil?
       job_ids = get_volumes_contain_sci_name(sci_names, name_query_join_operator)
