@@ -45,7 +45,7 @@ end
 group :development do
   gem 'actionpack-page_caching'
   gem 'actionpack-action_caching'
-  gem 'better_errors'
+
 end
 
 group :development, :test do
@@ -74,6 +74,8 @@ group :test do
   gem 'rack_session_access'
 end
 
+  gem 'better_errors'
+  gem 'binding_of_caller'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
