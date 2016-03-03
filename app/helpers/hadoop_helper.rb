@@ -56,7 +56,7 @@ module HadoopHelper
       json_output << "\"titles\": [\"#{book.title}\",\"#{book.title_alternative}\"],"
       json_output << "\"authors\": #{authors},"
       json_output << "\"subjects\": #{subjects},"
-      json_output << "\"publishers\": [\"#{book.publisher}\"],"
+      json_output << "\"publishers\": [#{book.publisher.to_json}],"
       json_output << "\"location_address\": #{locations},"
       json_output << "\"main_title\": \"#{book.title}\"},"
     end
