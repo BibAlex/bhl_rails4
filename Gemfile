@@ -45,6 +45,7 @@ end
 group :development do
   gem 'actionpack-page_caching'
   gem 'actionpack-action_caching'
+  gem 'better_errors'
 end
 
 group :development, :test do
