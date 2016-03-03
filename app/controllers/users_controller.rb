@@ -71,9 +71,11 @@ class UsersController < ApplicationController
     if (session[:login_attempts].to_i >= LOGIN_ATTEMPTS) && !(bhl_verify_recaptcha)
       redirect_to({ controller: 'users', action: 'login'} , flash: { error: I18n.t('msgs.recaptcha_error') })
     else
-      @user = User.authenticate(params[:user][:username], params[:user][:password])
-      if @user.nil? || !@user.active
-        failed_validation(@user.try(:active))
+      @user = User.find_by_username_and_password(params[:user][:username], User.hash_password(params[:user][:password]))
+      if @user.nil?
+        failed_validation(false)
+      elsif !@user.active
+        failed_validation(true)
       else
        successful_validation
       end
@@ -189,10 +191,10 @@ class UsersController < ApplicationController
     redirect_to root_path, flash: { notice: I18n.t('msgs.account_activated', real_name: @user.real_name) }
   end
 
-  def failed_validation(active_user)
+  def failed_validation(non_active)
     session[:login_attempts] = session[:login_attempts].to_i + 1
     error_msg = nil
-    unless active_user
+    if non_active
       error_msg =  I18n.t('msgs.sign_in_inactive_user')
     else
       error_msg = I18n.t('msgs.sign_in_unsuccessful_error')
