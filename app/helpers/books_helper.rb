@@ -29,8 +29,8 @@ module BooksHelper
     tmp_params
   end
 
-  def search_volumes(query, page, limit, sort_type)
-    response = search_facet_highlight(query, page, limit, sort_type)
+  def search_volumes(query, page, limit, sort_type, fquery = nil)
+    response = search_facet_highlight(query, page, limit, sort_type, fquery)
     
     process_solr_volumes(response, query, page, limit)
   end
@@ -108,7 +108,7 @@ module BooksHelper
       else
         query = prepare_search_query(multilingual_attributes, normal_attributes, "AND")
       end
-    end
+    end    
     query
   end
 
@@ -121,6 +121,20 @@ module BooksHelper
       end
     end
     emptyQuery
+  end
+  
+  def set_fquery_string(query_array, name_query_join_operator)
+    sci_name = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
+    unless sci_name.blank?
+       tmp_array = []
+       sci_name.each do |item|
+         tmp_array << "\"" + item.to_s + "\""
+       end
+       values = "(" + tmp_array.join(" OR ") + ")"
+       field_query = "(" + "sci_name:#{values}" + ")"
+      return "{!join from=job_id to=job_id fromIndex=names_found} #{field_query}"
+    end
+    return nil
   end
 
   def prepare_search_query(multilingual_attributes_and_values, normal_attributes_and_values, query_join_operator)
@@ -164,7 +178,7 @@ module BooksHelper
       query = normal_query
     else
       query = ''
-    end
+    end    
   end
 
   def get_multilingual_attributes(query_array)
@@ -181,6 +195,7 @@ module BooksHelper
     normal_attributes = { }
     normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['location']
     normal_attributes[:language_auto] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
+    # normal_attributes[:sci_name] = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
     sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
     unless sci_names.nil?
       job_ids = get_volumes_contain_sci_name(sci_names, name_query_join_operator)
