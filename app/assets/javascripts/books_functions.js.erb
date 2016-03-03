@@ -1,6 +1,8 @@
 $(document).ready(function() {
     autocomplete();
-    $('.tooltipname').tooltipster({ interactive: true, fixedWidth: 280});
+    if( $('.tooltipname').length > 0 ){
+      $('.tooltipname').tooltipster({ interactive: true, fixedWidth: 280});
+    }
   });
 
 function searchfnc(search_select, field){
