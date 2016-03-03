@@ -5,10 +5,10 @@
     .browse
       .col-md-2
         - coverauthor = doc[:author] ? doc[:author][0] : ""
-        = render partial: "books/covers", locals: { coverno: index + 1, covertitle: doc[:title][0].html_safe, coverauthor: coverauthor } if doc[:title]
+        = render partial: "books/covers", locals: { coverno: index + 1, covertitle: doc[:title][0].html_safe, coverauthor: coverauthor }
       .col-md-6
         %h4
-          = link_to doc[:title][0], book_path(id: doc[:job_id]) if doc[:title]
+          = link_to doc[:title][0], book_path(id: doc[:job_id])
         %p.small
           - if doc[:author]
             = render partial: "books/book_multi_valued_field", locals: { book_multi_valued_field: doc[:author], title: I18n.t('common.by') }
