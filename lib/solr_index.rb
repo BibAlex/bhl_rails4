@@ -25,9 +25,9 @@ module SOLR
           doc[:bib_id] = book.bib_id
           doc[:title_sort] = book.title
           languages = []
-          book.languages.select(:code).each do |language|
-            if ["eng", "fre", "ara", "ger", "ita"].include?(language.code) 
-              languages << language.code  
+          book.languages.select(:name).each do |language|
+            if ["English", "Frensh", "Arabic", "German", "Italian"].include?(language.name) 
+              languages << language.name  
             end
           end
           languages << "ud" if languages.blank?
