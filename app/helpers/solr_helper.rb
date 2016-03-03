@@ -11,11 +11,11 @@ module SolrHelper
     response.facets.first.items
   end  
     
-  def search_facet_highlight(query, page, limit, sort_type)
+  def search_facet_highlight(query, page, limit, sort_type, fquery= nil)
     facet_array = ['author_facet', 'language_facet', 'subject_facet', 'location_facet', 'publisher_facet']
     start = (page > 1) ? (page - 1) * limit : 0
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
-    response = solr.find  'q' => query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
+    response = solr.find  'q' => query, 'fq' => fquery, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
                           'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4"
     response
   end

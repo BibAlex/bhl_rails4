@@ -15,7 +15,8 @@ class BooksController < ApplicationController
 
     @query_array = fill_query_array(params)
     query = set_query_string(@query_array, " OR ")
-    @response = search_volumes(query, @page, PAGE_SIZE, @sort)
+    fquery = set_fquery_string(@query_array, " OR ")
+    @response = search_volumes(query, @page, PAGE_SIZE, @sort, fquery)
     @books = WillPaginate::Collection.create(@page, PAGE_SIZE, @response[:total_number_of_volumes]) do |pager|
       pager.replace @response[:volumes]
     end
