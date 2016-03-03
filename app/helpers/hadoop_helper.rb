@@ -49,7 +49,7 @@ module HadoopHelper
       book.locations.select(:address).each do |location|
         locations << "#{location.address}"
       end
-      json_output << "{\"job_id\": \"#{volume.job_id}\","
+      json_output << "{\"job_id\": #{volume.job_id.to_json},"
       json_output << "\"bibID\": \"#{book.bib_id}\","
       json_output << "\"date\": \"#{book.published_at}\","
       json_output << "\"languages\": #{languages},"
