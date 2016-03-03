@@ -49,16 +49,16 @@ module HadoopHelper
       book.locations.select(:address).each do |location|
         locations << "#{location.address}"
       end
-      json_output << "{\"job_id\": \"#{volume.job_id}\","
-      json_output << "\"bibID\": \"#{book.bib_id}\","
-      json_output << "\"date\": \"#{book.published_at}\","
+      json_output << "{\"job_id\": #{volume.job_id.to_json},"
+      json_output << "\"bibID\": #{book.bib_id.to_json},"
+      json_output << "\"date\": #{book.published_at.to_json},"
       json_output << "\"languages\": #{languages},"
-      json_output << "\"titles\": [\"#{book.title}\",\"#{book.title_alternative}\"],"
+      json_output << "\"titles\": [#{book.title.to_json},#{book.title_alternative.to_json}],"
       json_output << "\"authors\": #{authors},"
       json_output << "\"subjects\": #{subjects},"
-      json_output << "\"publishers\": [\"#{book.publisher}\"],"
+      json_output << "\"publishers\": [#{book.publisher.to_json}],"
       json_output << "\"location_address\": #{locations},"
-      json_output << "\"main_title\": \"#{book.title}\"},"
+      json_output << "\"main_title\": #{book.title.to_json}},"
     end
     json_output = json_output[0...json_output.length-1] if pending_volumes.count > 0
     json_output << "]}"

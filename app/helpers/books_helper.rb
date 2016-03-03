@@ -180,7 +180,7 @@ module BooksHelper
   def get_normal_attributes(query_array, name_query_join_operator)
     normal_attributes = { }
     normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['location']
-    normal_attributes[:language_facet] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
+    normal_attributes[:language_auto] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
     sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
     unless sci_names.nil?
       job_ids = get_volumes_contain_sci_name(sci_names, name_query_join_operator)
@@ -299,7 +299,7 @@ module BooksHelper
         tmp = all_sci_names_with_facets[:sci_names][doc[:job_id]]
         sci_names = tmp.nil? ? [] : tmp
         languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it" }
-        lang = languages.has_key?(doc["language_facet"]) ? languages[doc["language_facet"][0]] : "ud"
+        lang = languages.has_key?(doc["language_facet"][0]) ? languages[doc["language_facet"][0]] : "ud"
         options = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
                     rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
                     language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
