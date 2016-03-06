@@ -16,6 +16,8 @@
         .pagination-centered
           = will_paginate @books
   - else
-    .well-sm.center-block
+    %div
+      = render 'action_buttons'
+    %div.no-books
       %h2
         = I18n.t('common.no_books_found')
