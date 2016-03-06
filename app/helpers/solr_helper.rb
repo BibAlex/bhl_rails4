@@ -38,10 +38,10 @@ module SolrHelper
   end
   
   
-  def get_sci_names_with_facet(query, page, limit)
+  def get_sci_names_with_facet(query, page, limit, fquery)
     start = (page > 1) ? (page - 1) * limit : 0
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => "{!join from=job_id to=job_id fromIndex=books_metadata} #{query}", 'fl' => 'job_id,sci_name', 'facet' => true, 'facet.field' => "sci_name", 'start' =>  start, 'rows' => limit
+    response = rsolr.find 'q' => fquery, 'fq' => "{!join from=job_id to=job_id fromIndex=books_metadata} #{query}", 'fl' => 'job_id,sci_name', 'facet' => true, 'facet.field' => "sci_name", 'start' =>  start, 'rows' => limit
     sci_names = {}
     
     if response["response"]["numFound"] > 0
