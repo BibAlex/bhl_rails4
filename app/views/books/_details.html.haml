@@ -22,7 +22,7 @@
           
       - unless @volume[:date].nil?
         %dt
-          = I18n.t(:book_date_title) + ':'
+          = I18n.t('common.date') + ':'
         %dd
           = @volume[:date].first(4)
       
