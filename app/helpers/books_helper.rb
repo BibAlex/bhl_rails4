@@ -32,7 +32,7 @@ module BooksHelper
   def search_volumes(query, page, limit, sort_type, fquery = nil)
     response = search_facet_highlight(query, page, limit, sort_type, fquery)
     
-    process_solr_volumes(response, query, page, limit)
+    process_solr_volumes(response, query, page, limit, fquery)
   end
 
   def fill_response_array(arr)
@@ -96,13 +96,13 @@ module BooksHelper
   end
 
 
-  def set_query_string(query_array, name_query_join_operator)
+  def set_query_string(query_array)
     emptyQuery = is_empty_search?(query_array)
     if(emptyQuery)
       query = "*:*"
     else
       multilingual_attributes = get_multilingual_attributes(query_array)
-      normal_attributes = get_normal_attributes(query_array, name_query_join_operator)
+      normal_attributes = get_normal_attributes(query_array)
       if(!(query_array['all'].empty?))
         query = prepare_search_query(multilingual_attributes, normal_attributes, "OR")
       else
@@ -115,26 +115,25 @@ module BooksHelper
   def is_empty_search?(query_array)
     emptyQuery = true
     query_array.each do |key, value|
-      if value.count > 0
-        emptyQuery = false
-        break
+      unless key == "name"
+        if value.count > 0
+          emptyQuery = false
+          break
+        end
       end
     end
     emptyQuery
   end
   
-  def set_fquery_string(query_array, name_query_join_operator)
-    sci_name = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
-    unless sci_name.blank?
-       tmp_array = []
-       sci_name.each do |item|
-         tmp_array << "\"" + item.to_s + "\""
-       end
-       values = "(" + tmp_array.join(" OR ") + ")"
-       field_query = "(" + "sci_name:#{values}" + ")"
+  def set_fquery_string(query_array)
+    sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']      
+    unless sci_names.blank?
+      exact_sci_names = get_exact_sci_names(sci_names)
+       values = exact_sci_names.join(" OR ")
+       field_query = "(sci_name:#{values})"
       return "{!join from=job_id to=job_id fromIndex=names_found} #{field_query}"
     end
-    return nil
+    return "*:*"
   end
 
   def prepare_search_query(multilingual_attributes_and_values, normal_attributes_and_values, query_join_operator)
@@ -191,16 +190,16 @@ module BooksHelper
     multilingual_attributes.delete_if { |key, value| value.blank? }
   end
 
-  def get_normal_attributes(query_array, name_query_join_operator)
+  def get_normal_attributes(query_array)
     normal_attributes = { }
     normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['location']
     normal_attributes[:language_auto] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
     # normal_attributes[:sci_name] = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
-    sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
-    unless sci_names.nil?
-      job_ids = get_volumes_contain_sci_name(sci_names, name_query_join_operator)
-      normal_attributes[:job_id] = job_ids.empty? ? nil : job_ids
-    end
+    # sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
+    # unless sci_names.nil?
+      # job_ids = get_volumes_contain_sci_name(sci_names, name_query_join_operator)
+      # normal_attributes[:job_id] = job_ids.empty? ? nil : job_ids
+    # end
     normal_attributes.delete_if { |key, value| value.blank? }
   end
 
@@ -302,13 +301,14 @@ module BooksHelper
 
   private
 
-  def process_solr_volumes(solr_response, query, page, limit)
+  def process_solr_volumes(solr_response, query, page, limit, fquery)
     volumes = []
     facet_fields = {}
 
     if solr_response["response"]["numFound"] > 0
       
-      all_sci_names_with_facets = get_sci_names_with_facet(query, page, limit)
+     
+      all_sci_names_with_facets = get_sci_names_with_facet(query, page, limit, fquery)
 
       solr_response["response"]["docs"].each do |doc|
         tmp = all_sci_names_with_facets[:sci_names][doc[:job_id]]
