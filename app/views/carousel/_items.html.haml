@@ -23,7 +23,8 @@
     %ul.list-group
       - items.each do |item|
         %li.list-group-item
-          = link_to item[:title].first, { controller: controller, action: action, id: item[:id] || item[:job_id] }
+          - title = params[:type] == "related" ? item[:title].first : item[:title]
+          = link_to title, { controller: controller, action: action, id: item[:id] || item[:job_id] }
 
     %center{ id: "#{type}_pagination" }
       = will_paginate items, page_links: false, previous_label: "", next_label: ""
