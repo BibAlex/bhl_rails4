@@ -14,8 +14,8 @@ class BooksController < ApplicationController
     @sort = params[:sort_type] ? params[:sort_type] : '' # get sort options (rate or views) from params
 
     @query_array = fill_query_array(params)
-    query = set_query_string(@query_array, " OR ")
-    fquery = set_fquery_string(@query_array, " OR ")
+    query = set_query_string(@query_array)
+    fquery = set_fquery_string(@query_array)
     @response = search_volumes(query, @page, PAGE_SIZE, @sort, fquery)
     @books = WillPaginate::Collection.create(@page, PAGE_SIZE, @response[:total_number_of_volumes]) do |pager|
       pager.replace @response[:volumes]
