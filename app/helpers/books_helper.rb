@@ -129,9 +129,11 @@ module BooksHelper
     sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']      
     unless sci_names.blank?
       exact_sci_names = get_exact_sci_names(sci_names)
-       values = exact_sci_names.join(" OR ")
-       field_query = "(sci_name:#{values})"
-      return "{!join from=job_id to=job_id fromIndex=names_found} #{field_query}"
+      unless exact_sci_names.blank?
+        values = exact_sci_names.join(" OR ")
+        field_query = "(sci_name:#{values})"
+        return "{!join from=job_id to=job_id fromIndex=names_found} #{field_query}"
+      end
     end
     return "*:*"
   end
