@@ -78,6 +78,7 @@ ar:
     subject: "النوع"
     language: "لغة"
     location: "الموقع الجغرافي"
+    date: "التاريخ"
     author: "المؤلف"
     publisher: "الناشر"
     name: "الاسم"
