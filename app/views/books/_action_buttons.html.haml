@@ -1,0 +1,17 @@
+%small
+  - @query_array.each do |key, val|
+    - if(val != '')
+      - val.each do |term|
+        .tab.center-block
+          - search_type = I18n.t("common.#{key}")
+          = "#{search_type}: #{term}"
+          .close
+            = link_to params: remove_bread_crumb(params, key, term) do
+              ="&times;".html_safe
+
+- query = parse_url_params(params)
+- if (!(@query_array.values.join("").blank?) && session[:user_id])
+  .savequery.pull-right
+    - if(!(already_saved?(session[:user_id], query)))
+      = button_tag I18n.t('common.save_query'), onclick: "save_query(\"#{query}\")", class: "btn btn-success btn-sm", id: "save_query"
+    = link_to I18n.t('common.clear') , { controller: 'books', action: 'index' }, class: "btn btn-warning btn-sm"
