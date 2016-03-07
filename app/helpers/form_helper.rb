@@ -22,7 +22,7 @@ module FormHelper
       options.symbolize_keys!
       if errors_on?(method)
         (options[:class] = "#{options[:class].to_s} errors").strip!
-        (options[:title] = "#{options[:title].to_s} #{I18n.t(:form_validation_errors_for_attribute_assistive)}").strip!
+        (options[:title] = "#{options[:title].to_s} #{I18n.t('msgs.form_validation_errors_for_attribute_assistive')}").strip!
         errors = errors_for_method(@object, method)
       end
     

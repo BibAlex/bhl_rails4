@@ -1,11 +1,12 @@
 .panel.panel-styled
-  - @response[:facets].each do |facet_field, items| 
+  - @response[:facets].each do |facet_field, items|
+    - next if items.blank? 
     .panel-heading
       %h3.panel-title
         = I18n.t("common.#{facet_field}")
     .panel-body
       %ul.dir
-        - items.each do |item|          
+        - items.each do |item|
           %li
             - field = "#{facet_field[0..facet_field.length-7]}"
             - if (params["_#{field}"]) && (params["_#{field}"].include? item[:field_value])

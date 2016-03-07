@@ -24,7 +24,7 @@
           %input.form-control{ id: "appendedDropdownButton focusedInput", placeholder: "Search", type: "text" }
         .btn-group
           %button.btn.dropdown-toggle.allcat{ "data-toggle" => "dropdown" }
-            = "#{I18n.t(:option_all)}"
+            = "#{I18n.t('common.option_all')}"
             %span.caret
           %ul.dropdown-menu.topdropdown-search
             %li
@@ -32,5 +32,5 @@
             %li
               %a{ href: "#" } Aykalam 
         %button.btn.btn-default{ type: "submit" } 
-          = "#{I18n.t(:submit_buton)}"
+          = "#{I18n.t('common.submit_button')}"
         .clearfix
