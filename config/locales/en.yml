@@ -141,10 +141,12 @@ en:
     about_us: About Us
     contact_us: Contact Us    
     browse_all: Browse All
+    submit_button: Submit
     geographics: Geographics
     signout: Sign Out
     logo: "logo.png"
     ba_logo: "balogo-white.svg"
+    bibalex: "Bibliotheca Alexandrina"
     home: Home
     tagged_species: Tagged Species
     copyright_statement: Copyright © Bibliotheca Alexandrina
@@ -167,6 +169,8 @@ en:
     sent: Sent
     find_in_book: Find in the book
     view_in_eol: View in EOL.org
+    tree_of_life_title: Tree of Life
+    option_all: All Categories
     books_with_name: Books with name
     name_found_in_books:
       zero:  "No Books Found"

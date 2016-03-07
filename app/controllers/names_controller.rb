@@ -3,7 +3,7 @@ class NamesController < ApplicationController
   include SolrHelper
   
   def index
-    @page_title = I18n.t(:tree_of_life_title)
+    @page_title = I18n.t('common.tree_of_life_title')
     @entries = Hierarchy.where(browsable: 1).order("label")
   end
   
