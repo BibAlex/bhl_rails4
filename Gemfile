@@ -58,7 +58,7 @@ group :development, :test do
   gem 'capybara'
   gem 'minitest'
   gem 'selenium-webdriver'
-  gem 'social-share-button'
+  gem 'social-share-button', '~> 0.1.8', git: 'https://github.com/cuterxy/social-share-button.git'
   gem 'byebug'
   gem 'will_paginate'
   gem 'carrierwave'
