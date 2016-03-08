@@ -28,7 +28,7 @@ class GeographicsController < ApplicationController
       @map.icons << temp_icon
     end
     response = @rsolr.find q: "*:*", facet: true, 'facet.field' => 'location_facet', rows: 0, 'facet.limit' => 15
-    response.facets.first.items.each do |item|
+    response.facets.first.items.each_with_index do |item, index|
       # specify icon
       case item.hits
         when 1..10
@@ -49,7 +49,7 @@ class GeographicsController < ApplicationController
         location = load_geolocations_from_solr(item.value)
 
          unless location.nil?
-          @map.markers << Cartographer::Gmarker.new( marker_type: "Building",
+          @map.markers << Cartographer::Gmarker.new( name:  "geo_marker_#{index}", marker_type: "Building",
                             position: [location[:latitude],location[:longitude]],
                             info_window_url: "/geographics/show/#{location[:address]}",
                             icon: gicons[icon_in])
