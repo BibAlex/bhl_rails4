@@ -9,7 +9,6 @@ class BooksController < ApplicationController
   before_filter :store_location, only: [:show]
 
   def index
-    @page_title = I18n.t('common.books')
     @page = params[:page] ? params[:page].to_i : 1
     @view = params[:view] ? params[:view] : ''
     @sort = params[:sort_type] ? params[:sort_type] : '' # get sort options (rate or views) from params
