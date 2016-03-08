@@ -54,7 +54,8 @@ module UsersHelper
     end
     query_array = fill_query_array(url_params)
     query = set_query_string(query_array, "AND")
-    response = search_volumes(query, 1, PAGE_SIZE, '')
+    fquery = set_fquery_string(query_array)
+    response = search_volumes(query, 1, PAGE_SIZE, '', fquery)
     response[:total_number_of_volumes]
   end
 end
