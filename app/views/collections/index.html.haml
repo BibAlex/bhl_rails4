@@ -20,6 +20,6 @@
   .row
     = render partial: "collections/collections"
   - if !@collections.blank?
-    %div
+    %center
       .pagination-centered
         = will_paginate @collections 

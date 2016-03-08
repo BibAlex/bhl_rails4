@@ -12,7 +12,7 @@
       = render partial: "books/breadcrumb"  
       - @books.each_with_index  do |doc, index|
         = render partial: "books/listresult", locals: { index: index, doc: doc }
-      %div
+      %center
         .pagination-centered
           = will_paginate @books
   - else

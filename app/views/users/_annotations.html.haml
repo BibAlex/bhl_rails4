@@ -33,7 +33,7 @@
          type: "note", job_id: annotation[:job_id]
         = render "list_annotations", annotations: annotation[:highlights],
          type: "highlight", job_id: annotation[:job_id]
-    %div
+    %center
       .pagination-centered
         = will_paginate @annotations
 - else
