@@ -13,7 +13,7 @@
           %span.pull-right        
             %span.badge
               %a{ href: "/books?#{query.string}" }
-                = I18n.t('common.book_count', count:get_number_of_returned_books(query.string).to_i)   
+                = I18n.t('common.book_count', count: get_number_of_returned_books(query.string).to_i)   
             %i.fa.fa-times-circle
               = link_to I18n.t('common.delete'), user_search_history_delete_query_path(user_id: query.user_id, id: query.id),
                   onclick: "return confirmDelete(\"#{I18n.t('msgs.delete_saved_query_confirm')}\");" 

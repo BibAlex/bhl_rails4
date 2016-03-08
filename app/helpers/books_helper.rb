@@ -96,19 +96,22 @@ module BooksHelper
   end
 
 
-  def set_query_string(query_array)
+  def set_query_string(query_array, conjunction = nil)
     emptyQuery = is_empty_search?(query_array)
     if(emptyQuery)
       query = "*:*"
     else
       multilingual_attributes = get_multilingual_attributes(query_array)
       normal_attributes = get_normal_attributes(query_array)
-      if(!(query_array['all'].empty?))
-        query = prepare_search_query(multilingual_attributes, normal_attributes, "OR")
-      else
-        query = prepare_search_query(multilingual_attributes, normal_attributes, "AND")
+      unless conjunction
+        if !(query_array['all'].empty?)
+          conjunction ="OR"
+        else
+          conjunction = "AND"
+        end
       end
-    end    
+      query = prepare_search_query(multilingual_attributes, normal_attributes, conjunction)
+    end
     query
   end
 
