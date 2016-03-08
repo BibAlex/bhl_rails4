@@ -24,7 +24,7 @@ class PagesController < ApplicationController
   end
   
   def about
-    
+    @page_title = I18n.t('common.about_us')
   end
   
   def contact
