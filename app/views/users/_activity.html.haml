@@ -31,7 +31,7 @@
               = "#{I18n.t('common.at')} #{activity.created_at}"
       - if index < @activities.count
         %hr
-    %div
+    %center
       .pagination-centered
       = will_paginate @activities
   
