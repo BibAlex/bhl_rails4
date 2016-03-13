@@ -14,8 +14,8 @@ module BHL
 
     def log_out
       session.clear
-      #cookies.delete :SSid
-      cookies.delete :SSid, :domain => 'bhl.bibalex.org'
+      cookies.delete :SSid
+      # cookies.delete :SSid, :domain => 'bhl.bibalex.org'
     end
   end
 end
