@@ -296,7 +296,7 @@ module BooksHelper
     unless solr_response["response"]["numFound"] == 0
       doc = solr_response["response"]["docs"][0]
       languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it" }
-      lang = languages.has_key?(doc["language_facet"][0]) ? languages[doc["language_facet"][0]] : "ud"
+      lang = (!doc["language_facet"].empty? && languages.has_key?(doc["language_facet"][0])) ? languages[doc["language_facet"][0]] : "ud"
       volume = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
                  rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
                  language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"] }
@@ -319,7 +319,7 @@ module BooksHelper
         tmp = all_sci_names_with_facets[:sci_names][doc[:job_id]]
         sci_names = tmp.nil? ? [] : tmp
         languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it" }
-        lang = languages.has_key?(doc["language_facet"][0]) ? languages[doc["language_facet"][0]] : "ud"
+        lang = (!doc["language_facet"].empty? && languages.has_key?(doc["language_facet"][0])) ? languages[doc["language_facet"][0]] : "ud"
         options = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
                     rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
                     language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
