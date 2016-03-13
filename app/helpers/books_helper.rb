@@ -259,7 +259,7 @@ module BooksHelper
   def self.find_field_in_document(job_id, field)
     languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it" }
     doc = SolrHelper.solr_find_document("job_id:#{job_id}")    
-    lang = languages.has_key?(doc["language_facet"][0]) ? languages[doc["language_facet"][0]] : "ud"
+    lang = (!doc["language_facet"].empty? && languages.has_key?(doc["language_facet"][0])) ? languages[doc["language_facet"][0]] : "ud"
     doc["#{field}_#{lang}"]
   end
 
