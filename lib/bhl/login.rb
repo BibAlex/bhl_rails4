@@ -8,14 +8,14 @@ module BHL
 
       user.last_login = Time.now
       user.save
-      cookies[:SSid] = user.guid
-      # cookies[:SSid] = { value: user.guid, domain: 'bhl.bibalex.org' }
+      # cookies[:SSid] = user.guid
+      cookies[:SSid] = { value: user.guid, domain: '.bibalex.org' }
     end
 
     def log_out
       session.clear
-      cookies.delete :SSid
-      # cookies.delete :SSid, :domain => 'bhl.bibalex.org'
+      # cookies.delete :SSid
+      cookies.delete :SSid, :domain => '.bibalex.org'
     end
   end
 end
