@@ -14,7 +14,7 @@ class Collection < ActiveRecord::Base
   validates :user_id, presence: true
   
   before_save :sanitize_html
-  after_save :update_activity
+  after_create :update_activity
   scope :top, -> { where("is_public = true").order("rate desc").limit(TOP_COLLECTIONS_COUNT).offset(0) }
   scope :user_collections, ->(id) {where(user_id: id)}
   scope :public_user_collections, ->(id) {where(user_id: id, is_public: true)}
