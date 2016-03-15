@@ -250,6 +250,7 @@ en:
     recover_password_success: "Account recovery email has been sent with further instructions"
     email_not_found: "A BHL account with that email address %{email} could not be found"
     no_volume_history_found: No history found...
+    no_activities_found: No activities found...
     remove_book_from_history: "Are you sure you want to remove this book ?"
     user_not_found: User not found.
     sign_in_inactive_user: The user is not activated yet. Check your mail for activation instructions.
