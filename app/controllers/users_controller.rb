@@ -172,12 +172,14 @@ class UsersController < ApplicationController
   end
 
   def send_registration_confirmation_email
-    url = "#{request.host}:#{request.port}/users/activate/#{@user.guid}/#{@user.verification_code}"
+    port = request.port == 80 ? nil : ":#{request.port}"
+    url = "#{request.host}#{port}/users/activate/#{@user.guid}/#{@user.verification_code}"
     Notifier.user_verification(@user, url).deliver_now
   end
 
   def send_reset_password_email
-    url = "#{request.host}:#{request.port}/users/reset_password/#{@user.guid}/#{@user.verification_code}"
+    port = request.port == 80 ? nil : ":#{request.port}"
+    url = "#{request.host}#{port}/users/reset_password/#{@user.guid}/#{@user.verification_code}"
     Notifier.user_reset_password_verification(@user, url).deliver_now
   end
 
