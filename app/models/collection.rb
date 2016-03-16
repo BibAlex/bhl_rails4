@@ -33,7 +33,7 @@ class Collection < ActiveRecord::Base
   end
   
   def self.get_count_by_volume(volume_job_id, user_id)
-    Collection.includes(:collection_volumes).where(collection_volumes: { volume_id: volume_job_id }).where('is_public=true or user_id=?', user_id).count
+    Collection.includes(:collection_volumes).where(collection_volumes: { volume_id: volume_job_id }).where('is_public=1 or user_id=?', user_id).count
   end
   
   def self.process_collection_photo_name(photo_name)
