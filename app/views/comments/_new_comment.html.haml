@@ -1,5 +1,5 @@
 - comment = Comment.new
-= form_for comment, :builder => FormHelper::BHLFormBuilder do |f|
+= form_for comment, :builder => FormHelper::BHLFormBuilder, html: {onsubmit: "return check_comment_value(\"#{commentable_id}\");" } do |f|
   = validation_errors_for(comment)
   = f.text_area :text, class: "form-control", id: "text_#{commentable_id}"
   = f.hidden_field :commentable_id, value: commentable_id
