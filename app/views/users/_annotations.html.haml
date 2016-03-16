@@ -14,7 +14,7 @@
             %small
               = link_to book_path(id: annotation[:job_id], tab: "read") do
                 %i.fa.fa-book{id: "read"}
-                = I18n.t('common.read')
+                = I18n.t('common.read'), target: "_blank"
               = link_to book_path(id: annotation[:job_id]) do
                 %i.fa.fa-info{id: "details"}
                 = I18n.t('common.details')  
