@@ -80,7 +80,7 @@ module SolrHelper
     response = rsolr.find 'q' => field_query, 'fl' => "job_id", 'rows' => 1000000
     unless response["response"]["numFound"] == 0
       response["response"]["docs"].each do |doc|
-        job_ids << doc[:job_id]
+        job_ids << doc[:job_id] unless job_ids.include?(doc[:job_id])
       end
     end
     job_ids
