@@ -76,7 +76,8 @@ module SolrHelper
       values = exact_sci_names.join(query_join_operator)
     end
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => "sci_name:#{values}", 'fl' => "job_id", 'rows' => 1000000
+    field_query = "(sci_name:#{values})"
+    response = rsolr.find 'q' => field_query, 'fl' => "job_id", 'rows' => 1000000
     unless response["response"]["numFound"] == 0
       response["response"]["docs"].each do |doc|
         job_ids << doc[:job_id]
