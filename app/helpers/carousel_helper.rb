@@ -4,9 +4,10 @@ module CarouselHelper
   include SolrHelper
 
   def load_collections_carousel(params)
+    user_query = session[:user_id].nil? ? nil : "or user_id = #{session[:user_id]}"
     items = Collection.includes(:collection_volumes)
                       .where(collection_volumes: { volume_id: params[:job_id] })
-                      .where("is_public=true")
+                      .where("is_public=1 #{user_query}")
                       .paginate(page: params[:page], per_page: LIMIT_CAROUSEL)
     options = { items: items, carousel_title: I18n.t('common.collections'), controller: "collections", action: "show", type: params[:type], object_id: params[:job_id] }
   end
