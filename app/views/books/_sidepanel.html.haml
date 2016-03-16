@@ -39,7 +39,10 @@
     .list-group-item
       %span.badge.badge-success
         = @collections_count
-      %a{ href: "#collectionsfound" }
+      - if @collections_count > 0
+        %a{ href: "#collectionsfound" }
+          =I18n.t('common.book_collections_count', count: @collections_count)
+      - else
         =I18n.t('common.book_collections_count', count: @collections_count)
 
     - unless get_format(params[:id], 'mods').blank?
