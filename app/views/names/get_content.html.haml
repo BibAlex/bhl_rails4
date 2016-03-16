@@ -9,5 +9,8 @@
       - if @image
         = image_tag @image, :width => 200
         %br
-      %br      
-      = link_to I18n.t('common.name_found_in_books', count: @books_count), books_path(params: add_facet_search({}, 'name', @name))
+      %br
+      - if @books_count == 0
+        = I18n.t('common.name_found_in_books', count: @books_count)
+      - else
+        = link_to I18n.t('common.name_found_in_books', count: @books_count), books_path(params: add_facet_search({}, 'name', @name))
