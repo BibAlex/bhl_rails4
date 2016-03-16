@@ -34,4 +34,6 @@
     %center
       .pagination-centered
       = will_paginate @activities
-  
+- else
+  %h4
+    = I18n.t('common.no_activities')
