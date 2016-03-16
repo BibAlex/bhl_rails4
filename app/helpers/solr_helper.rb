@@ -70,14 +70,16 @@ module SolrHelper
   def get_volumes_contain_sci_name(sci_names, query_join_operator)
     job_ids = []
     exact_sci_names = get_exact_sci_names(sci_names)
-    unless exact_sci_names.blank?
-      values = "(" + exact_sci_names.map { |s| "\"#{s}\"" }.join(query_join_operator) + ")"
-      rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-      response = rsolr.find 'q' => "sci_name:#{values}", 'fl' => "job_id", 'rows' => 1000000
-      unless response["response"]["numFound"] == 0
-        response["response"]["docs"].each do |doc|
-          job_ids << doc[:job_id]
-        end
+    if exact_sci_names.blank?
+      values = sci_names.join(query_join_operator)
+    else
+      values = exact_sci_names.join(query_join_operator)
+    end
+    rsolr = RSolr.connect url: SOLR_NAMES_FOUND
+    response = rsolr.find 'q' => "sci_name:#{values}", 'fl' => "job_id", 'rows' => 1000000
+    unless response["response"]["numFound"] == 0
+      response["response"]["docs"].each do |doc|
+        job_ids << doc[:job_id]
       end
     end
     job_ids
