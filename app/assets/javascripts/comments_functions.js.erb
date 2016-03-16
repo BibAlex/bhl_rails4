@@ -52,3 +52,15 @@ function mark_comment(id) {
     }
   });
 }
+
+function check_comment_value(comment_id)
+{
+	if($('#text_' + comment_id).val() == "")
+	{
+		alert("<%= I18n.t('warn.comment_empty_warn') %>");
+		return false;
+	}		
+	else
+		return true;
+	
+}
