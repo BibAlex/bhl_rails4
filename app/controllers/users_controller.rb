@@ -222,12 +222,14 @@ class UsersController < ApplicationController
 
   def load_queries_tab
     if authenticate_user(params[:id])
+      @page_title = @user.username + " - " + I18n.t("common.queries")
       @page = params[:page] ? params[:page].to_i : 1
       @queries = @user.queries.order("created_at DESC").paginate(page: @page, per_page:  PAGE_SIZE)
     end
   end
 
   def load_activity_tab
+     @page_title = @user.username + " - " + I18n.t("common.activity_log")
      @total_activities = Activity.where(user_id: params[:id]).count
      @page = params[:page] ? params[:page].to_i : 1
      limit = PAGE_SIZE
@@ -238,6 +240,7 @@ class UsersController < ApplicationController
 
   def load_history_tab
     if authenticate_user(params[:id])
+      @page_title = @user.username + " - " + I18n.t("common.history")
       @total_number = UserVolumeHistory.history(@user).count
       @page = params[:page] ? params[:page].to_i : 1
       @history = UserVolumeHistory.history(@user).paginate(page: @page, per_page: PAGE_SIZE)
@@ -255,6 +258,7 @@ class UsersController < ApplicationController
   end
   
   def load_collections_tab
+    @page_title = @user.username + " - " + I18n.t("common.collections")
     @page = params[:page] ? params[:page].to_i : 1
     if session[:user_id].to_i == params[:id].to_i
       user_collections = Collection.user_collections(session[:user_id])
@@ -273,6 +277,7 @@ class UsersController < ApplicationController
 
   def load_annotations_tab
     if authenticate_user(params[:id])
+      @page_title = @user.username + " - " + I18n.t("common.annotations")
       @page = params[:page] ? params[:page].to_i : 1
       @total_number = Annotation.where("user_id = #{@user.id}").count
       @annotations = Annotation.where(user_id: @user).select(:volume_id).
