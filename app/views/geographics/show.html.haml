@@ -1,5 +1,6 @@
-= "#{@location_name} (#{@books_count})"
-%ol.geographics 
+%h5{style: "direction: ltr"}
+  = "#{@location_name} (#{@books_count})"
+%ol.geographics
   - @books.each do |key, value|
     %li
       =link_to value, "/books/#{key}"
