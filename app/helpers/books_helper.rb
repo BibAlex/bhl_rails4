@@ -29,8 +29,8 @@ module BooksHelper
     tmp_params
   end
 
-  def search_volumes(query, page, limit, sort_type, fquery = nil)
-    response = search_facet_highlight(query, page, limit, sort_type, fquery)
+  def search_volumes(query, page, limit, sort_type, fquery = nil, not_all_categories_query = true)
+    response = search_facet_highlight(query, page, limit, sort_type, fquery, not_all_categories_query)
     
     process_solr_volumes(response, query, page, limit, fquery)
   end
@@ -184,7 +184,7 @@ module BooksHelper
       query = normal_query
     else
       query = ''
-    end    
+    end
   end
 
   def get_multilingual_attributes(query_array)
