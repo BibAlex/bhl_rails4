@@ -71,6 +71,7 @@ ar:
     save_query: "حفظ البحث"
     sort_by: "الترتيب حسب"
     search_by: البحث بواسطة
+    list_all_books: "عرض جميع الكتب"
     book: "كتاب"
     number_of_viewes: عدد المشاهدات
     entity_saved: "%{entity} تم حفظ"
