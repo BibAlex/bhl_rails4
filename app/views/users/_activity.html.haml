@@ -13,7 +13,7 @@
         - thumb = owner_of_activity.photo_name_url(:thumb)
         
       .media
-        = link_to image_tag("#{thumb}", class: "media-object img-circle"), { controller: 'users', action: 'show', id: owner_of_activity.id }, class: "pull-left"
+        = link_to image_tag("#{thumb}", class: "media-object img-circle", title: owner_of_activity.username), { controller: 'users', action: 'show', id: owner_of_activity.id }, class: "pull-left"
         .media-body.activity-log
           %p{ style: "line-height:120%;font-size:12px;" }
             %strong
