@@ -21,9 +21,7 @@ class BooksController < ApplicationController
       pager.replace @response[:volumes]
     end
     title = get_page_title_of_search(@query_array)
-    @page_title = "#{I18n.t('common.search_by')} ("
-    @page_title+= title.blank? ? "" : title
-    @page_title+= ")"
+    @page_title = title.blank? ? I18n.t('common.list_all_books') : "#{I18n.t('common.search_by')} ( #{title} )"
   end
 
   def autocomplete
@@ -39,8 +37,9 @@ class BooksController < ApplicationController
   end
 
   def show
-    load_volume_details
-    if params[:tab] == "read"
+    tab = params[:tab] == "read" ? "read" : "details"
+    load_volume_details(tab)
+    if tab == "read"
       load_read_page
     else
       load_details_page
@@ -50,9 +49,19 @@ class BooksController < ApplicationController
 
   private
 
-  def load_volume_details
+  def load_volume_details(tab)
     @volume = load_volume_with_names_from_solr(params[:id])
-    @page_title = @volume[:title][0]
+    @page_title = "#{@volume[:title][0]} - #{I18n.t("common.#{tab}")}"
+    @page_author = @volume[:author].join(",")
+    @page_description = ""
+    @volume[:sci_names].each do |name|
+      if(@page_description.length + name.length + 1 <= 100)
+        @page_description += name + ","
+      else
+        break
+      end
+    end
+    @page_description = @page_description[0..@page_description.length-2]
   end
 
   def load_details_page
