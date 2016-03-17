@@ -5,12 +5,14 @@
 - @top_collections.each do |collection|  
   - if(collection.photo_name.blank?)
     - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_collection')}"
+    - thumb_title = nil
   - else
     - thumb = collection.photo_name_url(:thumb)
+    - thumb_title = collection.title
   .col-md-2.collection
     .media
       %center
-        = link_to image_tag(thumb, title: "#{collection.title}", class: "media-object img-thumbnail"),{ controller: 'collections', action: 'show', id: collection.id }
+        = link_to image_tag(thumb, title: thumb_title, class: "media-object img-thumbnail"),{ controller: 'collections', action: 'show', id: collection.id }
       %h5
         - title = "#{collection.title}"
         - if collection.title.length > 14
