@@ -70,6 +70,7 @@ ar:
     delete_photo: حذف صورة
     save_query: "حفظ البحث"
     sort_by: "الترتيب حسب"
+    search_by: البحث بواسطة
     book: "كتاب"
     number_of_viewes: عدد المشاهدات
     entity_saved: "%{entity} تم حفظ"
@@ -113,7 +114,7 @@ ar:
     read: "اقرأ"
     details: "تفاصيل"
     add_collection: "أضف إلى المجموعة"
-    bhl_site_name: "مكتبة تراث التنوع الحيوي- مصر"
+    bhl_site_name: "مكتبة تراث التنوع الحيوي مصر"
     bhl_short_title: "مصر BHL"
     regional_affiliation: التبعية الإقليمية
     content: المحتوى
