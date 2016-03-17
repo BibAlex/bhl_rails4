@@ -180,8 +180,8 @@ en:
     title: "Title"
     eol_pages_link: "http://www.eol.org/pages/"
     book_count:
-      one: "one book"
-      other: "%{count} books"
+      one: "one Book"
+      other: "%{count} Books"
     author_count:
       one: "one Author"
       other: "%{count} Authors"
