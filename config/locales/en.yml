@@ -91,6 +91,7 @@ en:
     delete_photo: Delete Photo
     save_query: Save Search
     sort_by: Sort By
+    search_by: Search By
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     found: "Found"
@@ -134,7 +135,7 @@ en:
     read: Read
     details: Details
     add_collection: Add to Collection
-    bhl_site_name: "Biodivestiry Heritage Library - Egypt"
+    bhl_site_name: "Biodivestiry Heritage Library Egypt"
     bhl_short_title: "BHL Egypt"
     content: Content
     about_us: About Us

@@ -215,6 +215,7 @@ class UsersController < ApplicationController
 
   def load_user
     @user = User.find_by_id(params[:id])
+    @page_title = @user.username
     return redirect_to root_path , flash: {error: I18n.t('msgs.user_not_found')} unless @user
     @tab = params[:tab].nil? ? "profile" : params[:tab]
   end
