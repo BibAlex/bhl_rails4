@@ -92,6 +92,7 @@ en:
     save_query: Save Search
     sort_by: Sort By
     search_by: Search By
+    list_all_books: List all Books
     stars_white: "stars_white.png"
     stars_grey: "stars_grey.png"
     found: "Found"

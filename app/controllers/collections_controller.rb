@@ -23,6 +23,7 @@ class CollectionsController < ApplicationController
   def show    
     @collection = Collection.find(params[:id])
     @page_title = @collection.title
+    @page_author = User.find(@collection.user_id).username
     if @collection.is_public || authenticate_user(@collection.user_id)
       @collection_id = params[:id]
       # @volume_id = nil
@@ -37,9 +38,10 @@ class CollectionsController < ApplicationController
     end
   end
   
-  def edit
-    @page_title = I18n.t('collection.edit_collection_page_title')
+  def edit    
     @collection = Collection.find(params[:id])
+    @page_title = "#{@collection.title} -  #{I18n.t('collection.edit_collection_page_title')}"
+    @page_author = User.find(@collection.user_id).username
     authenticate_user(@collection.user_id)
   end
 
