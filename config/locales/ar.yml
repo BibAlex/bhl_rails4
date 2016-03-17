@@ -86,7 +86,7 @@ ar:
     name_facet: "الأنواع المسماة"
     language_facet: "اللغات"
     author_facet: "المؤلفون"
-    location_facet: "التبعية الإقليمية"
+    location_facet: "الموقع الجغرافي"
     subject_facet: "النوع"
     publisher_facet: "الناشر"
     stars_white: "stars_white.png"
@@ -116,7 +116,6 @@ ar:
     add_collection: "أضف إلى المجموعة"
     bhl_site_name: "مكتبة تراث التنوع الحيوي مصر"
     bhl_short_title: "مصر BHL"
-    regional_affiliation: التبعية الإقليمية
     content: المحتوى
     about_us: من نحن
     contact_us: اتصل بنا

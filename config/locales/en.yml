@@ -110,7 +110,7 @@ en:
     name_facet: "TAGGED SPECIES"
     language_facet: "LANGUAGES"
     author_facet: "AUTHORS"
-    location_facet: "REGIONAL AFFILIATION"
+    location_facet: "LOCATION"
     subject_facet: "GENRE"
     publisher_facet: "PUBLISHER"
     tools: Tools
@@ -137,7 +137,6 @@ en:
     add_collection: Add to Collection
     bhl_site_name: "Biodivestiry Heritage Library Egypt"
     bhl_short_title: "BHL Egypt"
-    regional_affiliation: Regional Affiliation
     content: Content
     about_us: About Us
     contact_us: Contact Us    
