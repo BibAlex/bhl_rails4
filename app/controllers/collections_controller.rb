@@ -20,9 +20,9 @@ class CollectionsController < ApplicationController
     render json: @results
   end
 
-  def show
-    @page_title = I18n.t('collection.show_collection_detail')
+  def show    
     @collection = Collection.find(params[:id])
+    @page_title = @collection.title
     if @collection.is_public || authenticate_user(@collection.user_id)
       @collection_id = params[:id]
       # @volume_id = nil

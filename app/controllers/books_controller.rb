@@ -20,6 +20,10 @@ class BooksController < ApplicationController
     @books = WillPaginate::Collection.create(@page, PAGE_SIZE, @response[:total_number_of_volumes]) do |pager|
       pager.replace @response[:volumes]
     end
+    title = get_page_title_of_search(@query_array)
+    @page_title = "#{I18n.t('common.search_by')} ("
+    @page_title+= title.blank? ? "" : title
+    @page_title+= ")"
   end
 
   def autocomplete
@@ -48,6 +52,7 @@ class BooksController < ApplicationController
 
   def load_volume_details
     @volume = load_volume_with_names_from_solr(params[:id])
+    @page_title = @volume[:title][0]
   end
 
   def load_details_page
@@ -66,5 +71,16 @@ class BooksController < ApplicationController
   def load_read_page
     UserVolumeHistory.save_user_history(params[:id], session[:user_id]) if is_logged_in?
     @reader_path = (DAR_JAR_API_URL.sub DAR_JAR_API_URL_STRING, params[:id]).sub DAR_JAR_API_URL_LANGUAGE, I18n.locale.to_s
+  end
+  
+  def get_page_title_of_search(query_array)
+    query_arr = []
+    query_array.each do |key, val|
+      unless val.blank?
+        search_type = I18n.t("common.#{key}")
+        query_arr << "#{search_type}: #{val.join(",")}"
+      end
+    end
+    query_arr.join(" - ")
   end
 end

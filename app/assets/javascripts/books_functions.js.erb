@@ -7,12 +7,12 @@ $(document).ready(function() {
 
 function searchfnc(search_select, field){
 	searchquery = '';
-    if(field == null || field == ''){
+    if(field == null || field == '' ||  (/\S/.test(field) == false)){
       alert("<%= I18n.t('warn.empty_search_query_warn') %>");
       return;
     }
     
-    if ([' ',  '!', '@', '#', '$' , '^', '&', '*', '(',  ',',  ')', '_',  '+', '-', '=' , '&', '%'].indexOf(field) >= 0 || field.indexOf("%") >= 0) {
+    if ([' ',  '!', '@', '#', '$' , '^', '&', '*', '(',  ',',  ')', '_',  '+', '-', '=' , '&', '%', '~'].indexOf(field) >= 0 || field.indexOf("%") >= 0) {
      alert("<%= I18n.t('warn.invalid_input') %>");
      return;
     }
