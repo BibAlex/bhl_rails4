@@ -28,6 +28,7 @@ class PagesController < ApplicationController
   end
   
   def contact
+    @page_title = I18n.t('common.contact_us')
     @email_message = EmailMessage.new
     @verify_captcha = true
   end

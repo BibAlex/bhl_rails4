@@ -1,7 +1,7 @@
 - if !(@user.photo_name.blank?)
   = image_tag(@user.photo_name_url(:thumb), class: "img-thumbnail", title: @user.username)
 - else
-  = image_tag("/images_#{I18n.locale}/#{I18n.t('common.default_user')}", class: "img-thumbnail", title: @user.username)
+  = image_tag("/images_#{I18n.locale}/#{I18n.t('common.default_user')}", class: "img-thumbnail")
 - if User.can_edit?(@user.id, session[:user_id]) && !(@user.photo_name.blank?)
   %div{ class: "checkbox-inline", style: "padding-left: 13px;" }
     = check_box_tag("delete_photo", "delete_photo" , false , onclick: "confirmDeletePhoto(\"#{params[:id]}\")")
