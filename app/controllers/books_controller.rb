@@ -52,7 +52,7 @@ class BooksController < ApplicationController
   def load_volume_details(tab)
     @volume = load_volume_with_names_from_solr(params[:id])
     @page_title = "#{@volume[:title][0]} - #{I18n.t("common.#{tab}")}"
-    @page_author = @volume[:author].join(",")
+    @page_author = @volume[:author].join(",") if @volume[:author]
     @page_description = ""
     @volume[:sci_names].each do |name|
       if(@page_description.length + name.length + 1 <= 100)
