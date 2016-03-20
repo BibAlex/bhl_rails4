@@ -10,12 +10,14 @@
         - if activity
           .panel-body
             - user = User.find(activity.user_id)
-            - if(user.photo_name.blank?)
+            - if user.photo_name.blank?
               - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
+              - title = nil
             - else
               - thumb = user.photo_name_url(:small)
+              - title = user.username
             .media
-              = link_to image_tag("#{thumb}", class: "media-object img-circle", title: user.username), { controller: 'users', action: 'show', id: user.id }, class: "pull-left"
+              = link_to image_tag("#{thumb}", class: "media-object img-circle", title: title), { controller: 'users', action: 'show', id: user.id }, class: "pull-left"
               .media-body.activity-log
                 %p{ style: "line-height:120%;font-size:12px;" }
                   %strong
