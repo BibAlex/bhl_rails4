@@ -35,6 +35,10 @@ function searchfnc(search_select, field){
       			params[i] = search_tokens[0] + "=" + search_tokens[1] + " _OR " + field;
       			field_found = true;  			
       		}
+      		if(search_tokens[0] === "page" )
+      		{
+      			params[i] = search_tokens[0] + "=1";
+      		}
       		searchquery += params[i] + "&";
       		 			
       	}
