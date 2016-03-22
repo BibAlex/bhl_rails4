@@ -18,6 +18,7 @@ module HadoopHelper
       batch_id = volume_list.blank? ? "" : Batch.find_or_create_by(status_id: BatchStatus.pending_content.id).id
       json_output = "{ \"batch_id\": \"#{batch_id}\", \"Volumes\":["
       volume_list.each do |volume|
+        volume.update_attributes(number_of_trials: volume.number_of_trials + 1)
         json_output << "\"#{volume.job_id}\","
       end
     json_output = json_output[0...json_output.length-1] if volume_list.count > 0
