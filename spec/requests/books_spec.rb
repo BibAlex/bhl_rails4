@@ -10,15 +10,15 @@ RSpec.describe "Books", type: :request do
 
     before(:all) do
 
-      Language.create(code: 'eng', name: "english")
+      Language.create(code: 'English', name: "english")
 
       Rails.cache.clear
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
       solr_books_core.commit
-      solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
+      solr_books_core.add({ job_id: 1, language_facet: 'English', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
                             publisher_en: "publisher_1", location_search: "location_1", rate: 5, views: 2 })
-      solr_books_core.add({ job_id: 2, language_facet: 'eng', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2",
+      solr_books_core.add({ job_id: 2, language_facet: 'English', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2",
                             publisher_en: "publisher_2", location_search: "location_2", rate: 3, views: 3 })
       solr_books_core.commit
 
@@ -45,7 +45,7 @@ RSpec.describe "Books", type: :request do
 
     it "displays pagination block" do
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
-      doc = { language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
+      doc = { language_facet: 'English', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
               publisher_en: "publisher_1", location_search: "location_1", rate: 5, views: 2  }
 
       (3..15).each do |index|
@@ -107,13 +107,13 @@ RSpec.describe "Books", type: :request do
     before(:all) do
       book = FactoryGirl.create(:book)
       volume = FactoryGirl.create(:volume, job_id: 1, book_id: book.id)
-      Language.create(code: 'eng', name: "english")
+      Language.create(code: 'English', name: "english")
 
       Rails.cache.clear
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
       solr_books_core.commit
-      solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
+      solr_books_core.add({ job_id: 1, language_facet: 'English', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
                             publisher_en: "publisher_1", location_search: "location_1", rate: 5, views: 2  })
       solr_books_core.commit
 

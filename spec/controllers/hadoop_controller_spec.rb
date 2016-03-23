@@ -294,7 +294,7 @@ RSpec.describe HadoopController, type: :controller do
         Batch.delete_all        
         @book = Book.create(book_status_id: BookStatus.finished_metadata.id, bib_id: Faker::Base.numerify('#####-#####'), title: "title",
                             title_alternative: "title alternative", publisher: "publisher", published_at: "published_at")
-        @book.languages << Language.create(code: 'eng', name: "english")
+        @book.languages << Language.create(code: 'English', name: "english")
         @book.locations << Location.create(address: "123 detailed address", longitude: 0.0, latitude: 2.5)
         @book.authors << Author.create(name: "author")
         @book.subjects << Subject.create(name: "subject")
