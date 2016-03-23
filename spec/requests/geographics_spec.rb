@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Geographics", type: :request do
   before(:all) do
-      Language.create(code: 'eng', name: "english")
+      Language.create(code: 'English', name: "english")
       Rails.cache.clear
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
@@ -10,7 +10,7 @@ RSpec.describe "Geographics", type: :request do
       5.times do |i|
         location = FactoryGirl.create :location
         solr_books_core.add(
-        { job_id: i, language_facet: 'eng', bib_id: 'bib_id',
+        { job_id: i, language_facet: 'English', bib_id: 'bib_id',
           title_en: 'title_#{i}', author_en: "author_#{i}",
           subject_en: "subject_#{i}",location_search: location.formatted_address,
           location_facet: "#{location.formatted_address},#{location.longitude},#{location.latitude}" })

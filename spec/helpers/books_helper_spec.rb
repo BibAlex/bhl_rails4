@@ -22,8 +22,8 @@ RSpec.describe BooksHelper, type: :helper do
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
       solr_books_core.commit
-      solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1", views: 1, rate: 5 })
-      solr_books_core.add({ job_id: 2, language_facet: 'eng', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2", views: 3, rate: 2 })
+      solr_books_core.add({ job_id: 1, language_facet: 'English', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1", views: 1, rate: 5 })
+      solr_books_core.add({ job_id: 2, language_facet: 'English', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2", views: 3, rate: 2 })
       solr_books_core.commit
        
       solr_names_found_core = RSolr::Ext.connect url: SOLR_NAMES_FOUND

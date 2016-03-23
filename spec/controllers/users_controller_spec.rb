@@ -270,7 +270,7 @@ RSpec.describe UsersController, type: :controller do
           solr_books_core.delete_by_query('*:*')
           solr_books_core.commit
           job_ids.each_with_index do |job_id, i|
-          solr_books_core.add({ job_id: job_id, language_facet: 'eng',
+          solr_books_core.add({ job_id: job_id, language_facet: 'English',
              bib_id: 'bib_id_#{i}', title_en: book.title, author_en: "author_#{i}"})
            end
           solr_books_core.commit

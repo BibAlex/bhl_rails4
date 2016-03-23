@@ -18,7 +18,7 @@ RSpec.describe GeographicsController, type: :controller do
         solr_locations_core.commit
         solr_locations_core.optimize   
         solr_books_core.add(
-        { job_id: i, language_facet: 'eng', bib_id: 'bib_id',
+        { job_id: i, language_facet: 'English', bib_id: 'bib_id',
           title_en: 'title_#{i}', author_en: "author_#{i}",
           subject_en: "subject_#{i}",location_search: location.address,
           location_facet: location.address })
