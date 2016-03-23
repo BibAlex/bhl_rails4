@@ -1,3 +1,4 @@
+$.noConflict();
 $(document).ready ->
   initTree = (id) ->
     tree.init $("#h_container"),
