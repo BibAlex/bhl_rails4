@@ -13,8 +13,8 @@ RSpec.describe BooksController, type: :controller do
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
       solr_books_core.commit
-      solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1"  })
-      solr_books_core.add({ job_id: 2, language_facet: 'eng', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2" })
+      solr_books_core.add({ job_id: 1, language_facet: 'English', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1"  })
+      solr_books_core.add({ job_id: 2, language_facet: 'English', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2" })
       solr_books_core.commit
 
       solr_books_core = RSolr::Ext.connect url: SOLR_SCI_NAMES
@@ -95,15 +95,15 @@ RSpec.describe BooksController, type: :controller do
     
     before(:all) do      
       
-      Language.create(code: 'eng', name: "english")
+      Language.create(code: 'en', name: "English")
       
       Rails.cache.clear
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
       solr_books_core.commit
-      solr_books_core.add({ job_id: 1, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
+      solr_books_core.add({ job_id: 1, language_facet: 'English', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
                             publisher_en: "publisher_1", location_search: "location_1", rate: 5, views: 2  })
-      solr_books_core.add({ job_id: 2, language_facet: 'eng', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2",
+      solr_books_core.add({ job_id: 2, language_facet: 'English', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2",
                             publisher_en: "publisher_2", location_search: "location_2", rate: 3, views: 3 })
       solr_books_core.commit
       
@@ -133,11 +133,11 @@ RSpec.describe BooksController, type: :controller do
       expect(response).to render_template(:index)
     end    
     
-    it "lists all books" do
+     it "lists all books" do
       books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                      job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] },
+                      job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] },
                     { title: ["title_2"], author: ["author_2"], subject: ["subject_2"], rate: 3.0, views: 3,
-                      job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["eng"], location: ["location_2"], publisher: ["publisher_2"] }]
+                      job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["English"], location: ["location_2"], publisher: ["publisher_2"] }]
       get :index  
       expect(assigns(:books)).to eq(books_list) 
     end
@@ -146,51 +146,51 @@ RSpec.describe BooksController, type: :controller do
       
       it "filters books by title" do
         books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] }]
+                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] }]
         get :index, { "_title" =>  "title_1" }
         expect(assigns(:books)).to eq(books_list)
       end
       
       it "filters books by author" do
         books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] }]
+                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] }]
         get :index, { "_author" =>  "author_1" }
         expect(assigns(:books)).to eq(books_list)
       end
       
       it "filters books by subject" do
         books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] }]
+                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] }]
         get :index, { "_subject" =>  "subject_1" }
         expect(assigns(:books)).to eq(books_list)
       end
       
       it "filters books by publisher" do
         books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] }]
+                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] }]
         get :index, { "_publisher" =>  "publisher_1" }
         expect(assigns(:books)).to eq(books_list)
       end
       
       it "filters books by location" do
         books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] }]
+                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] }]
         get :index, { "_location" =>  "location_1" }
         expect(assigns(:books)).to eq(books_list)
       end
       
       it "filters books by language" do
         books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] },
+                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] },
                       { title: ["title_2"], author: ["author_2"], subject: ["subject_2"], rate: 3.0, views: 3,
-                        job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["eng"], location: ["location_2"], publisher: ["publisher_2"] }]
-        get :index, { "_language" =>  "eng" }
+                        job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["English"], location: ["location_2"], publisher: ["publisher_2"] }]
+        get :index, { "_language" =>  "English" }
         expect(assigns(:books)).to eq(books_list)
       end
       
       it "filters books by name" do
         books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] }]
+                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] }]
         get :index, { "_name" =>  "sci_name_1" }
         expect(assigns(:books)).to eq(books_list)
       end
@@ -202,22 +202,22 @@ RSpec.describe BooksController, type: :controller do
     
     describe "sort books" do
       
-      context "rate" do
+      context " rate" do
         
         it "sort books by rate DESC" do
           books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                          job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] },
+                          job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] },
                         { title: ["title_2"], author: ["author_2"], subject: ["subject_2"], rate: 3.0, views: 3,
-                          job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["eng"], location: ["location_2"], publisher: ["publisher_2"] }]
+                          job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["English"], location: ["location_2"], publisher: ["publisher_2"] }]
           get :index, { "sort_type" =>  "rate DESC" }
           expect(assigns(:books)).to eq(books_list)
         end
         
         it "sort books by rate ASC" do
           books_list = [{ title: ["title_2"], author: ["author_2"], subject: ["subject_2"], rate: 3.0, views: 3,
-                          job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["eng"], location: ["location_2"], publisher: ["publisher_2"] },
+                          job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["English"], location: ["location_2"], publisher: ["publisher_2"] },
                         { title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] }]
+                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] }]
           get :index, { "sort_type" =>  "rate ASC" }
           expect(assigns(:books)).to eq(books_list)
         end        
@@ -227,18 +227,18 @@ RSpec.describe BooksController, type: :controller do
         
         it "sort books by number of views DESC" do
           books_list = [{ title: ["title_2"], author: ["author_2"], subject: ["subject_2"], rate: 3.0, views: 3,
-                          job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["eng"], location: ["location_2"], publisher: ["publisher_2"] },
+                          job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["English"], location: ["location_2"], publisher: ["publisher_2"] },
                         { title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] }]
+                        job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] }]
           get :index, { "sort_type" =>  "views DESC" }
           expect(assigns(:books)).to eq(books_list)
         end
         
         it "sort books by number of views ASC" do
           books_list = [{ title: ["title_1"], author: ["author_1"], subject: ["subject_1"], rate: 5.0, views: 2,
-                          job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["eng"], location: ["location_1"], publisher: ["publisher_1"] },
+                          job_id: 1, date: nil, sci_names: ["sci_name_1"], language: ["English"], location: ["location_1"], publisher: ["publisher_1"] },
                         { title: ["title_2"], author: ["author_2"], subject: ["subject_2"], rate: 3.0, views: 3,
-                          job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["eng"], location: ["location_2"], publisher: ["publisher_2"] }]          
+                          job_id: 2, date: nil, sci_names: ["sci_name_2"], language: ["English"], location: ["location_2"], publisher: ["publisher_2"] }]          
           get :index, { "sort_type" =>  "views ASC" }
           expect(assigns(:books)).to eq(books_list)
         end        
@@ -254,7 +254,7 @@ RSpec.describe BooksController, type: :controller do
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
       solr_books_core.commit
-      solr_books_core.add({ job_id: @volume.id, views: 0, language_facet: 'eng', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1" })
+      solr_books_core.add({ job_id: @volume.id, views: 0, language_facet: 'English', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1" })
       solr_books_core.commit
       Rails.cache.clear
     end
