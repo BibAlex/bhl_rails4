@@ -18,11 +18,13 @@ module HadoopHelper
       if volume_list.blank?
         batch_id = ""
       else
-        batch = Batch.where(status_id: BatchStatus.pending_content.id)
-        if batch.first
-          Volume.where(batch_id: batch.first.id).each do |volume|
+        res = Batch.where(status_id: BatchStatus.pending_content.id)
+        batch = res.first
+        if batch
+          Volume.where(batch_id: batch.id).each do |volume|
             volume.update_attributes(batch_id: nil)
            end
+           batch_id = batch.id
         else
           batch_id = Batch.create(status_id: BatchStatus.pending_content.id).id
         end
