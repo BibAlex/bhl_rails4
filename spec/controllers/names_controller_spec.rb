@@ -27,7 +27,7 @@ RSpec.describe NamesController, type: :controller do
       he = HierarchyEntry.find_taxon(8)
       name = he.clean_taxon_concept
       name = name.gsub( /\s/, '+' )
-      expect(response.body).to have_selector("a[href='/books?_name=#{name}']")
+      expect(response.body).to have_selector("b", text: I18n.t('common.name_found_in_books', count: 0))
     end
     
   end

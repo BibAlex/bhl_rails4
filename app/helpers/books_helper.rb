@@ -314,11 +314,17 @@ module BooksHelper
 
     if solr_response["response"]["numFound"] > 0
       
+      job_ids = "("
+      solr_response["response"]["docs"].each do |doc|
+        job_ids += job_ids == "(" ? doc["job_id"].to_s : " OR  #{doc[:job_id]}"
+      end
+      all_sci_names = get_sci_names_of_volumes("#{job_ids} )")
+
      
-      all_sci_names_with_facets = get_sci_names_with_facet(query, page, limit, fquery)
+      sci_names_facets = get_sci_names_with_facet(query, page, limit, fquery)
 
       solr_response["response"]["docs"].each do |doc|
-        tmp = all_sci_names_with_facets[:sci_names][doc[:job_id]]
+        tmp = all_sci_names[:sci_names][doc[:job_id]]
         sci_names = tmp.nil? ? [] : tmp
         languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it" }
         lang = (!doc["language_facet"].blank? && languages.has_key?(doc["language_facet"][0])) ? languages[doc["language_facet"][0]] : "ud"
@@ -335,7 +341,7 @@ module BooksHelper
         end
          facet_fields["#{field.name}"] = items
       end
-      facet_fields["name_facet"] = all_sci_names_with_facets[:facets]
+      facet_fields["name_facet"] = sci_names_facets[:facets]
     end
     { volumes: volumes, total_number_of_volumes: solr_response["response"]["numFound"], facets: facet_fields }
   end
