@@ -43,29 +43,15 @@ module SolrHelper
   
   
   def get_sci_names_with_facet(query, page, limit, fquery)
-    start = (page > 1) ? (page - 1) * limit : 0
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
     response = rsolr.find 'q' => fquery, 'fq' => "{!join from=job_id to=job_id fromIndex=books_metadata} #{query}",
                                          'fl' => 'job_id,sci_name', 'facet' => true,
-                                         'facet.field' => "sci_name",
-                                         'start' =>  start, 'rows' => limit
-    sci_names = {}
-    
-    if response["response"]["numFound"] > 0
-      response["response"]["docs"].each do |doc|
-        if sci_names.has_key?(doc[:job_id])
-          sci_names[doc[:job_id]] << doc[:sci_name]
-        else
-          sci_names[doc[:job_id]] = [doc[:sci_name]]
-        end        
-      end
-    end
-    
+                                         'facet.field' => "sci_name", 'facet.limit' => 4    
     items  = []
     response.facets.first.items.first(FACET_COUNT).each do |item|
       items << { field_value: item.value, hits: item.hits }
-    end    
-    { sci_names: sci_names, facets: items }
+    end 
+    { facets: items }
   end
   
   def get_name_info(sci_name)

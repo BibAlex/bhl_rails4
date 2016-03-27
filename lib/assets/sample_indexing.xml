@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<BatchId value= "1">
-<Volumes>
-<JobId value = "1">
-</JobId>
-</Volumes>
-</BatchId>
-
-
-
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <IndexingFailureList batchID="1">
 <JobID>1</JobID>
 </IndexingFailureList>
