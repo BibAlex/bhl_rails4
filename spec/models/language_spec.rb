@@ -18,13 +18,14 @@ RSpec.describe Language, type: :model do
     it "is invalid without code" do
       expect(FactoryGirl.build(:language, code: nil)).to_not be_valid
     end
+
+    # These specs are no longer valid as the length constraint has been removed from the model
+    #it "is invalid with too short code" do
+      #expect(FactoryGirl.build(:language, code: 'co')).to_not be_valid
+    #end
     
-    it "is invalid with too short code" do
-      expect(FactoryGirl.build(:language, code: 'co')).to_not be_valid
-    end
-    
-    it "is invalid with too long code" do
-      expect(FactoryGirl.build(:language, code: Faker::Lorem.characters(4))).to_not be_valid
-    end    
+    #it "is invalid with too long code" do
+    #  #expect(FactoryGirl.build(:language, code: Faker::Lorem.characters(4))).to_not be_valid
+    #end
   end
 end

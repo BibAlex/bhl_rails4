@@ -522,7 +522,7 @@ end
     end
     
     context "invalid user" do
-      
+
       it "sets session of login_attempts" do
         last_login_attempts = session[:login_attempts] ||= 0
         post :validate, { user: { username: "invalid_username", password: "invalid_password" } }
@@ -536,8 +536,15 @@ end
       
       it "displays a flash message for unsuccessful login" do
         post :validate, { user: { username: "invalid_username", password: "invalid_password" } }
+        expect(flash[:error]).to eq(I18n.t('msgs.sign_in_unsuccessful_error'))
+      end
+
+
+      it "displays a flash message for inactive user login" do
+        FactoryGirl.create(:user, active: false, username: "valid_user_login", password: User.hash_password("password"))
+        post :validate, { user: { username: "valid_user_login", password: "password" } }
         expect(flash[:error]).to eq(I18n.t('msgs.sign_in_inactive_user'))
-      end            
+      end
     end    
   end
   

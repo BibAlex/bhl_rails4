@@ -140,7 +140,7 @@ RSpec.describe "Books", type: :request do
     it "display language of volume" do
       visit book_path(id: 1)
       expect(page).to have_selector("dt", text: I18n.t('common.language'))
-      expect(page).to have_selector("dd", text: "eng")
+      expect(page).to have_selector("dd", text: "English")
     end
 
     it "display location of volume" do
