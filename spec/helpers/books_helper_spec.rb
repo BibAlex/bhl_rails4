@@ -26,6 +26,14 @@ RSpec.describe BooksHelper, type: :helper do
       solr_books_core.add({ job_id: 2, language_facet: 'English', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2", views: 3, rate: 2 })
       solr_books_core.commit
        
+      solr_sci_names_core = RSolr::Ext.connect url: SOLR_SCI_NAMES
+      solr_sci_names_core.delete_by_query('*:*')
+      solr_sci_names_core.commit    
+      solr_sci_names_core.add({ sci_name: "sci_name_1" })
+      solr_sci_names_core.add({ sci_name: "sci_name_2" })
+      solr_sci_names_core.add({ sci_name: "sci_name_1_1" })
+      solr_sci_names_core.commit
+      
       solr_names_found_core = RSolr::Ext.connect url: SOLR_NAMES_FOUND
       solr_names_found_core.delete_by_query('*:*')
       solr_names_found_core.commit    
