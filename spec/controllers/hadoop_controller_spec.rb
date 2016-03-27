@@ -318,14 +318,14 @@ RSpec.describe HadoopController, type: :controller do
         get :pending_indexing
         json_response = ActiveSupport::JSON.decode(response.body)
         job_id = json_response["books"][0]["job_id"]
-        expect(job_id).to eq(@volume.job_id.to_s)
+        expect(job_id).to eq(@volume.job_id)
       end
       
       it 'returns correct metadata(bibID) of pending books' do
         get :pending_indexing
         json_response = ActiveSupport::JSON.decode(response.body)
         bib_id = json_response["books"][0]["bibID"]
-        expect(bib_id).to eq(@book.bib_id.to_s)
+        expect(bib_id).to eq(@book.bib_id)
       end
       
       it 'returns correct metadata(title) of pending books' do
@@ -360,28 +360,28 @@ RSpec.describe HadoopController, type: :controller do
         get :pending_indexing
         json_response = ActiveSupport::JSON.decode(response.body)
         languages = json_response["books"][0]["languages"]
-        expect(languages).to eq(["\"english\""])
+        expect(languages).to eq(["english"])
       end
       
       it 'returns correct metadata(address) of pending books' do
         get :pending_indexing
         json_response = ActiveSupport::JSON.decode(response.body)
         location_address = json_response["books"][0]["location_address"]
-        expect(location_address).to eq(["\"123 detailed address\""])
+        expect(location_address).to eq(["123 detailed address"])
       end
       
       it 'returns correct metadata(authors) of pending books' do
         get :pending_indexing
         json_response = ActiveSupport::JSON.decode(response.body)
         authors = json_response["books"][0]["authors"]
-        expect(authors).to eq(["\"author\""])
+        expect(authors).to eq(["author"])
       end
       
       it 'returns correct metadata(authors) of pending books' do
         get :pending_indexing
         json_response = ActiveSupport::JSON.decode(response.body)
         subjects = json_response["books"][0]["subjects"]
-        expect(subjects).to eq(["\"subject\""])
+        expect(subjects).to eq(["subject"])
       end
 
     end

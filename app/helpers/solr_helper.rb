@@ -3,10 +3,12 @@ module SolrHelper
   def solr_autocomplete(field, term, limit)
     if field == 'name'
       rsolr = RSolr.connect url: SOLR_SCI_NAMES
-      response = rsolr.find 'q' => "*:*", 'facet' => true, 'facet.field' => "sci_name_suggest", 'facet.limit' => limit, 'facet.prefix' => term.downcase, 'rows' => 0
+      response = rsolr.find 'q' => "*:*", 'facet' => true, 'facet.field' => "sci_name_suggest", 'facet.limit' => limit,
+                                                           'facet.prefix' => term.downcase, 'rows' => 0
     else
       rsolr = RSolr.connect url: SOLR_BOOKS_METADATA
-      response = rsolr.find 'q' => "*:*", 'facet' => true, 'facet.field' => "#{field}_auto", 'facet.limit' => limit, 'facet.prefix' => term.downcase, 'rows' => 0
+      response = rsolr.find 'q' => "*:*", 'facet' => true, 'facet.field' => "#{field}_auto", 'facet.limit' => limit,
+                                                           'facet.prefix' => term.downcase, 'rows' => 0
     end    
     response.facets.first.items
   end  
@@ -23,7 +25,8 @@ module SolrHelper
   
   def get_sci_names_of_volumes(job_ids)
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => "job_id:#{job_ids}", 'fl' => 'job_id,sci_name', 'facet' => true, 'facet.field' => "sci_name"
+    response = rsolr.find 'q' => "job_id:#{job_ids}", 'fl' => 'job_id,sci_name',
+                                                      'facet' => true, 'facet.field' => "sci_name"
     sci_names = {}
     
     if response["response"]["numFound"] > 0
@@ -42,7 +45,10 @@ module SolrHelper
   def get_sci_names_with_facet(query, page, limit, fquery)
     start = (page > 1) ? (page - 1) * limit : 0
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => fquery, 'fq' => "{!join from=job_id to=job_id fromIndex=books_metadata} #{query}", 'fl' => 'job_id,sci_name', 'facet' => true, 'facet.field' => "sci_name", 'start' =>  start, 'rows' => limit
+    response = rsolr.find 'q' => fquery, 'fq' => "{!join from=job_id to=job_id fromIndex=books_metadata} #{query}",
+                                         'fl' => 'job_id,sci_name', 'facet' => true,
+                                         'facet.field' => "sci_name",
+                                         'start' =>  start, 'rows' => limit
     sci_names = {}
     
     if response["response"]["numFound"] > 0
