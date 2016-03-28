@@ -34,6 +34,16 @@ class ApplicationController < ActionController::Base
   def bhl_verify_recaptcha
     verify_recaptcha(timeout: 100)
   end
+
+  def resource_not_found
+    redirect_to '/'
+    flash[:error] = I18n.t "msgs.resource_not_found"
+  end
+
+  def unauthorized_action
+    redirect_to '/'
+    flash[:error] = I18n.t 'common.unauthorized_action'
+  end
    private
     def extract_locale_from_accept_language_header
       request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
