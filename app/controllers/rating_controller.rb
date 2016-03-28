@@ -1,12 +1,16 @@
 class RatingController < ApplicationController
   include SolrHelper
 
-  before_filter :check_authentication, only: :rate
+  before_filter :check_authentication, only: [:rate, :detailed_rate]
 
   def rate
-    avg_rate = update_rate(params)
-    respond_to do |format|
-      format.html { render partial: "rating/avg_rate", locals: { rate: avg_rate , type: params[:rateable_type]} }
+    if(User.can_edit?(params[:user_id].to_i,session[:user_id].to_i))
+      avg_rate = update_rate(params)
+      respond_to do |format|
+        format.html { render partial: "rating/avg_rate", locals: { rate: avg_rate , type: params[:rateable_type]} }
+      end
+    else
+      render "pages/unauthorized"
     end
   end
 
