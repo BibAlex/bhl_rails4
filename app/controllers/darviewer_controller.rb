@@ -1,6 +1,7 @@
 class DarviewerController < ApplicationController
   
   protect_from_forgery except: [:book, :user, :annotations] 
+  before_filter :check_authentication
   
   include SolrHelper
   include DarviewerHelper
@@ -17,13 +18,17 @@ class DarviewerController < ApplicationController
   end
   
   def book
-    pid = params[:PID]
-    jobid = pid.gsub("DAF-Job:", "")    
-    jsonArray = load_volume_with_names_from_solr(jobid)
-    jsonArray["Language"] = jsonArray.delete(:language)
-    jsonArray["Subjects"] = jsonArray.delete(:subject)
-    jsonArray["Authors"] = jsonArray.delete(:author)
-    jsonArray["Title"] = jsonArray.delete(:title)
+    if params[:PID]
+      pid = params[:PID]
+      jobid = pid.gsub("DAF-Job:", "")    
+      jsonArray = load_volume_with_names_from_solr(jobid)
+      jsonArray["Language"] = jsonArray.delete(:language)
+      jsonArray["Subjects"] = jsonArray.delete(:subject)
+      jsonArray["Authors"] = jsonArray.delete(:author)
+      jsonArray["Title"] = jsonArray.delete(:title)
+    else
+      jsonArray = ""
+    end
     render :json =>  jsonArray.to_json, :callback => params[:callback]
   end
   
@@ -39,6 +44,7 @@ class DarviewerController < ApplicationController
       jsonArray = remove_annotation(params)
     end
     j = ActiveSupport::JSON
-    render :json => j.encode(jsonArray), :callback => params[:callback]
+    res = jsonArray.nil? ? "" : j.encode(jsonArray)
+    render :json => res, :callback => params[:callback]
   end
 end
