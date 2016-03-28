@@ -184,7 +184,7 @@ ar:
       collection: "المجموعة"
       book: "الكتاب"
       comment: "التعليق"
-
+    unauthorized_action: "عمل غير مصرح به"
   warn:
     empty_search_query_warn: "يجب عليك إدخال جملة البحث"
     invalid_input: "جملة غير صالحة للبحث"

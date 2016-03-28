@@ -212,6 +212,7 @@ en:
     most_viewed: Most Viewed
     top_rated: Top Rated
     top_collections: Top Collections
+    unauthorized_action: Unauthorized Action
     
 
   warn:
@@ -219,6 +220,7 @@ en:
     invalid_input: Invalid Input
     max_photo_size: Max size for photo
     comment_empty_warn: Comment can't be empty
+    can_not_find_object: "Can't find the requested %{object}"
 
   msgs:
     no_suggestion: "No Suggestion"
