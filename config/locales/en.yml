@@ -272,6 +272,7 @@ en:
     delete_saved_query_confirm: "Are you sure you want to delete this query ?"
     book_removed: Book has been removed
     hidden_comment_msg: This comment was hidden as it may contains inappropriate content
+    resource_not_found: Resource not found
     
 
   activerecord:
