@@ -1,7 +1,7 @@
 class UserSearchHistoryController < ApplicationController
   include UsersHelper 
   
-  before_filter :check_authentication, only:[:save_query, :delete_query]
+  before_filter :check_authentication
   
   def save_query
     if params[:query]
@@ -31,10 +31,16 @@ class UserSearchHistoryController < ApplicationController
   end
   
   def remove_book_history
-    user_id = params[:user_id].to_i
-    if authenticate_user(user_id)
-      UserVolumeHistory.destroy(params[:user_volume_history_id])
-      redirect_to user_path(id: user_id, tab: "history", page: params[:page]), flash: { notice: I18n.t('msgs.book_removed') }
+    volume_history =  UserVolumeHistory.find_by_id(params[:user_volume_history_id])
+    if volume_history
+      if volume_history.user_id == session[:user_id]
+        volume_history.destroy
+        return redirect_to user_path(id: session[:user_id], tab: "history", page: params[:page]), flash: { notice: I18n.t('msgs.book_removed') }
+      else
+        return unauthorized_action
+      end
+    else
+      resource_not_found
     end
   end 
   
