@@ -36,13 +36,11 @@ class ApplicationController < ActionController::Base
   end
 
   def resource_not_found
-    redirect_to '/'
-    flash[:error] = I18n.t "msgs.resource_not_found"
+    redirect_to '/' , flash: {error: I18n.t("msgs.resource_not_found")}
   end
 
   def unauthorized_action
-    redirect_to '/'
-    flash[:error] = I18n.t 'common.unauthorized_action'
+    redirect_to '/', flash: {error: I18n.t('common.unauthorized_action')}
   end
    private
     def extract_locale_from_accept_language_header

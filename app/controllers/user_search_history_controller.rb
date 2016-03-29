@@ -16,15 +16,18 @@ class UserSearchHistoryController < ApplicationController
   end
   
   def delete_query
-    # if authenticate_user(params[:user_id].to_i)
     if(params[:id])
       query = Query.find_by_id(params[:id])
-      query.destroy
-      redirect_to user_path( id: session[:user_id], tab: "queries"), flash: {notice: I18n.t('common.entity_deleted', entity: I18n.t('common.search_query'))}
-    else
-      redirect_to root_path, flash: {notice: I18n.t('warn.can_not_find_object', object: "walaa")}
+      if query
+        if session[:user_id] == query.user_id
+          query.destroy
+          return redirect_to user_path( id: session[:user_id], tab: "queries"), flash: {notice: I18n.t('common.entity_deleted', entity: I18n.t('common.search_query'))}
+        else
+          return unauthorized_action
+        end
+      end
     end
-    # end 
+    return redirect_to root_path, flash: {notice: I18n.t('warn.can_not_find_query')}
   end
   
   def remove_book_history
