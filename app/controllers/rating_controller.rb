@@ -2,7 +2,6 @@ class RatingController < ApplicationController
   include SolrHelper
 
   before_filter :check_authentication, only: [:rate]
-  before_filter :find_rateable_object, only: [:rate, :detailed_rate]
 
   def rate
     if(User.can_edit?(params[:user_id].to_i, session[:user_id].to_i))

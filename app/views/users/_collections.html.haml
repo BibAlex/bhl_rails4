@@ -9,7 +9,7 @@
     -@collections.each do |item|
       
       - if(item.photo_name.blank?)
-        - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_collection')}"
+        - thumb = "/assets/images_#{I18n.locale}/#{I18n.t('common.default_collection')}"
         - title = nil
       - else
         - thumb = item.photo_name_url(:small)

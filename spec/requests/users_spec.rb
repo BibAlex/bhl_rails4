@@ -191,7 +191,7 @@ RSpec.describe "Users", type: :request do
 
       it "should have an image for each collection" do
         visit user_path(id: @owner_user.id, tab: "collections")
-        expect(page).to have_selector("img[src = '/images_#{I18n.locale}/#{I18n.t('common.default_collection')}']")
+        expect(page).to have_selector("img[src = '/assets/images_#{I18n.locale}/#{I18n.t('common.default_collection')}']")
       end
 
       it "should have added on date in my collections" do
