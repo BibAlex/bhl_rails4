@@ -10,11 +10,11 @@ class GeographicsController < ApplicationController
     @header = Cartographer::Header.new.to_s
     @range = params[:range] ? params[:range] : "10,20,30,40,50"
     @icons = {
-      10 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_blue')}",
-      20 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_green')}",
-      30 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_yellow')}",
-      40 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_orange')}",
-      50 => "/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_red')}"
+      10 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_blue')}",
+      20 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_green')}",
+      30 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_yellow')}",
+      40 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_orange')}",
+      50 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_red')}"
       }
     # defining icons
     gicons = {}

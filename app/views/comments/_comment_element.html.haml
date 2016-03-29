@@ -1,6 +1,6 @@
 - owner_of_comment = User.find(comment.user_id)
 - if(owner_of_comment && (owner_of_comment.photo_name.blank?))
-  - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
+  - thumb = "/assets/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
 - else
   - thumb = owner_of_comment.photo_name_url(:thumb)
 
