@@ -16,7 +16,7 @@ RSpec.describe "Homepages", type: :feature do
     end
     
     it "includes BHL logo" do
-      expect(page).to have_selector("img[src='/images_#{I18n.locale}/logo.png']")
+      expect(page).to have_selector("img[src='/assets/images_#{I18n.locale}/logo.png']")
     end    
     
     it "includes a link for home page" do
@@ -80,7 +80,7 @@ RSpec.describe "Homepages", type: :feature do
     end
     
     it "includes bibalex logo" do
-      expect(page).to have_selector("img[src='/images_#{I18n.locale}/#{I18n.t('common.ba_logo')}']")
+      expect(page).to have_selector("img[src='/assets/images_#{I18n.locale}/#{I18n.t('common.ba_logo')}']")
     end    
     
     it "includes a link for home page" do
