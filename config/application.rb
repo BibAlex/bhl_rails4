@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require 'carrierwave'
 ActiveRecord::Base.raise_in_transactional_callbacks = true
 
 # Require the gems listed in Gemfile, including any gems

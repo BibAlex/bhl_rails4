@@ -11,7 +11,7 @@
           .panel-body
             - user = User.find(activity.user_id)
             - if user.photo_name.blank?
-              - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
+              - thumb = "/assets/images_#{I18n.locale}/#{I18n.t('common.default_user')}"
               - title = nil
             - else
               - thumb = user.photo_name_url(:small)

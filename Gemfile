@@ -30,6 +30,17 @@ gem 'i18n'
 gem 'haml'
 gem 'recaptcha'
 gem 'rails-erd'
+gem 'social-share-button', '~> 0.1.8', git: 'https://github.com/cuterxy/social-share-button.git'
+gem 'carrierwave'
+gem "mini_magick"
+gem 'acts_as_list'
+gem 'will_paginate'
+gem 'uuidtools'
+gem 'i18n_compare_yaml_files'
+gem 'actionpack-page_caching'
+gem 'actionpack-action_caching'
+
+
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
@@ -42,9 +53,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-group :development do
-  gem 'actionpack-page_caching'
-  gem 'actionpack-action_caching'
+group :development do 
 
 end
 
@@ -52,21 +61,14 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'shoulda-matchers'
-  gem 'faker'
-  gem 'acts_as_list'
+  gem 'faker'  
   gem 'thin'
   gem 'capybara'
   gem 'minitest'
-  gem 'selenium-webdriver'
-  gem 'social-share-button', '~> 0.1.8', git: 'https://github.com/cuterxy/social-share-button.git'
+  gem 'selenium-webdriver'  
   gem 'byebug'
-  gem 'will_paginate'
-  gem 'carrierwave'
-  gem "mini_magick"
-  gem 'uuidtools'
   gem 'database_cleaner'
   gem 'rubocop', require: false
-  gem 'i18n_compare_yaml_files'
 end
 
 group :test do

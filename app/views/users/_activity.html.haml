@@ -8,7 +8,7 @@
     - @activities.each_with_index do |activity,index|
       - owner_of_activity = User.find(activity.user_id)
       - if( owner_of_activity && (owner_of_activity.photo_name.blank?))
-        - thumb = "/images_#{I18n.locale}/#{I18n.t('common.default_user_small')}"
+        - thumb = "/assets/images_#{I18n.locale}/#{I18n.t('common.default_user_small')}"
         - title = nil
       - else
         - thumb = owner_of_activity.photo_name_url(:thumb)

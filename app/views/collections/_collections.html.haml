@@ -11,7 +11,7 @@
     - title = coll.title.length > 15 ? coll.title[0,14] + "..." : coll.title
     - counter = counter + 1
     - if coll.photo_name.blank?
-      - @thumb ="/images_#{I18n.locale}/#{I18n.t('common.default_collection')}"
+      - @thumb ="/assets/images_#{I18n.locale}/#{I18n.t('common.default_collection')}"
       - thumb_title = nil
     - else
       - @thumb = coll.photo_name_url(:thumb)

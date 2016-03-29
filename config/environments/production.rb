@@ -20,20 +20,20 @@ BhlRails4::Application.configure do
   # config.action_dispatch.rack_cache = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this).
-  config.serve_static_assets = false
+  config.serve_static_files = false
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :uglifier
+  # config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
+  config.assets.compile = true
 
   # Generate digests for assets URLs.
-  config.assets.digest = true
+  config.assets.digest = false
 
   # Version of your assets, change this if you want to expire all your assets.
-  config.assets.version = '1.0'
+  # config.assets.version = '1.0'
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
@@ -71,6 +71,12 @@ BhlRails4::Application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
+  
+  SOLR_BOOKS_METADATA = "http://localhost:8983/solr/books_metadata"
+  SOLR_SCI_NAMES = "http://localhost:8983/solr/sci_names"
+  SOLR_NAMES_FOUND = "http://localhost:8983/solr/names_found"
+  SOLR_GEOLOCATIONS = "http://localhost:8983/solr/geolocations"
+
 
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
