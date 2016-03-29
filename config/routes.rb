@@ -65,7 +65,6 @@ BhlRails4::Application.routes.draw do
     get "user_search_history/save_query"
     get "user_search_history/delete_query"
     get "user_search_history/remove_book_history"
-    get "carousel/index"
     get "carousel/get_carousel"
     get "comments/insert_comment"
     get "comments/get_comments"
