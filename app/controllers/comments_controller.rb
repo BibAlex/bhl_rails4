@@ -8,10 +8,15 @@ class CommentsController < ApplicationController
   end
 
   def get_comments
-    comments  = Comment.where(commentable_id: params[:commentable_id], commentable_type: params[:commentable_type]).order("created_at DESC")
-                       .paginate(page: params[:page], per_page: LIMIT_CAROUSEL)
-    respond_to do |format|
-      format.html { render partial: "comments/get_comments", locals: { comments: comments, commentable_type: params[:commentable_type], commentable_id: params[:commentable_id] } }
+    if params[:commentable_id] && params[:commentable_type]
+      comments  = Comment.where(commentable_id: params[:commentable_id],
+                     commentable_type: params[:commentable_type]).order("created_at DESC")
+                     .paginate(page: params[:page] || 1, per_page: LIMIT_CAROUSEL)
+      respond_to do |format|
+        format.html { render partial: "comments/get_comments", locals: { comments: comments, commentable_type: params[:commentable_type], commentable_id: params[:commentable_id] } }
+      end
+    else
+      resource_not_found
     end
   end
 
