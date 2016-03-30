@@ -1,0 +1,15 @@
+function confirmDeleteCollectionphoto(id){
+    var r= confirm("<%= I18n.t('collection.delete_collection_photo_confirm') %>");
+    if (r)
+      $.ajax({
+        url: "/get_or_delete_collection_photo?id="+id+"&is_delete=1",
+        type: "GET",
+        success: function (data) {
+          $("#photo").html(data);
+        }
+      });
+    else{
+      $('#delete_photo').removeAttr('checked');
+      return false;
+      }
+  }

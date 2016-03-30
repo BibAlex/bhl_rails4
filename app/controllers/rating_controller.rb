@@ -4,13 +4,13 @@ class RatingController < ApplicationController
   before_filter :check_authentication, only: [:rate]
 
   def rate
-    if(User.can_edit?(params[:user_id].to_i,session[:user_id].to_i))
+    if(User.can_edit?(params[:user_id].to_i, session[:user_id].to_i))
       avg_rate = update_rate(params)
       respond_to do |format|
         format.html { render partial: "rating/avg_rate", locals: { rate: avg_rate , type: params[:rateable_type]} }
       end
     else
-      render "pages/unauthorized"
+      unauthorized_action
     end
   end
 
@@ -50,5 +50,13 @@ class RatingController < ApplicationController
     rateable_object = params[:rateable_type].camelize.constantize.find(params[:rateable_id])
     rateable_object.update_attributes(rate: avg_rate)
   end
-
+  private
+  def find_rateable_object
+    if  params[:rateable_type] == "volume"
+      return true if Volume.find_by_job_id(params[:rateable_id])
+    elsif params[:rateable_type] == "collection"
+      return true if Collection.find_by_id(params[:rateable_id])
+    end
+    return resource_not_found
+  end
 end
