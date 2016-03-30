@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
 
-  before_filter :check_authentication, only: [:create, :delete]
+  before_filter :check_authentication, only: [:create, :delete, :mark]
 
   def create
     Comment.create(Comment.comment_params(params[:comment]))
@@ -21,11 +21,15 @@ class CommentsController < ApplicationController
   end
 
   def mark
-    comment = Comment.find(params[:id])
-    comment.increment(:number_of_marks)
-    comment.save
-    data = comment.number_of_marks
-    render :json => data
+    comment = Comment.find_by_id(params[:id])
+    if comment
+      comment.increment(:number_of_marks)
+      comment.save
+      data = comment.number_of_marks
+      render json: data
+    else
+      resource_not_found
+    end
   end
 
   def delete
