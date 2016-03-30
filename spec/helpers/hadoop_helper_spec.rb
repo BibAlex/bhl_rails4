@@ -70,11 +70,12 @@ RSpec.describe HadoopHelper, type: :helper do
     before do
       load_book_statuses
       load_batch_statuses
+      load_volume_statuses
       Book.delete_all
       Volume.delete_all
-      book = Book.create(book_status_id: BookStatus.finished_metadata.id, bib_id: Faker::Base.numerify('#####-#####'))
-      @volume = Volume.create(book_id: book.id, job_id: 1)
-      Batch.create(status_id: BatchStatus.pending_content.id, id: 1)
+      book = Book.create(book_status_id: BookStatus.finished_metadata.id, bib_id: Faker::Base.numerify('#####-#####'))      
+      batch = Batch.create(status_id: BatchStatus.pending_content.id, id: 1)
+      @volume = Volume.create(book_id: book.id, job_id: 1, batch_id: batch.id, status_id: VolumeStatus.pending_content.id)
       xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "mark_finished_content.xml"))
       mods_xml = Nokogiri::XML(xml_file_path)
       xml_file_path.close
@@ -107,12 +108,13 @@ RSpec.describe HadoopHelper, type: :helper do
     before do
       load_book_statuses
       load_batch_statuses
+      load_volume_statuses
       Book.delete_all
       Volume.delete_all
       Batch.delete_all
       book = Book.create(book_status_id: BookStatus.finished_metadata.id, bib_id: Faker::Base.numerify('#####-#####'))
       @batch = Batch.create(status_id: BatchStatus.pending_indexing.id, id: 1)
-      @volume = Volume.create(book_id: book.id, job_id: 1, batch_id: @batch.id)  
+      @volume = Volume.create(book_id: book.id, job_id: 1, batch_id: @batch.id, status_id: VolumeStatus.pending_indexing.id)  
       xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "sample_indexing.xml"))
       mods_xml = Nokogiri::XML(xml_file_path)
       xml_file_path.close
