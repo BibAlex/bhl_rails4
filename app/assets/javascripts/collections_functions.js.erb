@@ -1,52 +1,36 @@
-function check_image_size() {  
+function check_image_size() {
   var is_file_valid = true;
-  if($('#photo_name')[0] != null){   
-    if($('#photo_name')[0].files[0] != null){           
+  if($('#photo_name')[0] != null){
+    if($('#photo_name')[0].files[0] != null){
       var ext = $('#photo_name').val().split('.').pop().toLowerCase();
       var size = $('#photo_name')[0].files[0].size;
-      var photo_size_limit = "<%= UPLOADED_PHOTO_MAX_SIZE * 1000 * 1000 %>";    
-      if($.inArray(ext, ['gif','png','jpg','jpeg', 'bmp']) == -1) {              
+      var photo_size_limit = "<%= UPLOADED_PHOTO_MAX_SIZE * 1000 * 1000 %>";
+      if($.inArray(ext, ['gif','png','jpg','jpeg', 'bmp']) == -1) {
         $('#photo_ext_error_message').removeClass("invisible_error_msg");
         $('#photo_ext_error_message').addClass("visible_error_msg");
         $('#photo_size_error_message').removeClass("visible_error_msg");
         $('#photo_size_error_message').addClass("invisible_error_msg");
         is_file_valid = false;
       }
-      else{          
+      else{
         if(size > photo_size_limit){
           $('#photo_ext_error_message').removeClass("visible_error_msg");
           $('#photo_ext_error_message').addClass("invisible_error_msg");
           $('#photo_size_error_message').removeClass("invisible_error_msg");
           $('#photo_size_error_message').addClass("visible_error_msg");
           is_file_valid = false;
-        } 
+        }
       }
     }
   }
     return is_file_valid;
 }
 
-function confirmDeleteCollectionphoto(id){
-    var r= confirm("<%= I18n.t('collection.delete_collection_photo_confirm') %>");
-    if (r)
-      $.ajax({
-        url: "/get_or_delete_collection_photo?id="+id+"&is_delete=1",
-        type: "GET",        
-        success: function (data) { 
-          $("#photo").html(data);        
-        }
-      });
-    else{
-      $('#delete_photo').removeAttr('checked');
-      return false;
-      }
-  }
-  
 function confirmBookDeleteFromCollection(){
     var r= confirm("<%= I18n.t('collection.remove_book_from_collection_confirm') %>");
     return r;
 }
-  
+
 function get_or_delete_photo(id, is_delete){
     var xmlhttp;
     if (window.XMLHttpRequest)
@@ -66,11 +50,11 @@ function get_or_delete_photo(id, is_delete){
           alert("<%= I18n.t('collection.delete_photo_flash') %>");
         document.getElementById("photo").innerHTML=xmlhttp.responseText;
       }
-    }  
+    }
     xmlhttp.open("GET","/get_or_delete_collection_photo?id="+ id +"&is_delete="+ is_delete,true);
     xmlhttp.send();
   }
-  
+
 function auto_complete(){
 	var cache;
     cache = {};

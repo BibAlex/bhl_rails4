@@ -3,42 +3,38 @@ class CollectionsController < ApplicationController
   include BooksHelper
   before_filter :store_location, only: [:show]
   before_filter :check_authentication, only: [:add_book]
-  
+
   def index
     @page_title = I18n.t('collection.collection_title')
     @page = params[:page] ? params[:page].to_i : 1
-    
+
     sql_query = "is_public = 1"
-    sql_query += " AND title LIKE '%#{params[:search]}%'" if !params[:search].blank?
+    sql_query += " AND title LIKE '%#{params[:search]}%'" unless params[:search].blank?
     @collections = Collection.where(sql_query).paginate(page: @page, per_page: PAGE_SIZE).order(params[:sort_type])
     @collections_total_number = Collection.where(sql_query).count
   end
-  
-  
+
   def autocomplete
     @results = Collection.where("title LIKE :title", { title: "#{params[:term]}%" }).group(:title).limit(10).map(&:title) # TODO put it in config
     render json: @results
   end
 
-  def show    
+  def show
     @collection = Collection.find(params[:id])
     @page_title = @collection.title
     @page_author = User.find(@collection.user_id).username
     if @collection.is_public || authenticate_user(@collection.user_id)
       @collection_id = params[:id]
-      # @volume_id = nil
-      # @comment = Comment.new
       @user_rate = Rate.load_user_rate(session[:user_id], @collection_id, "collection") || 0.0
       @view = params[:view] ? params[:view] : 'list'
       @page = params[:page] ? params[:page].to_i : 1
       @collection_volumes = @collection.collection_volumes.paginate(page: @page, per_page: PAGE_SIZE).order('position ASC')
-      # @total_number = @collection_volumes.count
       @user = User.find(@collection.user_id)
       @url_params = params.clone
     end
   end
-  
-  def edit    
+
+  def edit
     @collection = Collection.find(params[:id])
     @page_title = "#{@collection.title} -  #{I18n.t('collection.edit_collection_page_title')}"
     @page_author = User.find(@collection.user_id).username
@@ -75,7 +71,7 @@ class CollectionsController < ApplicationController
   def delete_book
     move_or_delete_book("delete")
   end
-  
+
   def get_or_delete_collection_photo
     @collection = Collection.find(params[:id])
     if (is_logged_in_user?(@collection.user_id) && params[:is_delete].to_i == 1)
@@ -96,11 +92,7 @@ class CollectionsController < ApplicationController
       Comment.collection_comments.delete_all
       flash[:notice]=I18n.t('collection.collection_removed')
       flash.keep
-      if request.env["HTTP_REFERER"].present? and request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
-        redirect_to_back_or_default
-      else
-        redirect_to users_path(id: session[:user_id], tab: "collections")
-      end
+      redirect_to_back_or_default(users_path(id: session[:user_id], tab: "collections"))
     end
   end
 
@@ -110,7 +102,7 @@ class CollectionsController < ApplicationController
       if col.valid?
         col.save
         col_id = col.id
-      else        
+      else
         flash[:notice] = col.errors.full_messages
         respond_to do |format|
           format.html { render partial: 'layouts/flash' }
@@ -139,7 +131,7 @@ class CollectionsController < ApplicationController
   end
 
   private
- 
+
   def move_or_delete_book(decision)
     collection_volume = CollectionVolume.find(params[:collection_volume_id])
     collection = Collection.find(collection_volume.collection_id)
@@ -154,15 +146,11 @@ class CollectionsController < ApplicationController
         flash.keep
       end
       collection.update_attributes(updated_at: Time.now)
-      if request.env["HTTP_REFERER"].present? and request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
-        redirect_to_back_or_default
-      else
-        redirect_to controller: :collections, action: :index
-      end
+      redirect_to_back_or_default(collections_path)
     end
   end
-  
-  def add_book_to_collection(job_id, col_id)    
+
+  def add_book_to_collection(job_id, col_id)
     CollectionVolume.create(volume_id: job_id, collection_id: col_id)
     flash[:notice] = I18n.t('msgs.book_added_to_collection')
     respond_to do |format|
