@@ -18,9 +18,9 @@ class NamesController < ApplicationController
   def get_content
     @id = params[:id]
     he = HierarchyEntry.find_taxon(@id)
-    return unless he
+    return resource_not_found unless he
     @taxon_concept_id = he.taxon_concept_id
-    return unless @taxon_concept_id
+    return resource_not_found unless @taxon_concept_id
     @name = he.clean_taxon_concept
     image_source = TaxonConcept.get_image(@taxon_concept_id)
     if image_source.nil?
@@ -39,8 +39,7 @@ class NamesController < ApplicationController
     else
       @books_count = 0
     end
-
-    render :layout => 'main' # this is a blank layout as I don't need any layout in this action
+    render layout: 'main' # this is a blank layout as I don't need any layout in this action
   end
 
 
