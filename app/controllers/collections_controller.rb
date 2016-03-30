@@ -97,7 +97,7 @@ class CollectionsController < ApplicationController
       flash[:notice]=I18n.t('collection.collection_removed')
       flash.keep
       if request.env["HTTP_REFERER"].present? and request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
-        redirect_to :back
+        redirect_to_back_or_default
       else
         redirect_to users_path(id: session[:user_id], tab: "collections")
       end
@@ -155,7 +155,7 @@ class CollectionsController < ApplicationController
       end
       collection.update_attributes(updated_at: Time.now)
       if request.env["HTTP_REFERER"].present? and request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
-        redirect_to :back
+        redirect_to_back_or_default
       else
         redirect_to controller: :collections, action: :index
       end

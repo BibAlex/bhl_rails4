@@ -4,7 +4,7 @@ class CommentsController < ApplicationController
 
   def create
     Comment.create(Comment.comment_params(params[:comment]))
-    redirect_to :back
+    redirect_to_back_or_default
   end
 
   def get_comments
@@ -33,19 +33,25 @@ class CommentsController < ApplicationController
   end
 
   def delete
-    comment = Comment.find( params[:id])
-    if comment.can_delete?
-      commentable_type = comment.commentable_type
-      comment.destroy if comment
-      if commentable_type == "comment"
-        flash[:notice] = I18n.t('msgs.reply_deleted')
+    comment = Comment.find_by_id( params[:id])
+    if comment
+      if comment.user_id != session[:user_id]
+        return unauthorized_action
+      elsif comment.can_delete?
+        commentable_type = comment.commentable_type
+        comment.destroy
+        if commentable_type == "comment"
+          flash[:notice] = I18n.t('msgs.reply_deleted')
+        else
+          flash[:notice] = I18n.t('msgs.comment_deleted')
+        end
       else
-        flash[:notice] = I18n.t('msgs.comment_deleted')
+        flash[:error] = I18n.t('msgs.can_not_delete_comment')
       end
+      redirect_to_back_or_default
     else
-      flash[:error] = I18n.t('msgs.can_not_delete_comment')
+      resource_not_found
     end
-    redirect_to :back
   end
 
 

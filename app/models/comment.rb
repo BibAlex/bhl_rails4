@@ -14,7 +14,7 @@ class Comment < ActiveRecord::Base
   after_save :update_activity
 
   def sanitize_html
-    self.text = sanitize(text, :tags=>[])
+    self.text = sanitize(text.strip, :tags=>[])
   end
 
   def update_activity
@@ -28,7 +28,7 @@ class Comment < ActiveRecord::Base
     elsif comment
        title = comment.text
     end
-    Activity.add_activity({ activitable_id: self.commentable_id, action: "comment", user_id: self.user_id, 
+    Activity.add_activity({ activitable_id: self.commentable_id, action: "comment", user_id: self.user_id,
                             activitable_type: self.commentable_type, value: self.text, activitable_title: title })
   end
 
