@@ -111,7 +111,7 @@ class UsersController < ApplicationController
     return redirect_to root_path, flash: { error: I18n.t('msgs.activation_failed') } if @user.nil?
     unless @user.active
        return activate_user if @user.verification_code == params[:activation_code]
-       return redirect_to root_path, flash: { error: I18n.t('msgs.activation_failed') } 
+       return redirect_to root_path, flash: { error: I18n.t('msgs.activation_failed') }
     else
       redirect_to root_path, flash: { error: I18n.t('msgs.account_already_active') }
     end
@@ -130,7 +130,7 @@ class UsersController < ApplicationController
        format.html { render partial: "users/get_user_profile_photo" }
      end
   end
-  
+
   def edit
     if authenticate_user(params[:id])
       @page_title = I18n.t('common.modify_profile')
@@ -140,18 +140,18 @@ class UsersController < ApplicationController
       @user.email_confirmation = @user.email
     end
   end
-  
+
   def update
     if authenticate_user(params[:id])
       @user = User.find(params[:id])
       user_attr = params[:user]
       params[:user][:photo_name] = User.process_user_photo_name(user_attr[:photo_name])
-      
+
       if handle_change_password(user_attr)
         if @user.update_attributes(User.user_params(user_attr))
           handle_successful_update
         else
-          handle_unsuccessful_update        
+          handle_unsuccessful_update
         end
       end
     end
@@ -256,11 +256,11 @@ class UsersController < ApplicationController
       @url_params = params.clone
     end
   end
-  
+
   def load_collections_tab
     @page_title = @user.username + " - " + I18n.t("common.collections")
     @page = params[:page] ? params[:page].to_i : 1
-    if session[:user_id].to_i == params[:id].to_i
+    if is_logged_in_user?(params[:id].to_i)
       user_collections = Collection.user_collections(session[:user_id])
       @total_number = user_collections.count
       @collections = user_collections.paginate(page: @page, per_page: PAGE_SIZE)
@@ -294,7 +294,7 @@ class UsersController < ApplicationController
       end
     end
   end
-  
+
   def handle_successful_update
     log_out
     log_in(@user) # to make sure everything is loaded properly
@@ -302,8 +302,8 @@ class UsersController < ApplicationController
     flash.keep
     return redirect_to controller: "users", action: "show", id: params[:id]
   end
-  
-  def handle_unsuccessful_update  
+
+  def handle_unsuccessful_update
     flash.keep
     params[:entered_password] = nil
     params[:password_confirmation] = nil
@@ -312,7 +312,7 @@ class UsersController < ApplicationController
     render action: "edit"
     return
   end
-  
+
   def handle_change_password(user_attr)
     if(!(user_attr[:entered_password].blank?) || !(user_attr[:password_confirmation].blank?))
         return old_password_required if user_attr[:old_password].blank?
@@ -323,13 +323,13 @@ class UsersController < ApplicationController
     end
     return true
   end
-  
+
   def old_password_required
     flash.now[:error] = I18n.t("msgs.old_password_required")
     render action: "edit"
-    return false   
+    return false
   end
-  
+
   def invalid_old_password
     flash.now[:error] = I18n.t("msgs.invalid_old_password")
     flash.keep
@@ -340,5 +340,5 @@ class UsersController < ApplicationController
     render action: "edit"
     return false
   end
-  
+
 end

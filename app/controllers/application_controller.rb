@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_locale
 
-
   def check_authentication
     must_log_in unless logged_in?
     return false
@@ -26,7 +25,7 @@ class ApplicationController < ActionController::Base
     url = nil unless url =~ /\A([%2F\/]|#{root_url})/
     session[:return_to] = url
   end
-  
+
   def redirect_to_user_show_if_logged_in
     redirect_to({ controller: 'users', action: 'show', id: session[:user_id] }) if logged_in?
   end
@@ -36,13 +35,19 @@ class ApplicationController < ActionController::Base
   end
 
   def resource_not_found
-    redirect_to '/'
-    flash[:error] = I18n.t "msgs.resource_not_found"
+    redirect_to '/' , flash: {error: I18n.t("msgs.resource_not_found")}
   end
 
   def unauthorized_action
-    redirect_to '/'
-    flash[:error] = I18n.t 'common.unauthorized_action'
+    redirect_to '/', flash: {error: I18n.t('common.unauthorized_action')}
+  end
+
+  def redirect_to_back_or_default(default = root_url)
+    if request.env["HTTP_REFERER"].present? and request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
+      redirect_to :back
+    else
+      redirect_to default
+    end
   end
    private
     def extract_locale_from_accept_language_header

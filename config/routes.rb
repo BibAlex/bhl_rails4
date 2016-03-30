@@ -65,9 +65,7 @@ BhlRails4::Application.routes.draw do
     get "user_search_history/save_query"
     get "user_search_history/delete_query"
     get "user_search_history/remove_book_history"
-    get "carousel/index"
     get "carousel/get_carousel"
-    get "comments/insert_comment"
     get "comments/get_comments"
     get "comments/mark"
     get "comments/delete"
@@ -75,9 +73,9 @@ BhlRails4::Application.routes.draw do
     get "names/get_content/:id" => "names#get_content"
     get "get_or_delete_collection_photo" => "collections#get_or_delete_collection_photo"
     get "/collectionautocomplete" => "collections#autocomplete"
-    
 
-    
+
+
     resources :books do
       collection do
         get 'autocomplete'
@@ -113,7 +111,7 @@ BhlRails4::Application.routes.draw do
       collection do
         get 'get_activity_log'
       end
-    end    
+    end
 
     resources :names, only: [:index]
 
@@ -132,9 +130,9 @@ BhlRails4::Application.routes.draw do
         get "/collections/delete_book/:collection_volume_id" => "collections#delete_book"
       end
     end
-    
+
     resources :comments, only: [:create]
-    
+
     get "hadoop/pending_metadata"
     post "hadoop/ingest_metadata", to: 'hadoop#ingest_metadata'
     get "hadoop/pending_content"
@@ -144,12 +142,12 @@ BhlRails4::Application.routes.draw do
     post "hadoop/finished_indexing", to: 'hadoop#finished_indexing'
     post "hadoop/mark_finished_content",  to: 'hadoop#mark_finished_content'
     post "hadoop/ingest_content",  to: 'hadoop#ingest_content'
-    
+
     get "darviewer/user"
     get "darviewer/book"
     get "darviewer/annotations"
 
-    
+
   end
-  
+
 end

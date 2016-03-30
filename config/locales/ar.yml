@@ -190,7 +190,6 @@ ar:
     invalid_input: "جملة غير صالحة للبحث"
     max_photo_size: "أقصى حجم للصور"
     comment_empty_warn: "يجب إدخال قيمة صالحة للتعليق"
-
     
   msgs:
     no_suggestion: "لا توجد إقتراحات"
