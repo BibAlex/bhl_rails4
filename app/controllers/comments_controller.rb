@@ -35,7 +35,7 @@ class CommentsController < ApplicationController
   def delete
     comment = Comment.find_by_id( params[:id])
     if comment
-      if comment.user_id != session[:user_id]
+      if !is_logged_in_user?(comment.user_id)
         return unauthorized_action
       elsif comment.can_delete?
         commentable_type = comment.commentable_type
