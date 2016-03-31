@@ -155,7 +155,7 @@ module HadoopHelper
     batch.update_attributes(status_id: BatchStatus.pending_indexing.id) unless Volume.where(batch_id: batch.id).blank?
     volumes = Volume.where("batch_id = ? AND status_id = ? ",batch.id, VolumeStatus.pending_content.id)
     unless volumes.blank?
-      volumes.each do |vol|
+      volumes.each do |volume|
         volume.update_attributes(status_id: nil, batch_id: nil)
       end
     end
