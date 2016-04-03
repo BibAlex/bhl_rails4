@@ -273,6 +273,7 @@ en:
     book_removed: Book has been removed
     hidden_comment_msg: This comment was hidden as it may contains inappropriate content
     resource_not_found: Resource not found
+    book_already_added: Book is already added to this collection
 
 
   activerecord:
