@@ -26,9 +26,11 @@ class BooksController < ApplicationController
 
   def autocomplete
     @results = []
-    response = solr_autocomplete(params[:type], params[:term], AUTOCOMPLETE_MAX)
-    response.each do |item|
-      @results << item.value
+    if params[:type] && params[:term]
+      response = solr_autocomplete(params[:type], params[:term], AUTOCOMPLETE_MAX)
+      response.each do |item|
+        @results << item.value
+      end
     end
     if (@results.empty?)
       @results << "#{I18n.t('msgs.no_suggestion')}"
