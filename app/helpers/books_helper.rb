@@ -311,16 +311,14 @@ module BooksHelper
   def process_solr_volumes(solr_response, query, page, limit, fquery)
     volumes = []
     facet_fields = {}
-
+    sci_names = {}
     if solr_response["response"]["numFound"] > 0
       
       job_ids = "("
       solr_response["response"]["docs"].each do |doc|
-        job_ids += job_ids == "(" ? doc["job_id"].to_s : " OR  #{doc[:job_id]}"
+        sci_names[doc[:job_id]] = get_sci_names_of_volumes("#{doc[:job_id]}")[:sci_names][doc[:job_id]]
       end
-      all_sci_names = get_sci_names_of_volumes("#{job_ids} )")
-
-     
+      all_sci_names = { sci_names: sci_names }
       sci_names_facets = get_sci_names_with_facet(query, page, limit, fquery)
 
       solr_response["response"]["docs"].each do |doc|
