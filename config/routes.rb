@@ -119,7 +119,7 @@ BhlRails4::Application.routes.draw do
     get "/geographics/show/:address" => "geographics#show", :constraints  => { :address => /[0-z\D\.\s]+/ }
     get "/geographics/index/:range" => "geographics#index"
 
-    resources :collections do
+    resources :collections, except: [:new] do
       collection do
         get 'add_book'
         get 'load'
