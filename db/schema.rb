@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160322113036) do
+ActiveRecord::Schema.define(version: 20160329121155) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -58,6 +58,13 @@ ActiveRecord::Schema.define(version: 20160322113036) do
     t.string   "status_code", limit: 255
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "batch_volumes", force: :cascade do |t|
+    t.integer  "batch_id",   limit: 4, null: false
+    t.integer  "volume_id",  limit: 4, null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   create_table "batches", force: :cascade do |t|
@@ -289,6 +296,12 @@ ActiveRecord::Schema.define(version: 20160322113036) do
     t.datetime "updated_at"
   end
 
+  create_table "volume_statuses", force: :cascade do |t|
+    t.string   "status_code", limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
   create_table "volumes", force: :cascade do |t|
     t.integer  "book_id",          limit: 4,                                       null: false
     t.integer  "job_id",           limit: 4,                                       null: false
@@ -298,6 +311,7 @@ ActiveRecord::Schema.define(version: 20160322113036) do
     t.datetime "updated_at"
     t.integer  "batch_id",         limit: 4
     t.integer  "number_of_trials", limit: 4,                         default: 0
+    t.integer  "status_id",        limit: 4
   end
 
   add_index "volumes", ["batch_id"], name: "index_volumes_on_batch_id", using: :btree

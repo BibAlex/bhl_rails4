@@ -76,13 +76,13 @@ BhlRails4::Application.routes.draw do
 
 
 
-    resources :books do
+    resources :books, only: [:index, :show] do
       collection do
         get 'autocomplete'
       end
     end
 
-    resources :users do
+    resources :users, except:[:index, :destroy] do
       collection do
         get 'login'
         get 'forgot_password'
@@ -97,7 +97,7 @@ BhlRails4::Application.routes.draw do
     end
 
 
-    resources :pages do
+    resources :pages, only:[] do
       collection do
         get 'about'
         get 'home'
@@ -107,7 +107,7 @@ BhlRails4::Application.routes.draw do
       end
     end
 
-    resources :activities do
+    resources :activities, only:[:index] do
       collection do
         get 'get_activity_log'
       end
@@ -115,7 +115,7 @@ BhlRails4::Application.routes.draw do
 
     resources :names, only: [:index]
 
-    resources :geographics
+    resources :geographics, only:[:index]
     get "/geographics/show/:address" => "geographics#show", :constraints  => { :address => /[0-z\D\.\s]+/ }
     get "/geographics/index/:range" => "geographics#index"
 

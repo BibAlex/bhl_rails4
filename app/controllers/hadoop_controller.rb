@@ -22,11 +22,11 @@ class HadoopController < ApplicationController
   end
 
   def pending_content
-    render json: generate_json_volume_pending_content_listing(Volume.get_pending_content_volumes)
+    render json: generate_json_volume_pending_content_listing(Volume.get_pending_content_volumes(params[:batch_limit]))
   end
   
   def pending_indexing
-    render json: generate_json_volume_pending_indexing_listing
+    render json: generate_json_volume_pending_indexing_listing(params[:batch_id])
   end
   
   def finished_indexing

@@ -14,36 +14,32 @@ module HadoopHelper
     json_output
   end
   
-  def generate_json_volume_pending_content_listing(volume_list)
-      if volume_list.blank?
-        batch_id = ""
-      else
-        res = Batch.where(status_id: BatchStatus.pending_content.id)
-        batch = res.first
-        if batch
-          Volume.where(batch_id: batch.id).each do |volume|
-            volume.update_attributes(batch_id: nil)
-           end
-           batch_id = batch.id
-        else
-          batch_id = Batch.create(status_id: BatchStatus.pending_content.id).id
-        end
-      end
+  def generate_json_volume_pending_content_listing(volume_list)    
+    if volume_list.blank?
+      batch_id = ""
+      json_output = "{ \"batch_id\": \"#{batch_id}\", \"Volumes\":["
+    else
+      batch_id = Batch.create(status_id: BatchStatus.pending_content.id).id
       json_output = "{ \"batch_id\": \"#{batch_id}\", \"Volumes\":["
       volume_list.each do |volume|
-        volume.update_attributes(number_of_trials: volume.number_of_trials + 1)
-        json_output << "\"#{volume.job_id}\","
+        volume.update_attributes(status_id: VolumeStatus.pending_content.id, number_of_trials: volume.number_of_trials + 1, batch_id: batch_id)
+        json_output << "\"#{volume.job_id}\","        
       end
-    json_output = json_output[0...json_output.length-1] if volume_list.count > 0
+      json_output = json_output[0...json_output.length-1] 
+    end
     json_output << "]}"
-
     json_output
   end
   
-  def generate_json_volume_pending_indexing_listing
-    batch = Batch.where(status_id: BatchStatus.pending_indexing.id)
-    batch_id = batch.empty? ? "" : batch.first.id
-    pending_volumes  = Volume.where(batch_id: batch_id)
+  def generate_json_volume_pending_indexing_listing(batch_id_param)
+    if batch_id_param.nil?
+      batch = Batch.where(status_id: BatchStatus.pending_indexing.id)
+      batch_id = batch.empty? ? "" : batch.first.id
+    else
+      batch = Batch.find(batch_id_param)
+      batch_id = batch.id if batch
+    end
+    pending_volumes  = Volume.where("batch_id = ? AND status_id = ? ",batch_id, VolumeStatus.pending_indexing)
     json_output = "{ \"batchID\": \"#{batch_id}\", \"books\":["
     pending_volumes.each do |volume|
       book = Book.find(volume.book_id)
@@ -121,10 +117,18 @@ module HadoopHelper
     data_xml.xpath("//IndexingFailureList").each do |batch|
       batch_id = batch.attr("batchID").to_i
       Batch.find(batch_id).update_attributes(status_id: BatchStatus.indexed.id)
+      failure_list = []
       data_xml.xpath("//IndexingFailureList//JobID").each do |job_id|
-        volume  = Volume.find_by_job_id(job_id.text.to_i)
-        volume.update_attributes(batch_id: nil) unless volume.nil?
+        failure_list << job_id.text.to_i
       end
+      
+      Volume.where("batch_id = ? AND status_id = ? ", batch_id, VolumeStatus.pending_indexing.id).each do |volume|
+        if failure_list.include?(volume.job_id)
+          volume.update_attributes(status_id: nil, batch_id: nil)
+        else
+          volume.update_attributes(status_id: VolumeStatus.indexed.id)
+        end
+      end      
     end
     return true
   end
@@ -138,12 +142,10 @@ module HadoopHelper
     end
     
     data_xml.xpath("//ContentSuccessList").each do |batch|
-      batch_id = batch.attr("batchID").to_i
-    
       data_xml.xpath("//ContentSuccessList//JobID").each do |job_id|
-        volume  = Volume.find_by_job_id(job_id.text.to_i)
-        volume.update_attributes(batch_id: batch_id) unless volume.nil?
-      end
+        volume = Volume.find_by_job_id(job_id.text.to_i)
+        volume.update_attributes(status_id: VolumeStatus.pending_indexing.id) if volume
+      end      
     end
     return true
   end
@@ -151,6 +153,12 @@ module HadoopHelper
   def ingest_batch(batch_id, names_content)
     batch = Batch.find(batch_id)
     batch.update_attributes(status_id: BatchStatus.pending_indexing.id) unless Volume.where(batch_id: batch.id).blank?
+    volumes = Volume.where("batch_id = ? AND status_id = ? ",batch.id, VolumeStatus.pending_content.id)
+    unless volumes.blank?
+      volumes.each do |volume|
+        volume.update_attributes(status_id: nil, batch_id: nil)
+      end
+    end
     begin
       file = File.new("#{Rails.root}/public/batches_#{Rails.env}/batch_#{batch_id}.zip", 'wb+')
       file.binmode

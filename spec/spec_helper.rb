@@ -39,13 +39,20 @@ def load_book_statuses
   # make sure that book_statuses table is populated
   BookStatus.delete_all
   ["Pending metadata", "Finished metadata"].each do |status|
-    BookStatus.create(:status_code => status)
+    BookStatus.find_or_create_by(:status_code => status)
   end
 end
   
 def load_batch_statuses
   BatchStatus.delete_all
   ["Pending content", "pending indexing", "indexed"].each do |status|
-    BatchStatus.create(status_code: status)
+    BatchStatus.find_or_create_by(status_code: status)
+  end
+end
+
+def load_volume_statuses
+  VolumeStatus.delete_all
+  ["Pending content", "pending indexing", "indexed"].each do |status|
+    VolumeStatus.find_or_create_by(status_code: status)
   end
 end
