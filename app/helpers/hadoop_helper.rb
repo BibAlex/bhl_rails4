@@ -119,7 +119,7 @@ module HadoopHelper
       Batch.find(batch_id).update_attributes(status_id: BatchStatus.indexed.id)
       failure_list = []
       data_xml.xpath("//IndexingFailureList//JobID").each do |job_id|
-        failure_list << job_id
+        failure_list << job_id.text.to_i
       end
       
       Volume.where("batch_id = ? AND status_id = ? ", batch_id, VolumeStatus.pending_indexing.id).each do |volume|

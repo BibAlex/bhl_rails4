@@ -12,8 +12,12 @@ class UsersController < ApplicationController
   end
 
   def logout
-    log_out
-    redirect_to root_path
+    if(params[:id].to_i == session[:user_id].to_i)
+      log_out
+      redirect_to root_path
+    else
+      unauthorized_action
+    end
   end
 
   #GET /users/forgot_password
@@ -68,31 +72,37 @@ class UsersController < ApplicationController
 
     # POST /users/validate
   def validate
-    if (session[:login_attempts].to_i >= LOGIN_ATTEMPTS) && !(bhl_verify_recaptcha)
-      redirect_to({ controller: 'users', action: 'login'} , flash: { error: I18n.t('msgs.recaptcha_error') })
-    else
-      @user = User.find_by_username_and_password(params[:user][:username], User.hash_password(params[:user][:password]))
-      if @user.nil?
-        failed_validation(false)
-      elsif !@user.active
-        failed_validation(true)
+    if(params[:user])
+      if (session[:login_attempts].to_i >= LOGIN_ATTEMPTS) && !(bhl_verify_recaptcha)
+        redirect_to({ controller: 'users', action: 'login'} , flash: { error: I18n.t('msgs.recaptcha_error') })
       else
-       successful_validation
+        @user = User.find_by_username_and_password(params[:user][:username], User.hash_password(params[:user][:password]))
+        if @user.nil?
+          failed_validation(false)
+        elsif !@user.active
+          failed_validation(true)
+        else
+         successful_validation
+        end
       end
     end
   end
 
 
   def new
-    if session[:failed_user]
-      @user = User.new(User.user_params(session[:failed_user]))
-      @user.valid?
-      @user.errors.add('recaptcha', I18n.t('msgs.form_validation_errors_for_attribute_assistive')) unless bhl_verify_recaptcha
-      session[:failed_user] = nil
+    if(session[:user_id])
+      redirect_to user_path(id: session[:user_id])
     else
-       @user = User.new
+      if session[:failed_user]
+        @user = User.new(User.user_params(session[:failed_user]))
+        @user.valid?
+        @user.errors.add('recaptcha', I18n.t('msgs.form_validation_errors_for_attribute_assistive')) unless bhl_verify_recaptcha
+        session[:failed_user] = nil
+      else
+         @user = User.new
+      end
+      @verify_captcha = true
     end
-    @verify_captcha = true
   end
 
   def create
@@ -122,13 +132,13 @@ class UsersController < ApplicationController
   end
 
   def get_user_profile_photo
-     @user = User.find(params[:id])
-     if (User.can_edit?(@user.id, session[:user_id]) && params[:is_delete].to_i == 1)
+    @user = User.find(params[:id])
+    if (User.can_edit?(@user.id, session[:user_id]) && params[:is_delete].to_i == 1)
       @user.delete_photo
-     end
-     respond_to do |format|
-       format.html { render partial: "users/get_user_profile_photo" }
-     end
+    end
+    respond_to do |format|
+      format.html { render partial: "users/get_user_profile_photo" }
+    end
   end
 
   def edit
@@ -214,10 +224,14 @@ class UsersController < ApplicationController
   end
 
   def load_user
-    @user = User.find_by_id(params[:id])
-    @page_title = @user.username
-    return redirect_to root_path , flash: {error: I18n.t('msgs.user_not_found')} unless @user
-    @tab = params[:tab].nil? ? "profile" : params[:tab]
+    if params[:id]
+      @user = User.find_by_id(params[:id])
+      @page_title = @user.username
+      return redirect_to root_path , flash: {error: I18n.t('msgs.user_not_found')} unless @user
+      @tab = params[:tab].nil? ? "profile" : params[:tab]
+    else
+      redirect_to root_path
+    end
   end
 
   def load_queries_tab
