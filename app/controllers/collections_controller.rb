@@ -35,10 +35,14 @@ class CollectionsController < ApplicationController
   end
 
   def edit
-    @collection = Collection.find(params[:id])
-    @page_title = "#{@collection.title} -  #{I18n.t('collection.edit_collection_page_title')}"
-    @page_author = User.find(@collection.user_id).username
-    authenticate_user(@collection.user_id)
+    @collection = Collection.find_by_id(params[:id])
+    if @collection
+      @page_title = "#{@collection.title} -  #{I18n.t('collection.edit_collection_page_title')}"
+      @page_author = User.find(@collection.user_id).username
+      authenticate_user(@collection.user_id)
+    else
+      resource_not_found
+    end
   end
 
   def update
