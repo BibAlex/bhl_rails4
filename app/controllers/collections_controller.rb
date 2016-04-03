@@ -92,7 +92,7 @@ class CollectionsController < ApplicationController
     collection = Collection.find_by_id(params[:id])
     if collection
       if is_logged_in_user?(collection.user_id)
-        collection.delete
+        collection.destroy
         Rate.user_collection_rates(collection.user_id).delete_all
         Comment.collection_comments.delete_all
         flash[:notice]=I18n.t('collection.collection_removed')
@@ -147,20 +147,24 @@ class CollectionsController < ApplicationController
   private
 
   def move_or_delete_book(decision)
-    collection_volume = CollectionVolume.find(params[:collection_volume_id])
-    collection = Collection.find(collection_volume.collection_id)
-    if authenticate_user(collection.user_id)
-      if decision == "up"
-        collection_volume.move_higher
-      elsif decision == "down"
-        collection_volume.move_lower
-      else
-        collection_volume.destroy
-        flash.now[:notice] = I18n.t('collection.collection_volume_deleted')
-        flash.keep
+    collection_volume = CollectionVolume.find_by_id(params[:collection_volume_id])
+    if collection_volume
+      collection = Collection.find(collection_volume.collection_id)
+      if authenticate_user(collection.user_id)
+        if decision == "up"
+          collection_volume.move_higher
+        elsif decision == "down"
+          collection_volume.move_lower
+        else
+          collection_volume.destroy
+          flash.now[:notice] = I18n.t('collection.collection_volume_deleted')
+          flash.keep
+        end
+        collection.update_attributes(updated_at: Time.now)
+        redirect_to_back_or_default(collections_path)
       end
-      collection.update_attributes(updated_at: Time.now)
-      redirect_to_back_or_default(collections_path)
+    else
+      resource_not_found
     end
   end
 
