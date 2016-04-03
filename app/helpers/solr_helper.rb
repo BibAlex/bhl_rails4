@@ -25,7 +25,7 @@ module SolrHelper
   
   def get_sci_names_of_volumes(job_ids)
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => "job_id:#{job_ids}", 'fl' => 'job_id,sci_name',
+    response = rsolr.find 'q' => "job_id:#{job_ids}", 'fl' => 'job_id,sci_name', 'rows' => 1000000, 
                                                       'facet' => true, 'facet.field' => "sci_name"
     sci_names = {}
     
