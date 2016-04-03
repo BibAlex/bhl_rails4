@@ -161,7 +161,7 @@ class CollectionsController < ApplicationController
           flash.keep
         end
         collection.update_attributes(updated_at: Time.now)
-        redirect_to_back_or_default(collections_path)
+        redirect_to_back_or_default(collection_path(id: collection.id))
       end
     else
       resource_not_found
