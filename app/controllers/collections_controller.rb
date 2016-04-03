@@ -85,14 +85,20 @@ class CollectionsController < ApplicationController
   end
 
   def remove_collection
-    collection = Collection.find(params[:id])
-    if authenticate_user(collection.user_id)
-      collection.delete
-      Rate.user_collection_rates(collection.user_id).delete_all
-      Comment.collection_comments.delete_all
-      flash[:notice]=I18n.t('collection.collection_removed')
-      flash.keep
-      redirect_to_back_or_default(users_path(id: session[:user_id], tab: "collections"))
+    collection = Collection.find_by_id(params[:id])
+    if collection
+      if is_logged_in_user?(collection.user_id)
+        collection.delete
+        Rate.user_collection_rates(collection.user_id).delete_all
+        Comment.collection_comments.delete_all
+        flash[:notice]=I18n.t('collection.collection_removed')
+        flash.keep
+        redirect_to_back_or_default(user_path(id: session[:user_id], tab: "collections"))
+      else
+        unauthorized_action
+      end
+    else
+      resource_not_found
     end
   end
 
