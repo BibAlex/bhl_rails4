@@ -51,6 +51,7 @@ RSpec.describe HadoopController, type: :controller do
       before do
         load_book_statuses
         load_batch_statuses
+        load_volume_statuses
         Book.delete_all
         Volume.delete_all
         Batch.delete_all
@@ -199,6 +200,7 @@ RSpec.describe HadoopController, type: :controller do
       before do
         load_book_statuses
         load_batch_statuses
+        load_volume_statuses
         Book.delete_all
         Volume.delete_all
         Batch.delete_all
@@ -289,6 +291,7 @@ RSpec.describe HadoopController, type: :controller do
       before do
         load_book_statuses
         load_batch_statuses
+        load_volume_statuses
         Book.delete_all
         Volume.delete_all
         Batch.delete_all        
@@ -300,7 +303,7 @@ RSpec.describe HadoopController, type: :controller do
         @book.subjects << Subject.create(name: "subject")
         @book.save
         batch = Batch.create(status_id: BatchStatus.pending_indexing.id)
-        @volume = Volume.create(book_id: @book.id, job_id: 1, batch_id: batch.id)
+        @volume = Volume.create(book_id: @book.id, job_id: 1, batch_id: batch.id, status_id: VolumeStatus.pending_indexing.id)
       end
       
       it "has OK status code" do
