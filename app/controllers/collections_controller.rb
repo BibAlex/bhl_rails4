@@ -35,10 +35,14 @@ class CollectionsController < ApplicationController
   end
 
   def edit
-    @collection = Collection.find(params[:id])
-    @page_title = "#{@collection.title} -  #{I18n.t('collection.edit_collection_page_title')}"
-    @page_author = User.find(@collection.user_id).username
-    authenticate_user(@collection.user_id)
+    @collection = Collection.find_by_id(params[:id])
+    if @collection
+      @page_title = "#{@collection.title} -  #{I18n.t('collection.edit_collection_page_title')}"
+      @page_author = User.find(@collection.user_id).username
+      authenticate_user(@collection.user_id)
+    else
+      resource_not_found
+    end
   end
 
   def update
@@ -85,33 +89,43 @@ class CollectionsController < ApplicationController
   end
 
   def remove_collection
-    collection = Collection.find(params[:id])
-    if authenticate_user(collection.user_id)
-      collection.delete
-      Rate.user_collection_rates(collection.user_id).delete_all
-      Comment.collection_comments.delete_all
-      flash[:notice]=I18n.t('collection.collection_removed')
-      flash.keep
-      redirect_to_back_or_default(users_path(id: session[:user_id], tab: "collections"))
+    collection = Collection.find_by_id(params[:id])
+    if collection
+      if is_logged_in_user?(collection.user_id)
+        collection.delete
+        Rate.user_collection_rates(collection.user_id).delete_all
+        Comment.collection_comments.delete_all
+        flash[:notice]=I18n.t('collection.collection_removed')
+        flash.keep
+        redirect_to_back_or_default(user_path(id: session[:user_id], tab: "collections"))
+      else
+        unauthorized_action
+      end
+    else
+      resource_not_found
     end
   end
 
   def add_book
-    if params[:title]
-      col = Collection.new(title: params[:title], description: params[:description], is_public: params[:is_public], user_id: session[:user_id])
-      if col.valid?
-        col.save
-        col_id = col.id
-      else
-        flash[:notice] = col.errors.full_messages
-        respond_to do |format|
-          format.html { render partial: 'layouts/flash' }
+    if Volume.find_by_job_id(params[:job_id])
+      if params[:title]
+        col = Collection.new(title: params[:title], description: params[:description], is_public: params[:is_public], user_id: session[:user_id])
+        if col.valid?
+          col.save
+          col_id = col.id
+        else
+          flash[:notice] = col.errors.full_messages
+          respond_to do |format|
+            format.html { render partial: 'layouts/flash' }
+          end
         end
+      else
+        col_id = params[:col_id]
       end
+      add_book_to_collection(params[:job_id], col_id) if col_id
     else
-      col_id = params[:col_id]
+      resource_not_found
     end
-    add_book_to_collection(params[:job_id], col_id) if col_id
   end
 
   def load
@@ -151,10 +165,22 @@ class CollectionsController < ApplicationController
   end
 
   def add_book_to_collection(job_id, col_id)
-    CollectionVolume.create(volume_id: job_id, collection_id: col_id)
-    flash[:notice] = I18n.t('msgs.book_added_to_collection')
-    respond_to do |format|
-      format.html { render partial: 'layouts/flash' }
+    if collection = Collection.find_by_id(col_id)
+      if is_logged_in_user?(collection.user_id)
+        unless CollectionVolume.find_by_volume_id_and_collection_id(job_id, col_id)
+          CollectionVolume.create(volume_id: job_id, collection_id: col_id)
+          flash[:notice] = I18n.t('msgs.book_added_to_collection')
+        else
+          flash[:notice] = I18n.t('msgs.book_already_added')
+        end
+        respond_to do |format|
+          format.html { render partial: 'layouts/flash' }
+        end
+      else
+        unauthorized_action
+      end
+    else
+      resource_not_found
     end
   end
 end
