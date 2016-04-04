@@ -85,7 +85,7 @@ RSpec.describe UserSearchHistoryController, type: :controller do
       it "should deny access for wrong user" do
         session[:user_id] = another_user.id
         get :remove_book_history, {user_volume_history_id: user_volume_history, user_id: another_user.id}
-        expect(response).to redirect_to('/')
+        expect(response).to redirect_to(root_path)
       end
     end
 
