@@ -4,119 +4,119 @@ include BHL::Login
 RSpec.describe UsersController, type: :controller do
 
   describe "#new" do
-    
+
     before do
       get :new
     end
-    
+
     it "returns a 200 ok status" do
       expect(response).to have_http_status(:ok)
     end
-    
+
     it "renders the new template" do
       expect(response).to render_template(:new)
     end
   end
 
   describe "#create" do
-    
+
     context "when user enters valid parameters" do
-      
+
       it "creates new user" do
          expect {
-          post :create, { user: { username: "user", entered_password: "password", entered_password_confirmation: "password", 
+          post :create, { user: { username: "user", entered_password: "password", entered_password_confirmation: "password",
                                   email: "user@example.com", email_confirmation: "user@example.com", real_name: "user" } }
          }.to change(User, :count).by(1)
       end
-      
+
       it "redirects to home page" do
-        post :create, { user: { username: "user", entered_password: "password", entered_password_confirmation: "password", 
+        post :create, { user: { username: "user", entered_password: "password", entered_password_confirmation: "password",
                                 email: "user@example.com", email_confirmation: "user@example.com", real_name: "user" } }
         expect(response).to redirect_to(root_path)
       end
-      
+
       it "displays a flash message for successful registeration" do
-        post :create, { user: { username: "user", entered_password: "password", entered_password_confirmation: "password", 
+        post :create, { user: { username: "user", entered_password: "password", entered_password_confirmation: "password",
                                 email: "user@example.com", email_confirmation: "user@example.com", real_name: "user" } }
         expect(flash[:notice]).to eq(I18n.t('msgs.registration_welcome_message', real_name: "user"))
       end
-      
+
       it "uploads custom user photo" do
         file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                       filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-        post :create, { user: { username: "user", entered_password: "password", entered_password_confirmation: "password", 
+        post :create, { user: { username: "user", entered_password: "password", entered_password_confirmation: "password",
                                 email: "user@example.com", email_confirmation: "user@example.com", real_name: "user",
                                 photo_name: file } }
         expect(File.exist?("#{Rails.root}/public/avatar_#{Rails.env}/users/#{User.last.id}")).to eq(true)
-        
+
         file_path = "#{Rails.root}/public/avatar_#{Rails.env}/users/#{User.last.id}"
-        FileUtils.rm_rf(file_path) if File.exist?(file_path)          
+        FileUtils.rm_rf(file_path) if File.exist?(file_path)
       end
     end
-    
+
     context "when user enters invalid parameters" do
-      
+
       it "doesn't create a new user" do
          expect {
-          post :create, { user: { username: "", entered_password: "password", entered_password_confirmation: "password", 
+          post :create, { user: { username: "", entered_password: "password", entered_password_confirmation: "password",
                                 email: "user@example.com", email_confirmation: "user@example.com", real_name: "user" } }
          }.to change(User, :count).by(0)
       end
-      
+
       it "renders redirects to new page" do
-        post :create, { user: { username: "", entered_password: "password", entered_password_confirmation: "password", 
+        post :create, { user: { username: "", entered_password: "password", entered_password_confirmation: "password",
                                 email: "user@example.com", email_confirmation: "user@example.com", real_name: "user" } }
         expect(response).to redirect_to(new_user_path)
-      end      
-    end    
+      end
+    end
   end
-  
+
   describe "#login" do
-    
+
     before do
       get :login
     end
-    
+
     it "returns a 200 ok status" do
       expect(response).to have_http_status(:ok)
     end
-    
+
     it "renders the login template" do
       expect(response).to render_template(:login)
     end
   end
-  
-  describe "#show" do 
-    
+
+  describe "#show" do
+
     before :all do
       @owner_user = FactoryGirl.create(:user)
     end
-    
+
     context "profile tab" do
       before do
         session[:user_id] = @owner_user.id
         get :show, { id: @owner_user.id }
       end
-      
-      it "returns a 200 ok status" do      
+
+      it "returns a 200 ok status" do
         expect(response).to have_http_status(:ok)
       end
-      
+
       it "renders the show template" do
         expect(response).to render_template(:show)
       end
-      
+
       it "loads user info" do
         expect(assigns(:user)).to eq(@owner_user)
       end
-      
+
       it "loads tab info" do
         expect(assigns(:tab)).to eq("profile")
       end
     end
-    
+
     context "queries tab" do
-       let(:other_user) {FactoryGirl.create(:user, active: true, email: "other_user@bibalex.org", 
+       let(:other_user) {FactoryGirl.create(:user, active: true, email: "other_user@bibalex.org",
                           username: "other_user", password: User.hash_password("other_user_password"))}
       context "owner user" do
         before do
@@ -125,12 +125,12 @@ RSpec.describe UsersController, type: :controller do
           get :show, id: @owner_user.id, tab: "queries"
         end
         context "user has queries" do
-          it "loads successfully" do      
+          it "loads successfully" do
             expect(response).to have_http_status(:ok)
           end
           it "renders the show template" do
             expect(response).to render_template(:show)
-          end   
+          end
           it "displays the right number of queries" do
             expect(@owner_user.queries.count).to eq(2)
           end
@@ -141,14 +141,14 @@ RSpec.describe UsersController, type: :controller do
           end
           it 'assigns zero queries for user' do
             expect(other_user.queries.count).to eq(0)
-          end 
+          end
         end
       end
       context "other user" do
         before do
           session[:user_id] = other_user.id
-          get :show , {id: @owner_user.id , tab: "queries"} 
-        end                  
+          get :show , {id: @owner_user.id , tab: "queries"}
+        end
         it "redirects to owner user profile" do
          expect(response).to redirect_to(user_path)
         end
@@ -158,7 +158,7 @@ RSpec.describe UsersController, type: :controller do
       end
     end
     context "history tab" do
-      
+
       context "owner user" do
 
         before :all do
@@ -166,47 +166,47 @@ RSpec.describe UsersController, type: :controller do
             subject_en: "subject1"}
           book_metadata_2 = {job_id: "234", bib_id: "567", title_en: "Book 2", author_en: "Author2", publisher_en: "publisher2",
             subject_en: "subject2"}
-  
+
           solr = RSolr.connect :url => SOLR_BOOKS_METADATA
-      
+
           solr.delete_by_query("*:*")
           # solr.delete_by_query("job_id: 234")
           solr.commit
           solr.add book_metadata_1
           solr.add book_metadata_2
           solr.commit
-          
+
           UserVolumeHistory.where(user_id: @owner_user.id).destroy_all
           @vol_first = Volume.create(book: Book.create(title: 'Book 1', bib_id: '456'), job_id: "123")
           @vol_second = Volume.create(book: Book.create(title: 'Book 2', bib_id: '567'), job_id: "234")
           UserVolumeHistory.create(volume_id: @vol_first.id, user_id: @owner_user.id, :updated_at => Time.now)
           UserVolumeHistory.create(volume_id: @vol_second.id, user_id: @owner_user.id, :updated_at => Time.now)
         end
-        
+
         it 'should have 2 total books' do
           session[:user_id] = @owner_user.id
           get :show, { id: @owner_user.id, tab: "history" }
           expect(assigns[:total_number]).to eq(2)
         end
-        
+
         it 'should have 1 recently viewed volume' do
           session[:user_id] = @owner_user.id
           get :show, { id: @owner_user.id, tab: "history" }
           expect(assigns[:recently_viewed_volume]).to eq(@vol_first)
         end
-        
+
       end
-      
+
       context "not owner user" do
-        
-        let!(:another_user) { FactoryGirl.create(:user, active: true, email: "another_user_email@bibalex.org", 
+
+        let!(:another_user) { FactoryGirl.create(:user, active: true, email: "another_user_email@bibalex.org",
           username: "another_user", password: User.hash_password("another_password")) }
-        
+
         it "should redirect to login if not logged in" do
           get :show, { id: @owner_user.id, tab: 'history' }
           expect(response).to redirect_to(login_users_path)
         end
-        
+
         it "should deny access for wrong user" do
           session[:user_id] = @owner_user.id
           get :show, { id: another_user.id, tab: 'history' }
@@ -214,7 +214,7 @@ RSpec.describe UsersController, type: :controller do
         end
       end
     end
-    
+
     context "collection tab" do
       before do
         @other_user = FactoryGirl.create(:user, active: true, username: "otheruser",
@@ -225,44 +225,44 @@ RSpec.describe UsersController, type: :controller do
         @other_public_collection = FactoryGirl.create(:collection, user_id: @other_user.id, is_public: true)
         log_in(@owner_user)
       end
-      
+
       context 'owner user' do
         before do
           get :show, { id: @owner_user.id, tab: "collections" }
         end
-        
+
         it 'loads successfully' do
           expect(response).to have_http_status(:ok)
         end
-        
+
         it 'should have 2 collections' do
           expect(assigns[:total_number]).to eq(2)
         end
       end
-     
+
      context 'other user' do
        before do
          get :show, { id: @other_user.id, tab: "collections" }
        end
-       
+
        it 'loads successfully' do
          expect(response).to have_http_status(:ok)
        end
-       
+
        it 'should have only 1 collection' do
          expect(assigns[:total_number]).to eq(1)
        end
      end
     end
-    
+
     describe "annotations tab" do
       before do
         @owner_user = FactoryGirl.create(:user, active: true, username: "owneruser",
          password: User.hash_password("owner_user_password"))
-        @other_user = FactoryGirl.create(:user, active: true, 
+        @other_user = FactoryGirl.create(:user, active: true,
           username: "otheruser", password: User.hash_password("other_user_password"))
       end
-      context "successful" do 
+      context "successful" do
         before do
           book = FactoryGirl.create(:book)
           job_ids = [9,20]
@@ -286,14 +286,14 @@ RSpec.describe UsersController, type: :controller do
                anntype: "Highlight", volume_id: job_id)
             end
           end
-         
+
         end
         context "with user has annotations" do
           before do
             session[:user_id] = @owner_user.id
             get :show, id: @owner_user.id, tab: "annotations"
           end
-           it "loads successfully" do 
+           it "loads successfully" do
             expect(response).to have_http_status(:ok)
           end
           it "loads the rights tab" do
@@ -308,7 +308,7 @@ RSpec.describe UsersController, type: :controller do
             session[:user_id] = @other_user.id
             get :show, id: @other_user.id, tab: "annotations"
           end
-           it "loads successfully" do 
+           it "loads successfully" do
             expect(response).to have_http_status(:ok)
           end
           it 'assigns zero annotations for the user' do
@@ -329,71 +329,71 @@ RSpec.describe UsersController, type: :controller do
         end
       end
     end
-    
+
     describe "activity_log" do
       let!(:owner_user) { FactoryGirl.create(:user) }
-    
+
     before do
       session[:user_id] = owner_user.id
       get :show, { id: @owner_user.id , tab: "activity" }
     end
-    
-    it "returns a 200 ok status" do      
+
+    it "returns a 200 ok status" do
       expect(response).to have_http_status(:ok)
     end
-    
+
     it "renders the show template" do
       expect(response).to render_template(partial: 'users/_activity')
     end
-    
+
     it "loads tab info" do
       expect(assigns(:tab)).to eq("activity")
     end
-      
-  end
-end  
-  
- 
 
-  describe "#logout" do     
-      
+  end
+end
+
+
+
+  describe "#logout" do
+
    let!(:user) { FactoryGirl.create(:user) }
-    
+
     before do
       post :validate, { user: { username: "user_logout", password: "user_logout_password" } }
       get :logout, { id: user.id }
     end
-    
-   
+
+
     it "redirects to root path" do
       expect(response).to redirect_to(root_path)
     end
-      
-    it "clears session of user_id" do       
+
+    it "clears session of user_id" do
        expect(session[:user_id]).to be_nil
-    end    
+    end
   end
-  
+
   describe '#forgot_password' do
-    
+
     let!(:user) { FactoryGirl.create(:user, active: true, username: "user", password: User.hash_password("password")) }
-    
+
     it 'should not render forget_password if logged in' do
       session[:user_id] = user.id
       get :forgot_password
       expect(response).to redirect_to("/en/users/#{user.id}")
     end
-    
+
     it 'should render forget password if not logged in' do
       get :forgot_password
       expect(response).to render_template('users/forgot_password')
     end
   end
-  
+
   describe '#recover_password' do
-    
+
     let!(:user) { FactoryGirl.create(:user, active: true, username: "user", password: User.hash_password("password")) }
-    
+
     it 'should not render recover_password if logged in' do
       session[:user_id] = user.id
       post :recover_password, { user: { email: ''} }
@@ -405,7 +405,7 @@ end
       expect(flash[:error]).not_to be_blank
       expect(response).to redirect_to("/users/forgot_password")
     end
-    
+
     it 'should redirect to login' do
       post :recover_password, { user: { email: user.email } }
       expect(response).to redirect_to(login_users_path)
@@ -420,11 +420,11 @@ end
       expect(user.verification_code).not_to eq(old_verification_code)
     end
   end
-  
+
   describe '#reset_password' do
-    
+
     let!(:user) { FactoryGirl.create(:user, active: true, username: "user", password: User.hash_password("password")) }
-    
+
     it 'should redirect to profile page if user is logged in' do
       session[:user_id] = user.id
       get :reset_password, guid: user.guid, activation_code: user.verification_code
@@ -436,7 +436,7 @@ end
       expect(response).to redirect_to "/"
       expect(flash[:error]).not_to be_blank
     end
- 
+
     it 'should render form if parameters are valid' do
       get :reset_password, guid: user.guid, activation_code: user.verification_code
       expect(response).to render_template "users/reset_password"
@@ -445,9 +445,9 @@ end
   end
 
   describe '#reset_password_action' do
-    
+
     let!(:user) { FactoryGirl.create(:user, active: true, username: "user", password: User.hash_password("password")) }
-    
+
     it 'should redirect to profile page if user is logged in' do
       session[:user_id] = user.id
       post :reset_password_action
@@ -458,7 +458,7 @@ end
       post :reset_password_action, { user: { } }
       expect(response).to redirect_to "/"
     end
-      
+
     it 'should redirect to home page if invalid parameters' do
       post :reset_password_action, { user: { guid: user.guid, activation_code: "1234" } }
       expect(response).to redirect_to "/"
@@ -474,7 +474,7 @@ end
       expect(response).to redirect_to "/users/reset_password/#{user.guid}/#{user.verification_code}"
       expect(flash[:error]).not_to be_blank
     end
-    
+
     it 'should reject mismatched passwords' do
       post :reset_password_action, { user: {
         guid: user.guid,
@@ -484,7 +484,7 @@ end
       expect(response).to redirect_to "/users/reset_password/#{user.guid}/#{user.verification_code}"
       expect(flash[:error]).not_to be_blank
     end
- 
+
     it 'should change password and redirect to login' do
       old_password = user.password
       post :reset_password_action, { user: {
@@ -498,29 +498,29 @@ end
       expect(response).to redirect_to "/users/login"
     end
   end
-  
+
   describe "#validate" do
-    
-    context "valid user" do      
-      
-      let!(:user) { FactoryGirl.create(:user, active: true, username: "valid_user_login", password: User.hash_password("password")) } 
-      
+
+    context "valid user" do
+
+      let!(:user) { FactoryGirl.create(:user, active: true, username: "valid_user_login", password: User.hash_password("password")) }
+
       it "sets session of user_id" do
          post :validate, { user: { username: user.username, password: "password" } }
          expect(session[:user_id]).to eq(user.id)
       end
-      
+
       it "redirects to the profile page of the user" do
         post :validate, { user: { username: user.username, password: "password" } }
         expect(response).to redirect_to(user_path(id: user.id))
       end
-      
+
       it "displays a flash message for successful login" do
         post :validate, { user: { username: user.username, password: "password" } }
         expect(flash[:notice]).to eq(I18n.t('msgs.sign_in_successful_notice'))
-      end     
+      end
     end
-    
+
     context "invalid user" do
 
       it "sets session of login_attempts" do
@@ -528,12 +528,12 @@ end
         post :validate, { user: { username: "invalid_username", password: "invalid_password" } }
         expect(session[:login_attempts]).to eq(last_login_attempts + 1)
       end
-      
+
       it "renders renders login page" do
         post :validate, { user: { username: "invalid_username", password: "invalid_password" } }
         expect(response).to redirect_to(login_users_path)
       end
-      
+
       it "displays a flash message for unsuccessful login" do
         post :validate, { user: { username: "invalid_username", password: "invalid_password" } }
         expect(flash[:error]).to eq(I18n.t('msgs.sign_in_unsuccessful_error'))
@@ -545,62 +545,62 @@ end
         post :validate, { user: { username: "valid_user_login", password: "password" } }
         expect(flash[:error]).to eq(I18n.t('msgs.sign_in_inactive_user'))
       end
-    end    
+    end
   end
-  
+
   describe "#edit" do
-    let(:owner_user) {FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org", 
+    let(:owner_user) {FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org",
                           username: "owner_user", password: User.hash_password("owner_user_password"))}
-    let(:other_user) {FactoryGirl.create(:user, active: true, email: "other_user@bibalex.org", 
-                          username: "other_user", password: User.hash_password("other_user_password"))}   
-       
+    let(:other_user) {FactoryGirl.create(:user, active: true, email: "other_user@bibalex.org",
+                          username: "other_user", password: User.hash_password("other_user_password"))}
+
     it "redirects to login if user not logged in" do
       get 'edit', id: owner_user.id
       expect(response).to redirect_to(login_users_path)
-    end 
-    
+    end
+
     context "other user" do
       before do
         session[:user_id] = owner_user.id
         get 'edit', id: other_user.id
       end
-      
+
       it"redirects to other user profile page" do
         expect(response).to redirect_to(user_path)
       end
       it "displays access denied msg" do
         expect(flash[:error]).to eq(I18n.t 'msgs.access_denied_error')
       end
-    end 
-    
+    end
+
     context "owner user" do
        before do
         session[:user_id] = owner_user.id
         get 'edit', id: owner_user.id
        end
-       
+
        it "renders edit form" do
          expect(response).to render_template(:edit)
-       end 
-       
+       end
+
        it "has no error msgs" do
          expect(flash[:error]).to be_blank
-       end    
-    end                 
+       end
+    end
   end
 
   describe "#update" do
-    
+
       context "owner user" do
-         let(:owner_user) {FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org", 
+         let(:owner_user) {FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org",
                           username: "owner_user", password: User.hash_password("owner_user_password"))}
-          
+
          it "can upload valid photo" do
              user_before_update = owner_user
              log_in(owner_user)
              file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/avatar/default_user.png")),
                                                       filename: File.basename(File.new(Rails.root.join("spec/avatar/default_user.png"))))
-             put :update, id: owner_user.id, test: true, user: {id: owner_user.id, 
+             put :update, id: owner_user.id, test: true, user: {id: owner_user.id,
                                                                   username: user_before_update.username,
                                                                   email: user_before_update.email,
                                                                   email_confirmation: user_before_update.email,
@@ -609,7 +609,7 @@ end
                                                                   real_name: user_before_update.real_name + "updated",
                                                                   photo_name: file}
             owner_user.reload
-            pic = owner_user.photo_name 
+            pic = owner_user.photo_name
             expect(File.exist?("#{Rails.root}/public/avatar_#{Rails.env}/users/#{owner_user.id}")).to eq(true)
             file_path = "#{Rails.root}/public/avatar_#{Rails.env}/users/#{owner_user.id}"
             FileUtils.rm_rf(file_path) if File.exist?(file_path)
@@ -619,7 +619,7 @@ end
             log_in(owner_user)
             file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join("spec/rails_helper.rb")),
                                                       filename: File.basename(File.new(Rails.root.join("spec/rails_helper.rb"))))
-            put :update, id: owner_user.id, test: true, user: {id: owner_user.id, 
+            put :update, id: owner_user.id, test: true, user: {id: owner_user.id,
                                                                   username: user_before_update.username,
                                                                   email: user_before_update.email,
                                                                   email_confirmation: user_before_update.email,
@@ -628,14 +628,14 @@ end
                                                                   real_name: user_before_update.real_name + "updated",
                                                                   photo_name: file}
             owner_user.reload
-            pic = owner_user.photo_name 
+            pic = owner_user.photo_name
             expect(File.exist?("#{Rails.root}/public/users/#{owner_user.id}/rails_helper")).to eq(false)
             file_path = "#{Rails.root}/public/users/#{owner_user.id}/rails_helper"
             FileUtils.rm_rf(file_path) if File.exist?(file_path)
-         end              
+         end
          it 'accepts modifications even if the password is empty' do
             user_before_update = owner_user
-           
+
             log_in(owner_user)
             put :update, id: owner_user.id , user: {id: owner_user.id, username: user_before_update.username,
                                                     email: user_before_update.email,
@@ -646,9 +646,9 @@ end
             expect(response).to redirect_to user_path
             expect(flash[:error]).to be_blank
             expect(flash[:notice]).not_to be_blank
-           
+
             owner_user.reload
-      
+
             expect(owner_user.username).to eq(user_before_update.username)
             expect(owner_user.password).to eq(user_before_update.password)
             expect(owner_user.email).to eq(user_before_update.email)
@@ -678,32 +678,32 @@ end
                                                     real_name: owner_user.real_name}
             expect(response).to render_template(:edit)
             expect(flash[:error]).to eq(I18n.t('msgs.old_password_required'))
-         end                    
+         end
       end
-      
+
       context "other user" do
-         let(:owner_user) {FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org", 
+         let(:owner_user) {FactoryGirl.create(:user, active: true, email: "owner_user@bibalex.org",
                           username: "owner_user", password: User.hash_password("owner_user_password"))}
-         let(:other_user) {FactoryGirl.create(:user, active: true, email: "other_user@bibalex.org", 
+         let(:other_user) {FactoryGirl.create(:user, active: true, email: "other_user@bibalex.org",
                           username: "other_user", password: User.hash_password("other_user_password"))}
-                          
+
          it 'redirects to login page if user not logged in' do
-            put :update, id: owner_user.id 
+            put :update, id: owner_user.id
             expect(response).to redirect_to(login_users_path)
          end
          it 'redirects to other user profile page' do
             log_in(owner_user)
-            put :update, id: other_user.id 
+            put :update, id: other_user.id
             expect(response).to redirect_to(user_path)
          end
          it "displays access denied msg" do
             log_in(owner_user)
-            put :update, id: other_user.id 
+            put :update, id: other_user.id
             expect(flash[:error]).to eq(I18n.t 'msgs.access_denied_error')
-         end      
+         end
       end
-      
-         
+
+
   end
-end  
+end
 

@@ -2,7 +2,7 @@ class CollectionsController < ApplicationController
   include CollectionsHelper
   include BooksHelper
   before_filter :store_location, only: [:show]
-  before_filter :check_authentication, only: [:add_book]
+  before_filter :check_authentication, only: [:add_book, :remove_collection]
 
   def index
     @page_title = I18n.t('collection.collection_title')

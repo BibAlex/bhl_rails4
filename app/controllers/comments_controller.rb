@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+  include UsersHelper
 
   before_filter :check_authentication, only: [:create, :delete, :mark]
 

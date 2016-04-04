@@ -35,11 +35,11 @@ class ApplicationController < ActionController::Base
   end
 
   def resource_not_found
-    redirect_to '/' , flash: {error: I18n.t("msgs.resource_not_found")}
+    redirect_to root_path , flash: {error: I18n.t("msgs.resource_not_found")}
   end
 
   def unauthorized_action
-    redirect_to '/', flash: {error: I18n.t('common.unauthorized_action')}
+    redirect_to root_path, flash: {error: I18n.t('common.unauthorized_action')}
   end
 
   def redirect_to_back_or_default(default = root_url)
