@@ -160,7 +160,7 @@ module HadoopHelper
       end
     end
     begin
-      file = File.new("#{Rails.root}/public/batches_#{Rails.env}/batch_#{batch_id}.zip", 'wb+')
+      file = File.new("#{GENERATED_NAMES_PATH}/batches_#{Rails.env}/batch_#{batch_id}.zip", 'wb+')
       file.binmode
       file.write(names_content)
       file.flush
