@@ -39,4 +39,5 @@ BhlRails4::Application.configure do
   SOLR_SCI_NAMES = "http://localhost:8989/solr/sci_names"
   SOLR_NAMES_FOUND = "http://localhost:8989/solr/names_found"
   SOLR_GEOLOCATIONS = "http://localhost:8989/solr/geolocations"
+  GENERATED_NAMES_PATH = "public"
 end
