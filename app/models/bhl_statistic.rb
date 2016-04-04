@@ -10,5 +10,15 @@ class BhlStatistic < ActiveRecord::Base
       statistics_result = { books: 0, authors: 0, names: 0 }
     end
   end
+
+  def self.get_bhl_statistics_from_solr
+    solr_books_core = RSolr.connect url: SOLR_BOOKS_METADATA
+    response = solr_books_core.find 'q' => "*:*", 'facet' => true, 'facet.field' => "author_facet",'facet.limit' => 100000, 'rows' => 0
+    solr_sci_names_core = RSolr.connect url: SOLR_SCI_NAMES
+    sci_names = solr_sci_names_core.find 'q' => "*:*", 'rows' => 0
+    statistics_result = { books: response['response']['numFound'],
+                          authors: response["facet_counts"]["facet_fields"]["author_facet"].count,
+                          names: sci_names['response']['numFound'] }
+  end
 end
 
