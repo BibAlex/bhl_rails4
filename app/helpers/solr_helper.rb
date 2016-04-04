@@ -110,7 +110,6 @@ module SolrHelper
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
     solr.update data: solr.xml.add(doc)
     solr.commit
-    solr.optimize
   end
   
   def self.solr_find_document(query)
@@ -125,7 +124,6 @@ module SolrHelper
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
     solr.update data: solr.xml.add(doc)
     solr.commit
-    solr.optimize
   end
   
   def load_geolocations_from_solr(item)
