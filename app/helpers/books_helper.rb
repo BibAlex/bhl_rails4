@@ -59,7 +59,7 @@ module BooksHelper
     title_tip += "<div style='float:left'>
                     <span >#{string}</span>
                     <ul>
-                      <li><a href='../books/#{job_id}?tab=read'>
+                      <li><a href='../books/#{job_id}?tab=read&search_name=#{string}'>
                         #{I18n.t('common.find_in_book')}
                       </a></li>"
     if eol_page_id != nil && eol_page_id > -1

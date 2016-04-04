@@ -42,7 +42,7 @@ class BooksController < ApplicationController
     tab = params[:tab] == "read" ? "read" : "details"
     load_volume_details(tab)
     if tab == "read"
-      load_read_page
+      load_read_page(params[:search_name])
     else
       load_details_page
     end
@@ -79,9 +79,10 @@ class BooksController < ApplicationController
     session[:book_id] = params[:id].to_i
   end
 
-  def load_read_page
+  def load_read_page(search_name)
     UserVolumeHistory.save_user_history(params[:id], session[:user_id]) if is_logged_in?
     @reader_path = (DAR_JAR_API_URL.sub DAR_JAR_API_URL_STRING, params[:id]).sub DAR_JAR_API_URL_LANGUAGE, I18n.locale.to_s
+    @reader_path += "&q=#{search_name}"
   end
   
   def get_page_title_of_search(query_array)
