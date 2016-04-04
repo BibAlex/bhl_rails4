@@ -3,7 +3,7 @@
     %b
       = I18n.t('common.names')
 - sci_names_info.each_with_index do |item, index|
-  %a.tooltipname{ title: name_tip(id, item[:sci_name], item[:thumb], item[:eol_url]), href: "#" }
+  %a.tooltipname{ title: name_tip(id, item[:sci_name], item[:thumb], item[:eol_url], get_name_in_book(item[:sci_name], id)), href: "#" }
     = item[:sci_name].html_safe
   -if index != sci_names.length - 1
     %b

@@ -131,5 +131,11 @@ module SolrHelper
     response = solr.find q: "address:\"#{item}\"", start: 0, limit: 1
     response["response"]["docs"][0]    
   end
+  
+  def get_name_in_book(sci_name, job_id)
+    solr = RSolr.connect url: SOLR_NAMES_FOUND
+    response = solr.find q: "job_id:#{job_id} AND sci_name: #{sci_name.to_json}", start: 0, limit: 1
+    response["response"]["docs"][0]["name_found"]
+  end
  end 
   
