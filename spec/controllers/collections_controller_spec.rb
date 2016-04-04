@@ -147,7 +147,7 @@ RSpec.describe CollectionsController, type: :controller do
         request.env["HTTP_REFERER"] = "/collections"
         expect(lambda do
           get :remove_collection, id: @private_collection
-          expect(response).to redirect_to('/')
+          expect(response).to redirect_to(root_path)
         end).not_to change(Collection, :count)
       end
 
