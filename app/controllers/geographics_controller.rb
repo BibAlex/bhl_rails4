@@ -1,6 +1,6 @@
 class GeographicsController < ApplicationController
   include SolrHelper
-  
+
   before_filter :initialize_rsolr
 
   def index
@@ -22,12 +22,12 @@ class GeographicsController < ApplicationController
       temp_icon = Cartographer::Gicon.new( name: "icon_#{i-10}_to_#{i}", image_url: "#{@icons[i]}",
                                            width: 12, height: 20,
                                            shadow_width: 0, shadow_height: 0, #removing shadow
-                                           anchor_x: 6, #width/2 
+                                           anchor_x: 6, #width/2
                                            anchor_y: 20)
       gicons[i] = temp_icon
       @map.icons << temp_icon
     end
-    response = @rsolr.find q: "*:*", facet: true, 'facet.field' => 'location_facet', rows: 0, 'facet.limit' => 15
+    response = @rsolr.find q: "*:*", facet: true, 'facet.field' => 'location_facet', rows: 0, 'facet.limit' => 30
     response.facets.first.items.each_with_index do |item, index|
       # specify icon
       case item.hits
@@ -42,7 +42,7 @@ class GeographicsController < ApplicationController
         else
           icon_in = 50
       end
-      
+
       if @range.include?(icon_in.to_s)
 
         values= item.value.split(",") #"city, longitude, latitude"
@@ -57,7 +57,7 @@ class GeographicsController < ApplicationController
       end
     end
   end
-  
+
   def show
     @address = params[:address]
     location = load_geolocations_from_solr(@address)
