@@ -48,7 +48,7 @@ module BooksHelper
     sci_names_info
   end
 
-  def name_tip (job_id, string, eol_thumb, eol_page_id)
+  def name_tip (job_id, string, eol_thumb, eol_page_id, name_found)
     title_tip = ''
     if eol_thumb
       thumb = ATTACHMENTS_URL + THUMB_FOLDER + eol_thumb
@@ -59,7 +59,7 @@ module BooksHelper
     title_tip += "<div style='float:left'>
                     <span >#{string}</span>
                     <ul>
-                      <li><a href='../books/#{job_id}?tab=read&search_name=#{string}'>
+                      <li><a href='../books/#{job_id}?tab=read&search_name=#{name_found}'>
                         #{I18n.t('common.find_in_book')}
                       </a></li>"
     if eol_page_id != nil && eol_page_id > -1

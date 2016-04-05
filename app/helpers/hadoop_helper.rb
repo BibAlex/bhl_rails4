@@ -150,20 +150,20 @@ module HadoopHelper
     return true
   end
   
-  def ingest_batch(batch_id, names_content)
-    batch = Batch.find(batch_id)
-    batch.update_attributes(status_id: BatchStatus.pending_indexing.id) unless Volume.where(batch_id: batch.id).blank?
-    volumes = Volume.where("batch_id = ? AND status_id = ? ",batch.id, VolumeStatus.pending_content.id)
-    unless volumes.blank?
-      volumes.each do |volume|
-        volume.update_attributes(status_id: nil, batch_id: nil)
-      end
-    end
+  def ingest_batch(batch_id, names_content)    
     begin
-      file = File.new("#{Rails.root}/public/batches_#{Rails.env}/batch_#{batch_id}.zip", 'wb+')
+      file = File.new("#{GENERATED_NAMES_PATH}/batches_#{Rails.env}/batch_#{batch_id}.zip", 'wb+')
       file.binmode
       file.write(names_content)
       file.flush
+      batch = Batch.find(batch_id)
+      batch.update_attributes(status_id: BatchStatus.pending_indexing.id) unless Volume.where(batch_id: batch.id).blank?
+      volumes = Volume.where("batch_id = ? AND status_id = ? ",batch.id, VolumeStatus.pending_content.id)
+      unless volumes.blank?
+        volumes.each do |volume|
+          volume.update_attributes(status_id: nil, batch_id: nil)
+        end
+      end
     rescue
       return false
     end

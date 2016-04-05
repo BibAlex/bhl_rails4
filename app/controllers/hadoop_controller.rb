@@ -10,13 +10,13 @@ class HadoopController < ApplicationController
   def ingest_metadata
     xml_content = request.body.read
     if xml_content.empty?
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
     if ingest_metadata_from_xml_string(xml_content)
       render json: "Success"
     else
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
   end
@@ -32,13 +32,13 @@ class HadoopController < ApplicationController
   def finished_indexing
     json_content = request.body.read
     if json_content.empty?
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
     if mark_finished_indexing(json_content)
       render json: "Success"
     else
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
   end
@@ -50,13 +50,13 @@ class HadoopController < ApplicationController
   def ingest_locations
     xml_content = request.body.read
     if xml_content.empty?
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
     if ingest_locations_from_xml_string(xml_content)
       render json: "Success"
     else
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
   end
@@ -64,33 +64,33 @@ class HadoopController < ApplicationController
   def mark_finished_content
     xml_content = request.body.read
     if xml_content.empty?
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
     if mark_finished_content_volumes(xml_content)
       render json: "Success"
     else
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
   end
   
   def ingest_content
     if params[:batch_id].nil?
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
     
     names_content = request.body.read
     if names_content.empty?
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
      
     if ingest_batch(params[:batch_id], names_content)
       render json: "Success"
     else
-      render json: "Error invalid post"
+      render json: "Error invalid post", status: 403
       return
     end
   end

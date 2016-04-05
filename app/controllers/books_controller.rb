@@ -82,7 +82,7 @@ class BooksController < ApplicationController
   def load_read_page(search_name)
     UserVolumeHistory.save_user_history(params[:id], session[:user_id]) if is_logged_in?
     @reader_path = (DAR_JAR_API_URL.sub DAR_JAR_API_URL_STRING, params[:id]).sub DAR_JAR_API_URL_LANGUAGE, I18n.locale.to_s
-    @reader_path += "&q=#{search_name}"
+    @reader_path += "&keyword=#{search_name}"
   end
   
   def get_page_title_of_search(query_array)
