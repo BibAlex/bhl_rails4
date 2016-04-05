@@ -17,7 +17,7 @@ class BhlStatistic < ActiveRecord::Base
     solr_sci_names_core = RSolr.connect url: SOLR_SCI_NAMES
     sci_names = solr_sci_names_core.find 'q' => "*:*", 'rows' => 0
     statistics_result = { books: response['response']['numFound'],
-                          authors: response["facet_counts"]["facet_fields"]["author_facet"].count,
+                          authors: response["facet_counts"]["facet_fields"]["author_facet"].count/2,
                           names: sci_names['response']['numFound'] }
   end
 end
