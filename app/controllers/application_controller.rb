@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
 
   def store_location(url = url_for(controller: controller_name, action: action_name))
     url = nil unless url =~ /\A([%2F\/]|#{root_url})/
+    url =  book_url(id: params[:id], tab: 'read') if controller_name == 'darviewer'
     session[:return_to] = url
   end
 
