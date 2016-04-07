@@ -136,10 +136,9 @@ RSpec.describe "Homepages", type: :feature do
       
       BhlStatistic.create(books_count: 2, authors_count: 2, species_count: 2)
       
-      # User.create(name: "kokoelsayed", )
-      @user = User.create(username: "kokowawa",
-                    password: 'password', email: "koko_wawa@lolo.com",
-                    real_name: "koko wawa toto", active: true)#User.first
+      @user = User.create(username: "user",
+                    password: 'password', email: "user@example.com",
+                    real_name: "user", active: true)
       @collection = FactoryGirl.create(:collection, user: @user, title: "new_collection", is_public: true, rate: 5)
       FactoryGirl.create(:activity, activitable_id: @collection.id, activitable_type: "collection", activitable_title: "new_collection",
                                     action: "rate", user_id: @user.id, value: 5, created_at: Time.now + 2)
@@ -153,7 +152,6 @@ RSpec.describe "Homepages", type: :feature do
     
     describe "statistics" do
       it "displays a link for books page with total number of books in BHL" do
-        # debugger     
         expect(page).to have_selector("h4[class='alert alert-success']", text: I18n.t('common.book_count', count: 2))
       end
       
