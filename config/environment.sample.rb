@@ -4,7 +4,7 @@ require File.expand_path('../application', __FILE__)
 # Initialize the Rails application.
 BhlRails4::Application.initialize!
 AUTOCOMPLETE_MAX = 4
-BHL_LINK =  "http://beta.bhl.bibalex.org/"
+BHL_LINK =  "http://bhl.bibalex.org/"
 TOP_COLLECTIONS_COUNT = 5
 MOST_VIEWED_BOOKS = 3
 MAX_NAMES_PER_BOOK = 5
@@ -25,7 +25,7 @@ LIMIT_BOOK_COMMENTS = 4
 TAB_GALLERY_PAGE_SIZE = 9
 DEFAULT_HIERARCHY_ID = 3
 
-DAR_JAR_API_URL = 'http://viewer.beta.bhl.bibalex.org/book_viewer/?locale=en&LocaleButtons=disabled&book_id=DAF-Job:[JOBID]'
+DAR_JAR_API_URL = 'http://viewer.bhl.bibalex.org/book_viewer/?locale=en&LocaleButtons=disabled&book_id=DAF-Job:[JOBID]'
 DAR_JAR_API_URL_STRING = '[JOBID]'
 DAR_JAR_API_URL_LANGUAGE = "[LANGUAGE]"
 DAR_API_METADATA = ''
