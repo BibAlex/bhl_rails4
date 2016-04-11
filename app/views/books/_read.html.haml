@@ -1,7 +1,7 @@
 .row.clearfix
   .col-md-12.column
     %h3
-      =@page_title
+      = @book_name
   - if is_logged_in?
     %ul.fa-ul.tools
       %li
@@ -10,5 +10,5 @@
           %a{ onclick: "load_collections(#{params[:id]})", style: "cursor:pointer;" }
             = I18n.t('common.add_collection')
         .modal.fade{ "aria-hidden" => "true", "aria-labelledby" => "approvalModalLabel", "role" => "dialog", "tabindex" => "-1", id: "collection_modal_#{params[:id]}" }
-      
+
 %iframe{:frameborder => "0", :height => "700", :scrolling => "no", :style => "border:0px", :width => "980", :src => "#{@reader_path}"}
