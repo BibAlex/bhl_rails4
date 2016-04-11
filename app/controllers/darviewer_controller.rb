@@ -1,7 +1,6 @@
 class DarviewerController < ApplicationController
   
   protect_from_forgery except: [:book, :user, :annotations] 
-  before_filter :check_authentication
   
   include SolrHelper
   include DarviewerHelper
