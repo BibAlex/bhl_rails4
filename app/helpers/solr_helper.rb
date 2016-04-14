@@ -15,18 +15,23 @@ module SolrHelper
     
   def search_facet_highlight(query, page, limit, sort_type, fquery= nil, not_all_categories_query = true)
     facet_array = ['author_facet', 'language_facet', 'subject_facet', 'location_facet', 'publisher_facet']
+    highligh_array = ['title_en', 'title_fr', 'title_ar', 'title_ge', 'title_it', 'title_ud',
+                      'author_en', 'author_fr', 'author_ar', 'author_ge', 'author_it', 'author_ud',
+                      'subject_en', 'subject_fr', 'subject_ar', 'subject_ge', 'subject_it', 'subject_ud']
     start = (page > 1) ? (page - 1) * limit : 0
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
-    query = not_all_categories_query ? "#{query} AND _query_:\"#{fquery}\"" : "#{query} OR _query_:\"#{fquery}\""
-    response = solr.find  'q' => query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
-                          'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4"
+    all_query = not_all_categories_query ? query +  " AND _query_:" + "{!join from=job_id to=job_id fromIndex=names_found}#{fquery}".to_json :
+                                           query + " OR _query_:" + "{!join from=job_id to=job_id fromIndex=names_found}#{fquery}".to_json
+    response = solr.find  'q' => all_query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
+                          'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4",
+                          'hl' => true, 'hl.fl' => highligh_array, 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true
     response
   end
   
   def get_sci_names_of_volumes(job_ids)
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
     response = rsolr.find 'q' => "job_id:#{job_ids}", 'fl' => 'job_id,sci_name', 'rows' => 1000000, 
-                                                      'facet' => true, 'facet.field' => "sci_name"
+                          'facet' => true, 'facet.field' => "sci_name"
     sci_names = {}
     
     if response["response"]["numFound"] > 0
@@ -42,16 +47,39 @@ module SolrHelper
   end
   
   
-  def get_sci_names_with_facet(query, page, limit, fquery)
+  def get_sci_names_with_facet(query, page, limit, fquery, not_all_categories_query)
+    all_query = not_all_categories_query ? fquery + " AND _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json : 
+                                           fquery + " OR _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => fquery, 'fq' => "{!join from=job_id to=job_id fromIndex=books_metadata} #{query}",
-                                         'fl' => 'job_id,sci_name', 'facet' => true,
-                                         'facet.field' => "sci_name", 'facet.limit' => 4    
+    response = rsolr.find 'q' => all_query,
+                          'fl' => 'job_id', 
+                          'facet' => true, 'facet.field' => "sci_name", 'facet.limit' => 4,
+                          'hl' => true, 'hl.fl' => "sci_name", 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true  
     items  = []
     response.facets.first.items.first(FACET_COUNT).each do |item|
       items << { field_value: item.value, hits: item.hits }
-    end 
-    { facets: items }
+    end
+    highlights = {}
+    unless response["highlighting"].nil?
+      response["highlighting"].each do |item|
+        job_id = get_job_id_of_name_found(item[0])
+        unless job_id.nil?
+          highlights["#{job_id}"] = [] if highlights["#{job_id}"].nil?
+          highlights["#{job_id}"] << item[1]["sci_name"][0] if item[1]["sci_name"]
+        end
+      end
+    end
+    { facets: items, highlights: highlights }
+  end
+  
+  def get_job_id_of_name_found(id)
+    rsolr = RSolr.connect url: SOLR_NAMES_FOUND
+    response = rsolr.find 'q' => "id: #{id}", 'fl' => 'job_id'
+    if response["response"]["docs"] 
+      return response["response"]["docs"][0]["job_id"]
+    else
+      return nil
+    end
   end
   
   def get_name_info(sci_name)

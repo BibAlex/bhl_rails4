@@ -32,7 +32,7 @@ module BooksHelper
   def search_volumes(query, page, limit, sort_type, fquery = nil, not_all_categories_query = true)
     response = search_facet_highlight(query, page, limit, sort_type, fquery, not_all_categories_query)
     
-    process_solr_volumes(response, query, page, limit, fquery)
+    process_solr_volumes(response, query, page, limit, fquery, not_all_categories_query)
   end
 
   def fill_response_array(arr)
@@ -42,7 +42,10 @@ module BooksHelper
   def get_names_info(sci_names)
    sci_names_info = []
     sci_names.each do |sci_name|
-      info = get_name_info(sci_name)
+      target_name = sci_name.sub("<span class=\"highlight\">", "")
+      target_name = target_name.sub("</span>", "")
+      info = get_name_info(target_name)
+      info[:sci_name] = sci_name
      sci_names_info <<  info unless info.nil?
     end
     sci_names_info
@@ -138,7 +141,8 @@ module BooksHelper
         values = exact_sci_names.join(" OR ")
       end
       field_query = "(sci_name:#{values})"
-      return "{!join from=job_id to=job_id fromIndex=names_found} #{field_query}"
+      return field_query
+      # return "{!join from=job_id to=job_id fromIndex=names_found} #{field_query}"
     end
     return "*:*"
   end
@@ -201,12 +205,6 @@ module BooksHelper
     normal_attributes = { }
     normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['location']
     normal_attributes[:language_auto] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
-    # normal_attributes[:sci_name] = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
-    # sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']
-    # unless sci_names.nil?
-      # job_ids = get_volumes_contain_sci_name(sci_names, name_query_join_operator)
-      # normal_attributes[:job_id] = job_ids.empty? ? nil : job_ids
-    # end
     normal_attributes.delete_if { |key, value| value.blank? }
   end
 
@@ -308,8 +306,9 @@ module BooksHelper
 
   private
 
-  def process_solr_volumes(solr_response, query, page, limit, fquery)
+  def process_solr_volumes(solr_response, query, page, limit, fquery, not_all_categories_query)
     volumes = []
+    highlights = {}
     facet_fields = {}
     sci_names = {}
     if solr_response["response"]["numFound"] > 0
@@ -319,7 +318,7 @@ module BooksHelper
         sci_names[doc[:job_id]] = get_sci_names_of_volumes("#{doc[:job_id]}")[:sci_names][doc[:job_id]]
       end
       all_sci_names = { sci_names: sci_names }
-      sci_names_facets = get_sci_names_with_facet(query, page, limit, fquery)
+      sci_names_facets = get_sci_names_with_facet(query, page, limit, fquery, not_all_categories_query)
 
       solr_response["response"]["docs"].each do |doc|
         tmp = all_sci_names[:sci_names][doc[:job_id]]
@@ -341,7 +340,28 @@ module BooksHelper
       end
       facet_fields["name_facet"] = sci_names_facets[:facets]
     end
-    { volumes: volumes, total_number_of_volumes: solr_response["response"]["numFound"], facets: facet_fields }
+    
+    unless solr_response["highlighting"].blank?
+      solr_response["highlighting"].each do |item|
+        languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it", "Undefined" => "ud" }
+        language = get_volume_language(volumes,item[0].to_i)
+        lang = languages["#{language}"]
+        sci_names_highlights = sci_names_facets[:highlights].nil? ? [] : (sci_names_facets[:highlights]["#{item[0]}"].nil? ? [] : sci_names_facets[:highlights]["#{item[0]}"])
+        options = { title: item[1]["title_#{lang}"], author: item[1]["author_#{lang}"], subject: item[1]["subject_#{lang}"],
+                    language: item[1]["language_facet"], location: item[1]["location_search"], publisher: item[1]["publisher_#{lang}"], sci_names: sci_names_highlights }
+        highlights["#{item[0]}"] = options
+      end
+    end
+    { volumes: volumes, total_number_of_volumes: solr_response["response"]["numFound"], facets: facet_fields, highlights: highlights }
+  end
+  
+  def get_volume_language(volumes,job_id)
+    volumes.each do |volume|
+      if volume[:job_id] == job_id
+        lang = volume[:language].nil? ? "Undefined" : volume[:language][0]
+        return lang
+      end
+    end    
   end
 
   def handle_mods_format(id)

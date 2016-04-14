@@ -24,6 +24,9 @@ MAX_NO_ABUSE = 1
 LIMIT_BOOK_COMMENTS = 4
 TAB_GALLERY_PAGE_SIZE = 9
 DEFAULT_HIERARCHY_ID = 3
+HLPRE = '<span class="highlight">'
+HLPOST = '</span>'
+
 
 DAR_JAR_API_URL = 'http://viewer.bhl.bibalex.org/book_viewer/?locale=en&LocaleButtons=disabled&book_id=DAF-Job:[JOBID]'
 DAR_JAR_API_URL_STRING = '[JOBID]'

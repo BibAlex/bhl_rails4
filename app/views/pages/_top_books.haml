@@ -11,9 +11,9 @@
           = link_to doc[:title][0], book_path(id: doc[:job_id])
         %p.small
           - if doc[:author]
-            = render partial: "books/book_multi_valued_field", locals: { book_multi_valued_field: doc[:author], title: I18n.t('common.by') }
+            = render partial: "books/book_multi_valued_field", locals: { book_multi_valued_field: doc[:author], title: I18n.t('common.by'), highlighted_field: nil }
           - if doc[:subject]
-            = render partial: "books/book_multi_valued_field", locals: { book_multi_valued_field: doc[:subject], title: I18n.t('common.genre') }
+            = render partial: "books/book_multi_valued_field", locals: { book_multi_valued_field: doc[:subject], title: I18n.t('common.genre'), highlighted_field: nil }
           - if doc[:sci_names].count > 0
             - names = fill_response_array(doc[:sci_names])
             = render partial: "books/book_names", locals: { sci_names: doc[:sci_names], id: doc[:job_id], sci_names_info: get_names_info(names),
