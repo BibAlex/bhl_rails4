@@ -53,11 +53,11 @@ class PagesController < ApplicationController
   end
 
   def prepare_most_viewed_books_part
-    @most_viewed_response = search_volumes( "*:*", 1, MOST_VIEWED_BOOKS, "views desc")
+    @most_viewed_response = search_volumes( "*:*", 1, MOST_VIEWED_BOOKS, "views desc", "*:*")
   end
 
   def prepare_top_rated_books_part
-    @top_rated_response = search_volumes( "*:*", 1, MOST_VIEWED_BOOKS, "rate desc")
+    @top_rated_response = search_volumes( "*:*", 1, MOST_VIEWED_BOOKS, "rate desc", "*:*")
   end
 
   def prepare_activity_log

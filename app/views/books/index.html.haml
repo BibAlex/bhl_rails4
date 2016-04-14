@@ -11,7 +11,8 @@
     .col-md-8
       = render partial: "books/breadcrumb"  
       - @books.each_with_index  do |doc, index|
-        = render partial: "books/listresult", locals: { index: index, doc: doc }
+        - highlighted_item = @response[:highlights].blank? ? nil : @response[:highlights]["#{doc[:job_id]}"]
+        = render partial: "books/listresult", locals: { index: index, doc: doc, highlighted_item: highlighted_item }
       %center
         .pagination-centered
           = will_paginate @books
