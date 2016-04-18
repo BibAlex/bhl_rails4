@@ -311,11 +311,14 @@ module BooksHelper
     highlights = {}
     facet_fields = {}
     sci_names = {}
+    all_sci_names_highlights = {}
     if solr_response["response"]["numFound"] > 0
       
       job_ids = "("
       solr_response["response"]["docs"].each do |doc|
-        sci_names[doc[:job_id]] = get_sci_names_of_volumes("#{doc[:job_id]}")[:sci_names][doc[:job_id]]
+        volume_sci_names_with_highlight = get_sci_names_of_volumes("#{doc[:job_id]}", query, fquery, not_all_categories_query)
+        sci_names[doc[:job_id]] = volume_sci_names_with_highlight[:sci_names][doc[:job_id]]
+        all_sci_names_highlights["#{doc[:job_id]}"] = volume_sci_names_with_highlight[:highlights]["#{doc[:job_id]}"]
       end
       all_sci_names = { sci_names: sci_names }
       sci_names_facets = get_sci_names_with_facet(query, page, limit, fquery, not_all_categories_query)
@@ -343,12 +346,24 @@ module BooksHelper
     
     unless solr_response["highlighting"].blank?
       solr_response["highlighting"].each do |item|
+        volume_title = nil
+        volume_subject = nil
+        volume_author = nil        
         languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it", "Undefined" => "ud" }
-        language = get_volume_language(volumes,item[0].to_i)
-        lang = languages["#{language}"]
-        sci_names_highlights = sci_names_facets[:highlights].nil? ? [] : (sci_names_facets[:highlights]["#{item[0]}"].nil? ? [] : sci_names_facets[:highlights]["#{item[0]}"])
-        options = { title: item[1]["title_#{lang}"], author: item[1]["author_#{lang}"], subject: item[1]["subject_#{lang}"],
-                    language: item[1]["language_facet"], location: item[1]["location_search"], publisher: item[1]["publisher_#{lang}"], sci_names: sci_names_highlights }
+        volume_languages = get_volume_language(volumes,item[0].to_i)
+        volume_languages.each do |volume_language|
+          lang = languages["#{volume_language}"]
+          volume_title ||= item[1]["title_#{lang}"]
+          volume_author ||= item[1]["author_#{lang}"]
+          volume_subject ||= item[1]["subject_#{lang}"]
+        end
+        # sci_names_highlights = sci_names_facets[:highlights].nil? ? [] : (sci_names_facets[:highlights]["#{item[0]}"].nil? ? [] : sci_names_facets[:highlights]["#{item[0]}"])
+        sci_names_highlights = all_sci_names_highlights["#{item[0].to_i}"]
+        # sci_names_highlights = []
+        options = { title: volume_title,
+                    author: volume_author,
+                    subject: volume_subject,
+                    sci_names: sci_names_highlights }
         highlights["#{item[0]}"] = options
       end
     end
@@ -358,8 +373,9 @@ module BooksHelper
   def get_volume_language(volumes,job_id)
     volumes.each do |volume|
       if volume[:job_id] == job_id
-        lang = volume[:language].nil? ? "Undefined" : volume[:language][0]
-        return lang
+        return volume[:language]
+        # lang = volume[:language].nil? ? "Undefined" : volume[:language][0]
+        # return lang
       end
     end    
   end
