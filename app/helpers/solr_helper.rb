@@ -28,10 +28,18 @@ module SolrHelper
     response
   end
   
-  def get_sci_names_of_volumes(job_ids)
+  def get_sci_names_of_volumes(job_ids, query = nil, fquery = nil, not_all_categories_query = nil)
+    if query && fquery
+      all_query = not_all_categories_query ? "job_id:#{job_ids}" + " AND " + fquery + " AND _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json : 
+                                             "job_id:#{job_ids}" + " AND " + fquery + " OR _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json
+    else
+      all_query = "job_id:#{job_ids}"                           
+    end
+    
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => "job_id:#{job_ids}", 'fl' => 'job_id,sci_name', 'rows' => 1000000, 
-                          'facet' => true, 'facet.field' => "sci_name"
+    response = rsolr.find 'q' => all_query, 'fl' => 'job_id,sci_name', 'rows' => 1000000, 
+                          'facet' => true, 'facet.field' => "sci_name",
+                          'hl' => true, 'hl.fl' => "sci_name", 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true
     sci_names = {}
     
     if response["response"]["numFound"] > 0
@@ -42,8 +50,19 @@ module SolrHelper
           sci_names[doc[:job_id]] = [doc[:sci_name]]
         end        
       end
-    end    
-    { sci_names: sci_names }
+    end
+    
+    highlights = {}
+    unless response["highlighting"].nil?
+      response["highlighting"].each do |item|
+        job_id = get_job_id_of_name_found(item[0])
+        unless job_id.nil?
+          highlights["#{job_id}"] = [] if highlights["#{job_id}"].nil?
+          highlights["#{job_id}"] << item[1]["sci_name"][0] if item[1]["sci_name"] && !(highlights["#{job_id}"].include?(item[1]["sci_name"][0]))
+        end
+      end
+    end
+    { sci_names: sci_names, highlights: highlights }
   end
   
   
