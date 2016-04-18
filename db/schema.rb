@@ -206,10 +206,11 @@ ActiveRecord::Schema.define(version: 20160329121155) do
     t.float    "latitude",          limit: 24
     t.float    "longitude",         limit: 24
     t.integer  "country_id",        limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "address",           limit: 255
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
+
+  add_index "locations", ["country_id"], name: "index_locations_on_country_id", using: :btree
 
   create_table "names", force: :cascade do |t|
     t.string   "sci_name",       limit: 255
