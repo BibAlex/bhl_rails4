@@ -13,8 +13,8 @@ module HadoopHelper
 
     json_output
   end
-  
-  def generate_json_volume_pending_content_listing(volume_list)    
+
+  def generate_json_volume_pending_content_listing(volume_list)
     if volume_list.blank?
       batch_id = ""
       json_output = "{ \"batch_id\": \"#{batch_id}\", \"Volumes\":["
@@ -23,14 +23,14 @@ module HadoopHelper
       json_output = "{ \"batch_id\": \"#{batch_id}\", \"Volumes\":["
       volume_list.each do |volume|
         volume.update_attributes(status_id: VolumeStatus.pending_content.id, number_of_trials: volume.number_of_trials + 1, batch_id: batch_id)
-        json_output << "\"#{volume.job_id}\","        
+        json_output << "\"#{volume.job_id}\","
       end
-      json_output = json_output[0...json_output.length-1] 
+      json_output = json_output[0...json_output.length-1]
     end
     json_output << "]}"
     json_output
   end
-  
+
   def generate_json_volume_pending_indexing_listing(batch_id_param)
     if batch_id_param.nil?
       batch = Batch.where(status_id: BatchStatus.pending_indexing.id)
@@ -75,7 +75,7 @@ module HadoopHelper
 
     json_output
   end
-  
+
   def generate_json_location_listing(locations_list)
     json_output = "{\"Locations\":["
     locations_list.each do |location|
@@ -85,14 +85,14 @@ module HadoopHelper
     json_output << "]}"
     json_output
   end
-  
+
   def ingest_locations_from_xml_string(xml_content)
     begin
       mods_xml = Nokogiri::XML(xml_content)
     rescue
       return false
     end
-    
+
     mods_xml.xpath("//Geolocations//Location").each do |location_xml|
       address = location_xml.xpath(".//address").text
       location = Location.find_or_create_by(address: address)
@@ -100,20 +100,20 @@ module HadoopHelper
       location.country_id = country.id
       location.latitude = location_xml.xpath(".//latitude").text.to_f
       location.longitude = location_xml.xpath(".//longitude").text.to_f
-      location.formatted_address = location_xml.xpath(".//formattedAddress").text.to_f      
+      location.formatted_address = location_xml.xpath(".//formattedAddress").text.to_f
       location.save
     end
-    
+
     return true
   end
-  
+
   def mark_finished_indexing(xml_content)
     begin
       data_xml = Nokogiri::XML(xml_content)
     rescue
       return false
-    end    
-    
+    end
+
     data_xml.xpath("//IndexingFailureList").each do |batch|
       batch_id = batch.attr("batchID").to_i
       Batch.find(batch_id).update_attributes(status_id: BatchStatus.indexed.id)
@@ -121,36 +121,36 @@ module HadoopHelper
       data_xml.xpath("//IndexingFailureList//JobID").each do |job_id|
         failure_list << job_id.text.to_i
       end
-      
+
       Volume.where("batch_id = ? AND status_id = ? ", batch_id, VolumeStatus.pending_indexing.id).each do |volume|
         if failure_list.include?(volume.job_id)
           volume.update_attributes(status_id: nil, batch_id: nil)
         else
           volume.update_attributes(status_id: VolumeStatus.indexed.id)
         end
-      end      
+      end
     end
     return true
   end
-  
-  
+
+
   def mark_finished_content_volumes(xml_content)
     begin
       data_xml = Nokogiri::XML(xml_content)
     rescue
       return false
     end
-    
+
     data_xml.xpath("//ContentSuccessList").each do |batch|
       data_xml.xpath("//ContentSuccessList//JobID").each do |job_id|
         volume = Volume.find_by_job_id(job_id.text.to_i)
         volume.update_attributes(status_id: VolumeStatus.pending_indexing.id) if volume
-      end      
+      end
     end
     return true
   end
-  
-  def ingest_batch(batch_id, names_content)    
+
+  def ingest_batch(batch_id, names_content)
     begin
       file = File.new("#{GENERATED_NAMES_PATH}/batches_#{Rails.env}/batch_#{batch_id}.zip", 'wb+')
       file.binmode
@@ -179,10 +179,10 @@ module HadoopHelper
 
     mods_xml.xpath("//BHLMeta//BIBID").each do |book_xml|
       bib_id = book_xml.attr("value").gsub("DAF-BHL:","")
-      
-      
+
+
      metadata_hash = process_mods(book_xml.xpath(".//mods").text)
-              
+
       book = Book.find_or_create_by(bib_id: bib_id)
 
       if book_xml.xpath(".//mods").count == 0
@@ -192,7 +192,7 @@ module HadoopHelper
       else
         book.bibtex = book_xml.xpath(".//BIBTex").text
         book.endnote = book_xml.xpath(".//EndNote").text
-        book.mods = book_xml.xpath(".//mods").text               
+        book.mods = book_xml.xpath(".//mods").text
 
         if metadata_hash[:title_alternative].blank? &&  metadata_hash[:title].blank?
           # this means that this book has failed
@@ -206,23 +206,23 @@ module HadoopHelper
           book.contributor = metadata_hash[:contributor]
           book.book_status_id = BookStatus.finished_metadata.id
           book.save
-          
+
           book.authors << metadata_hash[:authors]
           book.locations << metadata_hash[:locations]
-          book.languages << metadata_hash[:languages]          
+          book.languages << metadata_hash[:languages]
           book.subjects << metadata_hash[:subjects]
-  
+
           book_xml.xpath(".//JobIDs//JobID").each do |job_id|
             volume = Volume.find_or_create_by(job_id: job_id.text.gsub("DAF-Job:",""))
             book.volumes << volume
           end
           book.save
         end
-       
+
       end
     end
     return true
-  end 
+  end
 
   def process_mods(mods_string)
     # this function should return a hash with extracted metadata from mods
@@ -290,7 +290,7 @@ private
     locations_xml.each do |place|
       if place.xpath('.//xmlns:placeTerm').attr('type').to_s == 'text'
         loc = place.xpath('.//xmlns:placeTerm').text
-        locations << Location.find_or_create_by(address: loc) unless loc.empty?
+        locations << Location.find_or_create_by(formatted_address: loc) unless loc.empty?
       end
     end
     locations
