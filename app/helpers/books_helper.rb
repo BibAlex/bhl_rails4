@@ -90,13 +90,13 @@ module BooksHelper
   def fill_query_array(params)
     search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_all",
                                                   "_location_facet", "_author_facet", "_language_facet", "_subject_facet",
-                                                  "_publisher_facet"].include?(key) }
+                                                  "_publisher_facet", "_name_facet"].include?(key) }
     query_array = { 'all' => [], 'title'=> [], 'language'=> [],
                     'location'=> [], 'author'=> [], 'name'=> [],
                     'subject'=> [], 'content' => [], 'publisher' => [],
                     'location_facet' => [], 'author_facet' => [],
                     'language_facet' => [], 'subject_facet' => [],
-                    'publisher_facet' => [] }
+                    'publisher_facet' => [], 'name_facet' => [] }
     query_array.each do  |key, value|
       query_array[key] = search_params["_#{key}"] ? search_params["_#{key}"].split(' _OR ') : []
     end
@@ -127,7 +127,7 @@ module BooksHelper
   def is_empty_search?(query_array)
     emptyQuery = true
     query_array.each do |key, value|
-      unless key == "name"
+      unless key == "name" || key == "name_facet"
         if value.count > 0
           emptyQuery = false
           break
@@ -138,23 +138,29 @@ module BooksHelper
   end
   
   def set_fquery_string(query_array)
-    sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']      
-    unless sci_names.blank?
-      exact_sci_names = get_exact_sci_names(sci_names)
-      if exact_sci_names.blank?
-        items = sci_names
-      else
-        items = exact_sci_names
-      end
-      field_query = '('
-       tmp_array = []
-       items.each do |item|
-         tmp_array << "(" + item.to_s + ")"
-       end
-       values = "(" + tmp_array.join(" OR ") + ")"
-       field_query = "(" + "sci_name:#{values}" + ")"
+    unless query_array['name_facet'].blank?
+      values = "(" + query_array['name_facet'].join(" OR ") + ")"
+      field_query = "(" + "sci_name:#{values}" + ")"
       return field_query
-    end
+    else
+      sci_names = query_array['name'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['name']      
+      unless sci_names.blank?
+        exact_sci_names = get_exact_sci_names(sci_names)
+        if exact_sci_names.blank?
+          items = sci_names
+        else
+          items = exact_sci_names
+        end
+        field_query = '('
+         tmp_array = []
+         items.each do |item|
+           tmp_array << "(" + item.to_s + ")"
+         end
+         values = "(" + tmp_array.join(" OR ") + ")"
+         field_query = "(" + "sci_name:#{values}" + ")"
+         return field_query
+      end
+    end    
     return "*:*"
   end
 
