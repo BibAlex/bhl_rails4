@@ -8,17 +8,17 @@ class GeographicsController < ApplicationController
     @page_title = I18n.t('common.geographics')
     @map = Cartographer::Gmap.new('map' , zoom: 2)
     @header = Cartographer::Header.new.to_s
-    @range = params[:range] ? params[:range] : "10,20,30,40,50"
+    @range = params[:range] ? params[:range] : "100,200,300,400,500"
     @icons = {
-      10 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_blue')}",
-      20 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_green')}",
-      30 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_yellow')}",
-      40 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_orange')}",
-      50 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_red')}"
+      100 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_blue')}",
+      200 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_green')}",
+      300 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_yellow')}",
+      400 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_orange')}",
+      500 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_red')}"
       }
     # defining icons
     gicons = {}
-    [10, 20, 30, 40, 50].each do |i|
+    [100, 200, 300, 400, 500].each do |i|
       temp_icon = Cartographer::Gicon.new( name: "icon_#{i-10}_to_#{i}", image_url: "#{@icons[i]}",
                                            width: 12, height: 20,
                                            shadow_width: 0, shadow_height: 0, #removing shadow
@@ -31,16 +31,16 @@ class GeographicsController < ApplicationController
     response.facets.first.items.each_with_index do |item, index|
       # specify icon
       case item.hits
-        when 1..10
-          icon_in = 10
-        when 11..20
-          icon_in = 20
-        when 21..30
-          icon_in = 30
-        when 31..40
-          icon_in = 40
+      when 1..100
+          icon_in = 100
+      when 101..200
+          icon_in = 200
+      when 201..300
+          icon_in = 300
+        when 301..400
+          icon_in = 400
         else
-          icon_in = 50
+          icon_in = 500
       end
 
       if @range.include?(icon_in.to_s)

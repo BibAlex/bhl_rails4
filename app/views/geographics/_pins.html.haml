@@ -1,36 +1,36 @@
 #location_checkbox
   %center
-    = check_box_tag "check10", 10, @range.include?("10"), class: "check10"
+    = check_box_tag "check100", 100, @range.include?("100"), class: "check100"
     - pin = I18n.t('geographics.blue_pin')
-    %img{ alt: pin , title: pin, src: @icons[10]} 
-    1-10 
+    %img{ alt: pin , title: pin, src: @icons[100]} 
+    1-100 
     = I18n.t('geographics.geo_titles_first_ten')
     &nbsp;&nbsp;&nbsp;&nbsp;
     
-    = check_box_tag "check20", 20, @range.include?("20"), class: "check20"
+    = check_box_tag "check200", 200, @range.include?("200"), class: "check200"
     -pin = I18n.t('geographics.green_pin')
-    %img{ alt: pin, title: pin, src: @icons[20]}
-    11-20 
+    %img{ alt: pin, title: pin, src: @icons[200]}
+    101-200 
     = I18n.t('geographics.geo_titles')
     &nbsp;&nbsp;&nbsp;&nbsp;
     
-    = check_box_tag "check30", 30, @range.include?("30"), class: "check30"
+    = check_box_tag "check300", 300, @range.include?("300"), class: "check300"
     -pin = I18n.t('geographics.yellow_pin')
-    %img{ alt: pin, title: pin, src: @icons[30]}
-    21-30 
+    %img{ alt: pin, title: pin, src: @icons[300]}
+    201-300 
     = I18n.t('geographics.geo_titles')
     &nbsp;&nbsp;&nbsp;&nbsp;
     
-    = check_box_tag "check40", 40, @range.include?("40"), class: "check40"
+    = check_box_tag "check400", 400, @range.include?("400"), class: "check400"
     -pin = I18n.t('geographics.orange_pin')
-    %img{ alt: pin, title: pin, src: @icons[40]}
-    31-40 
+    %img{ alt: pin, title: pin, src: @icons[400]}
+    301-400 
     = I18n.t('geographics.geo_titles')
     &nbsp;&nbsp;&nbsp;&nbsp;
     
-    = check_box_tag "check50", 50, @range.include?("50"), class: "check50"
+    = check_box_tag "check500", 500, @range.include?("500"), class: "check500"
     -pin = I18n.t('geographics.red_pin')
-    %img{ alt: pin, title: pin, src: @icons[50]}
-    41  
+    %img{ alt: pin, title: pin, src: @icons[500]}
+    401  
     = I18n.t('geographics.geo_titles_more')
     &nbsp;&nbsp;&nbsp;&nbsp;
