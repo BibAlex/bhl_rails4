@@ -7,11 +7,12 @@
     .panel-body
       %ul.dir
         - items.each do |item|
-          %li
-            - field = "#{facet_field[0..facet_field.length-7]}"
-            - if (params["_#{field}"]) && (params["_#{field}"].include? item[:field_value])
-              = "#{item[:field_value]} [#{item[:hits]}]"
-            - if (params["_#{facet_field}"]) && (params["_#{facet_field}"].include? item[:field_value])
-              = "#{item[:field_value]} [#{item[:hits]}]"
-            - else
-              = link_to "#{item[:field_value]} [#{item[:hits]}]", books_path(params: add_facet_search(params, facet_field, item[:field_value]))
+          - if item[:hits] > 0
+            %li
+              - field = "#{facet_field[0..facet_field.length-7]}"
+              - if (params["_#{field}"]) && (params["_#{field}"].include? item[:field_value])
+                = "#{item[:field_value]} [#{item[:hits]}]"
+              - if (params["_#{facet_field}"]) && (params["_#{facet_field}"].include? item[:field_value])
+                = "#{item[:field_value]} [#{item[:hits]}]"
+              - else
+                = link_to "#{item[:field_value]} [#{item[:hits]}]", books_path(params: add_facet_search(params, facet_field, item[:field_value]))
