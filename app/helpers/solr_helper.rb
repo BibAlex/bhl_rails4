@@ -20,8 +20,12 @@ module SolrHelper
                       'subject_en', 'subject_fr', 'subject_ar', 'subject_ge', 'subject_it', 'subject_ud']
     start = (page > 1) ? (page - 1) * limit : 0
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
-    all_query = not_all_categories_query ? query +  " AND _query_:" + "{!join from=job_id to=job_id fromIndex=names_found}#{fquery}".to_json :
-                                           query + " OR _query_:" + "{!join from=job_id to=job_id fromIndex=names_found}#{fquery}".to_json
+    if fquery == "*:*"
+      all_query = query
+    else
+      all_query = not_all_categories_query ? "#{query} AND _query_:\"{!join from=job_id to=job_id fromIndex=names_found}#{fquery}\"" :
+                                             "#{query} OR _query_:\"{!join from=job_id to=job_id fromIndex=names_found}#{fquery}\""
+    end
     response = solr.find  'q' => all_query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
                           'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4",
                           'hl' => true, 'hl.fl' => highligh_array, 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true
