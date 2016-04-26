@@ -405,8 +405,15 @@ module BooksHelper
         volume_author = nil        
         languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it", "Undefined" => "ud" }
         volume_languages = get_volume_language(volumes,item[0].to_i)
-        volume_languages.each do |volume_language|
-          lang = languages["#{volume_language}"]
+        unless volume_languages.blank?
+          volume_languages.each do |volume_language|
+            lang = languages["#{volume_language}"]
+            volume_title ||= item[1]["title_#{lang}"]
+            volume_author ||= item[1]["author_#{lang}"]
+            volume_subject ||= item[1]["subject_#{lang}"]
+          end
+        else
+          lang = languages["Undefined"]
           volume_title ||= item[1]["title_#{lang}"]
           volume_author ||= item[1]["author_#{lang}"]
           volume_subject ||= item[1]["subject_#{lang}"]
