@@ -88,10 +88,15 @@ module BooksHelper
   end
 
   def fill_query_array(params)
-    search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_all"].include?(key) }
+    search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_all",
+                                                  "_location_facet", "_author_facet", "_language_facet", "_subject_facet",
+                                                  "_publisher_facet"].include?(key) }
     query_array = { 'all' => [], 'title'=> [], 'language'=> [],
                     'location'=> [], 'author'=> [], 'name'=> [],
-                    'subject'=> [], 'content' => [], 'publisher' => [] }
+                    'subject'=> [], 'content' => [], 'publisher' => [],
+                    'location_facet' => [], 'author_facet' => [],
+                    'language_facet' => [], 'subject_facet' => [],
+                    'publisher_facet' => [] }
     query_array.each do  |key, value|
       query_array[key] = search_params["_#{key}"] ? search_params["_#{key}"].split(' _OR ') : []
     end
@@ -106,6 +111,7 @@ module BooksHelper
     else
       multilingual_attributes = get_multilingual_attributes(query_array)
       normal_attributes = get_normal_attributes(query_array)
+      facet_attributes = get_facet_attributes(query_array)
       unless conjunction
         if !(query_array['all'].empty?)
           conjunction ="OR"
@@ -113,7 +119,7 @@ module BooksHelper
           conjunction = "AND"
         end
       end
-      query = prepare_search_query(multilingual_attributes, normal_attributes, conjunction)
+      query = prepare_search_query(multilingual_attributes, normal_attributes, facet_attributes, conjunction)
     end
     query
   end
@@ -136,22 +142,29 @@ module BooksHelper
     unless sci_names.blank?
       exact_sci_names = get_exact_sci_names(sci_names)
       if exact_sci_names.blank?
-        values = sci_names.join(" OR ")
+        items = sci_names
       else
-        values = exact_sci_names.join(" OR ")
+        items = exact_sci_names
       end
-      field_query = "(sci_name:#{values})"
+      field_query = '('
+       tmp_array = []
+       items.each do |item|
+         tmp_array << "(" + item.to_s + ")"
+       end
+       values = "(" + tmp_array.join(" OR ") + ")"
+       field_query = "(" + "sci_name:#{values}" + ")"
       return field_query
-      # return "{!join from=job_id to=job_id fromIndex=names_found} #{field_query}"
     end
     return "*:*"
   end
 
-  def prepare_search_query(multilingual_attributes_and_values, normal_attributes_and_values, query_join_operator)
+  def prepare_search_query(multilingual_attributes_and_values, normal_attributes_and_values, facet_attributes_and_values, query_join_operator)
     attributes = []
     languages = ["en", "ge", "ar", "fr", "it", "ud"]
     multilingual_query = ''
     normal_query = ''
+    facet_query = ''
+    query = ''
 
     unless multilingual_attributes_and_values.empty?
       multilingual_attributes_and_values.each do |key, value_arr|
@@ -179,16 +192,41 @@ module BooksHelper
        field_query = "(" + "#{key}:#{values}" + ")"
        normal_query += normal_query == '' ? field_query : " #{query_join_operator} #{field_query}"
     end
-
-    if multilingual_query != '' && normal_query != ''
-      query = multilingual_query + "#{query_join_operator}" + normal_query
-    elsif multilingual_query != '' && normal_query == ''
-      query = multilingual_query
-    elsif multilingual_query == '' && normal_query != ''
-      query = normal_query
-    else
-      query = ''
+    
+    facet_attributes_and_values.each do |key, value_arr|
+       field_query = '('
+       tmp_array = []
+       value_arr.each do |item|
+         tmp_array << "\"" + item.to_s + "\""
+       end
+       values = "(" + tmp_array.join(" OR ") + ")"
+       field_query = "(" + "#{key}:#{values}" + ")"
+       facet_query += facet_query == '' ? field_query : " #{query_join_operator} #{field_query}"
     end
+    
+    if multilingual_query != ''
+      query += query == '' ? multilingual_query : "#{query_join_operator}" + multilingual_query
+    end
+    
+    if normal_query != ''
+      query += query == '' ? normal_query : "#{query_join_operator}" + normal_query
+    end
+    
+    if facet_query != ''
+      query += query == '' ? facet_query : "#{query_join_operator}" + facet_query
+    end
+    query
+    
+
+    # if multilingual_query != '' && normal_query != '' && facet_query != ''
+      # query = multilingual_query + "#{query_join_operator}" + normal_query + "#{query_join_operator}" + facet_query
+    # elsif multilingual_query != '' && normal_query == '' && facet_query == ''
+      # query = multilingual_query
+    # elsif multilingual_query == '' && normal_query != '' && 
+      # query = normal_query
+    # else
+      # query = ''
+    # end
   end
 
   def get_multilingual_attributes(query_array)
@@ -206,6 +244,16 @@ module BooksHelper
     normal_attributes[:location_search] = query_array['location'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['location']
     normal_attributes[:language_auto] = query_array['language'].empty? ? (query_array['all'].empty? ? nil : query_array['all']) : query_array['language']
     normal_attributes.delete_if { |key, value| value.blank? }
+  end
+  
+  def get_facet_attributes(query_array)
+    facet_attributes = { }
+    facet_attributes[:location_facet] = query_array['location_facet'].empty? ? nil : query_array['location_facet']
+    facet_attributes[:author_facet] = query_array['author_facet'].empty? ? nil : query_array['author_facet']
+    facet_attributes[:language_facet] = query_array['language_facet'].empty? ? nil : query_array['language_facet']
+    facet_attributes[:subject_facet] = query_array['subject_facet'].empty? ? nil : query_array['subject_facet']
+    facet_attributes[:publisher_facet] = query_array['publisher_facet'].empty? ? nil : query_array['publisher_facet']
+    facet_attributes.delete_if { |key, value| value.blank? }
   end
 
 
