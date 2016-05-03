@@ -1,0 +1,1 @@
+$(document).ready(function(){$(".starsidelink_white").jRating({isDisabled:!0,bigStarsPath:"/assets/images_en/stars_white.png"})});

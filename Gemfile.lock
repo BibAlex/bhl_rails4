@@ -336,6 +336,7 @@ DEPENDENCIES
   selenium-webdriver
   shoulda-matchers
   social-share-button (~> 0.1.8)!
+  sprockets-rails
   thin
   turbolinks
   uglifier

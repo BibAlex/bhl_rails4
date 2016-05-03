@@ -32,6 +32,12 @@ module SolrHelper
     response
   end
   
+  def load_top_books(sort_type)
+    solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
+    response = solr.find  'q' => "*:*", 'sort' => sort_type, 'start' => 0, 'rows' => MOST_VIEWED_BOOKS
+    response
+  end
+  
   def get_sci_names_of_volumes(job_ids, query = nil, fquery = nil, not_all_categories_query = nil)
     if query && fquery
       all_query = not_all_categories_query ? "job_id:#{job_ids}" + " AND " + fquery + " AND _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json : 
@@ -67,6 +73,24 @@ module SolrHelper
       end
     end
     { sci_names: sci_names, highlights: highlights }
+  end
+  
+  def get_sci_names_of_volumes_without_highlight(job_ids)
+    all_query = "job_id:#{job_ids}" 
+    rsolr = RSolr.connect url: SOLR_NAMES_FOUND
+    response = rsolr.find 'q' => all_query, 'fl' => 'job_id,sci_name', 'rows' => 1000000
+    sci_names = {}
+    
+    if response["response"]["numFound"] > 0
+      response["response"]["docs"].each do |doc|
+        if sci_names.has_key?(doc[:job_id])
+          sci_names[doc[:job_id]] << doc[:sci_name]
+        else
+          sci_names[doc[:job_id]] = [doc[:sci_name]]
+        end        
+      end
+    end    
+    sci_names
   end
   
   
