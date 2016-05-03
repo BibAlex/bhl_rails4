@@ -1,0 +1,1 @@
+function get_carousel(e,c,u){$.ajax({url:e+"&job_id="+c+"&type="+u,type:"GET",success:function(e){$("#"+u+"_carousel").html(e)}})}function load_carousel(e,c){$.ajax({url:"/carousel/get_carousel?job_id="+e+"&type="+c+"&page=1",type:"GET",success:function(e){$("#"+c+"_carousel").html(e)}})}

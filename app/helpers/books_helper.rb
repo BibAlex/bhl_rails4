@@ -34,6 +34,11 @@ module BooksHelper
     
     process_solr_volumes(response, query, page, limit, fquery, not_all_categories_query)
   end
+  
+  def get_top_books(sort_type)
+    response = load_top_books(sort_type)
+    process_top_books(response)
+  end
 
   def fill_response_array(arr)
     arr.slice 0, MAX_NAMES_PER_BOOK
@@ -439,6 +444,32 @@ module BooksHelper
         # return lang
       end
     end    
+  end
+  
+  def process_top_books(solr_response)
+    volumes = []
+    all_sci_names = {}
+    if solr_response["response"]["numFound"] > 0
+      
+      job_ids = []
+      solr_response["response"]["docs"].each do |doc|
+        job_ids << doc[:job_id]
+      end
+      
+      all_sci_names = get_sci_names_of_volumes_without_highlight("(#{job_ids.join(" OR ")})")
+
+      solr_response["response"]["docs"].each do |doc|
+        tmp = all_sci_names[doc[:job_id]]
+        sci_names = tmp.nil? ? [] : tmp
+        languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it" }
+        lang = (!doc["language_facet"].blank? && languages.has_key?(doc["language_facet"][0])) ? languages[doc["language_facet"][0]] : "ud"
+        options = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
+                    rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
+                    language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
+        volumes << options
+      end
+    end
+    { volumes: volumes }
   end
 
   def handle_mods_format(id)

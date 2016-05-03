@@ -1,0 +1,1 @@
+function confirmDeleteCollectionphoto(e){var o=confirm("Are you sure you want to delete collection photo?");return o?void $.ajax({url:"/get_or_delete_collection_photo?id="+e+"&is_delete=1",type:"GET",success:function(e){$("#photo").html(e)}}):($("#delete_photo").removeAttr("checked"),!1)}

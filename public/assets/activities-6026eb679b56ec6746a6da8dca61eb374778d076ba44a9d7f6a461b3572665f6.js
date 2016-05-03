@@ -1,0 +1,1 @@
+function filter_activities(i,t){window.location=window.location.href.split("?")[0]+"?filter="+i+"&sort="+t}
