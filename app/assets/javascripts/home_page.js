@@ -1,8 +1,6 @@
 $(document).ready(function($) {
 	moveItems(2,"homeactivitylog");
 	
-	$('.tooltipname').tooltipster({ interactive: true, fixedWidth: 280});
-	
 	$("#top_rated").click(function() {
       $.ajax({
         url: "pages/top_rated_books",
