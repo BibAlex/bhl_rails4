@@ -44,54 +44,14 @@ module BooksHelper
     arr.slice 0, MAX_NAMES_PER_BOOK
   end
 
-  def get_names_info(sci_names)
-   sci_names_info = []
-    sci_names.each do |sci_name|
-      target_name = sci_name.sub("<span class=\"highlight\">", "")
-      target_name = target_name.sub("</span>", "")
-      info = get_name_info(target_name)
-      info[:sci_name] = sci_name
-     sci_names_info <<  info unless info.nil?
-    end
-    sci_names_info
+  def get_names_info(sci_name)
+    target_name = sci_name.sub("<span class=\"highlight\">", "")
+    target_name = target_name.sub("</span>", "")
+    info = get_name_info(target_name)
+    info[:sci_name] = sci_name
+    info    
   end
-
-  def name_tip (job_id, string, eol_thumb, eol_page_id, name_found)
-    title_tip = ''
-    if eol_thumb
-      thumb = ATTACHMENTS_URL + THUMB_FOLDER + eol_thumb
-      title_tip = "<div style='float:left'>
-                    <img style='height:100px' src='#{thumb}'></img>
-                   </div>"
-    end
-    title_tip += "<div style='float:left'>
-                    <span >#{string}</span>
-                    <ul>
-                      <li><a href='../books/#{job_id}?tab=read&search_name=#{name_found}'>
-                        #{I18n.t('common.find_in_book')}
-                      </a></li>"
-    if eol_page_id != nil && eol_page_id > -1
-      title_tip += "<li><a href='http://eol.org/pages/#{eol_page_id}'>
-                          #{I18n.t('common.view_in_eol')}
-                        </a></li>"
-    end
-    title_tip += "<li><a href='../books?_name=#{string}'>
-                        #{I18n.t('common.books_with_name')}
-                      </a></li>
-                    </ul>
-                  </div>"
-    title_tip
-  end
-
-  def book_names_more_open_div(vol_jobid, sci_names_count)
-    more_names = ''
-    if sci_names_count > MAX_NAMES_PER_BOOK
-      count =
-      more_names = I18n.t('common.and_count_more', count: (sci_names_count - MAX_NAMES_PER_BOOK))
-    end
-    "<a href = '#' data-toggle='modal' data-target ='#morenamesdiv_#{vol_jobid}'>#{more_names}</a>".html_safe
-  end
-
+  
   def fill_query_array(params)
     search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_all",
                                                   "_location_facet", "_author_facet", "_language_facet", "_subject_facet",
@@ -341,10 +301,11 @@ module BooksHelper
   def load_volume_with_names_from_solr(job_id)
     volume = load_volume_without_names_from_solr(job_id)
     if !volume.blank?
-      all_sci_names_with_facets = get_sci_names_of_volumes("#{job_id}")
-      tmp = all_sci_names_with_facets[:sci_names][job_id.to_i]
+      all_sci_names_with_facets = get_sci_names_of_volume_with_highlights("#{job_id}")
+      tmp = all_sci_names_with_facets[:sci_names]
       sci_names = tmp.nil? ? [] : tmp
       volume[:sci_names] = sci_names
+      volume[:sci_names_count] = all_sci_names_with_facets[:names_count]
     end
     volume
   end
@@ -369,27 +330,16 @@ module BooksHelper
     volumes = []
     highlights = {}
     facet_fields = {}
-    sci_names = {}
-    all_sci_names_highlights = {}
-    if solr_response["response"]["numFound"] > 0
-      
-      job_ids = "("
-      solr_response["response"]["docs"].each do |doc|
-        volume_sci_names_with_highlight = get_sci_names_of_volumes("#{doc[:job_id]}", query, fquery, not_all_categories_query)
-        sci_names[doc[:job_id]] = volume_sci_names_with_highlight[:sci_names][doc[:job_id]]
-        all_sci_names_highlights["#{doc[:job_id]}"] = volume_sci_names_with_highlight[:highlights]["#{doc[:job_id]}"]
-      end
-      all_sci_names = { sci_names: sci_names }
+    if solr_response["response"]["numFound"] > 0      
       sci_names_facets = get_sci_names_with_facet(query, page, limit, fquery, not_all_categories_query)
-
       solr_response["response"]["docs"].each do |doc|
-        tmp = all_sci_names[:sci_names][doc[:job_id]]
-        sci_names = tmp.nil? ? [] : tmp
+        volume_sci_names_with_highlight = get_sci_names_of_volume_with_highlights("#{doc[:job_id]}", query, fquery, not_all_categories_query, true)
         languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it" }
         lang = (!doc["language_facet"].blank? && languages.has_key?(doc["language_facet"][0])) ? languages[doc["language_facet"][0]] : "ud"
         options = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
                     rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
-                    language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
+                    language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"],
+                    sci_names: volume_sci_names_with_highlight[:sci_names], sci_names_count: volume_sci_names_with_highlight[:names_count] }
         volumes << options
       end
 
@@ -423,13 +373,9 @@ module BooksHelper
           volume_author ||= item[1]["author_#{lang}"]
           volume_subject ||= item[1]["subject_#{lang}"]
         end
-        # sci_names_highlights = sci_names_facets[:highlights].nil? ? [] : (sci_names_facets[:highlights]["#{item[0]}"].nil? ? [] : sci_names_facets[:highlights]["#{item[0]}"])
-        sci_names_highlights = all_sci_names_highlights["#{item[0].to_i}"]
-        # sci_names_highlights = []
         options = { title: volume_title,
                     author: volume_author,
-                    subject: volume_subject,
-                    sci_names: sci_names_highlights }
+                    subject: volume_subject }
         highlights["#{item[0]}"] = options
       end
     end
@@ -450,22 +396,14 @@ module BooksHelper
     volumes = []
     all_sci_names = {}
     if solr_response["response"]["numFound"] > 0
-      
-      job_ids = []
       solr_response["response"]["docs"].each do |doc|
-        job_ids << doc[:job_id]
-      end
-      
-      all_sci_names = get_sci_names_of_volumes_without_highlight("(#{job_ids.join(" OR ")})")
-
-      solr_response["response"]["docs"].each do |doc|
-        tmp = all_sci_names[doc[:job_id]]
-        sci_names = tmp.nil? ? [] : tmp
+        volume_sci_names_with_count = get_sci_names_of_volume_with_highlights("#{doc[:job_id]}")        
         languages = { "English" => "en", "German" => "ge", "Arabic" => "ar", "French" => "fr", "Italian" => "it" }
         lang = (!doc["language_facet"].blank? && languages.has_key?(doc["language_facet"][0])) ? languages[doc["language_facet"][0]] : "ud"
         options = { title: doc["title_#{lang}"], author: doc["author_#{lang}"], subject: doc["subject_#{lang}"],
                     rate: doc["rate"], views: doc["views"], job_id: doc["job_id"], date: doc["date"],
-                    language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"], sci_names: sci_names }
+                    language: doc["language_facet"], location: doc["location_search"], publisher: doc["publisher_#{lang}"],
+                    sci_names: volume_sci_names_with_count[:sci_names], sci_names_count: volume_sci_names_with_count[:names_count] }
         volumes << options
       end
     end

@@ -1,0 +1,19 @@
+%div{:style => "float:left"}
+  %span 
+    = sci_name
+  %ul
+    %li
+      %a{:href => "/books/#{job_id}?tab=read&search_name=#{name_found}"}
+        = I18n.t('common.find_in_book')            
+    %li
+      %a{:href => "/books?_name=#{sci_name}"}
+        = I18n.t('common.books_with_name')
+    
+- if thumb
+  %div{:style => "float:left"}
+    %img{:src => thumb, :style => "height:100px"}    
+    
+- if eol_url
+  %li
+    %a{:href => "http://eol.org/pages/#{eol_url}"}
+      = I18n.t('common.view_in_eol')

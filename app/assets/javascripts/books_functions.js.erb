@@ -1,8 +1,5 @@
 $(document).ready(function() {
     autocomplete();
-    if( $('.tooltipname').length > 0 ){
-      $('.tooltipname').tooltipster({ interactive: true, fixedWidth: 280});
-    }
   });
 
 function searchfnc(search_select, field){
@@ -96,4 +93,19 @@ function loadformats(format){
       content = content.replace(/\s/g, " &nbsp;");  // to display xml indentation
     $("#modallabel").html(format);
     $("#modalcontent").html(content);
+}
+
+function load_sci_name_info(sci_name, job_id, index)
+{
+	$.ajax({
+        url: "/books/sci_name_info?job_id=" + job_id + "&sci_name=" + sci_name,
+        type: "GET",        
+        success: function (data) {
+          $("#name_tip_" + job_id + "_" + index).tooltipster({
+          	content: data,
+          	interactive: true,
+          	fixedWidth: 280
+          }); 
+        }
+      });
 }

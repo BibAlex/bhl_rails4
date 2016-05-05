@@ -79,6 +79,7 @@ BhlRails4::Application.routes.draw do
     resources :books, only: [:index, :show] do
       collection do
         get 'autocomplete'
+        get 'sci_name_info'
       end
     end
 

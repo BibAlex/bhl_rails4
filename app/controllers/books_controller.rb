@@ -48,6 +48,20 @@ class BooksController < ApplicationController
     end
 
   end
+  
+  def sci_name_info
+    name_tooltip = ''
+    if params[:sci_name] && params[:job_id]
+      item = get_names_info(params[:sci_name])
+      name_found= get_name_in_book(params[:sci_name], params[:job_id])
+      respond_to do |format|
+        format.html { render partial: "books/sci_name_tooltip",
+                             locals: { thumb: item[:thumb], sci_name: params[:sci_name],
+                             name_found: name_found, job_id: params[:job_id],
+                             eol_url: item[:eol_url] } }
+      end
+    end
+  end
 
   private
 

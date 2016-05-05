@@ -15,8 +15,9 @@
         = render partial: "books/book_multi_valued_field", locals: { book_multi_valued_field: doc[:subject], title: I18n.t('common.genre'), highlighted_field: highlighted_item[:subject] }
       - if doc[:sci_names].count > 0
         - names = highlighted_item[:sci_names].blank? ?  fill_response_array(doc[:sci_names]) : fill_response_array(highlighted_item[:sci_names])
-        = render partial: "books/book_names", locals: { sci_names: doc[:sci_names], id: doc[:job_id], 
-                                                        sci_names_info: get_names_info(names), names: names, display_title: true }
+        = render partial: "books/book_names", locals: { sci_names: doc[:sci_names], id: doc[:job_id],
+                                                        sci_names_count: doc[:sci_names_count],
+                                                        names: names, display_title: true }
   .col-xs-4.controls
     = render partial: "books/sidelinks", locals: { id: doc[:job_id], rate: doc[:rate], views: doc[:views] }
   .row.clearfix
