@@ -22,13 +22,16 @@ module SolrHelper
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
     if fquery == "*:*"
       all_query = query
+      query_options = { 'q' => all_query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
+                        'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4",}
     else
       all_query = not_all_categories_query ? "#{query} AND _query_:\"{!join from=job_id to=job_id fromIndex=names_found}#{fquery}\"" :
                                              "#{query} OR _query_:\"{!join from=job_id to=job_id fromIndex=names_found}#{fquery}\""
+      query_options = { 'q' => all_query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
+                        'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4",
+                        'hl' => true, 'hl.fl' => highligh_array, 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true }
     end
-    response = solr.find  'q' => all_query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
-                          'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4",
-                          'hl' => true, 'hl.fl' => highligh_array, 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true
+    response = solr.find  query_options
     response
   end
   
@@ -36,63 +39,51 @@ module SolrHelper
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
     response = solr.find  'q' => "*:*", 'sort' => sort_type, 'start' => 0, 'rows' => MOST_VIEWED_BOOKS
     response
-  end
+  end  
   
-  def get_sci_names_of_volumes(job_ids, query = nil, fquery = nil, not_all_categories_query = nil)
-    if query && fquery
-      all_query = not_all_categories_query ? "job_id:#{job_ids}" + " AND " + fquery + " AND _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json : 
-                                             "job_id:#{job_ids}" + " AND " + fquery + " OR _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json
-    else
-      all_query = "job_id:#{job_ids}"                           
+  def get_sci_names_of_volume_with_highlights(job_id, query = nil, fquery = nil, not_all_categories_query = nil, perform_highlight = false)
+    # if query && fquery
+      # all_query = not_all_categories_query ? "job_id:#{job_id}" + " AND " + fquery + " AND _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json : 
+                                             # "job_id:#{job_id}" + " AND " + fquery + " OR _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json
+    # else
+      # all_query = "job_id:#{job_id}"                        
+    # end
+    all_query = "job_id:#{job_id}"   
+    query_options = { 'q' => all_query, 'rows' => 1, 'facet' => true, 'facet.field' => "sci_name", 'facet.limit' => 5 }
+    if perform_highlight
+      query_options.merge!('hl' => true, 'hl.fl' => "sci_name", 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true)
     end
-    
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => all_query, 'fl' => 'job_id,sci_name', 'rows' => 1000000, 
-                          'facet' => true, 'facet.field' => "sci_name",
-                          'hl' => true, 'hl.fl' => "sci_name", 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true
-    sci_names = {}
-    
-    if response["response"]["numFound"] > 0
-      response["response"]["docs"].each do |doc|
-        if sci_names.has_key?(doc[:job_id])
-          sci_names[doc[:job_id]] << doc[:sci_name]
-        else
-          sci_names[doc[:job_id]] = [doc[:sci_name]]
-        end        
-      end
-    end
-    
-    highlights = {}
+    response = rsolr.find query_options
+
+    items  = []
+    response.facets.first.items.each do |item|
+      items << item.value if item.hits > 0
+    end  
+
     unless response["highlighting"].nil?
       response["highlighting"].each do |item|
-        job_id = get_job_id_of_name_found(item[0])
-        unless job_id.nil?
-          highlights["#{job_id}"] = [] if highlights["#{job_id}"].nil?
-          highlights["#{job_id}"] << item[1]["sci_name"][0] if item[1]["sci_name"] && !(highlights["#{job_id}"].include?(item[1]["sci_name"][0]))
+        if item[1]["sci_name"]
+          tmp = item[1]["sci_name"][0]     
+          target_name = tmp.sub("<span class=\"highlight\">", "")
+          target_name = target_name.sub("</span>", "")
+          found = false
+          items.each do |name|
+            if name.include? tmp
+              found = true
+            elsif (name.include? target_name) && !(name.include? tmp)
+              name.gsub!(target_name, tmp)
+              found = true
+            end     
+          end
+          if found == false
+            items << tmp
+          end          
         end
       end
     end
-    { sci_names: sci_names, highlights: highlights }
-  end
-  
-  def get_sci_names_of_volumes_without_highlight(job_ids)
-    all_query = "job_id:#{job_ids}" 
-    rsolr = RSolr.connect url: SOLR_NAMES_FOUND
-    response = rsolr.find 'q' => all_query, 'fl' => 'job_id,sci_name', 'rows' => 1000000
-    sci_names = {}
-    
-    if response["response"]["numFound"] > 0
-      response["response"]["docs"].each do |doc|
-        if sci_names.has_key?(doc[:job_id])
-          sci_names[doc[:job_id]] << doc[:sci_name]
-        else
-          sci_names[doc[:job_id]] = [doc[:sci_name]]
-        end        
-      end
-    end    
-    sci_names
-  end
-  
+    { sci_names: items, names_count: response["response"]["numFound"]  }
+  end  
   
   def get_sci_names_with_facet(query, page, limit, fquery, not_all_categories_query)
     all_query = not_all_categories_query ? fquery + " AND _query_:" + "{!join from=job_id to=job_id fromIndex=books_metadata}#{query}".to_json : 
@@ -100,23 +91,12 @@ module SolrHelper
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
     response = rsolr.find 'q' => all_query,
                           'fl' => 'job_id', 
-                          'facet' => true, 'facet.field' => "sci_name", 'facet.limit' => 4,
-                          'hl' => true, 'hl.fl' => "sci_name", 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true  
+                          'facet' => true, 'facet.field' => "sci_name", 'facet.limit' => FACET_COUNT
     items  = []
-    response.facets.first.items.first(FACET_COUNT).each do |item|
+    response.facets.first.items.each do |item|
       items << { field_value: item.value, hits: item.hits }
     end
-    highlights = {}
-    unless response["highlighting"].nil?
-      response["highlighting"].each do |item|
-        job_id = get_job_id_of_name_found(item[0])
-        unless job_id.nil?
-          highlights["#{job_id}"] = [] if highlights["#{job_id}"].nil?
-          highlights["#{job_id}"] << item[1]["sci_name"][0] if item[1]["sci_name"]
-        end
-      end
-    end
-    { facets: items, highlights: highlights }
+    { facets: items }
   end
   
   def get_job_id_of_name_found(id)

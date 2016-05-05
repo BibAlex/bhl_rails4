@@ -47,4 +47,5 @@
         %dd
           - names = fill_response_array(@volume[:sci_names])
           = render partial: "books/book_names", locals: { sci_names: @volume[:sci_names], id: @volume[:job_id], 
-                                                          sci_names_info: get_names_info(names), names: names, display_title: false }
+                                                          names: names, display_title: false,
+                                                          sci_names_count: @volume[:sci_names_count] }
