@@ -22,7 +22,7 @@
       = carousel_title
     %ul.list-group
       - items.each do |item|
-        %li.list-group-item
+        %li.list-group-item            
           - title = params[:type] == "related" ? item[:title].first : item[:title]
           = link_to title, { controller: controller, action: action, id: item[:id] || item[:job_id] }
 
