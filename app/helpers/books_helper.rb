@@ -286,15 +286,15 @@ module BooksHelper
     volume = load_volume_with_names_from_solr(params[:job_id])
 
     query_array = { 'all' => [], 'title'=> volume[:title], 'language'=> [], 'location'=> [], 'author'=> [], 'name'=> volume[:sci_names],
-                    'subject'=> [], 'content' => [], 'publisher' => [] }
+                    'subject'=> [], 'content' => [], 'publisher' => [],
+                    'location_facet' => [], 'author_facet' => [],
+                    'language_facet' => [], 'subject_facet' => [],
+                    'publisher_facet' => [], 'name_facet' => [] }
     query = set_query_string(query_array, " OR ")
 
-    query.gsub!("AND", " OR ")
-    query = "( #{query} ) AND NOT job_id:#{params[:job_id]}"
-    result = search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "")
-    #result[:volumes].each do |item|
-    #  result[:volumes].delete(item) if item[:job_id] == params[:job_id].to_i
-    #end
+    query = "(( #{query} ) AND (NOT job_id:#{params[:job_id]}))"
+    fquery = set_fquery_string(query_array)
+    result = search_volumes(query, params[:page].to_i, LIMIT_CAROUSEL, "", fquery, false)
     result
   end
 

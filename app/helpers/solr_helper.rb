@@ -22,8 +22,14 @@ module SolrHelper
     solr = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
     if fquery == "*:*"
       all_query = query
-      query_options = { 'q' => all_query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
-                        'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4",}
+      if query == "*:*"
+        query_options = { 'q' => all_query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
+                          'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4",}
+      else
+          query_options = { 'q' => all_query, 'sort' => sort_type, 'facet' => true, 'start' =>  start, 'rows' => limit,
+                          'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4",
+                          'hl' => true, 'hl.fl' => highligh_array, 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true }
+      end
     else
       all_query = not_all_categories_query ? "#{query} AND _query_:\"{!join from=job_id to=job_id fromIndex=names_found}#{fquery}\"" :
                                              "#{query} OR _query_:\"{!join from=job_id to=job_id fromIndex=names_found}#{fquery}\""
@@ -31,6 +37,7 @@ module SolrHelper
                         'facet.field' => facet_array, 'facet.mincount' => "1", 'facet.limit' => "4",
                         'hl' => true, 'hl.fl' => highligh_array, 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true }
     end
+    
     response = solr.find  query_options
     response
   end
@@ -48,11 +55,11 @@ module SolrHelper
     # else
       # all_query = "job_id:#{job_id}"                        
     # end
-    all_query = "job_id:#{job_id}"   
+    all_query = "job_id:#{job_id}"
     query_options = { 'q' => all_query, 'rows' => 1, 'facet' => true, 'facet.field' => "sci_name", 'facet.limit' => 5 }
-    if perform_highlight
-      query_options.merge!('hl' => true, 'hl.fl' => "sci_name", 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true)
-    end
+    # if perform_highlight
+      # query_options.merge!('hl' => true, 'hl.fl' => "sci_name", 'hl.simple.pre' => HLPRE, 'hl.simple.post'=> HLPOST, 'hl.requireFieldMatch'=> true)
+    # end
     rsolr = RSolr.connect url: SOLR_NAMES_FOUND
     response = rsolr.find query_options
 
@@ -61,27 +68,27 @@ module SolrHelper
       items << item.value if item.hits > 0
     end  
 
-    unless response["highlighting"].nil?
-      response["highlighting"].each do |item|
-        if item[1]["sci_name"]
-          tmp = item[1]["sci_name"][0]     
-          target_name = tmp.sub("<span class=\"highlight\">", "")
-          target_name = target_name.sub("</span>", "")
-          found = false
-          items.each do |name|
-            if name.include? tmp
-              found = true
-            elsif (name.include? target_name) && !(name.include? tmp)
-              name.gsub!(target_name, tmp)
-              found = true
-            end     
-          end
-          if found == false
-            items << tmp
-          end          
-        end
-      end
-    end
+    # unless response["highlighting"].nil?
+      # response["highlighting"].each do |item|
+        # if item[1]["sci_name"]
+          # tmp = item[1]["sci_name"][0]     
+          # target_name = tmp.sub("<span class=\"highlight\">", "")
+          # target_name = target_name.sub("</span>", "")
+          # found = false
+          # items.each do |name|
+            # if name.include? tmp
+              # found = true
+            # elsif (name.include? target_name) && !(name.include? tmp)
+              # name.gsub!(target_name, tmp)
+              # found = true
+            # end     
+          # end
+          # if found == false
+            # items << tmp
+          # end          
+        # end
+      # end
+    # end
     { sci_names: items, names_count: response["response"]["numFound"]  }
   end  
   
