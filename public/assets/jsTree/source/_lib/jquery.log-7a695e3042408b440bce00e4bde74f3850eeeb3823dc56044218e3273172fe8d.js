@@ -1,0 +1,1 @@
+!function(o){jQuery.fn.log=function(o){return window.console&&console?((window.console||console.firebug)&&(o=o||"",""!==o&&(o+=": "),console.log("%s%o",o,this)),this):void 0},o.extend({log:function(o){window.console&&console&&(window.console||console.firebug)&&console.log("%s",o)}})}(jQuery);

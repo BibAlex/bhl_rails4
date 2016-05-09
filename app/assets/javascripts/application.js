@@ -10,7 +10,20 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
-//= require jquery_ujs
-//= require turbolinks
-//= require_tree .
+//= require ./jquery/jquery.min
+//= require bootstrap.min
+//= require scripts
+//= require ./jquery/jquery.ui.core
+//= require ./jquery/jquery.ui.widget
+//= require ./jquery/jquery.ui.position
+//= require ./jquery/jquery.ui.menu
+//= require ./jquery/jquery.ui.autocomplete
+//= require social_share
+
+//= require ./jquery/jquery.tooltipster.min
+//= require ./jquery/rating/jRating.jquery
+
+
+//= require ./3dcovers/modernizr.custom
+//= require ./3dcovers/book
+//= require_tree ./site_related
