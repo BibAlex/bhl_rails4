@@ -51,7 +51,7 @@ RSpec.describe GeographicsController, type: :controller do
     end
     it "specifies a default range if no range is passed" do
       get :index
-      expect(assigns[:range]).to eq("10,20,30,40,50")
+      expect(assigns[:range]).to eq("100,200,300,400,500")
     end
   end
 

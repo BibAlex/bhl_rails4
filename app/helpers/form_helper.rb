@@ -25,7 +25,7 @@ module FormHelper
         (options[:title] = "#{options[:title].to_s} #{I18n.t('msgs.form_validation_errors_for_attribute_assistive')}").strip!
         errors = errors_for_method(@object, method)
       end
-    
+
       if block_given?
         @template.content_tag(:label, "#{@template.capture(&block)} #{errors.to_s}".html_safe, options)
       else
@@ -35,7 +35,7 @@ module FormHelper
 
     # tags can include :all, :minimal (default) or a comma separated string of tags
     def allowed_html_help_tip(tags = :minimal)
-      return nil
+      #return nil
       tags = "p, em, strong, a, ul, ol, li" if tags.to_sym == :minimal
       tags = "p, em, strong, a, ul, ol, li, table, tr, td" if tags.to_sym == :all
       return I18n.t(:allowed_html_tags, :comma_separated_tags => tags)
