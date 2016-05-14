@@ -1,12 +1,7 @@
 :javascript
   var loginApp = angular.module('loginApp', []);
   loginApp.controller('loginValidate', function($scope) {
-    $scope.validateForm = function() {
-      alert($scope);
-      alert($scope.username);
-      alert($scope.loginForm.$invalid);
-      return false;
-    }
+
   });
 
 :css
@@ -19,8 +14,9 @@
         = I18n.t('common.login')
       .form-horizontal
         = form_for :user, url: validate_users_path, builder: FormHelper::BHLFormBuilder,
-                    "ng-controller": "loginValidate",
-                    html: { name: "loginForm", "novalidate" => "novalidate" } do |f|
+                    html: { name: "loginForm",
+                            "novalidate" => "novalidate",
+                            "ng-controller": "loginValidate"} do |f|
           - unless session[:return_to].blank?
             = f.hidden_field :return_to, value: session[:return_to]
           .form-group
@@ -28,26 +24,21 @@
             .col-sm-10
               = f.text_field :username, class: "required form-control",
                              "ng-model": "username", :required => true, :placeholder => I18n.t('common.username')
-              %span{class: "invisible_error_msg", "ng-show": "loginForm['user[username]'].$invalid && loginForm.$submitted".html_safe}
-                = "#{I18n.t('msgs.empty_user_name_error')}"
           .form-group
             = f.label I18n.t('common.password'), class: 'col-sm-2 control-label'
             .col-sm-10
               = f.password_field :password, type: "password", class: "required form-control" ,
                                  "ng-model": "password", :required => true, :placeholder => I18n.t('common.password')
-              %span{class: "invisible_error_msg", "ng-show": "loginForm['user[password]'].$invalid && loginForm.$submitted".html_safe}
-                = "#{I18n.t('msgs.empty_password_error')}"
           - if @verify_captcha
             .form-group
               = f.label :recaptcha, I18n.t('common.recaptcha'), class: 'required col-sm-2 control-label'
               .col-sm-10
-                .invisible_error_msg#captcha_error
-                  = "#{I18n.t('msgs.empty_verfication_error')}"
                 = recaptcha_tags(display: {theme: 'clean'})
           .form-group
             .col-sm-2
             .col-sm-10
-              = f.submit I18n.t('common.login'), class: "btn btn-default", id: "submit", "ng-click" => "validateForm"
+              = f.submit I18n.t('common.login'), class: "btn btn-default", id: "submit",
+                         "ng-disabled": "loginForm.$invalid"
         %hr
           %div
             = link_to I18n.t('common.forgot_password_link'), forgot_password_users_path
