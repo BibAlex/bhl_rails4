@@ -14,9 +14,9 @@ class Rate < ActiveRecord::Base
     volume = Volume.find_by_job_id(self.rateable_id)
     collect = Collection.find_by_id(self.rateable_id)
     if volume
-        title =  (Book.find_by_id(volume.book_id)).title
+      title =  (Book.find_by_id(volume.book_id)).title
     elsif collect
-        title = collect.title
+      title = collect.title
     end
     Activity.add_activity({activitable_id: self.rateable_id, action: "rate", user_id: self.user_id, activitable_type: self.rateable_type,
                            value: self.rate, activitable_title: title })
