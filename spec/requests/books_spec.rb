@@ -178,17 +178,6 @@ RSpec.describe "Books", type: :request do
     end
 
     describe "add_book_to_collection" do
-      context "when user is logged in" do
-        it "displays a link for add book to collection", :js => true do
-          user = FactoryGirl.create(:user, password: User.hash_password('password'), active: true)
-          visit("/users/login")
-          fill_in "username", :with => "#{user.username}"
-          fill_in "password", :with => "password"
-          find("#submit").click
-          visit book_path(id: 1)
-          expect(page).to have_selector("a", text: I18n.t('common.add_collection'))
-        end
-      end
 
       context "when user is not logged in" do
         it "displays a link for add book to collection" do
