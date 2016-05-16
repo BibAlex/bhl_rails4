@@ -11,12 +11,13 @@ class Rate < ActiveRecord::Base
   scope :user_collection_rates, ->(id) {where(rateable_type: "collection", user_id: id)}
   
   def update_activity
-    volume = Volume.find_by_job_id(self.rateable_id)
-    collect = Collection.find_by_id(self.rateable_id)
-    if volume
-      title =  (Book.find_by_id(volume.book_id)).title
-    elsif collect
-      title = collect.title
+    if rateable_type == "volume"
+      volume = Volume.find_by_job_id(self.rateable_id)
+      book = Book.find_by_id(volume.book_id)
+      title =  book.nil? ? "" : book.title
+    elsif rateable_type == "collection"
+      collection = Collection.find_by_id(self.rateable_id)
+      title =  collection.nil? ? "" : collection.title
     end
     Activity.add_activity({activitable_id: self.rateable_id, action: "rate", user_id: self.user_id, activitable_type: self.rateable_type,
                            value: self.rate, activitable_title: title })
