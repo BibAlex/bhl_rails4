@@ -79,7 +79,7 @@ RSpec.describe Activity, type: :model do
   describe "add_activities" do
       Rails.cache.clear
       let(:user)        {FactoryGirl.create(:user, active: true, username: "user_activity", email: "user_activity@example.com", guid: "activity")}
-      let(:book)        {FactoryGirl.create(:book, title: "new_book")}
+      let(:book)        {FactoryGirl.create(:book)}
       let(:volume)      {FactoryGirl.create(:volume, book_id: book.id)}
       let(:comment)     {FactoryGirl.create(:comment, text: "main_comment")}
       let(:collection)  {FactoryGirl.create(:collection, user_id: user.id, title: "new_collection", is_public: true) }
@@ -110,7 +110,7 @@ RSpec.describe Activity, type: :model do
       volume_rate = FactoryGirl.create(:rate, user_id: user.id , rateable_id: volume.job_id ,rateable_type: "volume", rate: 5)
       expect(Activity.where(activitable_id: volume_rate.rateable_id , action: "rate", activitable_type: "volume").first).to have_attributes(activitable_id: volume_rate.rateable_id, action: "rate",
                                          user_id: volume_rate.user_id, activitable_type: volume_rate.rateable_type, 
-                                         activitable_title: (Book.find_by_id(Volume.find_by_job_id(volume_rate.rateable_id).book_id).title),
+                                         activitable_title: book.title,
                                          value: volume_rate.rate.to_s)
       
     end

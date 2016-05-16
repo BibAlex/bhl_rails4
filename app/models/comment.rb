@@ -17,19 +17,20 @@ class Comment < ActiveRecord::Base
     self.text = sanitize(text.strip, :tags=>[])
   end
 
-  def update_activity
-    volume = Volume.find_by_job_id(self.commentable_id)
-    collect = Collection.find_by_id(self.commentable_id)
-    comment = Comment.find_by_id(self.commentable_id)
-    if volume
-       title =  (Book.find_by_id(volume.book_id)).title
-    elsif collect
-       title = collect.title
-    elsif comment
-       title = comment.text
+  def update_activity    
+    if commentable_type == "volume"
+      volume = Volume.find_by_job_id(self.commentable_id)
+      book = Book.find_by_id(volume.book_id)
+      title =  book.nil? ? "" : book.title
+    elsif commentable_type == "collection"
+      collection = Collection.find_by_id(self.commentable_id)
+      title =  collection.nil? ? "" : collection.title
+    elsif commentable_type == "comment"
+      comment = Comment.find_by_id(self.commentable_id)
+      title = comment.nil? ? "" : comment.text
     end
     Activity.add_activity({ activitable_id: self.commentable_id, action: "comment", user_id: self.user_id,
-                            activitable_type: self.commentable_type, value: self.text, activitable_title: title })
+                            activitable_type: self.commentable_type, value: self.text, activitable_title: title })    
   end
 
   def self.comment_params(params)
