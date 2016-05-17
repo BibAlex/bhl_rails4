@@ -8,7 +8,8 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require_tree ./jquery/themes
+ *= require ./jquery/themes/jquery.ui.all
+ *= require ./jquery/themes/jquery-ui1.10.3-smoothness
  *= require ./jquery/rating/jRating.jquery
  *= require font-awesome
  *= require social_share
