@@ -60,12 +60,12 @@ RSpec.describe "Users", type: :request do
 
       it "displays username field" do
         expect(page).to have_selector("label", text: I18n.t('common.username'))
-        expect(page).to have_field("username")
+        expect(page).to have_field("user[username]")
       end
 
       it "displays password field" do
         expect(page).to have_selector("label", text: I18n.t('common.password'))
-        expect(page).to have_field("password")
+        expect(page).to have_field("user[password]")
       end
 
       it "displays a link for forgot password page" do
@@ -396,8 +396,8 @@ RSpec.describe "Users", type: :request do
           end
 
           it "should redirect to login page" do
-            expect(page).to have_field("username")
-            expect(page).to have_field("password")
+            expect(page).to have_field("user[username]")
+            expect(page).to have_field("user[password]")
           end
         end
 
