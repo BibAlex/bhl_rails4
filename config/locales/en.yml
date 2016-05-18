@@ -231,7 +231,7 @@ en:
     account_already_active: "This is account is already active."
     account_activated: "This account (%{real_name}) is activated. Thank you for joining BHL Egypt."
     upload_photo_ext_error: Allowed extensions (jpg, jpeg, png, gif, bmp)
-    empty_user_name_error: User name can't be empty
+    empty_user_name_error: Username can't be empty
     empty_password_error: Password can't be empty
     empty_password_confirmation_error: Password Confirmation can't be empty
     empty_email_error: Email can't be empty
