@@ -30,8 +30,6 @@ function recaptchaCallback() {
     var appElement = document.querySelector('[ng-app=loginApp]');
     var $scope = angular.element(appElement).scope().$$childHead;
     $scope.$apply(function() {
-        alert($scope);
-        alert($scope.recaptchaError);
         $scope.recaptchaError = false;
     });
 }
