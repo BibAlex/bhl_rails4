@@ -23,7 +23,7 @@ loginApp.controller('loginValidate', function($scope, $window) {
                 recaptchaError = false;
             }
         }
-    }
+    };
 });
 
 function recaptchaCallback() {
