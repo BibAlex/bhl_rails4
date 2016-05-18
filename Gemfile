@@ -42,6 +42,7 @@ gem 'uuidtools'
 gem 'i18n_compare_yaml_files'
 gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :ruby]
 
 
 
