@@ -1,11 +1,8 @@
 .panel.panel-default
   .panel-body
     %h4.alert.alert-success
-      -# = link_to I18n.t('common.book_count', count: @statistics[:books]) , { controller: "books", action: "index" }
-      = I18n.t('common.book_count', count: @statistics[:books])
+      = I18n.t('common.book_count', count: number_with_delimiter(@statistics[:books]))
     %h4.alert.alert-warning
-      = I18n.t('common.author_count', count: @statistics[:authors] )
+      = I18n.t('common.author_count', count: number_with_delimiter(@statistics[:authors]))
     %h4.alert.alert-info
-      -#= link_to I18n.t('common.species_count', count: @statistics[:names]),  { controller: "names", action: "index" }
-      = I18n.t('common.species_count', count: @statistics[:names])
-
+      = I18n.t('common.species_count', count: number_with_delimiter(@statistics[:names]))

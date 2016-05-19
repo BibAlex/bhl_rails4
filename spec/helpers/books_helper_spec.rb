@@ -45,52 +45,52 @@ RSpec.describe BooksHelper, type: :helper do
     
     context "when volumes are sorted by number of views" do
       it "returns top volumes sorted by number of views in DESC order" do
-        expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "views desc")[:volumes].first[:job_id]).to eq(2)
-        expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "views desc")[:volumes].last[:job_id]).to eq(1)
+        expect(get_top_books("views desc")[:volumes].first[:job_id]).to eq(2)
+        expect(get_top_books("views desc")[:volumes].last[:job_id]).to eq(1)
       end
       
       describe "search volume entry" do
         
         it "returns subjects of volume" do
-          expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "views desc")[:volumes].first[:subject]).to eq(["subject_2"])
+          expect(get_top_books("views desc")[:volumes].first[:subject]).to eq(["subject_2"])
         end
         
         it "returns title of volume" do
-          expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "views desc")[:volumes].first[:title]).to eq(["title_2"])
+          expect(get_top_books("views desc")[:volumes].first[:title]).to eq(["title_2"])
         end
         
         it "returns authors of volume" do
-          expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "views desc")[:volumes].first[:author]).to eq(["author_2"])
+          expect(get_top_books("views desc")[:volumes].first[:author]).to eq(["author_2"])
         end
         
         it "returns names of volume" do
-          expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "views desc")[:volumes].first[:sci_names]).to eq(["sci_name_1", "sci_name_2"])
+          expect(get_top_books("views desc")[:volumes].first[:sci_names]).to eq(["sci_name_1", "sci_name_2"])
         end        
       end      
     end
     
     context "when volumes are sorted by rate" do
       it "returns top volumes sorted by number rate in DESC order" do
-        expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "rate desc")[:volumes].first[:job_id]).to eq(1)
-        expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "rate desc")[:volumes].last[:job_id]).to eq(2)
+        expect(get_top_books("rate desc")[:volumes].first[:job_id]).to eq(1)
+        expect(get_top_books("rate desc")[:volumes].last[:job_id]).to eq(2)
       end
       
       describe "search volume entry" do
         
         it "returns subjects of volume" do
-          expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "rate desc")[:volumes].first[:subject]).to eq(["subject_1"])
+          expect(get_top_books("rate desc")[:volumes].first[:subject]).to eq(["subject_1"])
         end
         
         it "returns title of volume" do
-          expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "rate desc")[:volumes].first[:title]).to eq(["title_1"])
+          expect(get_top_books("rate desc")[:volumes].first[:title]).to eq(["title_1"])
         end
         
         it "returns authors of volume" do
-          expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "rate desc")[:volumes].first[:author]).to eq(["author_1"])
+          expect(get_top_books("rate desc")[:volumes].first[:author]).to eq(["author_1"])
         end
         
         it "returns names of volume" do
-          expect(search_volumes("*:*", 1, MOST_VIEWED_BOOKS, "rate desc")[:volumes].first[:sci_names]).to eq(["sci_name_1_1"])
+          expect(get_top_books("rate desc")[:volumes].first[:sci_names]).to eq(["sci_name_1_1"])
         end        
       end      
     end

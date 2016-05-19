@@ -101,6 +101,7 @@ GEM
     faker (1.5.0)
       i18n (~> 0.5)
     ffi (1.9.10)
+    ffi (1.9.10-x64-mingw32)
     formatador (0.2.5)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
@@ -147,6 +148,7 @@ GEM
     minitest (5.8.1)
     multi_json (1.11.2)
     mysql2 (0.3.20)
+    mysql2 (0.3.20-x64-mingw32)
     name-spotter (0.2.4)
       builder
       json
@@ -158,6 +160,8 @@ GEM
     netrc (0.10.3)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
+    nokogiri (1.6.7.2-x64-mingw32)
+      mini_portile2 (~> 2.0.0.rc2)
     notiffany (0.0.8)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -168,6 +172,11 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry (0.10.2-x64-mingw32)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+      win32console (~> 1.3)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -211,6 +220,11 @@ GEM
     rdoc (4.2.0)
     recaptcha (0.4.0)
     rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
+    rest-client (1.8.0-x64-mingw32)
+      ffi (~> 1.9)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
@@ -282,22 +296,27 @@ GEM
       coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    tzinfo-data (1.2016.4)
+      tzinfo (>= 1.0.0)
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
+    unf_ext (0.0.7.1-x64-mingw32)
     unicode_utils (1.4.0)
     unsupervised-language-detection (0.0.6)
     uuidtools (2.1.5)
     websocket (1.2.3)
     will_paginate (3.0.7)
+    win32console (1.3.2)
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
   actionpack-action_caching
@@ -339,6 +358,7 @@ DEPENDENCIES
   sprockets-rails
   thin
   turbolinks
+  tzinfo-data
   uglifier
   uuidtools
   will_paginate
