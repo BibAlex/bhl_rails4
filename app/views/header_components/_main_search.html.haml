@@ -1,36 +1,43 @@
+= javascript_include_tag 'layouts/top_search'
+
 .main-search
   .col-md-5
-    .topsearch
+    .topsearch{'ng-controller': 'topSearch'}
       .input-append
         %span.separator.pull-left.searchicon
           %i.fa.fa-search.fa-lg.pull-left
         .col-xs-5
-          %input.form-control{ id: "headersearchfield", type: "text",  onkeypress: "if(event.keyCode == 13){searchfnc(document.getElementById('headersearchby'), document.getElementById('headersearchfield').value);return false;}"}
-        %span.separator.pull-left 
+          %input.form-control{ id: "headersearchfield",
+                                        type: "text",
+                                        required: true,
+                                        'ng-model': 'searchQuery',
+                                        placeholder: I18n.t('common.search_query'),
+                                        onkeypress: "if(event.keyCode == 13){searchfnc(document.getElementById('headersearchby'), document.getElementById('headersearchfield').value);return false;}"}
+        %span.separator.pull-left
           |
         .btn-group.pull-left
-          %select.width.btn.allcat.text-left#headersearchby
-            %option.text-left{ value: "all" } 
+          %select.width.btn.allcat.text-left{'ng-model': 'searchBy'}
+            %option.text-left{ value: "all" }
               = I18n.t('common.all_categories')
-            %option.text-left{ value: "title", selected: true } 
+            %option.text-left{ value: "title" }
               = I18n.t('common.title')
-            %option.text-left{ value: "language" } 
+            %option.text-left{ value: "language" }
               = I18n.t('common.language')
-            %option.text-left{ value: "location" } 
+            %option.text-left{ value: "location" }
               = I18n.t('common.location')
-            %option.text-left{ value: "author" } 
+            %option.text-left{ value: "author" }
               = I18n.t('common.author')
-            %option.text-left{ value: "name" } 
+            %option.text-left{ value: "name" }
               = I18n.t('common.tagged_species')
-            %option.text-left{ value: "subject" } 
+            %option.text-left{ value: "subject" }
               = I18n.t('common.genre')
-            %option.text-left{ value: "publisher" } 
+            %option.text-left{ value: "publisher" }
               = I18n.t('common.publisher')
-            %option.text-left{ value: "content" } 
+            %option.text-left{ value: "content" }
               = I18n.t('common.content')
-        .clearfix.visible-xs  
-      %span.separator.pull-left 
-        |    
-      %a.go.pull-left.rotate{ href: "#", onclick: "searchfnc(document.getElementById('headersearchby'), document.getElementById('headersearchfield').value); return false;"}
+        .clearfix.visible-xs
+      %span.separator.pull-left
+        |
+      %a.go.pull-left.rotate{ 'ng-click': 'search($event)'}
         %i.fa.fa-arrow-circle-right.fa-2x
       .clearfix

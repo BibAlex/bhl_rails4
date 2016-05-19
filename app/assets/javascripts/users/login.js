@@ -1,6 +1,4 @@
-var recaptchaError = false;
-var loginApp = angular.module('loginApp', []);
-loginApp.controller('loginValidate', function($scope, $window) {
+bhlApp.controller('loginValidate', function($scope, $window) {
     $scope.showErrors = false;
     $scope.recaptchaError = false;
     $scope.validateForm = function(event, loginForm) {
@@ -9,11 +7,7 @@ loginApp.controller('loginValidate', function($scope, $window) {
             event.preventDefault();
         }
         if (!(typeof grecaptcha === 'undefined')) {
-            var recaptchaResponse = grecaptcha.getResponse();
-
-            if (grecaptcha.getResponse() != undefined &&
-                (grecaptcha.getResponse() == null) ||
-                (grecaptcha.getResponse() == '')) {
+            if (grecaptcha.getResponse() != undefined && (grecaptcha.getResponse() == null) || (grecaptcha.getResponse() == '')) {
                 $scope.showErrors = true;
                 $scope.recaptchaError = $window.recaptchaError = true;
                 event.preventDefault();
