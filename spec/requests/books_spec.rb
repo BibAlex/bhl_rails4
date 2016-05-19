@@ -16,10 +16,12 @@ RSpec.describe "Books", type: :request do
       solr_books_core = RSolr::Ext.connect url: SOLR_BOOKS_METADATA
       solr_books_core.delete_by_query('*:*')
       solr_books_core.commit
-      solr_books_core.add({ job_id: 1, language_facet: 'English', bib_id: 'bib_id', title_en: 'title_1', author_en: "author_1", subject_en: "subject_1",
-                            publisher_en: "publisher_1", location_search: "location_1", rate: 5, views: 2 })
-      solr_books_core.add({ job_id: 2, language_facet: 'English', bib_id: 'bib_id_2', title_en: 'title_2', author_en: "author_2", subject_en: "subject_2",
-                            publisher_en: "publisher_2", location_search: "location_2", rate: 3, views: 3 })
+      solr_books_core.add({ job_id: 1, language_facet: 'English', bib_id: 'bib_id', title_en: 'title_1',
+                            author_en: "author_1", subject_en: "subject_1", publisher_en: "publisher_1",
+                            location_search: "location_1", rate: 5, views: 2 })
+      solr_books_core.add({ job_id: 2, language_facet: 'English', bib_id: 'bib_id_2', title_en: 'title_2',
+                            author_en: "author_2", subject_en: "subject_2", publisher_en: "publisher_2",
+                            location_search: "location_2", rate: 3, views: 3 })
       solr_books_core.commit
 
       solr_books_core = RSolr::Ext.connect url: SOLR_SCI_NAMES
@@ -176,17 +178,6 @@ RSpec.describe "Books", type: :request do
     end
 
     describe "add_book_to_collection" do
-      context "when user is logged in" do
-        it "displays a link for add book to collection", :js => true do
-          user = FactoryGirl.create(:user, password: User.hash_password('password'), active: true)
-          visit("/users/login")
-          fill_in "username", :with => "#{user.username}"
-          fill_in "password", :with => "password"
-          find("#submit").click
-          visit book_path(id: 1)
-          expect(page).to have_selector("a", text: I18n.t('common.add_collection'))
-        end
-      end
 
       context "when user is not logged in" do
         it "displays a link for add book to collection" do

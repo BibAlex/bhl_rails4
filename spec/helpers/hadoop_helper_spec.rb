@@ -1,128 +1,316 @@
-require 'rails_helper'
+require 'json'
+require 'tempfile'
 
-RSpec.describe HadoopHelper, type: :helper do
-  describe "Testing Process Mods" do
-    before :all do
-      clean_book_tables
-      load_book_statuses      
-      xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "sample_mods.xml"))
-      mods_xml = Nokogiri::XML(xml_file_path)
-      xml_file_path.close
-      @mods_hash = process_mods(mods_xml.to_s)
-    end
+module HadoopHelper
 
-    it "should ouput the correct metadata" do
-      expect(@mods_hash[:title]).to eq("Indian medicinal plants")
-      expect(@mods_hash[:publisher]).to eq("Sudhindra Nath Basu, P�anin�i office; [etc., etc.]")
-      expect(@mods_hash[:published_at]).to eq("1918")
-      expect(@mods_hash[:edition]).to be_nil
+  def generate_json_book_listing(book_list)
+    json_output = "{\"Books\":["
+    book_list.each do |b|
+      json_output << "\"#{b.bib_id}\","
     end
+    json_output = json_output[0...json_output.length-1] if book_list.count > 0
+    json_output << "]}"
 
-    it "should create and return two authors" do
-      expect(@mods_hash[:authors].count).to eq(2)
-      expect(Author.count).to eq(2)
-    end
-
-    it "should create 2 authors and associate them with the book" do
-      expect(Author.find_by_name("Kirtikar, Kanhoba Ranchoddas, 1849-1917")).not_to be_nil
-      expect(Author.find_by_name("Basu, Baman Das, 1867-1930")).not_to be_nil
-      expect(@mods_hash[:authors]).to include(Author.find_by_name("Kirtikar, Kanhoba Ranchoddas, 1849-1917"))
-      expect(@mods_hash[:authors]).to include(Author.find_by_name("Basu, Baman Das, 1867-1930"))
-    end
-
-    it "should create a location with the name of Bahadurganj, India" do
-      expect(Location.find_by_address("Bahadurganj, India")).not_to be_nil
-      expect(@mods_hash[:locations]).to include(Location.find_by_address("Bahadurganj, India"))
-    end
+    json_output
   end
 
-  describe "Test metadata ingestion details" do
-    before :each do
-      clean_book_tables
-      load_book_statuses
-      load_batch_statuses
-      xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "metadata_single_sample.xml"))
-      mods_xml = Nokogiri::XML(xml_file_path)
-      xml_file_path.close
-      ingest_metadata_from_xml_string(mods_xml.to_s)
-      @book = Book.find_by_bib_id("indianmedicinalp01kirt")
+  def generate_json_volume_pending_content_listing(volume_list)
+    if volume_list.blank?
+      batch_id = ""
+      json_output = "{ \"batch_id\": \"#{batch_id}\", \"Volumes\":["
+    else
+      batch_id = Batch.create(status_id: BatchStatus.pending_content.id).id
+      json_output = "{ \"batch_id\": \"#{batch_id}\", \"Volumes\":["
+      volume_list.each do |volume|
+        volume.update_attributes(status_id: VolumeStatus.pending_content.id, number_of_trials: volume.number_of_trials + 1, batch_id: batch_id)
+        json_output << "\"#{volume.job_id}\","
+      end
+      json_output = json_output[0...json_output.length-1]
     end
-
-    it "should add a book with bib_id=indianmedicinalp01kirt" do
-      expect(@book).not_to be_nil
-    end
-
-    it "should add a book with BIBTex includes title=\"Indian medicinal plants\"," do
-      expect(@book.bibtex).to include("title=\"Indian medicinal plants\",")
-    end
-
-    it "should add a book with EndNote includes %T Indian medicinal plants" do
-      expect(@book.endnote).to include("%T Indian medicinal plants")
-    end
-
-    it "should create a volume with job_id=361720 and associate it with the book" do
-      expect(@book.volumes.count).to eq(1)
-      expect(@book.volumes.first.job_id).to eq(361720)
-    end
+    json_output << "]}"
+    json_output
   end
-  
-  describe "Test mark finished content" do
-    before do
-      load_book_statuses
-      load_batch_statuses
-      load_volume_statuses
-      Book.delete_all
-      Volume.delete_all
-      book = Book.create(book_status_id: BookStatus.finished_metadata.id, bib_id: Faker::Base.numerify('#####-#####'))      
-      batch = Batch.create(status_id: BatchStatus.pending_content.id, id: 1)
-      @volume = Volume.create(book_id: book.id, job_id: 1, batch_id: batch.id, status_id: VolumeStatus.pending_content.id)
-      xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "mark_finished_content.xml"))
-      mods_xml = Nokogiri::XML(xml_file_path)
-      xml_file_path.close
-      mark_finished_content_volumes(mods_xml.to_s)
-    end
 
-    it "should associate finished volumes with batch" do
-      expect(@volume.reload.batch_id).to eq(Batch.first.id)
+  def generate_json_volume_pending_indexing_listing(batch_id_param)
+    if batch_id_param.nil?
+      batch = Batch.where(status_id: BatchStatus.pending_indexing.id)
+      batch_id = batch.empty? ? "" : batch.first.id
+    else
+      batch = Batch.find(batch_id_param)
+      batch_id = batch.id if batch
     end
-  end  
-  
-  describe "Test locations ingestion details" do
-    before do
-      Location.delete_all
-      @location = Location.create(address: "address")
-      xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "locations_sample.xml"))
-      mods_xml = Nokogiri::XML(xml_file_path)
-      xml_file_path.close
-      ingest_locations_from_xml_string(mods_xml.to_s)
+    pending_volumes  = Volume.where("batch_id = ? AND status_id = ? ",batch_id, VolumeStatus.pending_indexing)
+    json_output = "{ \"batchID\": \"#{batch_id}\", \"books\":["
+    pending_volumes.each do |volume|
+      book = Book.find(volume.book_id)
+      languages = []
+      authors = []
+      subjects = []
+      locations = []
+      book.languages.select(:name).each do |lang|
+        languages << "#{lang.name}"
+      end
+      book.authors.select(:name).each do |author|
+        authors << "#{author.name}"
+      end
+      book.subjects.select(:name).each do |subject|
+        subjects << "#{subject.name}"
+      end
+      book.locations.select(:address).each do |location|
+        locations << "#{location.address}"
+      end
+      json_output << "{\"job_id\": #{volume.job_id.to_json},"
+      json_output << "\"bibID\": #{book.bib_id.to_json},"
+      json_output << "\"date\": #{book.published_at.to_json},"
+      json_output << "\"languages\": #{languages},"
+      json_output << "\"titles\": [#{book.title.to_json},#{book.title_alternative.to_json}],"
+      json_output << "\"authors\": #{authors},"
+      json_output << "\"subjects\": #{subjects},"
+      json_output << "\"publishers\": [#{book.publisher.to_json}],"
+      json_output << "\"location_address\": #{locations},"
+      json_output << "\"main_title\": #{book.title.to_json}},"
     end
+    json_output = json_output[0...json_output.length-1] if pending_volumes.count > 0
+    json_output << "]}"
 
-    it "should add coordinates for locations without coordinates" do
-      @location.reload
-      expect(@location.latitude).not_to be_nil
-      expect(@location.longitude).not_to be_nil
-    end
+    json_output
   end
-  
-  describe "Test mark indexed volumes" do
-    before do
-      load_book_statuses
-      load_batch_statuses
-      load_volume_statuses
-      Book.delete_all
-      Volume.delete_all
-      Batch.delete_all
-      book = Book.create(book_status_id: BookStatus.finished_metadata.id, bib_id: Faker::Base.numerify('#####-#####'))
-      @batch = Batch.create(status_id: BatchStatus.pending_indexing.id, id: 1)
-      @volume = Volume.create(book_id: book.id, job_id: 1, batch_id: @batch.id, status_id: VolumeStatus.pending_indexing.id)  
-      xml_file_path = File.open(File.join(Rails.root, "lib", "assets", "sample_indexing.xml"))
-      mods_xml = Nokogiri::XML(xml_file_path)
-      xml_file_path.close
-      mark_finished_indexing(mods_xml.to_s)
+
+  def generate_json_location_listing(locations_list)
+    json_output = "{\"Locations\":["
+    locations_list.each do |location|
+      json_output << "\"#{location.address}\","
+    end
+    json_output = json_output[0...json_output.length-1] if locations_list.count > 0
+    json_output << "]}"
+    json_output
+  end
+
+  def ingest_locations_from_xml_string(xml_content)
+    begin
+      mods_xml = Nokogiri::XML(xml_content)
+    rescue
+      return false
     end
 
-    it "should update batch status" do
-      expect(@batch.reload.status_id).to eq(BatchStatus.indexed.id)
+    mods_xml.xpath("//Geolocations//Location").each do |location_xml|
+      address = location_xml.xpath(".//address").text
+      location = Location.find_or_create_by(address: address)
+      country = Country.find_or_create_by(name: location_xml.xpath(".//country").text)
+      location.country_id = country.id
+      location.latitude = location_xml.xpath(".//latitude").text.to_f
+      location.longitude = location_xml.xpath(".//longitude").text.to_f
+      location.formatted_address = location_xml.xpath(".//formattedAddress").text.to_f
+      location.save
     end
-  end  
+
+    return true
+  end
+
+  def mark_finished_indexing(xml_content)
+    begin
+      data_xml = Nokogiri::XML(xml_content)
+    rescue
+      return false
+    end
+
+    data_xml.xpath("//IndexingFailureList").each do |batch|
+      batch_id = batch.attr("batchID").to_i
+      Batch.find(batch_id).update_attributes(status_id: BatchStatus.indexed.id)
+      failure_list = []
+      data_xml.xpath("//IndexingFailureList//JobID").each do |job_id|
+        failure_list << job_id.text.to_i
+      end
+
+      Volume.where("batch_id = ? AND status_id = ? ", batch_id, VolumeStatus.pending_indexing.id).each do |volume|
+        if failure_list.include?(volume.job_id)
+          volume.update_attributes(status_id: nil, batch_id: nil)
+        else
+          volume.update_attributes(status_id: VolumeStatus.indexed.id)
+        end
+      end
+    end
+    return true
+  end
+
+
+  def mark_finished_content_volumes(xml_content)
+    begin
+      data_xml = Nokogiri::XML(xml_content)
+    rescue
+      return false
+    end
+
+    data_xml.xpath("//ContentSuccessList").each do |batch|
+      data_xml.xpath("//ContentSuccessList//JobID").each do |job_id|
+        volume = Volume.find_by_job_id(job_id.text.to_i)
+        volume.update_attributes(status_id: VolumeStatus.pending_indexing.id) if volume
+      end
+    end
+    return true
+  end
+
+  def ingest_batch(batch_id, names_content)
+    begin
+      file = File.new("#{GENERATED_NAMES_PATH}/batches_#{Rails.env}/batch_#{batch_id}.zip", 'wb+')
+      file.binmode
+      file.write(names_content)
+      file.flush
+      batch = Batch.find(batch_id)
+      batch.update_attributes(status_id: BatchStatus.pending_indexing.id) unless Volume.where(batch_id: batch.id).blank?
+      volumes = Volume.where("batch_id = ? AND status_id = ? ",batch.id, VolumeStatus.pending_content.id)
+      unless volumes.blank?
+        volumes.each do |volume|
+          volume.update_attributes(status_id: nil, batch_id: nil)
+        end
+      end
+    rescue
+      return false
+    end
+    return true
+  end
+
+  def ingest_metadata_from_xml_string(xml_content)
+    begin
+      mods_xml = Nokogiri::XML(xml_content)
+    rescue
+      return false
+    end
+
+    mods_xml.xpath("//BHLMeta//BIBID").each do |book_xml|
+      bib_id = book_xml.attr("value").gsub("DAF-BHL:","")
+
+
+     metadata_hash = process_mods(book_xml.xpath(".//mods").text)
+
+      book = Book.find_or_create_by(bib_id: bib_id)
+
+      if book_xml.xpath(".//mods").count == 0
+        # this means that this book has failed
+        book.book_status_id = BookStatus.pending_metadata.id
+        book.save
+      else
+        book.bibtex = book_xml.xpath(".//BIBTex").text
+        book.endnote = book_xml.xpath(".//EndNote").text
+        book.mods = book_xml.xpath(".//mods").text
+
+        if metadata_hash[:title_alternative].blank? &&  metadata_hash[:title].blank?
+          # this means that this book has failed
+          book.book_status_id = BookStatus.pending_metadata.id
+          book.save
+        else
+          book.title = metadata_hash[:title]
+          book.title_alternative = metadata_hash[:title_alternative]
+          book.published_at = metadata_hash[:published_at]
+          book.publisher = metadata_hash[:publisher]
+          book.contributor = metadata_hash[:contributor]
+          book.book_status_id = BookStatus.finished_metadata.id
+          book.save
+
+          book.authors << metadata_hash[:authors]
+          book.locations << metadata_hash[:locations]
+          book.languages << metadata_hash[:languages]
+          book.subjects << metadata_hash[:subjects]
+
+          book_xml.xpath(".//JobIDs//JobID").each do |job_id|
+            volume = Volume.find_or_create_by(job_id: job_id.text.gsub("DAF-Job:",""))
+            book.volumes << volume
+          end
+          book.save
+        end
+
+      end
+    end
+    return true
+  end
+
+  def process_mods(mods_string)
+    # this function should return a hash with extracted metadata from mods
+    mods_xml = Nokogiri::XML(mods_string)
+    mods_hash = {}
+    begin
+      # check the title, is it title or alternative?
+      mods_xml.xpath('//xmlns:titleInfo').each do |titleInfo|
+         if titleInfo.attr('type') == 'alternative'
+           mods_hash[:title_alternative] = get_title(titleInfo)
+         else
+           mods_hash[:title] = get_title(titleInfo)
+         end
+      end
+    rescue
+      # this means that there is something wrong with the file?
+      return mods_hash
+    end
+
+    mods_hash[:authors] = get_authors(mods_xml.xpath('//xmlns:name'))
+    mods_hash[:published_at] = mods_xml.xpath('//xmlns:originInfo/xmlns:dateIssued').text unless mods_xml.xpath('//xmlns:originInfo/xmlns:dateIssued').empty?
+    mods_hash[:publisher] = mods_xml.xpath('//xmlns:originInfo/xmlns:publisher').text unless mods_xml.xpath('//xmlns:originInfo/xmlns:publisher').text.empty?
+    mods_hash[:note] = mods_xml.xpath('//xmlns:note').text unless mods_xml.xpath('//xmlns:note').text.empty?
+    mods_hash[:edition] = mods_xml.xpath('//xmlns:originInfo/xmlns:edition').text unless mods_xml.xpath('//xmlns:originInfo/xmlns:edition').text.empty?
+    mods_hash[:locations] = get_locations(mods_xml.xpath('//xmlns:originInfo/xmlns:place'))
+    mods_hash[:subjects] = get_subjects(mods_xml.xpath('//xmlns:subject'))
+    mods_hash[:languages] = get_languages(mods_xml.xpath('//xmlns:language'))
+
+    return mods_hash
+  end
+
+private
+
+  def get_title(title_info)
+    title = []
+    title << title_info.xpath(".//xmlns:nonSort").text unless title_info.xpath(".//xmlns:nonSort").text.empty?
+    title << title_info.xpath(".//xmlns:title").text unless title_info.xpath(".//xmlns:title").text.empty?
+    title << title_info.xpath(".//xmlns:subTitle").text unless title_info.xpath(".//xmlns:subTitle").text.empty?
+    title << title_info.xpath(".//xmlns:partNumber").text unless title_info.xpath(".//xmlns:partNumber").text.empty?
+    title << title_info.xpath(".//xmlns:partName").text unless title_info.xpath(".//xmlns:partName") .text.empty?
+    return title.join(' ')
+  end
+
+  def get_author_name(name)
+    name_string = []
+    name.xpath('.//xmlns:namePart').each do |name_part|
+      name_string << name_part.text unless name_part.text.empty?
+    end
+    return name_string.join(', ')
+  end
+
+  def get_authors(names_xml)
+    authors = []
+    names_xml.each do |name|
+      if name.attr('type') == 'personal'
+        author_name = get_author_name(name)
+        authors << Author.find_or_create_by(name: author_name) unless author_name.empty?
+      end
+    end
+    authors
+  end
+
+  def get_locations(locations_xml)
+    locations = []
+    locations_xml.each do |place|
+      if place.xpath('.//xmlns:placeTerm').attr('type').to_s == 'text'
+        loc = place.xpath('.//xmlns:placeTerm').text
+        locations << Location.find_or_create_by(address: loc) unless loc.empty?
+      end
+    end
+    locations
+  end
+
+  def get_subjects(subjects_xml)
+    subjects = []
+    subjects_xml.each do |subject|
+      subject.children.each do |child_node|
+        subjects << Subject.find_or_create_by(name: child_node.text) unless child_node.text.empty?
+      end
+    end
+    subjects
+  end
+
+  def get_languages(language_xml)
+    languages = []
+    language_xml.xpath('.//xmlns:languageTerm').each do |lang|
+        languages << Language.find_or_create_by(code: lang.text) unless lang.text.empty?
+    end
+    languages
+  end
 end

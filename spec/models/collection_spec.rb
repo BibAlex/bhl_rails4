@@ -43,7 +43,8 @@ RSpec.describe Collection, type: :model do
   describe "top_collections" do
     
     before do
-      user = User.first
+      # user = User.first
+      user = FactoryGirl.create(:user, password: User.hash_password('top_collections'), active: true)
       Collection.delete_all
       @first_collection = FactoryGirl.create(:collection, title: "first collection", user_id: user.id, is_public: true, rate: 2)
       @second_collection = FactoryGirl.create(:collection, title: "second collection", user_id: user.id, is_public: true, rate: 4)
