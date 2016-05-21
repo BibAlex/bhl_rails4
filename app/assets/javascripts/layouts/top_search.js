@@ -1,8 +1,8 @@
-topSearch = bhlApp.controller('topSearch', function($scope, $mdDialog, $mdMedia) {
+bhlApp.controller('topSearch', function($scope, $mdDialog, $mdMedia) {
   $scope.searchBy = 'title';
   $scope.search = function(ev) {
     if (!$scope.searchQuery) {
-      $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
+      //$scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
       $mdDialog.show(
           $mdDialog.alert()
               .clickOutsideToClose(true)
@@ -12,9 +12,6 @@ topSearch = bhlApp.controller('topSearch', function($scope, $mdDialog, $mdMedia)
               .ok('Got it!')
               .targetEvent(ev)
       );
-
-      alert("#TODO: invalid search query");
-
-    }
+    };
   };
 });
