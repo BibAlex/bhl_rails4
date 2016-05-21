@@ -1,4 +1,4 @@
-%html{ "xml:lang" => I18n.locale, "lang" => I18n.locale }
+%html{ "xml:lang" => I18n.locale, "lang" => I18n.locale ,'ng-app': 'bhlApp', }
   %head
     = render partial: "header_components/html_head"
 
@@ -6,7 +6,7 @@
     .ui-autocomplete-loading
       background: white url("/assets/images_#{I18n.locale}/ui-anim_basic_16x16.gif") right center no-repeat
 
-  %body{'ng-app': 'bhlApp'}
+  %body
     #wrap
       .container
         .row.clearfix.visible-md.visible-lg
