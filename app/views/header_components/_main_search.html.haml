@@ -11,8 +11,7 @@
                                         type: "text",
                                         required: true,
                                         'ng-model': 'searchQuery',
-                                        placeholder: I18n.t('common.search_query'),
-                                        onkeypress: "if(event.keyCode == 13){searchfnc(document.getElementById('headersearchby'), document.getElementById('headersearchfield').value);return false;}"}
+                                        placeholder: I18n.t('common.search_query')}
         %span.separator.pull-left
           |
         .btn-group.pull-left
@@ -38,6 +37,6 @@
         .clearfix.visible-xs
       %span.separator.pull-left
         |
-      %a.go.pull-left.rotate{ 'ng-click': 'search($event)'}
+      %a.go.pull-left.rotate{ 'ng-click': 'search()'}
         %i.fa.fa-arrow-circle-right.fa-2x
       .clearfix
