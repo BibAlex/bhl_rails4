@@ -1,0 +1,70 @@
+// I had to change the file extension to .js.erb instead of .erd as
+// it contains some internationalized strings, which need to be
+// executed on server side.
+
+bhlApp.controller('topSearch', function($scope, $window) {
+  $scope.searchBy = 'title';
+  $scope.search = function() {
+    if (typeof $scope.searchQuery === 'undefined') {
+      $scope.alertEmptySearchError();
+      return;
+    };
+
+    // Clear "some" special characters from the search query
+    $scope.searchQuery = $window.clearString($scope.searchQuery);
+
+    if ($scope.searchQuery == '') {
+      $scope.alertEmptySearchError();
+      return;
+    }
+
+    var previousSearch = $scope.extractPreviousSearchQuery();
+
+    var combinedSearch = '';
+
+    var searchTypeFound = false;
+
+    for (var i in previousSearch) {
+      if (combinedSearch != '') combinedSearch += '&';
+      // combine search strings with the same type to one string
+      // Query should be like _title=abcd_OR_wxyz&author=ghij
+      if (previousSearch[i].type == '_' + $scope.searchBy) {
+        previousSearch[i].keyword += '_or_' + $scope.searchQuery;
+        searchTypeFound = true;
+      }
+      combinedSearch += previousSearch[i].type + '=' + previousSearch[i].keyword;
+    }
+
+    if (!searchTypeFound) {
+      if (combinedSearch != '') combinedSearch += '&';
+      combinedSearch += '_' + $scope.searchBy + '=' + $scope.searchQuery;
+    }
+
+    window.location = window.location.protocol + "//" + window.location.host + "/books" + "?" + combinedSearch;
+  };
+
+  $scope.alertEmptySearchError = function() {
+    // TODO: we need to use AngularJS Material Dialog for this kinds of alert
+    $window.alert("<%= I18n.t('warn.empty_search_query_warn') %>");
+  };
+
+  $scope.extractPreviousSearchQuery = function() {
+    // This functoin is used to extract the previous search and append the new search
+    var windowLoacation = location.href.toLowerCase();
+    var pageName = windowLoacation.split('?')[0];
+    if (pageName != window.location.protocol + "//" + window.location.host + "/books") {
+      // This means that there is no previous search, so return empty array
+      return [];
+    }
+    var previousSearchArray = windowLoacation.split('?')[1].split('&');
+    var returnQueryArray = [];
+    for (var i in previousSearchArray) {
+      var searchItem = {
+        type: previousSearchArray[i].split('=')[0],
+        keyword: previousSearchArray[i].split('=')[1]
+      };
+      returnQueryArray.push(searchItem);
+    }
+    return returnQueryArray;
+  };
+});
