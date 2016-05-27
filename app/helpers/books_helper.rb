@@ -53,8 +53,9 @@ module BooksHelper
   end
   
   def fill_query_array(params)
-    search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name", "_location", "_publisher", "_content", "_all",
-                                                  "_location_facet", "_author_facet", "_language_facet", "_subject_facet",
+    search_params = params.select { |key, value| ["_title", "_subject", "_language", "_author", "_name",
+                                                  "_location", "_publisher", "_content", "_all", "_location_facet",
+                                                  "_author_facet", "_language_facet", "_subject_facet",
                                                   "_publisher_facet", "_name_facet"].include?(key) }
     query_array = { 'all' => [], 'title'=> [], 'language'=> [],
                     'location'=> [], 'author'=> [], 'name'=> [],
