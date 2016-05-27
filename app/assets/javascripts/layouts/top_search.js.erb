@@ -24,17 +24,16 @@ bhlApp.controller('topSearch', function($scope, $window) {
 
     var searchTypeFound = false;
 
-    for (var i in previousSearch) {
+    for (var index in previousSearch) {
       if (combinedSearch != '') combinedSearch += '&';
       // combine search strings with the same type to one string
-      // Query should be like _title=abcd_OR_wxyz&author=ghij
-      if (previousSearch[i].type == '_' + $scope.searchBy) {
-        previousSearch[i].keyword += '_or_' + $scope.searchQuery;
+      // Query should be like _title=abcd_or_wxyz&author=ghij
+      if (previousSearch[index].type == '_' + $scope.searchBy) {
+        previousSearch[index].keyword += '_or_' + $scope.searchQuery;
         searchTypeFound = true;
       }
-      combinedSearch += previousSearch[i].type + '=' + previousSearch[i].keyword;
+      combinedSearch += previousSearch[index].type + '=' + previousSearch[index].keyword;
     }
-
     if (!searchTypeFound) {
       if (combinedSearch != '') combinedSearch += '&';
       combinedSearch += '_' + $scope.searchBy + '=' + $scope.searchQuery;
@@ -58,10 +57,10 @@ bhlApp.controller('topSearch', function($scope, $window) {
     }
     var previousSearchArray = windowLoacation.split('?')[1].split('&');
     var returnQueryArray = [];
-    for (var i in previousSearchArray) {
+    for (var index in previousSearchArray) {
       var searchItem = {
-        type: previousSearchArray[i].split('=')[0],
-        keyword: previousSearchArray[i].split('=')[1]
+        type: previousSearchArray[index].split('=')[0],
+        keyword: previousSearchArray[index].split('=')[1]
       };
       returnQueryArray.push(searchItem);
     }
