@@ -45,7 +45,8 @@ bhlApp.controller('topSearch', function($scope, $window) {
 
   $scope.alertEmptySearchError = function() {
     // TODO: we need to use AngularJS Material Dialog for this kinds of alert
-    $window.alert("<%= I18n.t('warn.empty_search_query_warn') %>");
+    //$window.alert();
+    $window.sweetAlert("<%= I18n.t('warn.invalid_input')%>", "<%= I18n.t('warn.empty_search_query_warn') %>", "error");
   };
 
   $scope.extractPreviousSearchQuery = function() {
