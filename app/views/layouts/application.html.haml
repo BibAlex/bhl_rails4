@@ -7,6 +7,9 @@
       background: white url("/assets/images_#{I18n.locale}/ui-anim_basic_16x16.gif") right center no-repeat
 
   %body
+    = # Note that this has to be rendered inside the body. so it is not a fault.
+    = render partial: "header_components/angularjs"
+
     #wrap
       .container
         .row.clearfix.visible-md.visible-lg

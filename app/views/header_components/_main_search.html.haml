@@ -11,6 +11,7 @@
                                         type: "text",
                                         required: true,
                                         'ng-model': 'searchQuery',
+                                        'ng-keypress': 'if($event.which === 13)?search():false',
                                         placeholder: I18n.t('common.search_query')}
         %span.separator.pull-left
           |
