@@ -7,33 +7,35 @@
         %span.separator.pull-left.searchicon
           %i.fa.fa-search.fa-lg.pull-left
         .col-xs-5
-          %input.form-control{ id: "headersearchfield",
-                                        type: "text",
-                                        required: true,
-                                        'ng-model': 'searchQuery',
-                                        'ng-keypress': 'if($event.which === 13)?search():false',
-                                        placeholder: I18n.t('common.search_query')}
+
+          %input.form-control{ id: 'headersearchfield',
+                                type: 'text',
+                                required: true,
+                                'ng-model': 'searchQuery',
+                                'ng-keypress': '($event.which === 13)?search():false'.html_safe,
+                                placeholder: I18n.t('common.search_query')}
+
         %span.separator.pull-left
           |
         .btn-group.pull-left
           %select.width.btn.allcat.text-left{'ng-model': 'searchBy'}
-            %option.text-left{ value: "all" }
+            %option.text-left{ value: 'all' }
               = I18n.t('common.all_categories')
-            %option.text-left{ value: "title" }
+            %option.text-left{ value: 'title' }
               = I18n.t('common.title')
-            %option.text-left{ value: "language" }
+            %option.text-left{ value: 'language' }
               = I18n.t('common.language')
-            %option.text-left{ value: "location" }
+            %option.text-left{ value: 'location' }
               = I18n.t('common.location')
-            %option.text-left{ value: "author" }
+            %option.text-left{ value: 'author' }
               = I18n.t('common.author')
-            %option.text-left{ value: "name" }
+            %option.text-left{ value: 'name' }
               = I18n.t('common.tagged_species')
-            %option.text-left{ value: "subject" }
+            %option.text-left{ value: 'subject' }
               = I18n.t('common.genre')
-            %option.text-left{ value: "publisher" }
+            %option.text-left{ value: 'publisher' }
               = I18n.t('common.publisher')
-            %option.text-left{ value: "content" }
+            %option.text-left{ value: 'content' }
               = I18n.t('common.content')
         .clearfix.visible-xs
       %span.separator.pull-left
