@@ -8,7 +8,7 @@
       .form-horizontal
         = form_for :user, url: validate_users_path, builder: FormHelper::BHLFormBuilder,
                     html: { name: 'loginForm',
-                            'novalidate' => 'novalidate',
+                            'novalidate' => '',
                             'ng-controller' => 'loginValidate',
                             'ng-submit' => 'validateForm($event, loginForm)'.html_safe} do |f|
           - unless session[:return_to].blank?

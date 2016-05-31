@@ -1,9 +1,14 @@
-// I had to change the file extension to .js.erb instead of .erd as
+// I had to change the file extension to .js.erb instead of .js as
 // it contains some internationalized strings, which need to be
 // executed on server side.
 
-bhlApp.controller('topSearch', function($scope, $window) {
+bhlApp.controller('topSearch', ['$scope', '$window', '$log', function($scope, $window, $log) {
   $scope.searchBy = 'title';
+
+  $scope.updateSearchQuery = function(newSearchQuery) {
+    $scope.searchQuery = newSearchQuery;
+  }
+
   $scope.search = function() {
     if (typeof $scope.searchQuery === 'undefined') {
       $scope.alertEmptySearchError();
@@ -43,8 +48,6 @@ bhlApp.controller('topSearch', function($scope, $window) {
   };
 
   $scope.alertEmptySearchError = function() {
-    // TODO: we need to use AngularJS Material Dialog for this kinds of alert
-    //$window.alert();
     $window.sweetAlert("<%= I18n.t('warn.invalid_input')%>", "<%= I18n.t('warn.empty_search_query_warn') %>", "error");
   };
 
@@ -67,4 +70,44 @@ bhlApp.controller('topSearch', function($scope, $window) {
     }
     return returnQueryArray;
   };
+
+  $scope.searchKeyPress = function(event) {
+    (event.which === 13)?$scope.search():false;
+  };
+}]);
+
+$(document).ready(function() {
+  /*
+  TODO: this function needs refactoring to be more Angular
+   */
+  var cache;
+  cache = {};
+  return $("#headerSearchField").autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+      var term;
+      term = request.term;
+      if (term in cache) {
+        response(cache[term]);
+        return;
+      }
+      search_by = $("#headerSearchBy").val();
+      if(search_by != "content" && search_by != "all")
+      {
+        searchfield = $("#headerSearchField").val();
+        return $.getJSON("/<%= I18n.locale %>/books/autocomplete?type=" + search_by, request, function(data, status, xhr) {
+          cache[term] = data;
+          return response(data);
+        });
+      }
+    },
+    select: function(event, ui) {
+      var selectedValue = ui.item.value;
+      var scope = angular.element(document.getElementById("topsearch")).scope();
+      scope.$apply(function() {
+        scope.updateSearchQuery(selectedValue);
+      });
+    }
+  });
 });
+
