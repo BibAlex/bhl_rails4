@@ -1,5 +1,5 @@
 require 'jquery-rails'
-require "rexml/document"
+require 'rexml/document'
 
 class BooksController < ApplicationController
   include ApplicationHelper
@@ -16,7 +16,7 @@ class BooksController < ApplicationController
     @query_array = fill_query_array(params)
     query = set_query_string(@query_array)
     fquery = set_fquery_string(@query_array)
-    @response = search_volumes(query, @page, PAGE_SIZE, @sort, fquery, params["_all"].blank?)
+    @response = search_volumes(query, @page, PAGE_SIZE, @sort, fquery, params['_all'].blank?)
     @books = WillPaginate::Collection.create(@page, PAGE_SIZE, @response[:total_number_of_volumes]) do |pager|
       pager.replace @response[:volumes]
     end
@@ -39,23 +39,23 @@ class BooksController < ApplicationController
   end
 
   def show
-    tab = params[:tab] == "read" ? "read" : "details"
+    tab = params[:tab] == 'read' ? 'read' : 'details'
     load_volume_details(tab)
-    if tab == "read"
+    if tab == 'read'
       load_read_page(params[:search_name])
     else
       load_details_page
     end
 
   end
-  
+
   def sci_name_info
     name_tooltip = ''
     if params[:sci_name] && params[:job_id]
       item = get_names_info(params[:sci_name])
       name_found= get_name_in_book(params[:sci_name], params[:job_id])
       respond_to do |format|
-        format.html { render partial: "books/sci_name_tooltip",
+        format.html { render partial: 'books/sci_name_tooltip',
                              locals: { thumb: item[:thumb], sci_name: params[:sci_name],
                              name_found: name_found, job_id: params[:job_id],
                              eol_url: item[:eol_url] } }
@@ -68,11 +68,11 @@ class BooksController < ApplicationController
   def load_volume_details(tab)
     @volume = load_volume_with_names_from_solr(params[:id])
     @page_title = "#{@volume[:title][0]} - #{I18n.t("common.#{tab}")}"
-    @page_author = @volume[:author].join(",") if @volume[:author]
-    @page_description = ""
+    @page_author = @volume[:author].join(',') if @volume[:author]
+    @page_description = ''
     @volume[:sci_names].each do |name|
       if(@page_description.length + name.length + 1 <= 100)
-        @page_description += name + ","
+        @page_description += name + ','
       else
         break
       end
@@ -82,7 +82,7 @@ class BooksController < ApplicationController
 
   def load_details_page
     @types = { author: I18n.t('common.author'), subject: I18n.t('common.subject'), publisher: I18n.t('common.publisher') }
-    @user_rate = Rate.load_user_rate(session[:user_id], params[:id], "volume")
+    @user_rate = Rate.load_user_rate(session[:user_id], params[:id], 'volume')
     @collections_count = Collection.get_count_by_volume(params[:id], session[:user_id])
     save_book_also_viewed(params)
     @comment = Comment.new
@@ -105,9 +105,9 @@ class BooksController < ApplicationController
     query_array.each do |key, val|
       unless val.blank?
         search_type = I18n.t("common.#{key}")
-        query_arr << "#{search_type}: #{val.join(",")}"
+        query_arr << "#{search_type}: #{val.join(',')}"
       end
     end
-    query_arr.join(" - ")
+    query_arr.join(' - ')
   end
 end
