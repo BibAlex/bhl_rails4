@@ -121,16 +121,16 @@ module BooksHelper
         items.each do |item|
           tmp_array << '(' + item.to_s + ')'
         end
-        values = '(' + tmp_array.join(' OR ') + ')'
+        values = '(' + tmp_array.join(' or ') + ')'
         field_query = '(' + "sci_name:#{values}" + ')'
-        field_query
+        return field_query
       end
     else
-      values = '(' + query_array['name_facet'].join(' OR ') + ')'
+      values = '(' + query_array['name_facet'].join(' or ') + ')'
       field_query = '(' + "sci_name:#{values}" + ')'
-      field_query
+      return field_query
     end
-    '*:*'
+    return '*:*'
   end
 
   def prepare_search_query(multilingual_attributes_and_values, normal_attributes_and_values,
@@ -299,7 +299,7 @@ module BooksHelper
   end
 
   def self.find_field_in_document(job_id, field)
-    languages = get_solr_languages
+    languages = self.get_solr_languages
     doc = SolrHelper.solr_find_document("job_id:#{job_id}")
     lang = (!doc['language_facet'].blank? && languages.has_key?(doc['language_facet'][0])) ? languages[doc['language_facet'][0]] : 'ud'
     doc["#{field}_#{lang}"]
@@ -357,6 +357,20 @@ module BooksHelper
                  publisher: doc["publisher_#{lang}"] }
     end
     volume
+  end
+
+  def get_solr_languages
+    {'English' => 'en', 'German' => 'ge', 'Arabic' => 'ar', 'French' => 'fr', 'Italian' => 'it', 'Undefined' => 'ud'}
+  end
+  # there is a static methoduses this function. this is why I had to declare it as a module function
+  module_function :get_solr_languages
+
+  def get_solr_languages_values
+    return_array = []
+    get_solr_languages.each do |key, value|
+      return_array << value
+    end
+    return_array
   end
 
   private
@@ -473,17 +487,4 @@ module BooksHelper
     end
     format
   end
-
-  def get_solr_languages
-    {'English' => 'en', 'German' => 'ge', 'Arabic' => 'ar', 'French' => 'fr', 'Italian' => 'it', 'Undefined' => 'ud'}
-  end
-
-  def get_solr_languages_values
-    return_array = []
-    get_solr_languages.each do |key, value|
-      return_array << value
-    end
-    return_array
-  end
-
 end
