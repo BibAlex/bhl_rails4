@@ -2,23 +2,20 @@
 
 .main-search
   .col-md-5
-    .topsearch{'ng-controller': 'topSearch'}
+    .topsearch{'ng-controller': 'topSearch', id: 'topsearch'}
       .input-append
         %span.separator.pull-left.searchicon
           %i.fa.fa-search.fa-lg.pull-left
         .col-xs-5
-
-          %input.form-control{ id: 'headersearchfield',
+          %input.form-control{ id: 'headerSearchField',
                                 type: 'text',
-                                required: true,
                                 'ng-model': 'searchQuery',
-                                'ng-keypress': '($event.which === 13)?search():false'.html_safe,
+                                'ng-keypress': 'searchKeyPress($event)'.html_safe,
                                 placeholder: I18n.t('common.search_query')}
-
         %span.separator.pull-left
           |
         .btn-group.pull-left
-          %select.width.btn.allcat.text-left{'ng-model': 'searchBy'}
+          %select.width.btn.allcat.text-left{'ng-model': 'searchBy', id: 'headerSearchBy'}
             %option.text-left{ value: 'all' }
               = I18n.t('common.all_categories')
             %option.text-left{ value: 'title' }
