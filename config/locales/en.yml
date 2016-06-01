@@ -216,7 +216,7 @@ en:
 
 
   warn:
-    empty_search_query_warn: "Search statement shouldn't be empty"
+    empty_search_query_warn: Search statement shouldn't be empty
     invalid_input: Invalid Input
     max_photo_size: Max size for photo
     comment_empty_warn: Comment can't be empty

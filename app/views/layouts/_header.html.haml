@@ -1,11 +1,11 @@
 .row.clearfix.visible-md.visible-lg
   - cache("logo_#{I18n.locale}") do
-    = render partial: "header_components/logo"
+    = render partial: 'header_components/logo'
   - cache("search_autocomplete_#{I18n.locale}") do
-    = render partial: "header_components/main_search"
+    = render partial: 'header_components/main_search'
   - cache(["user_actions_#{session[:user_id]}", locale: I18n.locale]) do
-    = render partial: "header_components/user_actions"
-  = render partial: "header_components/languages"
-  
+    = render partial: 'header_components/user_actions'
+  = render partial: 'header_components/languages'
+
 .row.clearfix
-  = render partial: "header_components/pages" 
+  = render partial: 'header_components/pages'
