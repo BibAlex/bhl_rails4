@@ -1,6 +1,6 @@
 .panel.panel-styled
   - @response[:facets].each do |facet_field, items|
-    - next if items.blank? 
+    - next if items.blank?
     .panel-heading
       %h3.panel-title
         = I18n.t("common.#{facet_field}")
@@ -15,4 +15,5 @@
               - if (params["_#{facet_field}"]) && (params["_#{facet_field}"].include? item[:field_value])
                 = "#{item[:field_value]} [#{item[:hits]}]"
               - else
-                = link_to "#{item[:field_value]} [#{item[:hits]}]", books_path(params: add_facet_search(params, facet_field, item[:field_value]))
+                = link_to "#{item[:field_value]} [#{item[:hits]}]",
+                          books_path(params: add_facet_search(params, facet_field, item[:field_value]))

@@ -1,0 +1,118 @@
+// I had to change the file extension to .js.erb instead of .js as
+// it contains some internationalized strings, which need to be
+// executed on server side.
+
+bhlApp.controller('topSearch', ['$scope', '$window', '$log', function($scope, $window, $log) {
+  $scope.searchBy = 'title';
+
+  $scope.init_i18n_alerts = function(invalidInputWarn, emptySearchQueryWarn) {
+    $scope.invalidInputWarn = invalidInputWarn;
+    $scope.emptySearchQueryWarn = emptySearchQueryWarn;
+  };
+
+  $scope.updateSearchQuery = function(newSearchQuery) {
+    $scope.searchQuery = newSearchQuery;
+  }
+
+  $scope.search = function() {
+    if (typeof $scope.searchQuery === 'undefined') {
+      $scope.alertEmptySearchError();
+      return;
+    }
+
+    // Clear "some" special characters from the search query
+    $scope.searchQuery = $window.clearString($scope.searchQuery);
+
+    if ($scope.searchQuery == '') {
+      $scope.alertEmptySearchError();
+      return;
+    }
+
+    var previousSearch = $scope.extractPreviousSearchQuery();
+
+    var combinedSearch = '';
+
+    var searchTypeFound = false;
+
+    for (var index in previousSearch) {
+      if (combinedSearch != '') combinedSearch += '&';
+      // combine search strings with the same type to one string
+      // Query should be like _title=abcd_or_wxyz&author=ghij
+      if (previousSearch[index].type == '_' + $scope.searchBy) {
+        previousSearch[index].keyword += '_or_' + $scope.searchQuery;
+        searchTypeFound = true;
+      }
+      combinedSearch += previousSearch[index].type + '=' + previousSearch[index].keyword;
+    }
+    if (!searchTypeFound) {
+      if (combinedSearch != '') combinedSearch += '&';
+      combinedSearch += '_' + $scope.searchBy + '=' + $scope.searchQuery;
+    }
+
+    window.location = window.location.protocol + "//" + window.location.host + "/books" + "?" + combinedSearch;
+  };
+
+  $scope.alertEmptySearchError = function() {
+    $window.sweetAlert($scope.invalidInputWarn, $scope.emptySearchQueryWarn, "error");
+  };
+
+  $scope.extractPreviousSearchQuery = function() {
+    // This functoin is used to extract the previous search and append the new search
+    var windowLoacation = location.href.toLowerCase();
+    var pageName = windowLoacation.split('?')[0];
+    if (pageName != window.location.protocol + "//" + window.location.host + "/books") {
+      // This means that there is no previous search, so return empty array
+      return [];
+    }
+    var previousSearchArray = windowLoacation.split('?')[1].split('&');
+    var returnQueryArray = [];
+    for (var index in previousSearchArray) {
+      var searchItem = {
+        type: previousSearchArray[index].split('=')[0],
+        keyword: previousSearchArray[index].split('=')[1]
+      };
+      returnQueryArray.push(searchItem);
+    }
+    return returnQueryArray;
+  };
+
+  $scope.searchKeyPress = function(event) {
+    (event.which === 13)?$scope.search():false;
+  };
+}]);
+
+$(document).ready(function() {
+  /*
+  TODO: this function needs refactoring to be more Angular
+   */
+  var cache;
+  cache = {};
+  return $("#headerSearchField").autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+      var term;
+      term = request.term;
+      if (term in cache) {
+        response(cache[term]);
+        return;
+      }
+      search_by = $("#headerSearchBy").val();
+      if(search_by != "content" && search_by != "all")
+      {
+        searchfield = $("#headerSearchField").val();
+        return $.getJSON("/<%= I18n.locale %>/books/autocomplete?type=" + search_by, request, function(data, status, xhr) {
+          cache[term] = data;
+          return response(data);
+        });
+      }
+    },
+    select: function(event, ui) {
+      var selectedValue = ui.item.value;
+      var scope = angular.element(document.getElementById("topsearch")).scope();
+      scope.$apply(function() {
+        scope.updateSearchQuery(selectedValue);
+      });
+    }
+  });
+});
+
