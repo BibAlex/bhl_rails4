@@ -1,6 +1,6 @@
-%html{ "xml:lang" => I18n.locale, "lang" => I18n.locale ,'ng-app': 'bhlApp', }
+%html{ 'xml:lang' => I18n.locale, 'lang' => I18n.locale ,'ng-app': 'bhlApp', }
   %head
-    = render partial: "header_components/html_head"
+    = render partial: 'header_components/html_head'
 
   :css
     .ui-autocomplete-loading
@@ -8,15 +8,15 @@
 
   %body
     = # Note that this has to be rendered inside the body. so it is not a fault.
-    = render partial: "header_components/angularjs"
+    = render partial: 'header_components/angularjs'
 
     #wrap
       .container
         .row.clearfix.visible-md.visible-lg
 
-          = render partial: "layouts/header"
-          %div{ id: "flash" }
-            = render partial: "layouts/flash", object: flash  #NEW_LAYOUT
+          = render partial: 'layouts/header'
+          %div{ id: 'flash' }
+            = render partial: 'layouts/flash', object: flash  #NEW_LAYOUT
         = yield
-    - cache(["footer", locale: I18n.locale]) do
-      = render partial: "layouts/footer"
+    - cache(['footer', locale: I18n.locale]) do
+      = render partial: 'layouts/footer'

@@ -2,7 +2,10 @@
 
 .main-search
   .col-md-5
-    .topsearch{'ng-controller': 'topSearch', id: 'topsearch'}
+    .topsearch{'ng-controller': 'topSearch',
+               id: 'topsearch',
+               'ng-init': "init_i18n_alerts(\"#{I18n.t('warn.invalid_input')}\",
+                                         \"#{I18n.t('warn.empty_search_query_warn')}\")"}
       .input-append
         %span.separator.pull-left.searchicon
           %i.fa.fa-search.fa-lg.pull-left
