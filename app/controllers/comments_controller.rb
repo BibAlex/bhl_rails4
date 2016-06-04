@@ -11,10 +11,10 @@ class CommentsController < ApplicationController
   def get_comments
     if params[:commentable_id] && params[:commentable_type]
       comments  = Comment.where(commentable_id: params[:commentable_id],
-                     commentable_type: params[:commentable_type]).order("created_at DESC")
+                     commentable_type: params[:commentable_type]).order('created_at DESC')
                      .paginate(page: params[:page] || 1, per_page: LIMIT_CAROUSEL)
       respond_to do |format|
-        format.html { render partial: "comments/get_comments", locals: { comments: comments, commentable_type: params[:commentable_type], commentable_id: params[:commentable_id] } }
+        format.html { render partial: 'comments/get_comments', locals: {comments: comments, commentable_type: params[:commentable_type], commentable_id: params[:commentable_id] } }
       end
     else
       resource_not_found
@@ -41,7 +41,7 @@ class CommentsController < ApplicationController
       elsif comment.can_delete?
         commentable_type = comment.commentable_type
         comment.destroy
-        if commentable_type == "comment"
+        if commentable_type == 'comment'
           flash[:notice] = I18n.t('msgs.reply_deleted')
         else
           flash[:notice] = I18n.t('msgs.comment_deleted')
