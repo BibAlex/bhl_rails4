@@ -5,21 +5,17 @@ class PagesController < ApplicationController
 
   def home
     prepare_statistics_part
-
     prepare_top_collections_part
-
     prepare_most_viewed_books_part
-
     prepare_activity_log
-
-    #for top rated books
-    #prepare_top_rated_books_part
   end
 
   def top_rated_books
    prepare_top_rated_books_part
    respond_to do |format|
-     format.html { render partial: 'pages/top_books', locals: { top_books: @top_rated_response[:volumes], top_criteria: "rate" } }
+     format.html { render partial: 'pages/top_books',
+                          locals: { top_books: @top_rated_response[:volumes],
+                                    top_criteria: 'rate'} }
    end
   end
 
@@ -53,11 +49,11 @@ class PagesController < ApplicationController
   end
 
   def prepare_most_viewed_books_part
-    @most_viewed_response = get_top_books("views desc")
+    @most_viewed_response = get_top_books('views desc')
   end
 
   def prepare_top_rated_books_part
-    @top_rated_response = get_top_books("rate desc")
+    @top_rated_response = get_top_books('rate desc')
   end
 
   def prepare_activity_log
@@ -66,8 +62,10 @@ class PagesController < ApplicationController
 
   def handle_valid_email_message
     @email_message.save
-    if Notifier.contact_message(params[:email_message][:name],params[:email_message][:email],
-                                params[:email_message][:subject],params[:email_message][:message]).deliver
+    if Notifier.contact_message(params[:email_message][:name],
+                                params[:email_message][:email],
+                                params[:email_message][:subject],
+                                params[:email_message][:message]).deliver
       redirect_to contact_pages_path, flash: { notice: I18n.t('msgs.contact_us_successful_feedback') }
     else
       redirect_to contact_pages_path, flash: { notice: I18n.t('msgs.contact_us_unsuccessful_feedback') }
@@ -77,7 +75,9 @@ class PagesController < ApplicationController
 
   def handle_invalid_email_message
     @verify_captcha = true
-    @email_message.errors.add('recaptcha', I18n.t("form_validation_errors_for_attribute_assistive")) unless bhl_verify_recaptcha
+    unless bhl_verify_recaptcha
+      @email_message.errors.add 'recaptcha', I18n.t('form_validation_errors_for_attribute_assistive')
+    end
     render 'contact'
   end
 end

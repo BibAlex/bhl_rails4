@@ -71,8 +71,8 @@ module BooksHelper
 
 
   def set_query_string(query_array, conjunction = nil)
-    emptyQuery = is_empty_search?(query_array)
-    if(emptyQuery)
+    empty_query = is_empty_search?(query_array)
+    if(empty_query)
       query = '*:*'
     else
       multilingual_attributes = get_multilingual_attributes(query_array)
