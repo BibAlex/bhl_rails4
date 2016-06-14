@@ -140,13 +140,13 @@ ar:
     forget_password_page_header: "أدخل عنوان البريد الإلكتروني المرتبط بحساب BHL الخاص بك"
     volume_history_page_header: "الكتب التى تم تصفحها مؤخرا"
     volume_history_viewed_on: "في:"
-    select_species_for_details: اختر الأنواع الموجودة إلى اليمين لمشاهدة التفاصيل 
-    species_details: تفاصيل الأنواع 
+    select_species_for_details: اختر الأنواع الموجودة إلى اليمين لمشاهدة التفاصيل
+    species_details: تفاصيل الأنواع
     rates: "معدل"
     eol_pages_link: "http://www.eol.org/pages/"
     sent: "مرسل"
     find_in_book: ابحث في الكتاب
-    view_in_eol: EOL.orgانظر في 
+    view_in_eol: EOL.orgانظر في
     tree_of_life_title: شجرة الحياة
     option_all: كل التصنيفات
     books_with_name: كتب تحمل اسم
@@ -185,12 +185,15 @@ ar:
       book: "الكتاب"
       comment: "التعليق"
     unauthorized_action: "عمل غير مصرح به"
+    loading: "تحميل ..."
+
+
   warn:
     empty_search_query_warn: "يجب عليك إدخال جملة البحث"
     invalid_input: "جملة غير صالحة للبحث"
     max_photo_size: "أقصى حجم للصور"
     comment_empty_warn: "يجب إدخال قيمة صالحة للتعليق"
-    
+
   msgs:
     no_suggestion: "لا توجد إقتراحات"
     registration_welcome_message: "مرحبًا %{real_name}. لم يتم تفعيل الحساب الخاص بك بعد. سوف يتم إرسال بريد إلكتروني يتضمن التعليمات الخاصة بالتفعيل."
@@ -211,7 +214,7 @@ ar:
     recover_password_success: "لقد تم إرسال رسالة استعادة كلمة المرور على بريدك الإلكترونى "
     email_not_found: لا يوجد حساب على BHL Egypt لهذا البريد الإلكترونى %{email}
     no_volume_history_found:  لا يوجد تاريخ سابق ..
-    remove_book_from_history: "هل تريد فعلاً إزالة هذا الكتاب؟" 
+    remove_book_from_history: "هل تريد فعلاً إزالة هذا الكتاب؟"
     recaptcha_error: "يوجد خطأ تحقق من الصحة في عنصر التأكد من تسجيل الدخول"
     sign_in_unsuccessful_error: "فشل تسجيل الدخول. اسم مستخدم غير سليم أو كلمة مرور غير سليمة"
     sign_in_successful_notice: "تسجيل دخول ناجح"
@@ -233,7 +236,7 @@ ar:
     delete_saved_query_confirm: هل ترغب فعلاً في حذف هذا الاستعلام؟
     book_removed: "تمت إزالة الكتاب"
     hidden_comment_msg: تم إخفاء التعليق لأنه قد يحتوي على محتوى غير ملائم
-    
+
   activerecord:
     attributes:
       user:
@@ -284,10 +287,10 @@ ar:
         wrong_type: "يوجد خطأ في النوع"
       full_messages:
         format: "%{خاصية} %{رسالة}"
-        
+
   collection:
-    delete_collection_photo_confirm: هل تريد فعلاً حذف صورة المجموعة؟ 
-    delete_photo_flash: تم حذف الصورة 
+    delete_collection_photo_confirm: هل تريد فعلاً حذف صورة المجموعة؟
+    delete_photo_flash: تم حذف الصورة
     edit_collection: تعديل
     remove_book_from_collection_confirm: هل تريد فعلاً حذف هذا الكتاب؟
     col_book_order: "ترتيب الكتب"
@@ -300,7 +303,7 @@ ar:
     collection_volume_deleted: تم حذف الكتاب بنجاح
     show_collection_detail: تفاصيل المجموعة
     edit_collection_page_title: تعديل المجموعة
-    upload_collection_photo: تحميل الصور 
+    upload_collection_photo: تحميل الصور
     public_collection_description: مجموعة عامة متاحة للآخرين
     title_collection: "اسم المجموعة"
     collection_updated: تم تحديث المجموعة
@@ -320,7 +323,7 @@ ar:
     col_book_added_on: "تمت الاضافة في"
     remove_collection: "هل تريد فعلاً حذف هذه المجموعة؟"
     collection_removed: تم حذف المجموعة
-    
+
   notifier:
     user_verification:
       subject: " برجاء التحقق من طلبك ل BHLمصر "
@@ -348,7 +351,7 @@ ar:
     map_pin_orange: "map_pin_orange.png"
     map_pin_red: "map_pin_red.png"
     map_pin_yellow: "map_pin_yellow.png"
-    
+
   annotations:
     no_annotations_found: "لا توجد ملاحظات .."
     title: الملاحظات
