@@ -2,7 +2,7 @@
 = javascript_include_tag 'names/tree_tag_directive'
 = javascript_include_tag 'names/node_tag_directive'
 
-.col-md-8{'ng-controller': 'NamesCtrl'}
+%div{'ng-controller': 'NamesCtrl', dir: 'ltr'}
   %md-select{'ng-model': 'hierarchy', 'ng-change': 'loadHierarchy()'}
     - @entries.each do |entry|
       %md-option{value: entry.id}
