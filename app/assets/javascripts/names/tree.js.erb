@@ -5,7 +5,7 @@ displaying entry details
 
 var closedIcon = '/arrow_closed.png';
 var openIcon = '/arrow_open.png';
-var nodeIcon = '/node.png';
+var nodeIcon = '/node.gif';
 
 function getAjaxUrl(hierarchyId, hierarchyEntryId) {
   var ajaxUrl = "http://localhost:3000/names/show?h_id=" + hierarchyId;
@@ -14,122 +14,18 @@ function getAjaxUrl(hierarchyId, hierarchyEntryId) {
   return ajaxUrl;
 }
 
-var namesCtrl = bhlApp.controller('NamesCtrl', function($scope, $http, $log, $window, $mdDialog, $mdMedia) {
-  $scope.hierarchy = '<%= DEFAULT_HIERARCHY_ID%>';
-
-  $scope.loadDetails = function(ev, heId){
-    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) ;
-    $mdDialog.show({
-      templateUrl: '/names/get_content/' + heId,
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: useFullScreen
-    });
+bhlApp.service('HierarchySrv', function () {
+  return {
+    hierarchy: '<%= DEFAULT_HIERARCHY_ID%>',
+    showTree: true
   };
 });
 
-namesCtrl.directive("treeTag", function () {
-  return {
-    restrict: 'E',
-    scope: {},
-    templateUrl: "Tree",
-    link: function(scope, element, attrs) { },
-    controller: function($scope, $log, $window, $http) {
-      $scope.data = [];
+var namesCtrl = bhlApp.controller('NamesCtrl', function($scope, $http, $log, $window, HierarchySrv) {
+  $scope.hierarchy = HierarchySrv.hierarchy;
 
-      $scope.init = function() {
-        var he_id = $scope.$parent.hierarchy;
-        $scope.url = $window.getAjaxUrl(he_id, 0);
-        $http({
-          cache: true,
-          method: 'GET',
-          url: $scope.url
-        }).success(function(data){
-          $scope.data = data;
-        }).error(function() {
-          $scope.data = [];
-        });
-      };
-
-      $scope.getNodes = function(onlyParents) {
-        var nodesArray = [];
-        for (var dataItem in $scope.data) {
-          if ((parseInt($scope.data[dataItem].childrenCount) > 0 && onlyParents) ||
-              (parseInt($scope.data[dataItem].childrenCount) == 0 && !onlyParents)) {
-            nodesArray.push($scope.data[dataItem]);
-          }
-        }
-        return nodesArray;
-      }
-
-      $scope.getParents = function() {
-        return $scope.getNodes(true);
-      }
-
-      $scope.getLeaf = function() {
-        return $scope.getNodes(false);
-      }
-    }
-  };
-});
-
-namesCtrl.directive("nodeTag", function() {
-  return {
-    restrict: 'E',
-    scope: {
-      id: '@',
-      name: '@',
-      childrenCount: '@'
-    },
-    templateUrl: 'Node',
-    controller: function ($scope, $log, $window, $http) {
-      $scope.isParent = function() {
-        if (typeof $scope.childrenCount == undefined)
-          return false;
-        else
-          return(parseInt($scope.childrenCount) > 0);
-      };
-
-      $scope.toggleNode = function () {
-        if ($scope.isClosed) {
-          $scope.isClosed = false;
-          $scope.expand();
-        } else {
-          $scope.isClosed = true;
-          $scope.collapse();
-        }
-      };
-
-      $scope.expand = function() {
-        if ($scope.isParent()) {
-          $scope.nodeIcon = $window.openIcon;
-          var he_id = $scope.$parent.$parent.$parent.hierarchy;
-          $scope.url = $window.getAjaxUrl(he_id, $scope.id);
-          $http({
-            cache: true,
-            method: 'GET',
-            url: $scope.url
-          }).success(function(data){
-            $scope.data = data;
-          }).error(function() {
-            $scope.data = [];
-          });
-        }
-      };
-
-      $scope.collapse = function() {
-        if ($scope.isParent()) {
-          $scope.nodeIcon = $window.closedIcon;
-        }
-      };
-
-      // TODO: needs to have controller.init
-      if ($scope.isParent())
-        $scope.nodeIcon = $window.closedIcon;
-      else
-        $scope.nodeIcon = $window.nodeIcon;
-      $scope.isClosed = true;
-    }
+  $scope.loadHierarchy = function() {
+    HierarchySrv.hierarchy = $scope.hierarchy;
+    $scope.$broadcast('changeHierarchy',{});
   }
 });
