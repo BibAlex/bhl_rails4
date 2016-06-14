@@ -41,7 +41,6 @@ namesCtrl.directive("nodeTag", function(HierarchySrv) {
                 }).success(function(data){
                     $scope.data = data;
                     $scope.showChildren = true;
-                    //$scope.$apply();
                     $scope.isLoading = false;
                 }).error(function() {
                     $scope.data = [];
