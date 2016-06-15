@@ -7,7 +7,7 @@ class Activity < ActiveRecord::Base
   validates :action, presence: true
   validates :activitable_type, presence: true
 
-  def self.filter__and_sort_activities(filter, sort, page)
+  def self.filter_and_sort_activities(filter, sort, page)
     case filter
       when 'comments'
         filter_stmt = "action = 'comment'"
