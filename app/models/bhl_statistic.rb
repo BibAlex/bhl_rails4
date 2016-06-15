@@ -9,6 +9,7 @@ class BhlStatistic < ActiveRecord::Base
     else
       statistics_result = { books: 0, authors: 0, names: 0 }
     end
+    statistics_result
   end
 
   def self.get_bhl_statistics_from_solr
@@ -23,6 +24,7 @@ class BhlStatistic < ActiveRecord::Base
     statistics_result = { books: response['response']['numFound'],
                           authors: response['facet_counts']['facet_fields']['author_facet'].count/2,
                           names: names_found['response']['numFound'] }
+    statistics_result
   end
 end
 
