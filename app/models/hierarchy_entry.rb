@@ -20,7 +20,6 @@ class HierarchyEntry < EOLBase
   end
 
   def self.find_taxon(id)
-    return {} unless id.to_i.is_a? Integer
     self.find_by_sql("select string as taxon_concept,
                             (select count(*) from hierarchy_entries as h2 where h2.parent_id=h1.id)
                               as siblings_count,
@@ -35,7 +34,6 @@ class HierarchyEntry < EOLBase
   end
 
   def self.get_taxon_concept_id(hierarchy_entry_id)
-    return 0 unless hierarchy_entry_id.to_i.is_a? Integer
     he = self.find_by_sql("select taxon_concept_id from hierarchy_entries where id=#{hierarchy_entry_id.to_i};")
     if he.count > 0
       return he.first.taxon_concept_id
