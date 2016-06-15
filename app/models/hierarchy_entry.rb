@@ -29,11 +29,6 @@ class HierarchyEntry < EOLBase
   end
 
   def self.get_taxon_concept_id(hierarchy_entry_id)
-    he = self.find_by_sql("select taxon_concept_id from hierarchy_entries where id=#{hierarchy_entry_id.to_i};")
-    if he.count > 0
-      return he.first.taxon_concept_id
-    else
-      return 0
-    end
+    self.find_by_id(hierarchy_entry_id.to_i).taxon_concept_id
   end
 end
