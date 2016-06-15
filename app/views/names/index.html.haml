@@ -9,17 +9,6 @@
         = entry.label
   %tree-tag
 
-
-:css
-  .parent_node {
-    list-style: none;
-    cursor: pointer
-  }
-  .child_node {
-    list-style: none;
-    cursor: pointer
-  }
-
 %script{type: 'text/ng-template', id: 'Node'}
   %li
     %img{'ng-src': '{{nodeIcon}}', 'ng-click': 'isParent() && toggleNode()'}
