@@ -21,20 +21,16 @@ class Book < ActiveRecord::Base
   def meta_keywords
     volume = self.volumes.first
     solr_books_core = RSolr::Ext.connect url: SOLR_NAMES_FOUND
-    response = solr_books_core.find q: "job_id:#{volume.job_id}", fl: "sci_name"
-    response['response']['docs'].map{|item| "#{item['sci_name']}"}.join(", ")
+    response = solr_books_core.find q: "job_id:#{volume.job_id}", fl: 'sci_name'
+    response['response']['docs'].map{|item| "#{item['sci_name']}"}.join(', ')
   end
 
   def self.get_pending_metadata_books
     Book.where(:book_status_id => BookStatus.pending_metadata.id)
   end
 
-  # def self.get_pending_content_books
-    # Book.where(:book_status_id => BookStatus.pending_content.id)
-  # end  
-
   def meta_author
-
+    authors.map{|author| author.name}.join(', ')
   end
 
   def meta_description

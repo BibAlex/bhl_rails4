@@ -20,7 +20,7 @@ RSpec.describe Book, type: :model do
     it { should have_many(:volumes) }
   end
 
-  describe "meta functions" do
+  describe 'meta functions' do
 
     before do
       @book = FactoryGirl.build(:book)
@@ -42,17 +42,19 @@ RSpec.describe Book, type: :model do
       solr_names_found_core.commit
     end
 
-    it "returns a list of volume's names" do
-      expect(@book.meta_keywords).to eq("sci_name_1, sci_name_2")
+    it 'returns a list of volumes names' do
+      expect(@book.meta_keywords).to eq('sci_name_1, sci_name_2')
     end
+
+
 
   end
 
-  describe "Hadoop functions" do
+  describe 'Hadoop functions' do
     before do
       # make sure that book_statuses table is populated
       BookStatus.delete_all
-      ["Pending metadata", "Pending content", "Pending indexing", "Indexed"].each do |status|
+      ['Pending metadata', 'Pending content', 'Pending indexing', 'Indexed'].each do |status|
         BookStatus.create(:status_code => status)
       end
 
@@ -62,7 +64,7 @@ RSpec.describe Book, type: :model do
       end
     end
 
-    it "returns a pending metadata book" do
+    it 'returns a pending metadata book' do
       books = Book.get_pending_metadata_books
       expect(books.count).to eq(1)
     end
