@@ -4,8 +4,7 @@ class HierarchyEntry < EOLBase
   belongs_to :hierarchy
 
   def self.find_siblings(hierarchy_id, parent_id)
-    if (hierarchy_id.to_i.is_a? Integer) && (parent_id.to_i.is_a? Integer)
-      self.find_by_sql("select string as taxon_concept, h1.id, h1.parent_id,
+    self.find_by_sql("select string as taxon_concept, h1.id, h1.parent_id,
                         (select count(*) from hierarchy_entries as h2 where h2.parent_id=h1.id)
                           as siblings_count,
                           h1.taxon_concept_id
@@ -13,10 +12,6 @@ class HierarchyEntry < EOLBase
                           left outer join names on names.id=name_id
                         where hierarchy_id=#{hierarchy_id.to_i} and parent_id=#{parent_id.to_i} and published=1
                         order by string;")
-
-    else
-      return []
-    end
   end
 
   def self.find_taxon(id)
