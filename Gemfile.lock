@@ -331,6 +331,7 @@ DEPENDENCIES
   database_cleaner
   factory_girl_rails
   faker
+  guard
   guard-rspec
   haml
   i18n
@@ -362,3 +363,6 @@ DEPENDENCIES
   uglifier
   uuidtools
   will_paginate
+
+BUNDLED WITH
+   1.12.5

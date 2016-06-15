@@ -57,19 +57,19 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-group :development do 
-
+group :development do
+  gem 'guard'
 end
 
 group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'shoulda-matchers'
-  gem 'faker'  
+  gem 'faker'
   gem 'thin'
   gem 'capybara'
   gem 'minitest'
-  gem 'selenium-webdriver'  
+  gem 'selenium-webdriver'
   gem 'byebug'
   gem 'database_cleaner'
   gem 'rubocop', require: false
