@@ -213,6 +213,7 @@ en:
     top_rated: Top Rated
     top_collections: Top Collections
     unauthorized_action: Unauthorized Action
+    loading: Loading ...
 
 
   warn:

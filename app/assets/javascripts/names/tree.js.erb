@@ -1,0 +1,31 @@
+/*
+This JS file includes all functions needed to display hierarchies trees, loading entries, and
+displaying entry details
+ */
+
+var closedIcon = '/arrow_closed.png';
+var openIcon = '/arrow_open.png';
+var nodeIcon = '/node.gif';
+
+function getAjaxUrl(hierarchyId, hierarchyEntryId) {
+  var ajaxUrl = "http://localhost:3000/names/show?h_id=" + hierarchyId;
+  if (hierarchyEntryId != 0)
+    ajaxUrl += "&id=" + hierarchyEntryId;
+  return ajaxUrl;
+}
+
+bhlApp.service('HierarchySrv', function () {
+  return {
+    hierarchy: '<%= DEFAULT_HIERARCHY_ID%>',
+    showTree: true
+  };
+});
+
+var namesCtrl = bhlApp.controller('NamesCtrl', function($scope, $http, $log, $window, HierarchySrv) {
+  $scope.hierarchy = HierarchySrv.hierarchy;
+
+  $scope.loadHierarchy = function() {
+    HierarchySrv.hierarchy = $scope.hierarchy;
+    $scope.$broadcast('changeHierarchy',{});
+  }
+});
