@@ -7,14 +7,16 @@ class Activity < ActiveRecord::Base
   validates :action, presence: true
   validates :activitable_type, presence: true
 
-  def self.filter__and_sort_activities(filter, sort, page)
-    filter_stmt = ''
-    if filter == 'comments'
-      filter_stmt = "action = 'comment'"
-    elsif filter == 'rate'
-      filter_stmt = "action = 'rate'"
-    elsif filter == 'collections'
-      filter_stmt = "activitable_type = 'collection'"
+  def self.filter_and_sort_activities(filter, sort, page)
+    case filter
+      when 'comments'
+        filter_stmt = "action = 'comment'"
+      when 'rate'
+        filter_stmt = "action = 'rate'"
+      when 'collections'
+        filter_stmt = "activitable_type = 'collection'"
+      else
+        filter_stmt = ''
     end
     Activity.where(filter_stmt).order("created_at #{sort}").paginate(page: page, per_page: PAGE_SIZE)
   end

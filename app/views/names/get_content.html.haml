@@ -1,17 +1,18 @@
-.spacing-left.panel.panel-styled
-  .panel-heading
-    %h3.panel-title
-      = @name
-  .panel-body
-    %center
-      = link_to I18n.t('common.species_details'), "#{I18n.t('common.eol_pages_link')}#{@taxon_concept_id}", target: "_blank"
-      %br
-      - if @image
-        = image_tag @image, :width => 200
-        %br
-      %br
-      - if @books_count == 0
-        %b
-          = I18n.t('common.name_found_in_books', count: @books_count)
-      - else
-        = link_to I18n.t('common.name_found_in_books', count: @books_count), books_path(params: add_facet_search({}, 'name', @name))
+%md-dialog{'aria-label': "#{@name}", 'ng-cloak': '' }
+  %form
+    %md-toolbar
+      %div{class: 'md-toolbar-tools'}
+        %h2
+          = @name
+        %span{flex: ''}
+        %md-button{class: 'md-icon-button', 'ng-click': 'cancel()'}
+          %md-icon{'md-svg-src': 'img/icons/ic_close_24px.svg', 'aria-label': 'Close dialog'}
+    %md-dialog-content
+      %div{class: 'md-dialog-content'}
+        %img{src: "#{@image}"}
+    %md-dialog-actions
+      %md-button{href: "#{books_path(params: add_facet_search({}, 'name', @name))}", 'md-autofocus': ''}
+        = I18n.t('common.name_found_in_books', count: @books_count)
+      %span{flex: ''}
+      %md-button{href: "#{I18n.t('common.eol_pages_link')}#{@taxon_concept_id}", target: '_blank'}
+        = I18n.t('common.species_details')
