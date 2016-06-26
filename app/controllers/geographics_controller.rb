@@ -4,11 +4,7 @@ class GeographicsController < ApplicationController
   before_filter :initialize_rsolr
 
   def index
-
     @page_title = I18n.t('common.geographics')
-    @map = Cartographer::Gmap.new('map' , zoom: 2)
-    @header = Cartographer::Header.new.to_s
-    @range = params[:range] ? params[:range] : "100,200,300,400,500"
     @icons = {
       100 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_blue')}",
       200 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_green')}",
@@ -16,17 +12,20 @@ class GeographicsController < ApplicationController
       400 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_orange')}",
       500 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_red')}"
       }
-    # defining icons
-    gicons = {}
-    [100, 200, 300, 400, 500].each do |i|
-      temp_icon = Cartographer::Gicon.new( name: "icon_#{i-10}_to_#{i}", image_url: "#{@icons[i]}",
-                                           width: 12, height: 20,
-                                           shadow_width: 0, shadow_height: 0, #removing shadow
-                                           anchor_x: 6, #width/2
-                                           anchor_y: 20)
-      gicons[i] = temp_icon
-      @map.icons << temp_icon
-    end
+  end
+  
+  
+  def load_books
+    books_locations = []
+    range = params[:range] ? params[:range] : "100,200,300,400,500"
+    @icons = {
+      100 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_blue')}",
+      200 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_green')}",
+      300 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_yellow')}",
+      400 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_orange')}",
+      500 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_red')}"
+      }
+    
     response = @rsolr.find q: "*:*", facet: true, 'facet.field' => 'location_facet', rows: 0, 'facet.limit' => 30
     response.facets.first.items.each_with_index do |item, index|
       # specify icon
@@ -43,19 +42,21 @@ class GeographicsController < ApplicationController
           icon_in = 500
       end
 
-      if @range.include?(icon_in.to_s)
+      if range.include?(icon_in.to_s)
 
         values= item.value.split(",") #"city, longitude, latitude"
         location = load_geolocations_from_solr(item.value)
 
          unless location.nil?
-          @map.markers << Cartographer::Gmarker.new( name:  "geo_marker_#{index}", marker_type: "Building",
-                            position: [location[:latitude],location[:longitude]],
-                            info_window_url: "/geographics/show/#{location[:address]}",
-                            icon: gicons[icon_in])
+          books_locations << { latitude: location[:latitude],
+                                longitude: location[:longitude],
+                                address: location[:address],
+                                icon: @icons[icon_in],
+                                category: icon_in}
          end
       end
     end
+    render json: books_locations
   end
 
   def show

@@ -1,16 +1,12 @@
-:javascript
-  $(document).ready(function(){
-    prepare_map();
-  });
+%script{ :src => "https://maps.googleapis.com/maps/api/js"}
+= javascript_include_tag 'geographics'
 
 .row.clearfix
-  .col-md-12.column
+  .col-md-12.column{ "ng-controller" => "MapCtrl", "ng-init" => "setSelectPins()" }
     %h2
       = @page_title
     .well
       = render partial: "pins"
-    %center
-      = raw @header
-      = raw @map.to_html
+    %center 
       #map
 
