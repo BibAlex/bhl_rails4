@@ -363,6 +363,3 @@ DEPENDENCIES
   uglifier
   uuidtools
   will_paginate
-
-BUNDLED WITH
-   1.12.5

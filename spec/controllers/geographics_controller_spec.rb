@@ -39,20 +39,6 @@ RSpec.describe GeographicsController, type: :controller do
       get :index
       expect(assigns[:page_title]).to eq(I18n.t 'common.geographics')
     end
-    it 'loads all the books in solr on the map' do
-      get :index
-      count =
-      expect(assigns[:map].markers.count).not_to eq(0)
-    end
-    it " specifies the range if passed" do
-      range = "10,30,40"
-      get :index, range: range
-      expect(assigns[:range]).to eq(range)
-    end
-    it "specifies a default range if no range is passed" do
-      get :index
-      expect(assigns[:range]).to eq("100,200,300,400,500")
-    end
   end
 
   describe 'GET show' do

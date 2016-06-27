@@ -80,6 +80,7 @@ BhlRails4::Application.configure do
   SOLR_SCI_NAMES = "http://localhost:8983/solr/sci_names"
   SOLR_NAMES_FOUND = "http://localhost:8983/solr/names_found"
   SOLR_GEOLOCATIONS = "http://localhost:8983/solr/geolocations"
+  GENERATED_NAMES_PATH = "public"
 
 
   # Disable automatic flushing of the log to improve performance.

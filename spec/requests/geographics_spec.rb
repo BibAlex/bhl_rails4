@@ -26,21 +26,16 @@ RSpec.describe "Geographics", type: :request do
     it "displays the pins bar" do
       visit geographics_path(locale: I18n.locale)
       expect(page).to have_selector("div[class='well']")
-      expect(page).to have_selector("input[id='check100']")
+      expect(page).to have_selector("input[id='check_100']")
       expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.blue_pin'}\']")
-      expect(page).to have_selector("input[id='check200']")
+      expect(page).to have_selector("input[id='check_200']")
       expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.green_pin'}\']")
-      expect(page).to have_selector("input[id='check300']")
+      expect(page).to have_selector("input[id='check_300']")
       expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.yellow_pin'}\']")
-      expect(page).to have_selector("input[id='check400']")
+      expect(page).to have_selector("input[id='check_400']")
       expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.orange_pin'}\']")
-      expect(page).to have_selector("input[id='check500']")
+      expect(page).to have_selector("input[id='check_500']")
       expect(page).to have_selector("img[title=\'#{I18n.t 'geographics.red_pin'}\']")
-    end
-
-    it "unchecks the pins if not included in the range" do
-      visit geographics_path(locale: I18n.locale, range: "100,300,500")
-      expect(page).to have_selector("input[checked= 'checked']", count:3)
     end
   end
 end
