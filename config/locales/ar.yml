@@ -197,7 +197,7 @@ ar:
   msgs:
     no_suggestion: "لا توجد إقتراحات"
     registration_welcome_message: "مرحبًا %{real_name}. لم يتم تفعيل الحساب الخاص بك بعد. سوف يتم إرسال بريد إلكتروني يتضمن التعليمات الخاصة بالتفعيل."
-    form_validation_errors_for_attribute_assistive: "يوجد خطأ في التحقق من الصحة في هذه العنصر"
+    form_validation_errors_for_attribute_assistive: "يوجد خطأ في التحقق من صحة هذا العنصر"
     upload_photo_max_size_error:  لا يمكن تحميل ملف أكبر من
     activation_failed: "لقد فشلت عملية التفعيل"
     account_already_active: تم تفعيل هذا الحساب من قبل
