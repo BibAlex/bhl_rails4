@@ -16,9 +16,12 @@ class User < ActiveRecord::Base
 
   validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 4, maximum: 16 }
   validates :entered_password, presence: true, confirmation: true,
-            format: @password_regex,
             length: { minimum: 8, maximum: 16 },
             if: :password_validation_required?
+  validates_format_of :entered_password, with: @password_regex,
+                      message: I18n.t('msgs.invalid_password_format'),
+                      if: :password_validation_required?
+
   validates :email, presence: true, confirmation: true, format: @email_format_re,
             uniqueness: { case_sensitive: false }
   validates :real_name, presence: true

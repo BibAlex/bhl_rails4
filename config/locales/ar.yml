@@ -236,6 +236,7 @@ ar:
     delete_saved_query_confirm: هل ترغب فعلاً في حذف هذا الاستعلام؟
     book_removed: "تمت إزالة الكتاب"
     hidden_comment_msg: تم إخفاء التعليق لأنه قد يحتوي على محتوى غير ملائم
+    invalid_password_format: يجب ان تحتوي على حرف واحد ورقم واحد على الاقل
 
   activerecord:
     attributes:
@@ -267,8 +268,8 @@ ar:
           one: "(حرف %{count}بحد أقصى)طويل جدًّا "
           other: "(حرف %{count} بحد أقصى)طويل جدًّا "
         too_short:
-          one: "(حرف %{count}بحد أدنى)قصير جدًّا "
-          other: "(حرف %{count}بحد أدنى)قصير جدًّا "
+          one: "قصير جدًّا  (بحد أدنى %{count} حرف)"
+          other: "قصير جدًّا  (بحد أدنى %{count} حرف)"
         wrong_length: "(حرف %{count}(يجب أن يكون يوجد خطأ في الطول)"
         not_a_number: "ليس رقمًا"
         not_an_integer: "يجب أن يكون عددًا صحيحًا"
