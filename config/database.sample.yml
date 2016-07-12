@@ -2,14 +2,14 @@ common: &common
   adapter: mysql2
   encoding: utf8
   reconnect: true
-  
+
 eol: &eol
   <<: *common
   host:        localhost
   database:    eol
   username:    root
   password:    root
-  #eol_port:        3306 
+  #eol_port:        3306
 
 development:
   <<: *common
@@ -18,7 +18,7 @@ development:
   username:        root
   password:        root
   database:        bhl_development_2
-  
+
 test:
   <<: *common
   #<<: *eol
@@ -28,9 +28,29 @@ test:
   database:        bhl_test-2
 
 production:
-  <<: *common
+  adapter: mysql2_makara
+  encoding: utf8
+  reconnect: true
   #<<: *eoloo
-  host:            localhost
-  username:        root
-  password:        root
-  database:        bhl_production_2
+  # add a makara subconfig
+  makara:
+
+    # the following are default values
+    blacklist_duration: 5
+    master_ttl: 5
+    master_strategy: round_robin
+    sticky: true
+
+    # list your connections with the override values (they're merged into the top-level config)
+    # be sure to provide the role if master, role is assumed to be a slave if not provided
+    connections:
+      - role: master
+        host:
+        username:
+        password:
+        database:
+      - role: slave
+        host:
+        username:
+        password:
+        database:
