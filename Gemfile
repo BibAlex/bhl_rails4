@@ -35,7 +35,7 @@ gem 'recaptcha'
 gem 'rails-erd'
 gem 'social-share-button', '~> 0.1.8', git: 'https://github.com/cuterxy/social-share-button.git'
 gem 'carrierwave'
-gem "mini_magick"
+gem 'mini_magick'
 gem 'acts_as_list'
 gem 'will_paginate'
 gem 'uuidtools'
@@ -43,6 +43,9 @@ gem 'i18n_compare_yaml_files'
 gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :ruby]
+
+# makara is used to split read/write for database.
+gem 'makara'
 
 
 
