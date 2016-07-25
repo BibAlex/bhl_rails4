@@ -275,7 +275,10 @@ en:
     hidden_comment_msg: This comment was hidden as it may contains inappropriate content
     resource_not_found: Resource not found
     book_already_added: Book is already added to this collection
-    invalid_password_format: Password should contain at least one number and one letter
+    invalid_password_format: Password should be 8-16 length and contain at least one number and one letter
+    short_username: Username must contain 4-16 characters and numbers
+    invalid_username_format: Username must contain only characters and numbers
+
 
 
   activerecord:

@@ -1,8 +1,4 @@
-:javascript
-  $(document).ready(function() {
-    initialize_user_form();
-  });
-
+= javascript_include_tag 'users/signup'
 
 - user_form_params = get_user_form_params(user)
 
@@ -13,21 +9,65 @@
         = user_form_params[:page_title]
       .form-horizontal
         = validation_errors_for(user)
-        = form_for user, url: { action: action }, builder: FormHelper::BHLFormBuilder ,html: { onsubmit: 'return check_image_size();' } do |f|
+        = form_for user, url: { action: action },
+                    builder: FormHelper::BHLFormBuilder ,
+                    html: { name: 'signupForm',
+                            'ng-controller': 'signupValidate',
+                            'novalidate': '',
+                            'ng-submit': 'signupValidate($event, signupForm)'.html_safe} do |f|
           .form-group
             = f.label I18n.t('common.username'), class: 'col-sm-2 control-label'
             .col-sm-10
-              = f.text_field :username, { class: 'required form-control', id: 'username' }
+              = f.text_field :username,
+                             class: 'required form-control',
+                             required: true,
+                             placeholder: I18n.t('common.username'),
+                             'ng-model': 'username',
+                             MinLength: 4,
+                             MaxLength: 16,
+                             pattern: '[a-zA-Z0-9]{4,16}'
+              %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[username]'].$error.required && (signupForm['user[username]'].$touched || showErrors)".html_safe}
+                = I18n.t('msgs.empty_user_name_error')
+                %br
+              %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[username]'].$error.minlength &&  (signupForm['user[username]'].$touched || showErrors)".html_safe}
+                = I18n.t('msgs.short_username')
+                %br
+              %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[username]'].$error.pattern && !signupForm['user[username]'].$error.minlength && (signupForm['user[username]'].$touched || showErrors)".html_safe}
+                = I18n.t('msgs.invalid_username_format')
+                %br
           - if user.new_record?
             .form-group
               = f.label I18n.t('common.password') , class: 'col-sm-2 control-label'
               .col-sm-10
-                = f.password_field :entered_password, { type: 'password', class: 'required form-control', autocomplete: 'off' }
+                = f.password_field :entered_password,
+                                   type: 'password',
+                                   class: 'required form-control',
+                                   autocomplete: 'off',
+                                   'ng-model': 'entered_password',
+                                   MinLength: 8,
+                                   MaxLength: 16,
+                                   placeholder: I18n.t('common.password'),
+                                   pattern: '((?=.*\d)(?=.*[a-zA-Z]).)'
+                %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[entered_password]'].$error.required && (signupForm['user[entered_password]'].$touched || showErrors)".html_safe}
+                  = I18n.t('msgs.empty_password_error')
+                %span{class: 'ng-validation-error',
+                    'ng-show': "(signupForm['user[entered_password]'].$error.pattern) && (signupForm['user[entered_password]'].$touched || showErrors)".html_safe}
+                  = I18n.t('msgs.invalid_password_format')
             .form-group
               = f.label I18n.t('common.password_confirmation') , class: 'col-sm-2 control-label'
               .col-sm-10
-                = f.password_field :entered_password_confirmation, { type: 'password', class: 'required form-control', autocomplete: 'off' }
-          - unless user.new_record?
+                = f.password_field :entered_password_confirmation,
+                                   type: 'password',
+                                   class: 'required form-control',
+                                   autocomplete: 'off',
+                                   MinLength: 8,
+                                   MaxLength: 16,
+                                   placeholder: I18n.t('common.password_confirmation')
+          - else
             %a.btn{ style: 'cursor:pointer;', id: 'change_password' }
               = I18n.t('common.change_password')
             %div{ style: 'cursor:pointer;display:none;', id: 'change_password_block'}
@@ -46,7 +86,7 @@
           .form-group
             = f.label I18n.t('common.email'), class: 'col-sm-2 control-label'
             .col-sm-10
-              = f.text_field :email, { class: 'required form-control' }
+              = f.email_field :email, { class: 'required form-control' }
           .form-group
             = f.label I18n.t('common.email_confirmation'), class: 'col-sm-2 control-label'
             .col-sm-10
