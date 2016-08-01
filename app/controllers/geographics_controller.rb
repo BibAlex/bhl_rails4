@@ -17,7 +17,7 @@ class GeographicsController < ApplicationController
   
   def load_books
     books_locations = []
-    range = params[:range] ? params[:range] : "100,200,300,400,500"
+    range = params[:range] =~ /^[0-9]+$/ ? params[:range] : "100,200,300,400,500"
     @icons = {
       100 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_blue')}",
       200 => "/assets/images_#{I18n.locale}/#{I18n.t('geographics.map_pin_green')}",
