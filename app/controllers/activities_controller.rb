@@ -14,7 +14,7 @@ class ActivitiesController < ApplicationController
     @sort_filter = params[:sort] && params[:filter] ? "#{params[:filter]} #{params[:sort]}" : "all DESC"
     page = params[:page] ? params[:page].to_i : 1
     filter = params[:filter] ? params[:filter] : nil
-    sort = params[:sort] ? params[:sort] : 'DESC'
+    sort = params[:sort] == "ASC" ? "ASC" : "DESC"
     @activities = Activity.filter_and_sort_activities(filter, sort, page)
   end
 end

@@ -18,7 +18,8 @@ class Activity < ActiveRecord::Base
       else
         filter_stmt = ''
     end
-    Activity.where(filter_stmt).order("created_at #{sort}").paginate(page: page, per_page: PAGE_SIZE)
+    actv = Activity.where(filter_stmt).order(created_at: sort).paginate(page: page, per_page: PAGE_SIZE)
+    # http://localhost:3000/en/activities?filter=rate&sort=select%20action%20from%20activities%20where%20id%20=1
   end
 
   def self.add_activity(options)
