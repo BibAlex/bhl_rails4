@@ -235,7 +235,10 @@ en:
     empty_user_name_error: Username can't be empty
     empty_password_error: Password can't be empty
     empty_password_confirmation_error: Password Confirmation can't be empty
+    invalid_password_confirmation: Invalid password confirmation
     empty_email_error: Email can't be empty
+    invalid_email_error: Invalid email format
+    invalid_email_confirmation: Invalid email conformation
     empty_verfication_error: Please fill this
     recaptcha_error: "There is a validation error on verification element"
     sign_in_unsuccessful_error: "Sign in failed. Invalid username or password."
@@ -278,6 +281,8 @@ en:
     invalid_password_format: Password should be 8-16 length and contain at least one number and one letter
     short_username: Username must contain 4-16 characters and numbers
     invalid_username_format: Username must contain only characters and numbers
+    empty_real_name: Real name can't be empty
+    short_real_name: Real name must contain 4-16 characters and numbers
 
 
 

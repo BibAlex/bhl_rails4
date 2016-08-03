@@ -206,7 +206,10 @@ ar:
     empty_user_name_error: لا يمكن ترك اسم المستخدم خاليًا
     empty_password_error: لا يمكن ترك كلمة المرور خالية
     empty_password_confirmation_error: يجب عليك تأكيد كلمة المرور
+    invalid_password_confirmation: تأكيد كلمة المرور غير صحيح
     empty_email_error: يجب إدخال البريد الإلكترونى
+    invalid_email_error: البريد الإلكترونى غير صحيح
+    invalid_email_confirmation: تأكيد البريد الإلكترونى غير صحيح
     access_denied_error: "غير مسموح بالدخول"
     empty_verfication_error: يرجى ملء هذا الحقل
     reset_password_failed: "تعيين كلمة المرور فشلت عملية إعادة"
@@ -239,6 +242,8 @@ ar:
     invalid_password_format: يجب ان تحتوي على حرف واحد ورقم واحد على الاقل وان تحتوي على 8-16 حرف أو رقم
     short_username: أسم المستخدم يجب ان يحتوي على 4-16 حرف أو رقم
     invalid_username_format: أسم المستخدم يجب ان يحتوي على حروف أو ارقام فقط
+    empty_real_name: لا يمكن ترك الاسم الفعلي خاليًا
+    short_real_name: الاسم الفعلي يجب ان يحتوي على 4-16 حرف أو رقم
 
   activerecord:
     attributes:

@@ -43,14 +43,15 @@
               = f.label I18n.t('common.password') , class: 'col-sm-2 control-label'
               .col-sm-10
                 = f.password_field :entered_password,
+                                   'ng-model': 'entered_password',
                                    type: 'password',
                                    class: 'required form-control',
                                    autocomplete: 'off',
-                                   'ng-model': 'entered_password',
                                    MinLength: 8,
                                    MaxLength: 16,
+                                   required: true,
                                    placeholder: I18n.t('common.password'),
-                                   pattern: '((?=.*\d)(?=.*[a-zA-Z]).)'
+                                   'ng-pattern': '/(?=.*[a-zA-Z])(?=.*[0-9])/'
                 %span{class: 'ng-validation-error',
                     'ng-show': "signupForm['user[entered_password]'].$error.required && (signupForm['user[entered_password]'].$touched || showErrors)".html_safe}
                   = I18n.t('msgs.empty_password_error')
@@ -61,12 +62,19 @@
               = f.label I18n.t('common.password_confirmation') , class: 'col-sm-2 control-label'
               .col-sm-10
                 = f.password_field :entered_password_confirmation,
+                                   'ng-model': 'entered_password_confirmation',
                                    type: 'password',
                                    class: 'required form-control',
                                    autocomplete: 'off',
-                                   MinLength: 8,
                                    MaxLength: 16,
+                                   required: true,
                                    placeholder: I18n.t('common.password_confirmation')
+                %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[entered_password_confirmation]'].$error.required && (signupForm['user[entered_password_confirmation]'].$touched || showErrors)".html_safe}
+                  = I18n.t('msgs.empty_password_confirmation_error')
+                %span{class: 'ng-validation-error',
+                    'ng-show': "(entered_password_confirmation != entered_password) && (signupForm['user[entered_password_confirmation]'].$touched || showErrors)".html_safe}
+                  = I18n.t('msgs.invalid_password_confirmation')
           - else
             %a.btn{ style: 'cursor:pointer;', id: 'change_password' }
               = I18n.t('common.change_password')
@@ -86,26 +94,67 @@
           .form-group
             = f.label I18n.t('common.email'), class: 'col-sm-2 control-label'
             .col-sm-10
-              = f.email_field :email, { class: 'required form-control' }
+              = f.email_field :email,
+                              class: 'required form-control',
+                              MaxLength: 64,
+                              placeholder: I18n.t('common.email'),
+                              'ng-model': 'email',
+                              required: true
+              %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[email]'].$error.required && (signupForm['user[email]'].$touched || showErrors)".html_safe}
+                = I18n.t('msgs.empty_email_error')
+              %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[email]'].$error.email && (signupForm['user[email]'].$touched || showErrors)".html_safe}
+                = I18n.t('msgs.invalid_email_error')
           .form-group
             = f.label I18n.t('common.email_confirmation'), class: 'col-sm-2 control-label'
             .col-sm-10
-              = f.text_field :email_confirmation, { class: 'required form-control' }
+              = f.text_field :email_confirmation,
+                             class: 'required form-control',
+                             MaxLength: 64,
+                             placeholder: I18n.t('common.email'),
+                             'ng-model': 'email_confirmation',
+                             required: true
+              %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[email_confirmation]'].$error.required && (signupForm['user[email_confirmation]'].$touched || showErrors)".html_safe}
+                = I18n.t('msgs.empty_email_error')
+              %span{class: 'ng-validation-error',
+                    'ng-show': "(email_confirmation != email) && (signupForm['user[email_confirmation]'].$touched || showErrors)".html_safe}
+                = I18n.t('msgs.invalid_email_confirmation')
           .form-group
             = f.label I18n.t('common.real_name'), class: 'col-sm-2 control-label'
             .col-sm-10
-              = f.text_field :real_name, { class: 'required form-control' }
+              = f.text_field :real_name,
+                             class: 'required form-control',
+                             MinLength: 4,
+                             MaxLength: 16,
+                             required: true,
+                             'ng-model': 'real_name'
+              %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[real_name]'].$error.required && (signupForm['user[real_name]'].$touched || showErrors)".html_safe}
+                = I18n.t('msgs.empty_real_name')
+                %br
+              %span{class: 'ng-validation-error',
+                    'ng-show': "signupForm['user[real_name]'].$error.minlength &&  (signupForm['user[real_name]'].$touched || showErrors)".html_safe}
+                = I18n.t('msgs.short_real_name')
+                %br
+
           - if user_form_params[:verify_captcha]
             .form-group
               = f.label I18n.t('common.recaptcha'), class: 'required col-sm-2 control-label'
               .col-sm-10
-                = recaptcha_tags(display: {theme: 'clean'})
+                = recaptcha_tags(theme: 'clean',
+                                 callback: 'recaptchaCallback')
+                %br
+                %span{class: 'ng-validation-error', 'ng-show' => 'recaptchaError'.html_safe}
+                  = "#{I18n.t('msgs.recaptcha_error')}"
           - if(!(user.photo_name.blank?))
             - thumb = user.photo_name_url(:thumb)
             .form-group
               = f.label I18n.t('profile_photo'), class: 'col-sm-2 control-label'
               .col-sm-10
                 = image_tag("#{thumb}", width: 150, border: 0)
+
           .form-group
             = f.label I18n.t('common.upload_photo'), class: 'col-sm-2 control-label'
             .col-sm-10
@@ -113,7 +162,11 @@
                 = "#{I18n.t('msgs.upload_photo_max_size_error')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
               .invisible_error_msg#photo_ext_error_message
                 = "#{I18n.t('msgs.upload_photo_ext_error')}"
-              = f.file_field :photo_name, { id: 'photo_name', type: 'file', class: 'btn btn-default' }
+              = f.file_field :photo_name,
+                             id: 'photo_name',
+                             type: 'file',
+                             class: 'btn btn-default',
+                             validfile: ''
               %p.help-block
                 = "#{I18n.t('warn.max_photo_size')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
           .form-group

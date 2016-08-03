@@ -21,7 +21,7 @@ bhlApp.controller('loginValidate', function($scope, $window) {
 });
 
 function recaptchaCallback() {
-    var appElement = document.querySelector('[ng-app=loginApp]');
+    var appElement = document.querySelector('[ng-app=bhlApp]');
     var $scope = angular.element(appElement).scope().$$childHead;
     $scope.$apply(function() {
         $scope.recaptchaError = false;

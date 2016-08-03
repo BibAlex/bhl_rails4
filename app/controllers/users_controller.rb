@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
 
+  protect_from_forgery
+
   include UsersHelper
   include BHL::Login
 
