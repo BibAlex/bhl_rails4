@@ -30,16 +30,21 @@ class UsersController < ApplicationController
   def recover_password
     return redirect_to user_path(id: session[:user_id]) if is_logged_in?
     if bhl_verify_recaptcha
-      @user = User.find_by_email(params[:user][:email])# unless @email
-      if @user
-        @user.change_activation_code
-        send_reset_password_email
-        redirect_to login_users_path, flash: { notice: I18n.t('msgs.recover_password_success') }
+      @email_format_re = /\A(?:[_\+a-z0-9-]+)(\.[_\+a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})\z/i
+      if params[:user][:email] =~ @email_format_re
+        @user = User.find_by_email(params[:user][:email])# unless @email
+        if @user
+          @user.change_activation_code
+          send_reset_password_email
+          redirect_to login_users_path, flash: { notice: I18n.t('msgs.recover_password_success') }
+        else
+          redirect_to forgot_password_users_path, flash: { error: I18n.t('msgs.email_not_found', email: @email) }
+        end
       else
-        redirect_to forgot_password_users_path, flash: { error: I18n.t('msgs.email_not_found', email: @email) }
+        redirect_to forgot_password_users_path, flash: { error: I18n.t('msgs.recaptcha_error') }
       end
     else
-      redirect_to forgot_password_users_path, flash: { error: I18n.t('msgs.recaptcha_error') }
+      redirect_to forgot_password_users_path, flash: { error: I18n.t('msgs.invalid_email_format') }
     end
   end
 
@@ -128,6 +133,19 @@ class UsersController < ApplicationController
   end
 
   def show
+    if params[:tab] == "annotations"
+      @tab = "annotations"
+    elsif params[:tab] == "queries"
+      @tab = "queries"
+    elsif params[:tab] == "collections"
+      @tab = "collections"
+    elsif params[:tab] == "history"
+      @tab = "history"
+    elsif params[:tab] == "activity"
+      @tab = "activity"
+    else
+      @tab = "profile"
+    end
     send("load_#{@tab}_tab") unless @tab == "profile"
   end
 
