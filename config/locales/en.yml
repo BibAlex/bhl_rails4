@@ -276,6 +276,7 @@ en:
     resource_not_found: Resource not found
     book_already_added: Book is already added to this collection
     invalid_password_format: Password should contain at least one number and one letter
+    invalid_email_format: Invalid Email fromat
 
 
   activerecord:

@@ -237,7 +237,8 @@ ar:
     book_removed: "تمت إزالة الكتاب"
     hidden_comment_msg: تم إخفاء التعليق لأنه قد يحتوي على محتوى غير ملائم
     invalid_password_format: يجب ان تحتوي على حرف واحد ورقم واحد على الاقل
-
+    invalid_email_format: البريد الالكتروني غير صالح
+    
   activerecord:
     attributes:
       user:
