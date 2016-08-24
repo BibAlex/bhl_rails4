@@ -73,6 +73,8 @@ BhlRails4::Application.routes.draw do
     get "names/get_content/:id" => "names#get_content"
     get "get_or_delete_collection_photo" => "collections#get_or_delete_collection_photo"
     get "/collectionautocomplete" => "collections#autocomplete"
+    
+
 
 
 
@@ -89,11 +91,13 @@ BhlRails4::Application.routes.draw do
         get 'forgot_password'
         post 'validate'
         post 'recover_password'
-        post 'reset_password_action'
+        post 'reset_password_action'              
       end
       member do
         get 'logout'
         get 'get_user_profile_photo'
+        get "change_password"
+        post "perform_change_password"
       end
     end
 

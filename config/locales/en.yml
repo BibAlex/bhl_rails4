@@ -274,7 +274,13 @@ en:
     hidden_comment_msg: This comment was hidden as it may contains inappropriate content
     resource_not_found: Resource not found
     book_already_added: Book is already added to this collection
-
+    short_username_length: Username is too short(Minimum Length is 4)
+    long_username_length: Username is too long(Maximum Length is 16)
+    email_blank_error: Email can't be empty
+    invalid_email_format: Invalid email format
+    short_password_length: Password is too short(Minimum Length is 4)
+    long_password_length: Password is too long(Maximum Length is 16)
+    invalid_username_format: Invalid Username Format(Only characters from a:z/A:Z and numbers from 0:9 are allowed)
 
   activerecord:
       attributes:
@@ -374,7 +380,9 @@ en:
       user_recover_account:
         subject: "Recover your BHL account"
         message: "The BHL received a request to recover your account. If you did not make this request, please ignore this email.The following link provides a one time log in to allow you to change your password"
-
+      user_change_password:
+        subject: "Change Password Notification"
+        message: "Your password has been changed successfully"
   geographics:
     blue_pin: 'Blue Pin'
     green_pin: 'Green Pin'
