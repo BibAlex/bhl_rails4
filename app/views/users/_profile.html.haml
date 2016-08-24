@@ -4,6 +4,7 @@
     %small
       - if User.can_edit?(@user.id, session[:user_id])
         = link_to I18n.t('common.edit'), edit_user_path(id: @user.id), { class: "fa fa-edit" }
+        = link_to I18n.t('common.change_password') , change_password_user_path(id: @user.id)
   %hr
   #photo
     .col-md-2.column.pull-right{ id: "user_photo" }

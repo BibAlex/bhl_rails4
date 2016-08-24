@@ -26,5 +26,10 @@ class Notifier < ApplicationMailer
     @user = user
     mail(content_type: "text/html", subject: I18n.t('notifier.user_activated.subject'), to: user.email, from: NO_REPLY_EMAIL_ADDRESS)
   end
+  
+  def user_change_password_notification(user)
+    @user = user
+    mail(content_type: "text/html", subject: I18n.t('notifier.user_change_password.subject'), to: user.email, from: NO_REPLY_EMAIL_ADDRESS)
+  end
 
 end
