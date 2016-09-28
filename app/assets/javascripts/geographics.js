@@ -1,33 +1,4 @@
-bhlApp.controller('MapCtrl', function ($scope, GoogleMap) {	
-	
-	var googleMapObject;
-    $scope.updatePins = function(pinCategory)
-    {
-    	var field = "check_" + pinCategory;
-    	if ($scope[field]) {
-    		googleMapObject.fillMapWithMarkers(pinCategory);
-    	}
-    	else
-    	{
-    		googleMapObject.removeSelectedPins(pinCategory);
-    	}
-    	
-    };   
-    
-    $scope.setSelectPins = function()
-	{
-		$scope.check_100 = true;
-    	$scope.check_200 = true;
-    	$scope.check_300 = true;
-    	$scope.check_400 = true;
-    	$scope.check_500 = true;
-    	googleMapObject = new GoogleMap(document.getElementById('map'));
-    	googleMapObject.fillMapWithMarkers();   	
-	};
-});
-
-
-bhlApp.factory("GoogleMap", function($http)
+bhlApp.factory("GoogleMap",['$http', function($http)
 {
 	var GoogleMap = function(element)
 	{
@@ -95,4 +66,37 @@ bhlApp.factory("GoogleMap", function($http)
 	    this.initialize(element);	
 	};
 	return GoogleMap;
-});
+}]);
+
+
+
+
+bhlApp.controller('MapCtrl',['$scope','GoogleMap', function ($scope, GoogleMap) {	
+	
+	var googleMapObject;
+    $scope.updatePins = function(pinCategory)
+    {
+    	var field = "check_" + pinCategory;
+    	if ($scope[field]) {
+    		googleMapObject.fillMapWithMarkers(pinCategory);
+    	}
+    	else
+    	{
+    		googleMapObject.removeSelectedPins(pinCategory);
+    	}
+    	
+    };   
+    
+    $scope.setSelectPins = function()
+	{
+		$scope.check_100 = true;
+    	$scope.check_200 = true;
+    	$scope.check_300 = true;
+    	$scope.check_400 = true;
+    	$scope.check_500 = true;
+    	googleMapObject = new GoogleMap(document.getElementById('map'));
+    	googleMapObject.fillMapWithMarkers();   	
+	};
+}]);
+
+
