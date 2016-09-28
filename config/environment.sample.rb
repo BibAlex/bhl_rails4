@@ -42,6 +42,8 @@ DAR_API_CONTENT = ''
 DAR_API_CONTENT_JOBID_STRING = '[JOBID]'
 
 BATCH_LIMIT = 20
+HTTP_PORT = 3000
+HTTPS_PORT = 3001
 
 # old path: content60.eol.org/content
 EOL_CONTENT_PATH = "http://media.eol.org/content/"
