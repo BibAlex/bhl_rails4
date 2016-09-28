@@ -90,7 +90,7 @@ class UsersController < ApplicationController
          successful_validation
         end
       end
-    end
+     end
   end
 
 
@@ -184,6 +184,27 @@ class UsersController < ApplicationController
       end
     end
   end
+  
+  def change_password
+    if authenticate_user(params[:id].to_i)
+      @page_title = I18n.t('common.change_password')
+      @user = User.find(params[:id])
+    end
+  end
+  
+  def perform_change_password
+    if authenticate_user(params[:id].to_i)
+      @user = User.find(params[:id])
+      user_attr = params[:user]
+      user_attr[:username] = @user.username
+      if handle_change_password(user_attr)
+        if @user.update_attributes(User.user_params(user_attr))
+          send_change_password_email
+          handle_successful_update
+        end     
+      end
+    end
+  end
 
 
   private
@@ -209,6 +230,11 @@ class UsersController < ApplicationController
     port = request.port == 80 ? nil : ":#{request.port}"
     url = "#{request.host}#{port}/users/reset_password/#{@user.guid}/#{@user.verification_code}"
     Notifier.user_reset_password_verification(@user, url).deliver_now
+  end
+  
+  def send_change_password_email
+    port = request.port == 80 ? nil : ":#{request.port}"
+    Notifier.user_change_password_notification(@user).deliver_now
   end
 
   def activate_user
@@ -332,7 +358,7 @@ class UsersController < ApplicationController
     log_in(@user) # to make sure everything is loaded properly
     flash.now[:notice] = I18n.t("msgs.changes_saved")
     flash.keep
-    return redirect_to controller: "users", action: "show", id: params[:id]
+    return redirect_to controller: "users", action: "show", id: params[:id]    
   end
 
   def handle_unsuccessful_update
@@ -358,19 +384,26 @@ class UsersController < ApplicationController
 
   def old_password_required
     flash.now[:error] = I18n.t("msgs.old_password_required")
-    render action: "edit"
+    render action: "change_password"
     return false
   end
 
   def invalid_old_password
     flash.now[:error] = I18n.t("msgs.invalid_old_password")
     flash.keep
-    @action = "modify"
-    @user.email_confirmation = @user.email
     params[:entered_password] = nil
     params[:password_confirmation] = nil
-    render action: "edit"
+    render action: "change_password"
     return false
   end
+  
+  protected
+    def allow_http?
+      if ["validate", "reset_password_action", "create", "perform_change_password", "login", "new", "change_password", "reset_password"].include? action_name
+        false
+      else
+        true
+      end
+    end
 
 end

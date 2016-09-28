@@ -10,7 +10,8 @@
                     html: { name: 'loginForm',
                             'novalidate' => '',
                             'ng-controller' => 'loginValidate',
-                            'ng-submit' => 'validateForm($event, loginForm)'.html_safe} do |f|
+                            'ng-submit' => 'validateForm($event, loginForm)'.html_safe,
+                            method: "post"} do |f|
           - unless session[:return_to].blank?
             = f.hidden_field :return_to, value: session[:return_to]
           .form-group

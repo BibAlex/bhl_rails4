@@ -12,18 +12,18 @@ class User < ActiveRecord::Base
   @email_format_re = /\A(?:[_\+a-z0-9-]+)(\.[_\+a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})\z/i
   @password_regex = /\A(?=.*[a-zA-Z])(?=.*[\d])./ # Password must have atleast one nummber and one letter
 
+  username_format_re = /\A[a-zA-Z0-9\u0600-\u06FF]+\z/i
+  
   attr_accessor :entered_password, :entered_password_confirmation, :email_confirmation, :old_password
-
-  validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 4, maximum: 16 }
+  
+  validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 4, maximum: 16 }, format: username_format_re
   validates :entered_password, presence: true, confirmation: true,
             length: { minimum: 8, maximum: 16 },
             if: :password_validation_required?
   validates_format_of :entered_password, with: @password_regex,
                       message: I18n.t('msgs.invalid_password_format'),
                       if: :password_validation_required?
-
-  validates :email, presence: true, confirmation: true, format: @email_format_re,
-            uniqueness: { case_sensitive: false }
+  validates :email, presence: true, confirmation: true, format: @email_format_re, uniqueness: { case_sensitive: false }
   validates :real_name, presence: true
   validate :file_size
   mount_uploader :photo_name, ImageUploader

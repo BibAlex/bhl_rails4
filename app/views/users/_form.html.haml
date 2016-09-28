@@ -1,11 +1,10 @@
-:javascript
-  $(document).ready(function() {
-    initialize_user_form();
-  });
+= javascript_include_tag 'users/user_form'
+
+
 
 
 - user_form_params = get_user_form_params(user)
-
+  
 .col-md-12.column
   %div
     %fieldset
@@ -13,53 +12,115 @@
         = user_form_params[:page_title]
       .form-horizontal
         = validation_errors_for(user)
-        = form_for user, url: { action: action }, builder: FormHelper::BHLFormBuilder ,html: { onsubmit: 'return check_image_size();' } do |f|
+        = form_for user, url: { action: action }, builder: FormHelper::BHLFormBuilder ,
+                   html: { name: 'userForm',
+                           'novalidate' => '',
+                           'ng-controller' => 'userValidate',
+                           'ng-submit' => 'validateForm($event, userForm)'.html_safe } do |f|
           .form-group
             = f.label I18n.t('common.username'), class: 'col-sm-2 control-label'
             .col-sm-10
-              = f.text_field :username, { class: 'required form-control', id: 'username' }
+              = f.text_field :username, { class: "required form-control",
+                                          id: "username",
+                                          'ng-init' => "username = '#{user.username}'",
+                                          'ng-model' => 'username',
+                                          required: true,
+                                          'ng-minlength' => "4",
+                                          'ng-maxlength' => "16",
+                                          'ng-pattern' => "/^[a-zA-Z0-9\u0600-\u06FF]+$/" }
+                                          
+              %span{ class: 'ng-validation-error',
+                     'ng-show': "userForm['user[username]'].$error.required && (userForm['user[username]'].$touched || showErrors)".html_safe}
+                = "#{I18n.t('msgs.empty_user_name_error')}"
+              %span{ class: 'ng-validation-error',
+                     'ng-show': "userForm['user[username]'].$error.minlength".html_safe}
+                = "#{I18n.t('msgs.short_username_length')}"
+              %span{ class: 'ng-validation-error',
+                     'ng-show': "userForm['user[username]'].$error.maxlength".html_safe}
+                = "#{I18n.t('msgs.long_username_length')}"
+              %span{ class: 'ng-validation-error',
+                     'ng-show' => "userForm['user[username]'].$error.pattern && (userForm['user[username]'].$touched || showErrors)".html_safe}
+                = "#{I18n.t('msgs.invalid_username_format')}"           
           - if user.new_record?
             .form-group
               = f.label I18n.t('common.password') , class: 'col-sm-2 control-label'
               .col-sm-10
-                = f.password_field :entered_password, { type: 'password', class: 'required form-control', autocomplete: 'off' }
+                = f.password_field :entered_password, { type: "password",
+                                                        class: "required form-control",
+                                                        autocomplete: "off",
+                                                        'ng-model' => 'entered_password',
+                                                        :required => true,
+                                                        'ng-minlength' => "4",
+                                                        'ng-maxlength' => "16" }
+                %span{ class: 'ng-validation-error',
+                     'ng-show': "userForm['user[entered_password]'].$error.required && (userForm['user[entered_password]'].$touched || showErrors)".html_safe}
+                  = "#{I18n.t('msgs.empty_password_error')}"
+                %span{ class: 'ng-validation-error',
+                     'ng-show': "userForm['user[entered_password]'].$error.minlength".html_safe}
+                  = "#{I18n.t('msgs.short_password_length')}"
+                %span{ class: 'ng-validation-error',
+                     'ng-show': "userForm['user[entered_password]'].$error.maxlength".html_safe}
+                  = "#{I18n.t('msgs.long_password_length')}"
             .form-group
               = f.label I18n.t('common.password_confirmation') , class: 'col-sm-2 control-label'
               .col-sm-10
-                = f.password_field :entered_password_confirmation, { type: 'password', class: 'required form-control', autocomplete: 'off' }
-          - unless user.new_record?
-            %a.btn{ style: 'cursor:pointer;', id: 'change_password' }
-              = I18n.t('common.change_password')
-            %div{ style: 'cursor:pointer;display:none;', id: 'change_password_block'}
-              .form-group
-                = f.label I18n.t('common.old_password') , class: 'col-sm-2 control-label'
-                .col-sm-10
-                  = f.text_field :old_password, { type: 'password', class: 'required form-control', autocomplete: 'off' }
-              .form-group
-                = f.label I18n.t('common.new_password') , class: 'col-sm-2 control-label'
-                .col-sm-10
-                  = f.password_field :entered_password, { type: 'password', class: 'required form-control', autocomplete: 'off' }
-              .form-group
-                = f.label I18n.t('common.new_password_confirmation') , class: 'col-sm-2 control-label'
-                .col-sm-10
-                  = f.password_field :entered_password_confirmation, { type: 'password', class: 'required form-control', autocomplete: 'off' }
+                = f.password_field :entered_password_confirmation, { type: "password",
+                                                                     class: "required form-control",
+                                                                     autocomplete: "off",
+                                                                     'ng-model' => 'entered_password_confirmation',
+                                                                     :required => true,
+                                                                     'ng-minlength' => "4",
+                                                                     'ng-maxlength' => "16" }
+                %span{ class: 'ng-validation-error',
+                     'ng-show': "userForm['user[entered_password_confirmation]'].$error.required && (userForm['user[entered_password_confirmation]'].$touched || showErrors)".html_safe}
+                  = "#{I18n.t('msgs.empty_password_error')}"
+                %span{ class: 'ng-validation-error',
+                     'ng-show': "userForm['user[entered_password_confirmation]'].$error.minlength".html_safe}
+                  = "#{I18n.t('msgs.short_password_length')}"
+                %span{ class: 'ng-validation-error',
+                     'ng-show': "userForm['user[entered_password_confirmation]'].$error.maxlength".html_safe}
+                  = "#{I18n.t('msgs.long_password_length')}"
           .form-group
             = f.label I18n.t('common.email'), class: 'col-sm-2 control-label'
             .col-sm-10
-              = f.text_field :email, { class: 'required form-control' }
+              = f.text_field :email, { class: "required form-control",
+                                       'ng-init' => "email = '#{user.email}'",
+                                       'ng-model' => 'email',
+                                        required: true,
+                                        'ng-pattern' => "/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" }
+              %span{ class: 'ng-validation-error',
+                     'ng-show' => "userForm['user[email]'].$error.required && (userForm['user[email]'].$touched || showErrors)".html_safe}
+                = "#{I18n.t('msgs.email_blank_error')}"
+              %span{ class: 'ng-validation-error',
+                     'ng-show' => "userForm['user[email]'].$error.pattern && (userForm['user[email]'].$touched || showErrors)".html_safe}
+                = "#{I18n.t('msgs.invalid_email_format')}"
           .form-group
             = f.label I18n.t('common.email_confirmation'), class: 'col-sm-2 control-label'
             .col-sm-10
-              = f.text_field :email_confirmation, { class: 'required form-control' }
+              = f.text_field :email_confirmation, { class: "required form-control",
+                                                    'ng-init' => "email_confirmation = '#{user.email}'",
+                                                    'ng-model' => 'email_confirmation',
+                                                    required: true,
+                                                    'ng-pattern' => "/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" }
+              %span{ class: 'ng-validation-error',
+                     'ng-show' => "userForm['user[email_confirmation]'].$error.required && (userForm['user[email_confirmation]'].$touched || showErrors)".html_safe}
+                = "#{I18n.t('msgs.email_blank_error')}"
+              %span{ class: 'ng-validation-error',
+                     'ng-show' => "userForm['user[email_confirmation]'].$error.pattern && (userForm['user[email_confirmation]'].$touched || showErrors)".html_safe}
+                = "#{I18n.t('msgs.invalid_email_format')}"
           .form-group
             = f.label I18n.t('common.real_name'), class: 'col-sm-2 control-label'
             .col-sm-10
-              = f.text_field :real_name, { class: 'required form-control' }
+              = f.text_field :real_name, { class: "required form-control" }
           - if user_form_params[:verify_captcha]
             .form-group
               = f.label I18n.t('common.recaptcha'), class: 'required col-sm-2 control-label'
               .col-sm-10
-                = recaptcha_tags(display: {theme: 'clean'})
+                = recaptcha_tags(theme: 'clean',
+                                 callback: 'recaptchaCallback')
+                %br
+                %span{class: 'ng-validation-error', 'ng-show' => 'recaptchaError'.html_safe}
+                  = "#{I18n.t('msgs.recaptcha_error')}"
           - if(!(user.photo_name.blank?))
             - thumb = user.photo_name_url(:thumb)
             .form-group
@@ -68,20 +129,26 @@
                 = image_tag("#{thumb}", width: 150, border: 0)
           .form-group
             = f.label I18n.t('common.upload_photo'), class: 'col-sm-2 control-label'
-            .col-sm-10
-              .invisible_error_msg#photo_size_error_message
-                = "#{I18n.t('msgs.upload_photo_max_size_error')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
-              .invisible_error_msg#photo_ext_error_message
-                = "#{I18n.t('msgs.upload_photo_ext_error')}"
-              = f.file_field :photo_name, { id: 'photo_name', type: 'file', class: 'btn btn-default' }
+            .col-sm-10              
+              = f.file_field :photo_name, { id: "photo_name", type: "file", class: "btn btn-default",
+                                            'ng-model' => "file",
+                                            'ng-file-select' => "uploadFile(this.files)" }
               %p.help-block
                 = "#{I18n.t('warn.max_photo_size')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
+              %span{ class: 'ng-validation-error',
+                     'ng-show' => "photoTypeError && showErrors".html_safe}
+                = "#{I18n.t('msgs.upload_photo_ext_error')}"
+              %br
+              %span{ class: 'ng-validation-error',
+                     'ng-show' => "photoSizeError && showErrors".html_safe}
+                = "#{I18n.t('msgs.upload_photo_max_size_error')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
+              
           .form-group
             .col-sm-2
             .col-sm-10
               - if user.new_record?
-                = f.submit I18n.t('common.signup'), class: 'btn btn-primary', id: 'submit'
-                = f.submit I18n.t('common.clear'), class: 'btn btn-default', id: 'clear', type: 'reset'
+                = f.submit I18n.t('common.signup'), class: "btn btn-primary", id: "submit"
+                = f.submit I18n.t('common.clear'), class: "btn btn-default", id: "clear", type: "reset"
               - else
-                = f.submit I18n.t('common.save'), class: 'btn btn-primary', id: 'submit'
-                = f.submit I18n.t('common.reset'), class: 'btn btn-default', id: 'clear', type: 'reset'
+                = f.submit I18n.t('common.save'), class: "btn btn-primary", id: "submit"
+                = f.submit I18n.t('common.reset'), class: "btn btn-default", id: "clear", type: "reset"
