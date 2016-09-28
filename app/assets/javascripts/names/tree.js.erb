@@ -8,7 +8,7 @@ var openIcon = '/arrow_open.png';
 var nodeIcon = '/node.gif';
 
 function getAjaxUrl(hierarchyId, hierarchyEntryId) {
-  var ajaxUrl = "http://localhost:3000/names/show?h_id=" + hierarchyId;
+  var ajaxUrl = "/names/show?h_id=" + hierarchyId;
   if (hierarchyEntryId != 0)
     ajaxUrl += "&id=" + hierarchyEntryId;
   return ajaxUrl;
