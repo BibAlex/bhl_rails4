@@ -49,7 +49,40 @@ class ApplicationController < ActionController::Base
     else
       redirect_to default
     end
+  end  
+  
+  def self.manage_redirect(options = {})
+    host = options.delete(:host)
+    before_filter(options) do
+      if !request.ssl? && !allow_http?
+        port = HTTPS_PORT
+        redirect_options = {:protocol => 'https://', :status => :moved_permanently}
+        redirect_options.merge!(:port => port) if port # <= this is also new
+        redirect_options.merge!(:host => host) if host
+        redirect_options.merge!(:params => request.query_parameters)
+        redirect_to redirect_options
+      end
+      if request.ssl? && allow_http?
+        port = HTTP_PORT
+        redirect_options = {:protocol => 'http://'}
+        redirect_options.merge!(:port => port) if port # <= this is also new
+        redirect_options.merge!(:host => host) if host
+        redirect_options.merge!(:params => request.query_parameters)
+        redirect_to redirect_options
+      end
+    end
   end
+  
+  
+  
+  protected
+    def allow_http?
+      true
+    end
+
+
+  
+  
    private
     def extract_locale_from_accept_language_header
       request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
@@ -72,4 +105,7 @@ class ApplicationController < ActionController::Base
         user.update_attributes(last_login_language: I18n.locale)
       end
     end
+    
+    manage_redirect
+    
 end

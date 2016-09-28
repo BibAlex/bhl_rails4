@@ -1,5 +1,6 @@
 %html{ 'xml:lang' => I18n.locale, 'lang' => I18n.locale ,'ng-app': 'bhlApp' }
   %head
+    = csrf_meta_tags
     = render partial: 'header_components/html_head'
 
   :css
