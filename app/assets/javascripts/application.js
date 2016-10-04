@@ -23,8 +23,6 @@
 //= require ./jquery/jquery.tooltipster.min
 //= require ./jquery/rating/jRating.jquery
 
-
 //= require ./3dcovers/modernizr.custom
 //= require ./3dcovers/book
 //= require_tree ./site_related
-var bhlApp = angular.module('bhlApp', []);

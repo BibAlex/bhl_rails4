@@ -1,14 +1,4 @@
-namesCtrl.directive("treeTag", function (HierarchySrv) {
-    return {
-        restrict: 'E',
-        scope: {},
-        templateUrl: "Tree",
-        link: function(scope, element, attrs) {
-            scope.$on('changeHierarchy', function(event, data) {
-               scope.init();
-            });
-        },
-        controller: function($scope, $log, $window, $http) {
+var customTreeController = ['$scope', '$log', '$window', '$http', 'HierarchySrv', function($scope, $log, $window, $http, HierarchySrv) {
             $scope.data = [];
 
             $scope.init = function() {
@@ -43,6 +33,17 @@ namesCtrl.directive("treeTag", function (HierarchySrv) {
             $scope.getLeaf = function() {
                 return $scope.getNodes(false);
             }
-        }
+        }];
+namesCtrl.directive("treeTag",['HierarchySrv', function (HierarchySrv) {
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: "Tree",
+        link: function(scope, element, attrs) {
+            scope.$on('changeHierarchy', function(event, data) {
+               scope.init();
+            });
+        },
+        controller: customTreeController
     };
-});
+}]);
