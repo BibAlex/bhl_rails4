@@ -21,11 +21,11 @@ bhlApp.service('HierarchySrv', function () {
   };
 });
 
-var namesCtrl = bhlApp.controller('NamesCtrl', function($scope, $http, $log, $window, HierarchySrv) {
+var namesCtrl = bhlApp.controller('NamesCtrl',['$scope', '$http', '$log', '$window', 'HierarchySrv', function($scope, $http, $log, $window, HierarchySrv) {
   $scope.hierarchy = HierarchySrv.hierarchy;
 
   $scope.loadHierarchy = function() {
     HierarchySrv.hierarchy = $scope.hierarchy;
     $scope.$broadcast('changeHierarchy',{});
   }
-});
+}]);

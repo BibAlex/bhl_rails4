@@ -1,14 +1,4 @@
-namesCtrl.directive("nodeTag", function(HierarchySrv) {
-    return {
-        restrict: 'E',
-        scope: {
-            id: '@',
-            name: '@',
-            childrenCount: '@',
-            taxonConceptId: '@'
-        },
-        templateUrl: 'Node',
-        controller: function ($scope, $log, $window, $http, HierarchySrv, $mdDialog, $mdMedia) {
+var customController = ['$scope', '$log', '$window', '$http', 'HierarchySrv', '$mdDialog', '$mdMedia', function ($scope, $log, $window, $http, HierarchySrv, $mdDialog, $mdMedia) {
             $scope.isParent = function() {
                 if (typeof $scope.childrenCount == undefined)
                     return false;
@@ -71,6 +61,20 @@ namesCtrl.directive("nodeTag", function(HierarchySrv) {
             $scope.isClosed = true;
             $scope.isLoading = false;
             $scope.showChildren = false;
-        }
+        }];
+
+
+
+namesCtrl.directive("nodeTag",['HierarchySrv', function(HierarchySrv) {
+    return {
+        restrict: 'E',
+        scope: {
+            id: '@',
+            name: '@',
+            childrenCount: '@',
+            taxonConceptId: '@'
+        },
+        templateUrl: 'Node',
+        controller: customController
     }
-});
+}]);
