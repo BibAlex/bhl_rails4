@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :user do
-    sequence(:username, 1) { |n| "username_#{n}" }
+    sequence(:username, 1) { |n| "username#{n}" }
     sequence(:email, 1) {|n| "email_#{n}@example.com" }
     password 'password'
     guid Faker::Lorem.characters(16)
