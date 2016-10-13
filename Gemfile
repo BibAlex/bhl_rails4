@@ -62,6 +62,7 @@ end
 
 group :development do
   gem 'guard'
+  gem 'thin'
 end
 
 group :development, :test do

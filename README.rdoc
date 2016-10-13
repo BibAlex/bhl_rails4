@@ -52,6 +52,8 @@ Things you need:
   10. Download the code
       git clone https://github.com/BibAlex/bhl_rails4.git bhl_rails
 
+  11. Follow this tutorial to use SSL
+      https://gist.github.com/trcarden/3295935#file-gistfile1-sh
 
 === INSTALLATION
 
@@ -63,7 +65,10 @@ Things you need:
   6.  rake db:populate RAILS_ENV=development 
   7.  rake bhl_statistics:load_bhl_statistics_from_solr
   8.  rake bhl:load_languages
-  9.  rake spec # to make sure all tests are green  
+  9.  rake spec # to make sure all tests are green
+  10. Start two servers:
+      thin start -p 3000
+      thin start -p 3001 --ssl --ssl-verify --ssl-key-file ~/.ssl/localhost.key --ssl-cert-file ~/.ssl/localhost.crt
   
 == Common issues
  - Make sure folder tmp/cache exists 

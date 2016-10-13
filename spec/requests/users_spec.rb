@@ -282,9 +282,9 @@ RSpec.describe "Users", type: :request do
 
      describe "queries tab" do
       before do
-          @user = FactoryGirl.create(:user, active: true, username: "@ouser", password: User.hash_password("@user_password"),
+          @user = FactoryGirl.create(:user, active: true, username: "user", password: User.hash_password("user_password"),
                                      real_name: "@user_real", email: "user@example.com")
-          @other_user = FactoryGirl.create(:user, active: true, username: "@other_user", password: User.hash_password("@other_user_password"),
+          @other_user = FactoryGirl.create(:user, active: true, username: "other_user", password: User.hash_password("other_user_password"),
                                      real_name: "@other_user_real", email: "other_user@example.com")
           @query_first = Query.create(user_id: @user.id, string: "_title=popular")
           @query_second = Query.create(user_id: @user.id, string: "_content=smith")
@@ -525,9 +525,6 @@ RSpec.describe "Users", type: :request do
       it "displays username field" do
         expect(page).to have_selector("label", text: I18n.t('common.username'))
         expect(page).to have_field("username")
-      end
-      it "displays change password link" do
-         expect(page).to have_selector("a[id='change_password']")
       end
 
       it "displays email field" do

@@ -5,15 +5,20 @@ RSpec.describe UsersController, type: :controller do
 
   describe '#new' do
 
-    before do
+    it 'expect to redirect on regular http call' do
       get :new
+      expect(response).to have_http_status(:moved_permanently)
     end
 
     it 'returns a 200 ok status' do
+      request.env['HTTPS'] = 'on'
+      get :new
       expect(response).to have_http_status(:ok)
     end
 
     it 'renders the new template' do
+      request.env['HTTPS'] = 'on'
+      get :new
       expect(response).to render_template(:new)
     end
   end
@@ -23,9 +28,11 @@ RSpec.describe UsersController, type: :controller do
     context 'when user enters valid parameters' do
 
       before do
+        request.env['HTTPS'] = 'on'
+
         @file = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join('spec/avatar/default_user.png')),
                                                       filename: File.basename(File.new(Rails.root.join('spec/avatar/default_user.png'))))
-        @user = { user: {username: 'user', entered_password: 'password123',
+        @user = { user: {username: 'username', entered_password: 'password123',
                          entered_password_confirmation: 'password123', email: 'user@example.com',
                          email_confirmation: 'user@example.com', real_name: 'user',
                          photo_name: @file } }
@@ -58,6 +65,7 @@ RSpec.describe UsersController, type: :controller do
     context 'when user enters invalid parameters' do
 
       before do
+        request.env['HTTPS'] = 'on'
         @user = { user: {username: '', entered_password: 'password123',
                          entered_password_confirmation: 'password123', email: 'user@example.com',
                          email_confirmation: 'user@example.com', real_name: 'user'} }
@@ -79,6 +87,7 @@ RSpec.describe UsersController, type: :controller do
   describe '#login' do
 
     before do
+      request.env['HTTPS'] = 'on'
       get :login
     end
 
@@ -433,17 +442,20 @@ end
 
     it 'should redirect to profile page if user is logged in' do
       session[:user_id] = user.id
+      request.env['HTTPS'] = 'on'
       get :reset_password, guid: user.guid, activation_code: user.verification_code
       expect(response).to redirect_to "/en/users/#{user.id}"
     end
 
     it 'should raise error and redirect to root if invalid parameters' do
+      request.env['HTTPS'] = 'on'
       get :reset_password, guid: user.guid, activation_code: '1234'
       expect(response).to redirect_to '/'
       expect(flash[:error]).not_to be_blank
     end
 
     it 'should render form if parameters are valid' do
+      request.env['HTTPS'] = 'on'
       get :reset_password, guid: user.guid, activation_code: user.verification_code
       expect(response).to render_template 'users/reset_password'
       expect(flash[:error]).to be_blank
@@ -451,6 +463,10 @@ end
   end
 
   describe '#reset_password_action' do
+
+    before do
+      request.env['HTTPS'] = 'on'
+    end
 
     let!(:user) { FactoryGirl.create(:user, active: true, username: 'user', password: User.hash_password('password')) }
 
@@ -509,6 +525,10 @@ end
 
     context 'valid user' do
 
+      before do
+        request.env['HTTPS'] = 'on'
+      end
+
       let!(:user) { FactoryGirl.create(:user, active: true, username: 'valid_user_login', password: User.hash_password('password')) }
 
       it 'sets session of user_id' do
@@ -528,6 +548,10 @@ end
     end
 
     context 'invalid user' do
+
+      before do
+        request.env['HTTPS'] = 'on'
+      end
 
       it 'sets session of login_attempts' do
         last_login_attempts = session[:login_attempts] ||= 0
@@ -581,8 +605,8 @@ end
 
     context 'owner user' do
        before do
-        session[:user_id] = owner_user.id
-        get 'edit', id: owner_user.id
+         session[:user_id] = owner_user.id
+         get 'edit', id: owner_user.id
        end
 
        it 'renders edit form' do
@@ -600,6 +624,8 @@ end
       context 'owner user' do
          let(:owner_user) {FactoryGirl.create(:user, active: true, email: 'owner_user@bibalex.org',
                                               username: 'owner_user', password: User.hash_password('owner_user_password'))}
+
+
 
          it 'can upload valid photo' do
              user_before_update = owner_user
@@ -620,6 +646,7 @@ end
             file_path = "#{Rails.root}/public/avatar_#{Rails.env}/users/#{owner_user.id}"
             FileUtils.rm_rf(file_path) if File.exist?(file_path)
          end
+
          it 'does not upload pictures with invalid extensions ' do
             user_before_update = owner_user
             log_in(owner_user)
@@ -639,6 +666,7 @@ end
             file_path = "#{Rails.root}/public/users/#{owner_user.id}/rails_helper"
             FileUtils.rm_rf(file_path) if File.exist?(file_path)
          end
+
          it 'accepts modifications even if the password is empty' do
             user_before_update = owner_user
 
@@ -661,29 +689,32 @@ end
             expect(owner_user.real_name).to eq(user_before_update.real_name)
             expect(session[:real_name]).to eq(owner_user.real_name)
          end
+
          it 'rejects modifications and renders edit for invalid old password' do
-            log_in(owner_user)
-            put :update, id: owner_user.id , user: {id: owner_user.id, username: owner_user.username,
-                                                    email: owner_user.email,
-                                                    email_confirmation: owner_user.email,
-                                                    old_password: 'wrong_pass',
-                                                    entered_password: '123',
-                                                    entered_password_confirmation: '123',
-                                                    real_name: owner_user.real_name}
-            expect(response).to render_template(:edit)
-            expect(flash[:error]).to eq(I18n.t('msgs.invalid_old_password'))
+           #request.env['HTTPS'] = 'on'
+           log_in(owner_user)
+           put :update, id: owner_user.id , user: {id: owner_user.id, username: owner_user.username,
+                                                   email: owner_user.email,
+                                                   email_confirmation: owner_user.email,
+                                                   old_password: 'wrong_pass',
+                                                   entered_password: '123',
+                                                   entered_password_confirmation: '123',
+                                                   real_name: owner_user.real_name}
+
+           expect(flash[:error]).to eq(I18n.t('msgs.invalid_old_password'))
          end
+
          it 'rejects modifications and renders edit without entering old password' do
-            log_in(owner_user)
-            put :update, id: owner_user.id , user: {id: owner_user.id, username: owner_user.username,
-                                                    email: owner_user.email,
-                                                    email_confirmation: owner_user.email,
-                                                    old_password: nil,
-                                                    entered_password: '123',
-                                                    entered_password_confirmation: '123',
-                                                    real_name: owner_user.real_name}
-            expect(response).to render_template(:edit)
-            expect(flash[:error]).to eq(I18n.t('msgs.old_password_required'))
+           log_in(owner_user)
+           put :update, id: owner_user.id , user: {id: owner_user.id, username: owner_user.username,
+                                                   email: owner_user.email,
+                                                   email_confirmation: owner_user.email,
+                                                   old_password: nil,
+                                                   entered_password: '123',
+                                                   entered_password_confirmation: '123',
+                                                   real_name: owner_user.real_name}
+
+           expect(flash[:error]).to eq(I18n.t('msgs.old_password_required'))
          end
       end
 
