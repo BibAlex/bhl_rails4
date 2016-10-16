@@ -53,14 +53,15 @@ class ApplicationController < ActionController::Base
   
   def self.manage_redirect(options = {})
     host = options.delete(:host)
-    
-    before_filter(options) do     
-      port = HTTPS_PORT
-      redirect_options = {:protocol => 'https://', :status => :moved_permanently}
-      redirect_options.merge!(:port => port) if port # <= this is also new
-      redirect_options.merge!(:host => host) if host
-      redirect_options.merge!(:params => request.query_parameters)
-      redirect_to redirect_options
+    if !request.ssl?
+      before_filter(options) do     
+        port = HTTPS_PORT
+        redirect_options = {:protocol => 'https://', :status => :moved_permanently}
+        redirect_options.merge!(:port => port) if port # <= this is also new
+        redirect_options.merge!(:host => host) if host
+        redirect_options.merge!(:params => request.query_parameters)
+        redirect_to redirect_options
+      end
     end
     
     # before_filter(options) do
