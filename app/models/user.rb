@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   @email_format_re = /\A(?:[_\+a-z0-9-]+)(\.[_\+a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})\z/i
   @password_regex = /\A(?=.*[a-zA-Z])(?=.*[\d])./ # Password must have atleast one nummber and one letter
 
-  username_format_re = /\A[a-zA-Z0-9\u0600-\u06FF]+\z/i
+  username_format_re = /\A[a-zA-Z0-9\u0600-\u06FF_]+\z/i
   
   attr_accessor :entered_password, :entered_password_confirmation, :email_confirmation, :old_password
   
