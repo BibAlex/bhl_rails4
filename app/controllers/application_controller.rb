@@ -117,6 +117,6 @@ class ApplicationController < ActionController::Base
       end
     end
     
-    manage_redirect
+    # manage_redirect
     
 end
