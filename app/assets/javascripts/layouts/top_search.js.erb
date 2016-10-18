@@ -22,7 +22,7 @@ bhlApp.controller('topSearch', ['$scope', '$window', '$log', function($scope, $w
 
     // Clear "some" special characters from the search query
     $scope.searchQuery = $window.clearString($scope.searchQuery);
-
+    console.log($scope.searchQuery);
     if ($scope.searchQuery == '') {
       $scope.alertEmptySearchError();
       return;
