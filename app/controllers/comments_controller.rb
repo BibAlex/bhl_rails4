@@ -2,6 +2,7 @@ class CommentsController < ApplicationController
   include UsersHelper
 
   before_filter :check_authentication, only: [:create, :delete, :mark]
+  before_filter :clean_params
 
   def create
     Comment.create(Comment.comment_params(params[:comment]))

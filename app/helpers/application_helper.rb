@@ -14,22 +14,5 @@ module ApplicationHelper
   
   def toggle_sort_option(sort_direction)
     sort_direction && sort_direction == "desc" ? "asc" : "desc"
-  end
-  
-  def clean_params(params)
-    params.each do |key, value|
-      if value.kind_of?(Hash)
-        value.each {|k,v| value[k] = v.gsub(/[{}=]/, "")}
-      else
-        params[key] = value.gsub(/[{}=]/, "")
-      end
-    end
-  end
-  
-  def clean_input(input)
-    input.gsub(/[{}]/, "")
-  end
-  
-
-  
+  end   
 end

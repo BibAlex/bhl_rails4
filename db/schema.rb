@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160329121155) do
+ActiveRecord::Schema.define(version: 20161020080545) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "activitable_id",    limit: 4
@@ -58,6 +58,13 @@ ActiveRecord::Schema.define(version: 20160329121155) do
     t.string   "status_code", limit: 255
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "batch_volumes", force: :cascade do |t|
+    t.integer  "batch_id",   limit: 4, null: false
+    t.integer  "volume_id",  limit: 4, null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   create_table "batches", force: :cascade do |t|
@@ -183,6 +190,17 @@ ActiveRecord::Schema.define(version: 20160329121155) do
     t.datetime "updated_at"
   end
 
+  create_table "failed_login_attempts", force: :cascade do |t|
+    t.string   "ip",                       limit: 255
+    t.string   "username",                 limit: 255
+    t.integer  "number_of_login_attempts", limit: 4
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "failed_login_attempts", ["ip", "username"], name: "index_failed_login_attempts_on_ip_and_username", using: :btree
+  add_index "failed_login_attempts", ["ip"], name: "index_failed_login_attempts_on_ip", using: :btree
+
   create_table "hierarchies", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -216,6 +234,11 @@ ActiveRecord::Schema.define(version: 20160329121155) do
     t.integer  "eol_page_link",  limit: 4
     t.string   "eol_thumb_link", limit: 255
     t.integer  "lookup_fail",    limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "notifiers", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end

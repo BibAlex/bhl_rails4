@@ -74,6 +74,9 @@ BhlRails4::Application.routes.draw do
     get "get_or_delete_collection_photo" => "collections#get_or_delete_collection_photo"
     get "/collectionautocomplete" => "collections#autocomplete"
     
+    
+    get '400', :to => 'errors#bad_request'
+    
     resources :books, only: [:index, :show] do
       collection do
         get 'autocomplete'

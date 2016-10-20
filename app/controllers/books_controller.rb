@@ -7,9 +7,9 @@ class BooksController < ApplicationController
   include SolrHelper
   include UsersHelper
   before_filter :store_location, only: [:show]
+  before_filter :clean_params
 
   def index
-    clean_params(params)    
     @page = params[:page] ? params[:page].to_i : 1
     @view = params[:view] ? params[:view] : ''
     @sort = params[:sort_type] ? params[:sort_type] : '' # get sort options (rate or views) from params
