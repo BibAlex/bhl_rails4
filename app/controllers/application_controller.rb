@@ -1,8 +1,10 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  
+  
 
-  before_filter :set_locale
-
+  before_filter :set_locale  
+  
   def check_authentication
     must_log_in unless logged_in?
     return false
@@ -114,6 +116,21 @@ class ApplicationController < ActionController::Base
       if session[:user_id]
         user = User.find_by_id(session[:user_id])
         user.update_attributes(last_login_language: I18n.locale)
+      end
+    end
+    
+    def clean_params
+      special = "?<>',?[]}{=-)(*&^%$#`~{}\""
+      regex = /[#{special.gsub(/./){|char| "\\#{char}"}}]/
+      params.each do |key, value|
+        redirect_to(controller: "errors", action: "bad_request") if key =~ regex
+        if value.kind_of?(Hash)
+          value.each do |k,v|
+            redirect_to(controller: "errors", action: "bad_request") if value[k] =~ regex
+          end
+        else
+          redirect_to(controller: "errors", action: "bad_request") if value =~ regex
+        end
       end
     end
     

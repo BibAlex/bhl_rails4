@@ -6,8 +6,19 @@ class UsersController < ApplicationController
   before_filter :load_user, only: [:show]
 
   def login
-    session[:login_attempts] ||= 0
-    @verify_captcha = true if session[:login_attempts].to_i >= LOGIN_ATTEMPTS
+    general_user = FailedLoginAttempt.where("ip = ? ", request.remote_ip)
+    if general_user.size > 0
+      if general_user.first
+        if general_user.first.number_of_login_attempts >= LOGIN_ATTEMPTS
+          @verify_captcha = true 
+        end
+      end
+    end
+    
+    
+    
+    # session[:login_attempts] ||= 0
+    # @verify_captcha = true if session[:login_attempts].to_i >= LOGIN_ATTEMPTS
   end
 
   def logout
@@ -61,19 +72,48 @@ class UsersController < ApplicationController
   # POST /users/validate
   def validate
     if params[:user]
-      if session[:login_attempts].to_i >= LOGIN_ATTEMPTS && !bhl_verify_recaptcha
-        redirect_to ({ controller: 'users', action: 'login'}), flash: { error: I18n.t('msgs.recaptcha_error') }
-      else
-        @user = User.find_by_username_and_password(params[:user][:username], User.hash_password(params[:user][:password]))
+      # specific_user = FailedLoginAttempt.where("ip =? and username = ?", request.remote_ip, params[:user][:username])
+      # if specific_user.size > 0
+        # if specific_user.first
+          # if specific_user.first.number_of_login_attempts >= LOGIN_ATTEMPTS && !bhl_verify_recaptcha
+            # redirect_to ({ controller: 'users', action: 'login'}), flash: { error: I18n.t('msgs.recaptcha_error') }
+          # end
+        # end
+      # else
+        general_user = FailedLoginAttempt.where("ip = ? ", request.remote_ip)
+        if general_user.size > 0
+          if general_user.first
+            if general_user.first.number_of_login_attempts >= LOGIN_ATTEMPTS && !bhl_verify_recaptcha
+              redirect_to ({ controller: 'users', action: 'login'}), flash: { error: I18n.t('msgs.recaptcha_error') }
+            end
+          end
+        end
+      # end
+      @user = User.find_by_username_and_password(params[:user][:username], User.hash_password(params[:user][:password]))
         if @user.nil?
-          failed_validation(false)
+          failed_validation(false, request.remote_ip, params[:user][:username])
         elsif !@user.active
-          failed_validation(true)
+          failed_validation(true, request.remote_ip, params[:user][:username])
         else
-         successful_validation
+         successful_validation(request.remote_ip, params[:user][:username])
         end
       end
-    end
+    
+    
+    # if params[:user]
+      # if session[:login_attempts].to_i >= LOGIN_ATTEMPTS && !bhl_verify_recaptcha
+        # redirect_to ({ controller: 'users', action: 'login'}), flash: { error: I18n.t('msgs.recaptcha_error') }
+      # else
+        # @user = User.find_by_username_and_password(params[:user][:username], User.hash_password(params[:user][:password]))
+        # if @user.nil?
+          # failed_validation(false)
+        # elsif !@user.active
+          # failed_validation(true)
+        # else
+         # successful_validation
+        # end
+      # end
+    # end
   end
 
   def new
@@ -217,13 +257,45 @@ class UsersController < ApplicationController
     redirect_to root_path, flash: { notice: I18n.t('msgs.account_activated', real_name: @user.real_name) }
   end
 
-  def failed_validation(non_active)
-    session[:login_attempts] = session[:login_attempts].to_i + 1
+  def failed_validation(non_active, ip, username)
+    # specific_user = FailedLoginAttempt.where("ip =? and username = ?", ip, username)
+    general_user = FailedLoginAttempt.where("ip = ? ", ip)
+    # if specific_user.size > 0
+      # if specific_user.first
+        # specific_user.first.number_of_login_attempts = specific_user.first.number_of_login_attempts + 1
+        # specific_user.first.save          
+      # end
+    if general_user.size > 0     
+      if general_user.first
+        general_user.first.number_of_login_attempts = general_user.first.number_of_login_attempts + 1
+        general_user.first.save
+      end
+    else
+      # name = User.where(username: username).nil? ? nil : username
+      FailedLoginAttempt.create(ip: ip, number_of_login_attempts: 1)
+    end
+    
+    
+    # session[:login_attempts] = session[:login_attempts].to_i + 1
     error_msg = non_active ? I18n.t('msgs.sign_in_inactive_user') : I18n.t('msgs.sign_in_unsuccessful_error')
     redirect_to({ controller: 'users', action: 'login' }, flash: { error: error_msg })
   end
 
-  def successful_validation
+  def successful_validation(ip, username)
+    specific_user = FailedLoginAttempt.where("ip =? and username = ?", ip, username)
+    general_user = FailedLoginAttempt.where("ip = ? ", ip)
+    if specific_user.size > 0
+      if specific_user.first
+        specific_user.first.destroy
+      end
+    elsif general_user.size > 0        
+      if general_user.first
+        general_user.first.destroy
+      end
+    else
+    end
+    
+    
     log_in(@user)
     if session[:return_to].blank?
       redirect_to({ controller: 'users', action: 'show', id: @user.id }, flash: { notice: I18n.t('msgs.sign_in_successful_notice') })

@@ -3,8 +3,10 @@ class CollectionsController < ApplicationController
   include BooksHelper
   before_filter :store_location, only: [:show]
   before_filter :check_authentication, only: [:add_book, :remove_collection]
+  before_filter :clean_params
 
   def index
+    check_sort_param(params[:sort_type]) if params[:sort_type]
     @page_title = I18n.t('collection.collection_title')
     @page = params[:page] ? params[:page].to_i : 1
 
@@ -187,4 +189,10 @@ class CollectionsController < ApplicationController
       resource_not_found
     end
   end
+  
+  def  check_sort_param(sort)
+    redirect_to(controller: "errors", action: "bad_request")  if !(["rate desc", "rate asc", "title desc", "title asc"].include? sort)
+  end
+  
+  
 end
