@@ -120,7 +120,7 @@ class ApplicationController < ActionController::Base
     end
     
     def clean_params
-      special = "?<>',?[]}{=-)(*&^%$#`~{}\""
+      special = "+?<>',?[]}{=-)(*&^%$#`~{}\""
       regex = /[#{special.gsub(/./){|char| "\\#{char}"}}]/
       params.each do |key, value|
         redirect_to(controller: "errors", action: "bad_request") if key =~ regex

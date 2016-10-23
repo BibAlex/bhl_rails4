@@ -7,7 +7,7 @@ class BooksController < ApplicationController
   include SolrHelper
   include UsersHelper
   before_filter :store_location, only: [:show]
-  before_filter :clean_params
+  # before_filter :clean_params
 
   def index
     @page = params[:page] ? params[:page].to_i : 1
