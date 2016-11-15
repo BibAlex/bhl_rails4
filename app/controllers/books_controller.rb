@@ -7,12 +7,12 @@ class BooksController < ApplicationController
   include SolrHelper
   include UsersHelper
   before_filter :store_location, only: [:show]
-  # before_filter :clean_params
+  before_filter :clean_params
 
   def index
     @page = params[:page] ? params[:page].to_i : 1
     @view = params[:view] ? params[:view] : ''
-    @sort = params[:sort_type] ? params[:sort_type] : '' # get sort options (rate or views) from params
+    @sort = params[:sort_type] ? params[:sort_type] : '' # get sort options (rate or views) from params    
 
     @query_array = fill_query_array(params)
     query = set_query_string(@query_array)
@@ -29,7 +29,7 @@ class BooksController < ApplicationController
     @results = []
     if params[:type] && params[:term]
       response = solr_autocomplete(params[:type], params[:term], AUTOCOMPLETE_MAX)
-      response.each do |item|
+      response.each do |item|        
         @results << item.value
       end
     end
