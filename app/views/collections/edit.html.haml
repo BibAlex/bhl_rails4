@@ -8,7 +8,7 @@
         = form_for @collection, url: collection_path, builder: FormHelper::BHLFormBuilder, html: {onsubmit: "return check_image_size();" } do |f|
           .form-group
             = f.label :title, raw(t('collection.title_collection')), class: 'col-sm-2 control-label'
-            .col-sm-10
+            .col-sm-10{"ng-non-bindable" => ""}
               = f.text_field :title, class: 'form-control'
           .form-group
             = f.label :description, raw(t('common.description')), class: 'col-sm-2 control-label'

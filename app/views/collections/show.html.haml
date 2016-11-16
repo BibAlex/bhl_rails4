@@ -6,7 +6,7 @@
 
 .row.clearfix
   .col-md-12.column
-    %h2
+    %h2{ "ng-non-bindable" => "" }
       = @collection.title
       %span.badge
         = "#{@collection_volumes.count}"
@@ -16,9 +16,9 @@
     %hr
     %blockquote
       #photo
-      %p
+      %p{ "ng-non-bindable" => "" }
         = @collection.description
-      %small
+      %small{ "ng-non-bindable" => "" }
         %i.fa.fa-user
         = link_to controller: :users, action: :show, id: @collection.user_id do
           = @user.real_name

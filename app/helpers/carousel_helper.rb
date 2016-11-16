@@ -5,9 +5,10 @@ module CarouselHelper
 
   def load_collections_carousel(params)
     user_query = session[:user_id].nil? ? nil : "or user_id = #{session[:user_id]}"
+    user_id =  session[:user_id].nil? ? "" : session[:user_id]
     items = Collection.includes(:collection_volumes)
                       .where(collection_volumes: { volume_id: params[:job_id] })
-                      .where("is_public=1 #{user_query}")
+                      .where("is_public = ? and user_id = ?", true, user_id)
                       .paginate(page: params[:page], per_page: LIMIT_CAROUSEL)
     options = { items: items, carousel_title: I18n.t('common.collections'), controller: "collections", action: "show", type: params[:type], object_id: params[:job_id] }
   end

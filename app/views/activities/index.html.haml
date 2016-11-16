@@ -20,7 +20,7 @@
               = link_to image_tag("#{thumb}", class: "media-object img-circle", title: title), { controller: 'users', action: 'show', id: user.id }, class: "pull-left"
               .media-body.activity-log
                 %p{ style: "line-height:120%;font-size:12px;" }
-                  %strong
+                  %strong{ "ng-non-bindable" => "" }
                     = link_to user.real_name, user_path(id: user.id, tab: "profile"), class: "book_author"
                   %strong
                     = activity_action_and_object(activity)

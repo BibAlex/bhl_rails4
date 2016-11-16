@@ -110,7 +110,7 @@
                 = "#{I18n.t('msgs.invalid_email_format')}"
           .form-group
             = f.label I18n.t('common.real_name'), class: 'col-sm-2 control-label'
-            .col-sm-10
+            .col-sm-10{"ng-non-bindable" => ""}
               = f.text_field :real_name, { class: "required form-control" }
           - if user_form_params[:verify_captcha]
             .form-group

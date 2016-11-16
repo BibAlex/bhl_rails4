@@ -2,7 +2,7 @@
   - @query_array.each do |key, val|
     - if(val != '')
       - val.each do |term|
-        .tab.center-block
+        .tab.center-block{"ng-non-bindable" => ""}
           - search_type = I18n.t("common.#{key}")
           = "#{search_type}: #{term}"
           .close

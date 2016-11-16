@@ -14,9 +14,9 @@
         - thumb = item.photo_name_url(:small)
         - title = item.title
       .row
-        .col-md-2
+        .col-md-2{"ng-non-bindable" => ""}
           = link_to image_tag("#{thumb}", title: title) , collection_path(id: item.id)
-        .col-md-7
+        .col-md-7{"ng-non-bindable" => ""}
           %h4
             = link_to "#{item.title}", collection_path(id: item.id)
           .date.text-muted

@@ -17,7 +17,7 @@
       - if collections.count > 0
         %div
           = I18n.t('common.choose_collection')
-          %select{ id: "idselect_#{job_id}" }
+          %select{ id: "idselect_#{job_id}", "ng-non-bindable" => "" }
             - collections.each_with_index do |collection, index|
               - if disabled[index] == 1
                 %option{ disabled: "disabled", value: collection.id, id: collection.id }

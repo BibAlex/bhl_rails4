@@ -12,13 +12,13 @@
     .media
       %center
         = link_to image_tag(thumb, title: thumb_title, class: "media-object img-thumbnail"),{ controller: 'collections', action: 'show', id: collection.id }
-      %h5
+      %h5{"ng-non-bindable" => ""}
         - title = "#{collection.title}"
         - if collection.title.length > 14
           - title = collection.title[0,13] +"..."
         = link_to title,{ controller: 'collections', action: 'show', id: collection.id }, alt: "#{collection.title}"
       %i.fa.fa-user
-      %small
+      %small{ "ng-non-bindable" => "" }
         = link_to "#{I18n.t('common.by')} #{User.find_by_id(collection.user_id).real_name}",{ controller: 'users', action: 'show', id: collection.user_id }
       .rate
         - if collection.rate != 0.0 
