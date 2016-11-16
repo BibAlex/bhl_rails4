@@ -8,8 +8,7 @@ class CollectionsController < ApplicationController
   def index
     check_sort_param(params[:sort_type]) if params[:sort_type]
     @page_title = I18n.t('collection.collection_title')
-    @page = params[:page] ? params[:page].to_i : 1
-    
+    @page = params[:page] ? params[:page].to_i : 1    
     @collections = Collection.where("is_public = ? and title like ?", true, "%#{params[:search]}%")
                              .paginate(page: @page, per_page: PAGE_SIZE).order(params[:sort_type])
     @collections_total_number = @collections.count   
