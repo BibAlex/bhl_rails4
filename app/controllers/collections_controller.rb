@@ -3,7 +3,7 @@ class CollectionsController < ApplicationController
   include BooksHelper
   before_filter :store_location, only: [:show]
   before_filter :check_authentication, only: [:add_book, :remove_collection]
-  # before_filter :clean_params
+  before_filter :clean_params, only: [:show, :load]
 
   def index
     check_sort_param(params[:sort_type]) if params[:sort_type]

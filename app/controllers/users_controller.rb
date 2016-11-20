@@ -4,6 +4,7 @@ class UsersController < ApplicationController
 
   before_filter :redirect_to_user_show_if_logged_in, only: [:login]
   before_filter :load_user, only: [:show]
+   before_filter :clean_params, only: [:show]
 
   def login
     general_user = FailedLoginAttempt.where("ip = ? ", request.remote_ip)

@@ -1,7 +1,7 @@
 class CarouselController < ApplicationController
   
   include CarouselHelper
-
+before_filter :clean_params
   def get_carousel
     if params[:type] == "collections"
       carousel_options = load_collections_carousel(params)
