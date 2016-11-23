@@ -12,10 +12,11 @@
     = render partial: 'header_components/angularjs'
 
     #wrap
-      .container
+      .container-fluid
         .row.clearfix.visible-md.visible-lg
 
-          = render partial: 'layouts/header'
+          = render partial: 'layouts/header'                      
+          = render partial: 'header_components/main_search'
           %div{ id: 'flash' }
             = render partial: 'layouts/flash', object: flash  #NEW_LAYOUT
         = yield

@@ -1,6 +1,4 @@
-.col-md-1
-  .language
-    - if I18n.locale != :en
-      = link_to "English", params.merge(locale: "en")
-    - if I18n.locale != :ar
-      = link_to "عربى", params.merge(locale: "ar")
+- if I18n.locale != :en
+  = link_to "English", params.merge(locale: "en")
+- if I18n.locale != :ar
+  = link_to "عربى", params.merge(locale: "ar")

@@ -1,6 +1,8 @@
 ar:
 
   common:
+    authors: مؤلف
+    books: كتاب
     all: الكل
     all_categories: كل التصنيفات
     login: دخول
@@ -195,6 +197,9 @@ ar:
     comment_empty_warn: "يجب إدخال قيمة صالحة للتعليق"
 
   msgs:
+    copyright: This website designed  developed  by Bibliotheca Alexandrina
+    welcome_statement: Welcome to Biodiversity
+    egypt_bhl: Egypt Biodiversity Heritage Library
     no_suggestion: "لا توجد إقتراحات"
     registration_welcome_message: "مرحبًا %{real_name}. لم يتم تفعيل الحساب الخاص بك بعد. سوف يتم إرسال بريد إلكتروني يتضمن التعليمات الخاصة بالتفعيل."
     form_validation_errors_for_attribute_assistive: "يوجد خطأ في التحقق من صحة هذا العنصر"

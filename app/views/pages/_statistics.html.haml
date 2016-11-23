@@ -1,8 +1,24 @@
-.panel.panel-default
-  .panel-body
-    %h4.alert.alert-success
-      = I18n.t('common.book_count', count: number_with_delimiter(@statistics[:books]))
-    %h4.alert.alert-warning
-      = I18n.t('common.author_count', count: number_with_delimiter(@statistics[:authors]))
-    %h4.alert.alert-info
-      = I18n.t('common.species_count', count: number_with_delimiter(@statistics[:names]))
+.container
+  .row
+    .col-md-12.color-white.text-center
+      %h1
+        = I18n.t('msgs.welcome_statement')
+      %h4
+        = I18n.t('msgs.egypt_bhl')
+  .row
+    .col-md-10.col-md-offset-1.counters
+      .col-sm-4
+        %h2
+          = @statistics[:books]
+        %h4
+          = I18n.t('common.books')
+      .col-sm-4
+        %h2
+          = @statistics[:authors]
+        %h4
+          = I18n.t('common.authors')
+      .col-sm-4
+        %h2
+          = @statistics[:names]
+        %h4
+          = I18n.t('common.names')

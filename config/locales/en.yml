@@ -21,6 +21,8 @@
 
 en:
   common:
+    authors: Authors
+    books: Books
     all: All
     all_categories: All Categories
     login: Sign in
@@ -224,6 +226,9 @@ en:
     can_not_find_query: Can't find the requested query
 
   msgs:
+    copyright: This website designed  developed  by Bibliotheca Alexandrina
+    welcome_statement: Welcome to Biodiversity
+    egypt_bhl: Egypt Biodiversity Heritage Library
     no_suggestion: "No Suggestion"
     registration_welcome_message: "Welcome %{real_name}. Your account is not activated yet. An email was sent to you containing activation instructions."
     form_validation_errors_for_attribute_assistive: "There is a validation error on this element"

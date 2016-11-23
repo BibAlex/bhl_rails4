@@ -1,24 +1,21 @@
 = javascript_include_tag 'layouts/top_search'
 
-.main-search
-  .col-md-5
-    .topsearch{'ng-controller': 'topSearch',
-               id: 'topsearch',
-               'ng-init': "init_i18n_alerts(\"#{I18n.t('warn.invalid_input')}\",
+
+%section.search{ 'ng-controller': 'topSearch',
+                 id: 'topsearch',
+                 'ng-init': "init_i18n_alerts(\"#{I18n.t('warn.invalid_input')}\",
                                          \"#{I18n.t('warn.empty_search_query_warn')}\")"}
-      .input-append
-        %span.separator.pull-left.searchicon
-          %i.fa.fa-search.fa-lg.pull-left
-        .col-xs-5
+  .container
+    .row
+      .col-md-10.col-md-offset-1
+        .col-md-8.form-group
           %input.form-control{ id: 'headerSearchField',
-                                type: 'text',
-                                'ng-model': 'searchQuery',
-                                'ng-keypress': 'searchKeyPress($event)'.html_safe,
-                                placeholder: I18n.t('common.search_query')}
-        %span.separator.pull-left
-          |
-        .btn-group.pull-left
-          %select.width.btn.allcat.text-left{'ng-model': 'searchBy', id: 'headerSearchBy'}
+                               type: 'text',
+                               'ng-model': 'searchQuery',
+                               'ng-keypress': 'searchKeyPress($event)'.html_safe,
+                               placeholder: I18n.t('common.search_query') }
+        .col-md-3.form-group
+          %select.form-control{ 'ng-model': 'searchBy', id: 'headerSearchBy' }
             %option.text-left{ value: 'all' }
               = I18n.t('common.all_categories')
             %option.text-left{ value: 'title' }
@@ -37,9 +34,6 @@
               = I18n.t('common.publisher')
             %option.text-left{ value: 'content' }
               = I18n.t('common.content')
-        .clearfix.visible-xs
-      %span.separator.pull-left
-        |
-      %a.go.pull-left.rotate{ 'ng-click': 'search()'}
-        %i.fa.fa-arrow-circle-right.fa-2x
-      .clearfix
+        .col-md-1
+          %button.btn.btn-primary.btn-block{ type: "submit", 'ng-click': 'search()' }
+            %i.fa.fa-search

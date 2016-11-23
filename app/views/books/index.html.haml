@@ -1,19 +1,47 @@
-.row
-  - if (@response[:volumes].count > 0)
-    .col-md-4.sidebar-offcanvas.pull-right
+%section
+  .container.bg-white
+    .row.maincontent
+      .col-md-9
+        .row
+          .col-md-12
+            %ol.breadcrumb
+              %li
+                %a{:href => "#"} Home
+              %li
+                %a{:href => "#"} Library
+              %li.active Data
+        
+        
+        
+        .row
+          .col-md-6
+            %h3 Number of books
+          .col-md-6 filter here
+          .col-md-12
+            %hr/
+            
+        - @books.each_with_index  do |doc, index|
+          - highlighted_item = @response[:highlights].blank? ? {} : @response[:highlights]["#{doc[:job_id]}"]
+          = render partial: 'books/listresult',
+                 locals: { index: index, doc: doc, highlighted_item: highlighted_item }        
+        .row
+          %nav{ "aria-label" => "Page navigation" }            
+            %ul.pagination
+              = will_paginate @books
+              %li
+                %a{"aria-label" => "Previous", :href => "#"}
+                  %span{"aria-hidden" => "true"} «
+              %li
+                %a{:href => "#"} 1
+              %li
+                %a{:href => "#"} 2
+              %li
+                %a{:href => "#"} 3
+              %li
+                %a{:href => "#"} 4
+              %li
+                %a{:href => "#"} 5
+              %li
+                %a{"aria-label" => "Next", :href => "#"}
+                  %span{"aria-hidden" => "true"} »
       = render partial: 'books/right_column'
-    .col-md-8
-      = render partial: 'books/breadcrumb'
-      - @books.each_with_index  do |doc, index|
-        - highlighted_item = @response[:highlights].blank? ? {} : @response[:highlights]["#{doc[:job_id]}"]
-        = render partial: 'books/listresult',
-                 locals: { index: index, doc: doc, highlighted_item: highlighted_item }
-      %center
-        .pagination-centered
-          = will_paginate @books
-  - else
-    %div
-      = render 'action_buttons'
-    %div.no-books
-      %h2
-        = I18n.t('common.no_books_found')
