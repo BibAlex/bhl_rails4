@@ -1,5 +1,5 @@
 - if @total_number > 0
-  .col-md-8.column
+  .col-md-9
     %h4
       = I18n.t('common.volume_history_page_header')
       %span.badge
@@ -7,44 +7,41 @@
     %hr
     - @history.each_with_index do |doc, index|
       - @book = load_volume_without_names_from_solr(doc.volume_id)
-      = render partial: "books/covers", locals: { coverno: index + 1, covertitle: @book[:title].try(:first).to_s, coverauthor: @book[:author].try(:first).to_s }
-      .col-md-7
-        %h4
-          = link_to @book[:title].try(:first).to_s, book_path(id: doc.volume_id, tab: nil)
-        .date.text-muted
-          %small
-            %b
-              = I18n.t('common.volume_history_viewed_on')
-            = doc.updated_at
-
-      .col-md-3.controls
-        %ul.fa-ul.tools
+     
+      .row.nopadding.nomargin
+        .col-sm-9
+          %h4
+            = link_to @book[:title].try(:first).to_s, book_path(id: doc.volume_id, tab: nil)
+          .date.text-muted
+            %small
+              %b
+                = I18n.t('common.volume_history_viewed_on')
+              = doc.updated_at
+  
+        .col-sm-3.controls
+         
           - if (doc.user_id == session[:user_id])
-            %li
-              %i.fa.fa-li.fa-trash-o
+            %span
               %small
-                = link_to I18n.t('common.delete'), user_search_history_remove_book_history_path(user_id: doc.user_id,
-                  user_volume_history_id: doc.id, page: @page),
-                  onclick: "return confirmDelete(\"#{I18n.t('msgs.remove_book_from_history')}\")"
-          %li
-            %i.fa.fa-li.fa-book
-            %small
-              = link_to I18n.t('common.read'), book_path(id: doc.volume_id, tab: "read"), target: "_blank"
-
-          %li
-            %i.fa.fa-li.fa-info
-            %small
-              = link_to I18n.t('common.details'), book_path(id: doc.volume_id, tab: nil)
-
-        .rate
-          .starsidelink_gray{id: "starsidelink_#{doc.volume_id}", data: "#{@book[:rate]}"}
-
-        %span.text-muted.pull-right
-          %small
-          = I18n.t('common.views', count: @book[:views])
-
-      .clearfix
-    %hr
+                .btn.btn-default.btn-sm
+                  = link_to I18n.t('common.delete'), user_search_history_remove_book_history_path(user_id: doc.user_id,
+                    user_volume_history_id: doc.id, page: @page),
+                    onclick: "return confirmDelete(\"#{I18n.t('msgs.remove_book_from_history')}\")"
+                 
+                 
+            %span.mg-top20
+              
+              %small
+                .btn.btn-default.btn-sm
+                  = link_to I18n.t('common.read'), book_path(id: doc.volume_id, tab: "read"), target: "_blank"
+  
+            %span.mg-top20
+             
+              %small
+                .btn.btn-default.btn-sm
+                  = link_to I18n.t('common.details'), book_path(id: doc.volume_id, tab: nil)
+        
+      %hr  
   %center
     .pagination-centered
       = will_paginate @history

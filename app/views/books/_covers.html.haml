@@ -2,19 +2,16 @@
   - covertitle = "#{covertitle.html_safe[0..40]}..."
 - else
   - covertitle = covertitle.html_safe
-.col-md-2.bookshelf.no-padding
-  %ul.bk-list.clearfix#bk-list
-    %li
-      .bk-book.bk-bookdefault{ class: "book-#{coverno}", title: covertitle }
-        .bk-front
-          .bk-cover
-            %h2
-              %span
-              %span                
-                = covertitle    
-          .bk-cover-back
-        .bk-right
-        .bk-left
-          %h4
-            %span
-              = coverauthor
+
+
+
+.col-sm-3
+  .book.book1
+    .book-content
+      %h5
+        = covertitle
+      .mg-top20{ "align" => "center"}
+        %a.btn.btn-info{ :href => "#{book_path(id: id, tab: 'read')}", target: "_blank" }
+          = I18n.t('common.read')
+        
+

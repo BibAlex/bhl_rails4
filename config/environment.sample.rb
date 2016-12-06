@@ -5,8 +5,8 @@ require File.expand_path('../application', __FILE__)
 BhlRails4::Application.initialize!
 AUTOCOMPLETE_MAX = 4
 BHL_LINK =  "http://bhl.bibalex.org/"
-TOP_COLLECTIONS_COUNT = 5
-MOST_VIEWED_BOOKS = 3
+TOP_COLLECTIONS_COUNT = 2
+MOST_VIEWED_BOOKS = 4
 MAX_NAMES_PER_BOOK = 5
 HOME_LOG_ACTIVITIES = 5
 PAGE_SIZE = 10

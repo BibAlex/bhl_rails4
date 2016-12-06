@@ -5,9 +5,11 @@
 
 - user_form_params = get_user_form_params(user)
   
-.col-md-12.column
-  %div
-    %fieldset
+
+.container
+  .row 
+    .col-md-8.col-md-offset-2
+      %fieldset
       %legend
         = user_form_params[:page_title]
       .form-horizontal

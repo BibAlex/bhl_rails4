@@ -1,14 +1,14 @@
 %body
   #wrap
     .container
-      .row.clearfix
+      .row
         .col-md-12.column
           %h2{ "ng-non-bindable" => "" }
             = @user.real_name
           %hr
-      .row.clearfix  
+      .row
         .col-md-3
-          %ul.nav.nav-pills.nav-stacked
+          %ul.nav.nav-pills.nav-stacked.profile
             %li
               = link_to I18n.t('common.profile'), user_path(id: @user.id, tab: "profile"), { id: "tab_profile", class: get_tab_class("profile", @tab) }
             - if User.can_edit?(@user.id, session[:user_id])

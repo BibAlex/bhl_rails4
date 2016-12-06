@@ -1,25 +1,25 @@
-%h4 
-  = link_to I18n.t('common.top_collections'), { controller: 'collections', action: 'index', sort_type: "rate desc" }
-
-- @top_collections.each do |collection|  
-  - if(collection.photo_name.blank?)
-    - thumb = "/assets/images_#{I18n.locale}/#{I18n.t('common.default_collection')}"
-    - thumb_title = nil
-  - else
-    - thumb = collection.photo_name_url(:thumb)
-    - thumb_title = collection.title
-  .col-md-2.collection
-    .media
-      %center
-        = link_to image_tag(thumb, title: thumb_title, class: "media-object img-thumbnail"),{ controller: 'collections', action: 'show', id: collection.id }
-      %h5{"ng-non-bindable" => ""}
-        - title = "#{collection.title}"
-        - if collection.title.length > 14
-          - title = collection.title[0,13] +"..."
-        = link_to title,{ controller: 'collections', action: 'show', id: collection.id }, alt: "#{collection.title}"
-      %i.fa.fa-user
-      %small{ "ng-non-bindable" => "" }
-        = link_to "#{I18n.t('common.by')} #{User.find_by_id(collection.user_id).real_name}",{ controller: 'users', action: 'show', id: collection.user_id }
-      .rate
-        - if collection.rate != 0.0 
-          .starsidelink_white{ id: "starsidelink_#{collection.id}", data: "#{collection.rate}" }
+.row
+  - @top_collections.each do |collection|  
+    - if(collection.photo_name.blank?)
+      - thumb = "/assets/images_en/collection.png"
+      - thumb_title = nil
+    - else
+      - thumb = collection.photo_name_url(:thumb)
+      - thumb_title = collection.title
+    - title = "#{collection.title}"
+    - if collection.title.length > 14
+      - title = collection.title[0,13] +"..."
+    .col-md-6.col-sm-12.col-xs-12
+      .nomargin.row.collection-text
+        .col-sm-6.nopadding
+          = link_to image_tag(thumb, title: thumb_title, class: "media-object img-thumbnail"),{ controller: 'collections', action: 'show', id: collection.id }
+        .col-sm-6.collection-detail.nomargin.nopadding
+          %h6
+            = link_to "#{I18n.t('common.by')} #{User.find_by_id(collection.user_id).real_name}",{ controller: 'users', action: 'show', id: collection.user_id }          
+          %h3           
+            = link_to title,{ controller: 'collections', action: 'show', id: collection.id }, alt: "#{collection.title}"
+.row.mg-top20
+  .col-md-5.border
+  .col-md-2
+    = link_to I18n.t('common.top_collections'), { controller: 'collections', action: 'index', sort_type: "rate desc" }, class: "btn btn-default btn-block"
+  .col-md-5.border

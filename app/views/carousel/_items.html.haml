@@ -14,17 +14,17 @@
       event.preventDefault();
       get_carousel(href, "#{object_id}", "#{type}");
     });
-  });
+  });  
+    
 
 - unless items.blank?
-  .col-md-4
-    %h4
-      = carousel_title
-    %ul.list-group
-      - items.each do |item|
-        %li.list-group-item            
-          - title = params[:type] == "related" ? item[:title].first : item[:title]
-          = link_to title, { controller: controller, action: action, id: item[:id] || item[:job_id] }
+  .list-group
+    .list-group-item.active
+      %h4
+        = carousel_title
+    - items.each do |item|
+      - title = params[:type] == "related" ? item[:title].first : item[:title]
+      = link_to title, { controller: controller, action: action, id: item[:id] || item[:job_id] }, class: "list-group-item"
 
     %center{ id: "#{type}_pagination" }
       = will_paginate items, page_links: false, previous_label: "", next_label: ""

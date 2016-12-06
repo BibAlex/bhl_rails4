@@ -2,16 +2,22 @@
   %meta{ name: "description", content: @meta_description }
   %meta{ name: "keywords", content: @meta_keywords }
   %meta{ name: "author", content: @meta_author }
+  
+
+
 
 - if(params[:tab] != 'read')
-  .row.clearfix
-    = render partial: "books/details"
-    = render partial: "books/sidepanel"
-  .row.clearfix
+  %section
+  .container.bg-white
+    .row.maincontent
+      = render partial: "books/details"
+      = render partial: "books/sidepanel"
     = render partial: "books/reviews"
-  .row.clearfix
     = render partial: "books/others"
 - else
   .row.clearfix
     %center
       = render partial: "books/read"
+ 
+  
+  

@@ -14,5 +14,5 @@
   .savequery.pull-right
     - if !already_saved?(session[:user_id], query)
       = button_tag I18n.t('common.save_query'), onclick: "save_query(\"#{query}\")",
-                    class: 'btn btn-success btn-sm', id: 'save_query'
-    = link_to I18n.t('common.clear') , { controller: 'books', action: 'index' }, class: 'btn btn-warning btn-sm'
+                    class: 'btn btn-success btn-xs', id: 'save_query'
+    = link_to I18n.t('common.clear') , { controller: 'books', action: 'index' }, class: 'btn btn-warning btn-xs'

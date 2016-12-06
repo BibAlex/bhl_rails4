@@ -1,31 +1,35 @@
-.col-md-8.column
+.col-md-9
   %h4
     = I18n.t('common.profile')
-    %small
+    %small.pull-right
       - if User.can_edit?(@user.id, session[:user_id])
-        = link_to I18n.t('common.edit'), edit_user_path(id: @user.id), { class: "fa fa-edit" }
-        = link_to I18n.t('common.change_password') , change_password_user_path(id: @user.id)
+        .btn.btn-default
+          = link_to " #{I18n.t('common.edit')}", edit_user_path(id: @user.id), { class: "fa fa-edit" }
+        .btn.btn-default
+          = link_to " #{I18n.t('common.change_password')}" , change_password_user_path(id: @user.id), { class: "fa fa-lock" }
+    .clearfix
   %hr
-  #photo
-    .col-md-2.column.pull-right{ id: "user_photo" }
-  .div
-    %span.col-md-3.text-right
+  .col-sm-3
+    #photo
+      %div{ id: "user_photo" }
+  .col-sm-9  
+    %div
       %strong
         = I18n.t('common.real_name')
-    %span.col-md-6{ "ng-non-bindable" => "" }
-      = @user.real_name
-    %span.col-md-3.text-right
+      %span{ "ng-non-bindable" => "" }
+        = @user.real_name
+    %div
       %strong
         = I18n.t('common.username')
-    %span.col-md-6
-      = @user.username
-    %span.col-md-3.text-right
+      %span
+        = @user.username
+    %div
       %strong
         = I18n.t('common.member_since')
-    %span.col-md-6
-      = @user.created_at.to_s
-    %span.col-md-3.text-right
+      %span
+        = @user.created_at.to_s
+    %div
       %strong
         = I18n.t('common.last_login')
-    %span.col-md-6
-      = @user.last_login.to_s
+      %span
+        = @user.last_login.to_s

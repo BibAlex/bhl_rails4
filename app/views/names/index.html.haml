@@ -2,31 +2,34 @@
 = javascript_include_tag 'names/tree_tag_directive'
 = javascript_include_tag 'names/node_tag_directive'
 
-%div{'ng-controller': 'NamesCtrl', dir: 'ltr'}
-  %md-select{'ng-model': 'hierarchy', 'ng-change': 'loadHierarchy()'}
-    - @entries.each do |entry|
-      %md-option{value: entry.id}
-        = entry.label
-  %tree-tag
-
-%script{type: 'text/ng-template', id: 'Node'}
-  %li
-    %img{'ng-src': '{{nodeIcon}}', 'ng-click': 'isParent() && toggleNode()'}
-    %span{'ng-click': 'loadDetails($event)'}
-      {{name}}
-    %ul{'ng-show': 'isLoading'}
-      %li
-        = I18n.t('common.loading')
-    %ul{'ng-show': 'showChildren'}
-      %node-tag{class: 'parent_node', 'ng-repeat': 'dataItem in data',
-               id: '{{dataItem.id}}', name: '{{dataItem.name}}',
-               'children-count': '{{dataItem.childrenCount}}',
-               'taxon-concept-id': '{{dataItem.taxonConceptId}}'}
-
-
-%script{type: 'text/ng-template', id: 'Tree'}
-  %ul{'ng-init': 'init()'}
-    %node-tag{class: 'parent_node', 'ng-repeat': 'dataItem in data',
-               id: '{{dataItem.id}}', name: '{{dataItem.name}}',
-               'children-count': '{{dataItem.childrenCount}}',
-               'taxon-concept-id': '{{dataItem.taxonConceptId}}'}
+.container
+  .row
+    .col-md-12
+      %div{'ng-controller': 'NamesCtrl', dir: 'ltr'}
+        %md-select{'ng-model': 'hierarchy', 'ng-change': 'loadHierarchy()'}
+          - @entries.each do |entry|
+            %md-option{value: entry.id}
+              = entry.label
+        %tree-tag
+      
+      %script{type: 'text/ng-template', id: 'Node'}
+        %li
+          %img{'ng-src': '{{nodeIcon}}', 'ng-click': 'isParent() && toggleNode()'}
+          %span{'ng-click': 'loadDetails($event)'}
+            {{name}}
+          %ul{'ng-show': 'isLoading'}
+            %li
+              = I18n.t('common.loading')
+          %ul{'ng-show': 'showChildren'}
+            %node-tag{class: 'parent_node', 'ng-repeat': 'dataItem in data',
+                     id: '{{dataItem.id}}', name: '{{dataItem.name}}',
+                     'children-count': '{{dataItem.childrenCount}}',
+                     'taxon-concept-id': '{{dataItem.taxonConceptId}}'}
+      
+      
+      %script{type: 'text/ng-template', id: 'Tree'}
+        %ul{'ng-init': 'init()'}
+          %node-tag{class: 'parent_node', 'ng-repeat': 'dataItem in data',
+                     id: '{{dataItem.id}}', name: '{{dataItem.name}}',
+                     'children-count': '{{dataItem.childrenCount}}',
+                     'taxon-concept-id': '{{dataItem.taxonConceptId}}'}

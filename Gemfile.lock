@@ -145,7 +145,7 @@ GEM
       activerecord (>= 3.0.0)
     method_source (0.8.2)
     mime-types (2.99.1)
-    mini_magick (4.3.5)
+    mini_magick (4.3.6)
     mini_portile2 (2.0.0)
     minitest (5.8.1)
     multi_json (1.11.2)

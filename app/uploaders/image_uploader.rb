@@ -22,7 +22,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   version :thumb do
-    process :resize_to_limit => [ENV['RESIZED_PHOTO_WIDTH'], ENV['RESIZED_PHOTO_HIGHT']]  
+    process :resize_to_limit => [ENV["RESIZED_PHOTO_WIDTH"], ENV["RESIZED_PHOTO_HIGHT"]]  
   end
   
   version :small do

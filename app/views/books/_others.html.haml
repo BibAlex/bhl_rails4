@@ -5,8 +5,14 @@
     load_carousel("#{params[:id]}", "related");
   });
 
-.col-md-12
+
+
+
+
+
+.row.mg-top40
   %a{:id=>"collectionsfound"}
-  #alsoviewed_carousel
-  #collections_carousel
-  #related_carousel
+  .col-md-4{ id: "alsoviewed_carousel" }
+  .col-md-4{id: "collections_carousel" }
+  .col-md-4{id: "related_carousel" }
+  

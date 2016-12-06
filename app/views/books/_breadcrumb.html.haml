@@ -1,7 +1,6 @@
-= render 'action_buttons'
 .clearfix
-.col-md-7.sort.text-muted.pull-right
-  .text-right
+.col-sm-12
+  .text-right.sort
     %small
       = I18n.t('common.sort_by')
       = link_to '', books_path(params: add_facet_search(params, 'sort_type', nil)),
@@ -48,6 +47,3 @@
       = link_to '', books_path(params: add_facet_search(params, 'sort_type', 'title_sort desc')),
                 class: 'fa fa-arrow-up', style: "#{get_class_for_sort_option(params[:sort_type],'title_sort asc')};"
 
-%h4.text-muted.clearfix
-  = "#{I18n.t('common.found')} #{I18n.t('common.book_count', count: @response[:total_number_of_volumes])}"
-%hr

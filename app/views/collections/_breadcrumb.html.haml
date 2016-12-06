@@ -1,6 +1,5 @@
-.clearfix
-.col-md-7.sort.text-muted.pull-right
-  .text-right
+.col-md-3
+  .mg-top40.text-center
     %small
       = I18n.t('common.sort_by')
       = link_to "", collections_path(sort_type: nil), class: "fa fa-check-square", style: "#{get_class_for_sort_option(params[:sort_type],'rate')}"
@@ -14,12 +13,13 @@
       = link_to I18n.t('common.title'), collections_path(sort_type: "title #{toggle_sort_option(params[:sort_type])}"), style: "color:#777777;"
       = link_to "", collections_path(sort_type: "title asc"), class: "fa fa-arrow-down", style: "#{get_class_for_sort_option(params[:sort_type],'title desc')};"
       = link_to "", collections_path(sort_type: "title desc"), class: "fa fa-arrow-up", style: "#{get_class_for_sort_option(params[:sort_type],'title asc')};"
-      
-%h4.text-muted
-  - if !@collections.blank?
-    - if !params[:search].blank?
-      = I18n.t('collection.collections_found', count: @collections.count)
-    - else
-      = I18n.t('collection.collections_found_all', count: @collections_total_number)
+
+.clearfix
+%p
+- if !@collections.blank?
+  - if !params[:search].blank?
+    = I18n.t('collection.collections_found', count: @collections.count)
   - else
-    = I18n.t('collection.no_collections_found') 
+    = I18n.t('collection.collections_found_all', count: @collections_total_number)
+- else
+  = I18n.t('collection.no_collections_found')

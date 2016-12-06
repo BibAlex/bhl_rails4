@@ -2,16 +2,26 @@
   $(document).ready(function() {
     load_comments("#{params[:id]}", "volume");
   });
-  
+
+
+
+
+
+
+        
+
 
 #new_comment_modal.modal.fade{ "aria-hidden" => "true", "aria-labelledby" => "myModalLabel", "role" => "dialog" }
   = render partial: "comments/reviews_body", locals: { commentable_type: "volume" }
 
-
-.reviews
-  %a#modal-4.btn.btn-primary.btn-sm.pull-right{ "data-toggle" => "modal", "href" => "#new_comment_modal", "role" => "button" } 
-    = I18n.t('common.write_review')
-  %h3 
-    = I18n.t('common.reviews')
-  %hr.clearfix
-  #reviews
+.row
+  .col-md-12
+    %hr
+    %div{:align => "center"}
+      %a#modal-4.btn.btn-primary.btn-lg{ "aria-controls" => "collapseExample", "aria-expanded" => "false", "data-toggle" => "modal", "href" => "#new_comment_modal", "role" => "button" } 
+        = I18n.t('common.write_review')
+    .reviews
+      %h3 
+        = I18n.t('common.reviews')
+      %hr.clearfix
+      #reviews

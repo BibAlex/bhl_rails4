@@ -1,3 +1,5 @@
-%br
-%p= I18n.t('common.about_us_paragraph_1', ba_link: link_to(I18n.t('common.ba_name'), I18n.t('common.ba_link'), target: "_blank")).html_safe
-%p= I18n.t('common.about_us_paragraph_2')
+.container
+  .row.maincontent
+    .col-md-12
+      %p= I18n.t('common.about_us_paragraph_1', ba_link: link_to(I18n.t('common.ba_name'), I18n.t('common.ba_link'), target: "_blank")).html_safe
+      %p= I18n.t('common.about_us_paragraph_2')

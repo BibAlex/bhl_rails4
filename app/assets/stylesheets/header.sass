@@ -1,9 +1,9 @@
 @charset "utf-8"
 
-/* CSS Document
+/* CSS Document*/
 
 body
-  background: #fff url(/assets/images_en/body-bg.jpg) repeat 150px top
+  background: #fff
 
 #home-header
   background: #fff url(/assets/images_en/banner.jpg) no-repeat left top
@@ -64,7 +64,7 @@ footer
   font-weight: lighter
   font-size: 12px
 
-/***************default************
+/***************default************/
 
 .border
   border: 1px solid #e1dbce
@@ -99,8 +99,11 @@ footer
 
 .mg-top100
   margin-top: 100px
+  
+.padtop30
+  padding-top: 30px
 
-/*******************Book cover ****************
+/*******************Book cover ****************/
 
 .book
   display: block
@@ -133,10 +136,22 @@ footer
 .rate
   position: absolute
   bottom: 0px
-  padding: 10px
+  padding: 3px
   color: #F5BF21
   font-size: 22px
+  background-color: #f2f2f2
+  border-radius: 4px
+  margin: 5px 15%
 
+.collection-list
+  .rate
+    position: relative
+    margin: 10px 0
+    background: #fff
+.collection-text
+  .rate
+    position: relative 
+    
 .book1
   background: #68bdc5
 
@@ -152,7 +167,7 @@ footer
 .mostviewed
   margin: 80% 0
 
-/************************* collection*********************
+/************************* collection*********************/
 
 .collection-text
   background: #fafaf8
@@ -161,6 +176,7 @@ footer
 
   img
     width: 100%
+    border: 0px
 
   h6
     color: #474747
@@ -175,7 +191,7 @@ footer
 .collection-detail
   padding: 10px
 
-/*************************** maincontent*******************************
+/*************************** maincontent*******************************/
 
 .maincontent
   margin-top: 30px
@@ -186,12 +202,151 @@ footer
     float: none
 
     h5
-      font-size: 15px
-      font-weight: normal
+      font-size: 16px
+      font-weight: bold
 
   .book-content
     height: 215px
+    overflow: hidden
 
   .bibilography
     padding-top: 20px
     font-size: 16px
+    
+.rate-book 
+  padding: 10px
+  background: #f6f6f6
+  border: 1px solid #f2f2f2
+  width: 135px
+  margin: 10px 0
+  border-radius: 4px
+  
+.pagination
+  a
+    padding:  10px 14px
+    margin: 0
+    border: 1px solid #e1dbce
+    
+    &:hover 
+      background: #e1dbce
+      text-decoration: none
+    
+  .previous_page
+    padding:  10px 14px
+    margin: 0
+    border: 1px solid #e1dbce
+    
+  em
+    padding:  10px 14px
+    margin: 0
+    border: 1px solid #e1dbce
+    
+.sort 
+  a
+    margin: 0 5px
+    
+.tab 
+  padding: 5px
+  border: 1px solid #ed7a07
+  margin: 4px
+  font-size: 16px
+  border-radius: 5px
+  
+.close
+  a
+    color: #ed7a07
+    margin: 0 4px
+    
+.starrating
+  list-style: none
+  display: inline
+  cursor: pointer
+  color: #ccc
+  
+.starrating:hover 
+  color: #dbba14
+  
+.img-circle
+  border: 1px solid
+  margin: 1px 4px
+  
+.nav-pills.profile 
+  a 
+    background-color: #ed7a07
+    margin-top: 5px
+   
+  li
+    &:hover
+      background-color: #c1b59a
+      
+html, body
+  &.md-default-theme
+    background-color: #ffffff
+
+  background-color: #ffffff
+    color: #000
+    
+
+
+.annotation
+  h4
+    max-height: 40px
+    overflow: hidden
+  border: 1px solid rgba(0, 0, 0, 0.2)
+  border-radius: 6px
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)
+  background-clip: padding-box
+  padding: 10px
+  height: 180px
+  margin-bottom: 35px
+  
+.btn-success
+  a
+    color: #fff
+
+a:hover 
+  text-decoration: none
+  
+
+/* flash design*/
+.flashtitle
+  min-height: 30px
+  display: block
+
+.flasherrortitlecontent
+  background-color: #ffeae6
+  width: 980px
+  margin: 3px auto
+  border: 1px solid #f2d2cc
+  position: absolute
+  top: 20px
+
+.flashwarningtitlecontent
+  background-color: #F4FFDB
+  width: 50%
+  margin: 3px auto
+  border: 1px solid #CCF2CD
+
+.flashnoticetitlecontent
+  background-color: #D7FFCF
+  width: 50%
+  margin: 3px auto
+  border: 1px solid #C6EDBE
+
+.flashtitleborder
+  padding: 10px
+  text-align: center
+  font-weight: bold
+  /* End of flash design*/
+.visible_error_msg
+  display: block
+  color: red
+.invisible_error_msg
+  color: red
+  
+  
+.ng-isolate-scope
+  li
+    list-style: none
+    

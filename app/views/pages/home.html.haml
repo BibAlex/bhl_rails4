@@ -5,33 +5,11 @@
   });
 
 
-.row.home
-  .col-md-3
-    = render partial: 'pages/statistics'
-  .col-md-9
-    %div{ id: 'top_collections' }
-      = render partial: 'pages/top_collections'
-
-.row
-  .col-md-12
-    %hr
-
-.row.clearfix
-  .col-md-4.column.pull-right
-    = render partial: 'pages/activity_log'
-  %div.col-md-8.tabs
-    %ul.nav.nav-tabs
-      %li.active
-        %a{ 'href' => '#mostviewd', 'data-toggle' => 'tab',
-            'style' => 'padding: 0px 15px 10px 15px;' }
-          %h4
-            = I18n.t('common.most_viewed')
-      %li
-        %a{ 'href' => '#toprated', 'data-toggle' => 'tab',
-            'style' => 'padding: 0px 15px 10px 15px;', 'id' => 'top_rated' }
-          %h4
-            = I18n.t('common.top_rated')
-    .tab-content
-      .tab-pane.active#mostviewd
-        = render partial: 'pages/top_books', locals: { top_books: @most_viewed_response[:volumes], top_criteria: 'views' }
-      .tab-pane#toprated
+%section
+  .container.bg-white
+    .row
+      .col-md-12.text-center
+        %h1
+          = I18n.t('msgs.welcome_statement')
+    = render partial: 'pages/top_collections'      
+    = render partial: 'pages/top_books', locals: { top_books: @most_viewed_response[:volumes], top_criteria: 'views' }

@@ -1,51 +1,53 @@
-.col-md-8.column.media
-  - coverauthor = @volume[:author] ? @volume[:author][0] : ""
-  - covertitle = @volume[:title] ? @volume[:title][0].html_safe : ""
-  = render partial: "books/covers", locals: { coverno: rand(1..10), covertitle: covertitle, coverauthor: coverauthor }
-  .media-body
-    %h3.media-heading
-      = covertitle
-    %dl.dl-horizontal.text-left
-      - unless @volume[:language].nil?
-        %dt
-          = I18n.t('common.language') + ':'
-        %dd
-          - @volume[:language].each do |item|
-            = item
-            
-      - unless @volume[:location].nil?
-        %dt
-          = I18n.t('common.location') + ':'
-        %dd
-          - @volume[:location].each do |item|
-            = item
-          
-      - unless @volume[:date].nil?
-        %dt
-          = I18n.t('common.date') + ':'
-        %dd
-          = @volume[:date].first(4)
-      
-      - unless @types.nil?
-        - @types.each do |type, value|
-          - count = 0
-          - unless @volume[type].nil?
+- covertitle = @volume[:title] ? @volume[:title][0].html_safe : ""
+
+.col-md-9
+  .row
+    = render partial: "books/covers", locals: { covertitle: covertitle, id: @volume[:job_id] }
+    .col-sm-9.bibilography
+      %div
+        %h3.media-heading
+          = covertitle
+        %dl.dl-horizontal.text-left
+          - unless @volume[:language].nil?
             %dt
-              = value + ':'
+              = I18n.t('common.language') + ':'
             %dd
-              - @volume[type].each do |item|
-                - count = count + 1
+              - @volume[:language].each do |item|
                 = item
-                -if count != @volume[type].length
+                
+          - unless @volume[:location].nil?
+            %dt
+              = I18n.t('common.location') + ':'
+            %dd
+              - @volume[:location].each do |item|
+                = item
+              
+          - unless @volume[:date].nil?
+            %dt
+              = I18n.t('common.date') + ':'
+            %dd
+              = @volume[:date].first(4)
+          
+          - unless @types.nil?
+            - @types.each do |type, value|
+              - count = 0
+              - unless @volume[type].nil?
+                %dt
+                  = value + ':'
+                %dd
+                  - @volume[type].each do |item|
+                    - count = count + 1
+                    = item
+                    -if count != @volume[type].length
+                      %b
+                        = I18n.t('common.separator')      
                   %b
-                    = I18n.t('common.separator')      
-              %b
-                = I18n.t('common.terminator')
-      - unless @volume[:sci_names].blank?
-        %dt
-          = I18n.t('common.tagged_species') + ':'
-        %dd
-          - names = fill_response_array(@volume[:sci_names])
-          = render partial: "books/book_names", locals: { sci_names: @volume[:sci_names], id: @volume[:job_id], 
-                                                          names: names, display_title: false,
-                                                          sci_names_count: @volume[:sci_names_count] }
+                    = I18n.t('common.terminator')
+          - unless @volume[:sci_names].blank?
+            %dt
+              = I18n.t('common.tagged_species') + ':'
+            %dd
+              - names = fill_response_array(@volume[:sci_names])
+              = render partial: "books/book_names", locals: { sci_names: @volume[:sci_names], id: @volume[:job_id], 
+                                                              names: names, display_title: false,
+                                                              sci_names_count: @volume[:sci_names_count] }
