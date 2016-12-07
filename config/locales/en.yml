@@ -21,8 +21,10 @@
 
 en:
   common:
-    authors: Authors
-    books: Books
+    st_authors: Authors
+    st_books: Books
+    st_names: Names
+    ba: Biliotheca Alexandrina
     all: All
     all_categories: All Categories
     login: Sign in

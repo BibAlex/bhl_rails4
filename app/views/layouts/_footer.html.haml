@@ -3,7 +3,7 @@
     .row
       .col-md-8
         %img{ alt: "", height: "39", src: "/assets/images_#{I18n.locale}/ba_logo", width: "92" }
-        Biliotheca Alexandrina
+          = I18n.t('common.ba')
       .col-md-4
         %a.color-black{ href: "#{contact_pages_path(locale: I18n.locale)}" }
           = I18n.t('common.contact_us')

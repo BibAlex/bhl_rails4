@@ -37,8 +37,7 @@
               %i.fa.fa-li.fa-info
               %small
                 = link_to I18n.t('common.details'), collection_path(id: item.id)
-          - if item.rate != 0.0
-            .starsidelink_gray{id: "starsidelink_#{item.id}", data: "#{item.rate}"}
+          
         .clearfix
         %hr
     %center

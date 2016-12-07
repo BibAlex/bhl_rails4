@@ -59,10 +59,11 @@
 #bibtex_hidden{ style: 'display: none;' }= get_format(params[:id], 'bibtex')
 #endnote_hidden{ style: 'display: none;' }= get_format(params[:id], 'endnote')
 #modal-container.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog"}
-  .modal-dialog
+  .modal-dialog.modal-lg
     .modal-content
       .modal-header
         %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"}
           ×
-          %h4#modallabel.modal-title
-        #modalcontent.modal-body
+        %h4#modallabel.modal-title
+            
+      #modalcontent.modal-body

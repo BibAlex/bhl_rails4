@@ -16,7 +16,7 @@
               .btn.btn-primary.btn-sm
                 = link_to book_path(id: annotation[:job_id], tab: "read"), target: "_blank" do
                   %i.fa.fa-book{id: "read"}
-                = I18n.t('common.read')
+                  = I18n.t('common.read')
               .btn.btn-primary.btn-sm
                 = link_to book_path(id: annotation[:job_id]) do
                   %i.fa.fa-info{id: "details"}

@@ -1,15 +1,7 @@
-:javascript
-  $(document).ready(function($) {
-    moveItems(2,"homeactivitylog");
-    load_top_rated_books();
-  });
-
-
 %section
   .container.bg-white
     .row
       .col-md-12.text-center
-        %h1
-          = I18n.t('msgs.welcome_statement')
+        
     = render partial: 'pages/top_collections'      
     = render partial: 'pages/top_books', locals: { top_books: @most_viewed_response[:volumes], top_criteria: 'views' }

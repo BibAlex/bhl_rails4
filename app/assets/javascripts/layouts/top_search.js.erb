@@ -49,7 +49,7 @@ bhlApp.controller('topSearch', ['$scope', '$window', '$log', function($scope, $w
       combinedSearch += '_' + $scope.searchBy + '=' + $scope.searchQuery;
     }
 
-    window.location = window.location.protocol + "//" + window.location.host + "/books" + "?" + combinedSearch;
+    window.location = window.location.protocol + "//" + window.location.host + "/" +  document.documentElement.lang +  "/books" + "?" + combinedSearch;
   };
 
   $scope.alertEmptySearchError = function() {

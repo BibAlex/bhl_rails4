@@ -16,19 +16,19 @@
   font-family: 'Montserrat'
   font-style: normal
   font-weight: 400
-  src: url(../fonts/Montserrat.ttf) format("truetype")
+  src: url(fonts/Montserrat.ttf) format("truetype")
 
 @font-face
   font-family: 'Montserrat-bold'
   font-style: bold
   font-weight: 500
-  src: url(../fonts/Montserrat-bold.ttf) format("truetype")
+  src: url(fonts/Montserrat-bold.ttf) format("truetype")
 
 @font-face
   font-family: 'Montserrat-light'
   font-style: lighter
   font-weight: 200
-  src: url(../fonts/Montserrat-light.ttf) format("truetype")
+  src: url(fonts/Montserrat-light.ttf) format("truetype")
 
 html
   font-family: sans-serif
@@ -283,7 +283,7 @@ body
   font-size: 14px
   line-height: 1.42857143
   color: #333333
-  background-color: #ffffff
+  background-color: #ffffff !important
 
 input, button, select, textarea
   font-family: inherit
@@ -291,15 +291,15 @@ input, button, select, textarea
   line-height: inherit
 
 a
-  color: #ed7a07
+  color: #ed7a07 !important
   text-decoration: none
 
   &:hover
-    color: #b7a98a
+    color: #b7a98a !important
     text-decoration: underline
 
   &:focus
-    color: #b7a98a
+    color: #b7a98a !important
     text-decoration: underline
     outline: 5px auto -webkit-focus-ring-color
     outline-offset: -2px
@@ -2194,17 +2194,17 @@ fieldset[disabled] .btn-primary.focus
   background-color: #262626
 
 .btn-success
-  color: #ffffff
+  color: #ffffff !important
   background-color: #6c9441
   border-color: #5f8239
 
   &:focus, &.focus
-    color: #ffffff
+    color: #ffffff !important
     background-color: #527131
     border-color: #1e2a12
 
   &:hover, &:active, &.active
-    color: #ffffff
+    color: #ffffff !important
     background-color: #527131
     border-color: #405827
 
@@ -2215,7 +2215,7 @@ fieldset[disabled] .btn-primary.focus
 
 .btn-success
   &:active:hover, &.active:hover
-    color: #ffffff
+    color: #ffffff !important
     background-color: #405827
     border-color: #1e2a12
 
@@ -2231,13 +2231,13 @@ fieldset[disabled] .btn-primary.focus
     border-color: #1e2a12
 
 .open > .dropdown-toggle.btn-success:focus
-  color: #ffffff
+  color: #ffffff 
   background-color: #405827
   border-color: #1e2a12
 
 .btn-success
   &:active.focus, &.active.focus
-    color: #ffffff
+    color: #ffffff !important
     background-color: #405827
     border-color: #1e2a12
 
@@ -2376,17 +2376,17 @@ fieldset[disabled] .btn-info.focus
   background-color: #ffffff
 
 .btn-warning
-  color: #ffffff
+  color: #ffffff !important
   background-color: #ed7a07
   border-color: #d46d06
 
   &:focus, &.focus
-    color: #ffffff
+    color: #ffffff !important
     background-color: #bb6106
     border-color: #582e03
 
   &:hover, &:active, &.active
-    color: #ffffff
+    color: #ffffff !important
     background-color: #bb6106
     border-color: #994f05
 
@@ -2397,7 +2397,7 @@ fieldset[disabled] .btn-info.focus
 
 .btn-warning
   &:active:hover, &.active:hover
-    color: #ffffff
+    color: #ffffff !important
     background-color: #994f05
     border-color: #582e03
 
@@ -2408,7 +2408,7 @@ fieldset[disabled] .btn-info.focus
 
 .btn-warning
   &:active:focus, &.active:focus
-    color: #ffffff
+    color: #ffffff !important
     background-color: #994f05
     border-color: #582e03
 
@@ -2419,7 +2419,7 @@ fieldset[disabled] .btn-info.focus
 
 .btn-warning
   &:active.focus, &.active.focus
-    color: #ffffff
+    color: #ffffff !important
     background-color: #994f05
     border-color: #582e03
 
@@ -5743,3 +5743,114 @@ button.close
     
 .tab 
   float: left
+  
+
+//NEW_LAYOUT DEVELOPER STYLING
+//***********************Start of Tooltip Styling********************************
+// This is the default Tooltipster theme (feel free to modify or duplicate and create multiple themes!):
+
+.tooltipster-default
+  border-radius: 5px
+  border: 2px solid #000
+  background: #4c4c4c
+  color: #fff
+  .tooltipster-content
+    font-family: Arial, sans-serif
+    font-size: 14px
+    line-height: 16px
+    padding: 8px 10px
+    overflow: hidden
+  .tooltipster-arrow .tooltipster-arrow-border
+    // border-color: ... !important;
+
+// Use this next selector to style things like font-size and line-height:
+
+// This next selector defines the color of the border on the outside of the arrow. This will automatically match the color and size of the border set on the main tooltip styles. Set display: none; if you would like a border around the tooltip but no border around the arrow
+
+// This is the base styling required to make all Tooltipsters work
+
+.tooltipster-base
+  padding: 0
+  font-size: 0
+  line-height: 0
+  position: absolute
+  z-index: 9999999
+  pointer-events: none
+  width: auto
+  overflow: visible
+  .tooltipster-content
+    overflow: hidden
+
+// These next classes handle the styles for the little arrow attached to the tooltip. By default, the arrow will inherit the same colors and border as what is set on the main tooltip itself.
+
+.tooltipster-arrow
+  display: block
+  text-align: center
+  width: 100%
+  height: 100%
+  position: absolute
+  top: 0
+  left: 0
+  z-index: -1
+  span
+    display: block
+    width: 0
+    height: 0
+    position: absolute
+
+.tooltipster-arrow-border
+  display: block
+  width: 0
+  height: 0
+  position: absolute
+
+.tooltipster-arrow-top span, .tooltipster-arrow-top-right span, .tooltipster-arrow-top-left span
+  border-left: 8px solid transparent !important
+  border-right: 8px solid transparent !important
+  border-top: 8px solid
+  bottom: -8px
+
+.tooltipster-arrow-top .tooltipster-arrow-border, .tooltipster-arrow-top-right .tooltipster-arrow-border, .tooltipster-arrow-top-left .tooltipster-arrow-border
+  border-left: 9px solid transparent !important
+  border-right: 9px solid transparent !important
+  border-top: 9px solid
+  bottom: -8px
+
+.tooltipster-arrow-top
+  span, .tooltipster-arrow-border
+    left: 0
+    right: 0
+    margin: 0 auto
+
+.tooltipster-arrow-bottom
+  span, .tooltipster-arrow-border
+    left: 0
+    right: 0
+    margin: 0 auto
+
+.tooltipster-arrow-top-left span, .tooltipster-arrow-bottom-left span
+  left: 6px
+
+.tooltipster-arrow-top-left .tooltipster-arrow-border, .tooltipster-arrow-bottom-left .tooltipster-arrow-border
+  left: 5px
+
+.tooltipster-arrow-top-right span, .tooltipster-arrow-bottom-right span
+  right: 6px
+
+.tooltipster-arrow-top-right .tooltipster-arrow-border, .tooltipster-arrow-bottom-right .tooltipster-arrow-border
+  right: 5px
+
+// Some CSS magic for the awesome animations - feel free to make your own custom animations and reference it in your Tooltipster settings!
+
+.tooltipster-fade
+  opacity: 0
+  -webkit-transition-property: opacity
+  -moz-transition-property: opacity
+  -o-transition-property: opacity
+  -ms-transition-property: opacity
+  transition-property: opacity
+
+.tooltipster-fade-show
+  opacity: 1
+
+//***********************End of Tooltip Styling**********************************

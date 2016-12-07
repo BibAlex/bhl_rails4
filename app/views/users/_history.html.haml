@@ -9,7 +9,7 @@
       - @book = load_volume_without_names_from_solr(doc.volume_id)
      
       .row.nopadding.nomargin
-        .col-sm-9
+        .col-sm-8
           %h4
             = link_to @book[:title].try(:first).to_s, book_path(id: doc.volume_id, tab: nil)
           .date.text-muted
@@ -18,7 +18,7 @@
                 = I18n.t('common.volume_history_viewed_on')
               = doc.updated_at
   
-        .col-sm-3.controls
+        .col-sm-4.controls
          
           - if (doc.user_id == session[:user_id])
             %span
