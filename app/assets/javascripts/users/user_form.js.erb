@@ -1,4 +1,4 @@
-bhlApp.controller('userValidate', function($scope, $window) {
+bhlApp.controller('userValidate', ['$scope','$window',function($scope, $window) {
     $scope.showErrors = false;
     $scope.photoTypeError = false; 
     $scope.photoSizeError = false; 
@@ -43,7 +43,7 @@ bhlApp.controller('userValidate', function($scope, $window) {
 
 	};    
     
-});
+}]);
 
 function recaptchaCallback() {
     var appElement = document.querySelector('[ng-app=bhlApp]');

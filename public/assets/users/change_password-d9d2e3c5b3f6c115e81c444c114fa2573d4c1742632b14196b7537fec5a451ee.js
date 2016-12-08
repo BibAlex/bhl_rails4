@@ -1,0 +1,1 @@
+bhlApp.controller("userValidateChangePaaword",["$scope","$window",function(o,r){o.showErrors=!1,o.validateForm=function(r,a){a.$invalid&&(o.showErrors=!0,r.preventDefault())}}]);

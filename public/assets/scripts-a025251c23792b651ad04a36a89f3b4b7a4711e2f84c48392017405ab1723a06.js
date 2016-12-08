@@ -1,0 +1,1 @@
+function clearString(r){var i=["--","=","{","}"];for(var n in i)r=r.split(i[n]).join(" ");return r.trim()}

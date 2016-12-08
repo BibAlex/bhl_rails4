@@ -25,5 +25,9 @@ module BhlRails4
     config.i18n.default_locale = :en
     config.i18n.fallbacks = [:en]
     config.i18n.enforce_available_locales = false
+    config.resized_photo_width = 500
+    config.resized_photo_height = 500
+    config.resized_photo_width_small = 100
+    config.resized_photo_height_small = 120
   end
 end

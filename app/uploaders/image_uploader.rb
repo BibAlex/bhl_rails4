@@ -22,11 +22,11 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   version :thumb do
-    process :resize_to_limit => [ENV["RESIZED_PHOTO_WIDTH"], ENV["RESIZED_PHOTO_HIGHT"]]  
+    process :resize_to_limit => [Rails.application.config.resized_photo_width, Rails.application.config.resized_photo_height]  
   end
   
   version :small do
-    process :resize_to_limit => [ENV['RESIZED_PHOTO_WIDTH_SMALL'], ENV['RESIZED_PHOTO_HIGHT_SMALL']]  
+    process :resize_to_limit => [Rails.application.config.resized_photo_width_small, Rails.application.config.resized_photo_height_small] 
   end
   
   def get_version_dimensions

@@ -1,4 +1,4 @@
-bhlApp.controller('userValidateChangePaaword', function($scope, $window) {
+bhlApp.controller('userValidateChangePaaword',['$scope', '$window', function($scope, $window) {
     $scope.showErrors = false;
     $scope.validateForm = function(event, userForm) {
         if (userForm.$invalid) {
@@ -6,4 +6,4 @@ bhlApp.controller('userValidateChangePaaword', function($scope, $window) {
             event.preventDefault();
         }       
     };   
-});
+}]);
