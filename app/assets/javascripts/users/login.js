@@ -1,4 +1,4 @@
-bhlApp.controller('loginValidate', function($scope, $window) {
+bhlApp.controller('loginValidate',['$scope', '$window', function($scope, $window) {
     $scope.showErrors = false;
     $scope.recaptchaError = false;
     $scope.validateForm = function(event, loginForm) {
@@ -18,7 +18,7 @@ bhlApp.controller('loginValidate', function($scope, $window) {
             }
         }
     };
-});
+}]);
 
 function recaptchaCallback() {
     var appElement = document.querySelector('[ng-app=loginApp]');
