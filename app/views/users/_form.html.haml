@@ -131,10 +131,10 @@
                 = image_tag("#{thumb}", width: 150, border: 0)
           .form-group
             = f.label I18n.t('common.upload_photo'), class: 'col-sm-2 control-label'
-            .col-sm-10              
-              = f.file_field :photo_name, { id: "photo_name", type: "file", class: "btn btn-default",
-                                            'ng-model' => "file",
-                                            'ng-file-select' => "uploadFile(this.files)" }
+            .col-sm-10
+              %input{ id: "photo_name", "ng-model" => "file", :onchange => "angular.element(this).scope().uploadFile(this)", :type => "file", class: "btn btn-default" }
+            
+              
               %p.help-block
                 = "#{I18n.t('warn.max_photo_size')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
               %span{ class: 'ng-validation-error',
@@ -142,7 +142,7 @@
                 = "#{I18n.t('msgs.upload_photo_ext_error')}"
               %br
               %span{ class: 'ng-validation-error',
-                     'ng-show' => "photoSizeError && showErrors".html_safe}
+                     'ng-show' => "photoSizeError && showErrors"}
                 = "#{I18n.t('msgs.upload_photo_max_size_error')} #{UPLOADED_PHOTO_MAX_SIZE} #{I18n.t('common.mb')}"
               
           .form-group

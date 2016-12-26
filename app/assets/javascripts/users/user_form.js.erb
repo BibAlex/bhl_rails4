@@ -23,11 +23,11 @@ bhlApp.controller('userValidate', ['$scope','$window',function($scope, $window) 
     };
     
     
-    $scope.uploadFile = function(files) {
-    	if(files != undefined){	
-			var size = files[0].size;
+    $scope.uploadFile = function(element) {
+    	if(element.files[0] != "undefined"){	
+			var size = element.files[0].size;
 	        var photo_size_limit = "<%= UPLOADED_PHOTO_MAX_SIZE * 1000 * 1000 %>"; 
-	        var type = files[0].type.substring(files[0].type.indexOf("/") + 1);
+	        var type = element.files[0].type.substring(element.files[0].type.indexOf("/") + 1);
 	        if($.inArray(type, ['gif','png','jpg','jpeg', 'bmp']) == -1) {
         	    $scope.photoTypeError = true;	        	     
 	        }
