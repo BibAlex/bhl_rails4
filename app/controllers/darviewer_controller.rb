@@ -10,8 +10,7 @@ class DarviewerController < ApplicationController
   include BooksHelper
 
   def fake_request    
-    uri = URI("https://viewer2.bibalex.org/LoadBalancer/JobLocation/#{params[:book_id]}/Host?callback=getLoadBalancer")    
-    #uri = URI("http://www.google.com")
+    uri = URI("")    
     response = Net::HTTP.get(uri)
     respond_to do |format|      
        format.js { render :json => response.sub("http", "https")}    
