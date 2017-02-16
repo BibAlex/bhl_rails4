@@ -8,8 +8,13 @@
       %div{'ng-controller': 'NamesCtrl', dir: 'ltr'}
         %md-select{'ng-model': 'hierarchy', 'ng-change': 'loadHierarchy()'}
           - @entries.each do |entry|
-            %md-option{value: entry.id}
-              = entry.label
+            - if entry.id == DEFAULT_HIERARCHY_ID
+              %md-option{value: entry.id, selected: true}
+                = entry.label
+            - else
+              %md-option{value: entry.id}
+                = entry.label
+                
         %tree-tag
       
       %script{type: 'text/ng-template', id: 'Node'}
