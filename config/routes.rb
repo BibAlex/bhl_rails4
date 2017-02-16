@@ -151,6 +151,7 @@ BhlRails4::Application.routes.draw do
     get "darviewer/user"
     get "darviewer/book"
     get "darviewer/annotations"
+    get "darviewer/fake_request"
 
 
   end

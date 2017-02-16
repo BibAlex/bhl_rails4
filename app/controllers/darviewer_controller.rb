@@ -1,10 +1,21 @@
+require 'net/http'
+
+
 class DarviewerController < ApplicationController
   
-  # protect_from_forgery except: [:book, :user, :annotations] 
+   protect_from_forgery except: [:book, :user, :annotations, :fake_request] 
   
   include SolrHelper
   include DarviewerHelper
   include BooksHelper
+
+  def fake_request    
+    uri = URI("")    
+    response = Net::HTTP.get(uri)
+    respond_to do |format|      
+       format.js { render :json => response.sub("http", "https")}    
+    end
+  end
   
   def user
     guid = params[:SSOToken]

@@ -9,7 +9,7 @@ module BHL
       user.last_login = Time.now
       user.save
       # cookies[:SSid] = user.guid
-      cookies[:SSid] = { value: user.guid, domain: '.bibalex.org', httponly: true }
+      cookies[:SSid] = { value: user.guid, domain: '.bibalex.org' }
     end
 
     def log_out
