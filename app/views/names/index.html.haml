@@ -6,14 +6,10 @@
   .row
     .col-md-12
       %div{'ng-controller': 'NamesCtrl', dir: 'ltr'}
-        %md-select{'ng-model': 'hierarchy', 'ng-change': 'loadHierarchy()'}
+        %md-select{'ng-model': 'hierarchy', 'placeholder': "#{I18n.t('common.select_hierarchy')}", 'ng-change': 'loadHierarchy()'}
           - @entries.each do |entry|
-            - if entry.id == DEFAULT_HIERARCHY_ID
-              %md-option{value: entry.id, selected: true}
-                = entry.label
-            - else
-              %md-option{value: entry.id}
-                = entry.label
+            %md-option{value: entry.id}
+              = entry.label
                 
         %tree-tag
       

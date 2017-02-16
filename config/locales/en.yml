@@ -21,6 +21,7 @@
 
 en:
   common:
+    select_hierarchy: Select Hierarchy
     st_authors: Authors
     st_books: Books
     st_names: Names

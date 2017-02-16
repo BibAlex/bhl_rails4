@@ -1,6 +1,7 @@
 ar:
 
   common:
+    select_hierarchy: اختار التصنيف
     st_authors: مؤلف
     st_books: كتاب
     st_names: اسم
